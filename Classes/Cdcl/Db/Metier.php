@@ -11,43 +11,45 @@ namespace Classes\Cdcl\Db;
 use Classes\Cdcl\Config\Config;
 
 
-class TypeTache extends DbObject{
+class Metier extends DbObject{
     /*----------------Properties------------------*/
     /*
-    `type_tache`.`nom_type_tache`,
-    `type_tache`.`code_type_tache`
+    `metier`.`code_metier`,
+    `metier`.`nom_metier`,
      */
     /**
      * @var string
      */
-    public $nom_type_tache;
+    public $code_metier;
     /**
      * @var string
      */
-    public $code_type_tache;
+    public $nom_metier;
 
-    function __construct($id=0, $nom_type_tache='', $code_type_tache='', $created=0)
+    function __construct($id=0, $code_metier='', $nom_metier='',$created=0)
     {
-        $this->nom_type_tache = $nom_type_tache;
-        $this->code_type_tache = $code_type_tache;
+        $this->code_metier = $code_metier;
+        $this->nom_metier = $nom_metier;
         parent::__construct($id, $created);
     }
 
     /**
      * @return string
      */
-    public function getNomTypeTache()
+    public function getCodeMetier()
     {
-        return $this->nom_type_tache;
+        return $this->code_metier;
     }
 
     /**
      * @return string
      */
-    public function getCodeTypeTache()
+    public function getNomMetier()
     {
-        return $this->code_type_tache;
+        return $this->nom_metier;
     }
+
+
 
     /**
      * @param int $id
@@ -59,9 +61,9 @@ class TypeTache extends DbObject{
         $sql = '
                 SELECT
                     `id`,
-                    `nom_type_tache`,
-                    `code_type_tache`
-                FROM `type_tache`
+                    `code_metier`,
+                    `nom_metier`
+                FROM `metier`
                 where id= :id
                 ';
         $stmt = Config::getInstance()->getPDO()->prepare($sql);
@@ -72,14 +74,12 @@ class TypeTache extends DbObject{
         }
         else {
             $data = $stmt->fetch() ;
-            $typeTacheObject = new TypeTache(
+            $metierObject = new Metier(
                 $data['id'],
-                $data['nom_type_tache'],
-                $data['code_type_tache'],
-                $data['created']
-            );
+                $data['code_metier'],
+                $data['nom_metier']            );
         }
-        return $typeTacheObject ;
+        return $metierObject ;
     }
 
     /**
@@ -88,18 +88,18 @@ class TypeTache extends DbObject{
      */
     public static function getAll()
     {
-        $sql=' SELECT * FROM type_tache
+        $sql=' SELECT * FROM metier
         ';
         $pdoStmt = Config::getInstance()->getPDO()->prepare($sql);
         if ($pdoStmt->execute() === false) {
             print_r($pdoStmt->errorInfo());
         }
         else {
-            $allTypeTaches = $pdoStmt->fetchAll(\PDO::FETCH_ASSOC);
-            foreach ($allTypeTaches as $row) {
+            $allMetiers = $pdoStmt->fetchAll(\PDO::FETCH_ASSOC);
+            foreach ($metierObject as $row) {
 
-                $returnList[$row['id']]['nom_type_tache'] = $row['nom_type_tache'];
-                $returnList[$row['id']]['name'] = $row['code_type_tache'];
+                $returnList[$row['id']]['code_metier'] = $row['code_metier'];
+                $returnList[$row['id']]['nom_metier'] = $row['nom_metier'];
             }
         }
         return $returnList;
@@ -114,9 +114,9 @@ class TypeTache extends DbObject{
         $sql = '
             SELECT
                 `id`,
-                `nom_type_tache`,
-                `code_type_tache`
-            FROM `type_tache`
+                `code_metier`,
+                `nom_metier`
+            FROM `metier`
             ';
         $stmt = Config::getInstance()->getPDO()->prepare($sql);
         if ($stmt->execute() === false) {
@@ -125,7 +125,7 @@ class TypeTache extends DbObject{
         else {
             $allDatas = $stmt->fetchAll(\PDO::FETCH_ASSOC);
             foreach ($allDatas as $row) {
-                $returnList[$row['id']] = $row['code_type_tache'].' '.$row['nom_type_tache'];
+                $returnList[$row['id']] = $row['code_metier'].' '.$row['nom_metier'];
             }
         }
 
@@ -136,9 +136,9 @@ class TypeTache extends DbObject{
         $sql = '
             SELECT
                 `id`,
-                `code_type_tache`,
-                `nom_type_tache`
-            FROM `type_tache`
+                `code_metier`,
+                `code_metier`
+            FROM `metier`
             ';
         $stmt = Config::getInstance()->getPDO()->prepare($sql);
         if ($stmt->execute() === false) {
@@ -147,8 +147,8 @@ class TypeTache extends DbObject{
         else {
             $allDatas = $stmt->fetchAll(\PDO::FETCH_ASSOC);
             foreach ($allDatas as $row) {
-                $returnList[$row['id']]['code_type_tache'] = $row['code_type_tache'];
-                $returnList[$row['id']]['nom_type_tache'] = $row['nom_type_tache'];
+                $returnList[$row['id']]['code_metier'] = $row['code_metier'];
+                $returnList[$row['id']]['nom_metier'] = $row['nom_metier'];
             }
         }
         return $returnList;
@@ -164,16 +164,16 @@ class TypeTache extends DbObject{
 
         if ($this->id > 0){
             $sql = '
-                UPDATE type_tache
+                UPDATE metier
                 SET
-                `nom_type_tache` = :nom_type_tache,
-                `code_type_tache` = :code_type_tache
+                `code_metier` = :code_metier,
+                `nom_metier` = :nom_metier
                 WHERE `id` = :id
                 ';
             $stmt = Config::getInstance()->getPDO()->prepare($sql);
             $stmt->bindValue(':id', $this->id, \PDO::PARAM_INT);
-            $stmt->bindValue(':nom_type_tache', $this->nom_type_tache);
-            $stmt->bindValue(':code_type_tache', $this->code_type_tache);
+            $stmt->bindValue(':code_metier', $this->code_metier);
+            $stmt->bindValue(':nom_metier', $this->nom_metier);
 
             //var_dump($sql);
 
@@ -188,16 +188,16 @@ class TypeTache extends DbObject{
         }
 
         else {
-            $sql = 'INSERT INTO `type_tache`
-                    (`nom_type_tache`,
-                    `code_type_tache`)
+            $sql = 'INSERT INTO `metier`
+                    (`code_metier`,
+                    `nom_metier`)
                 VALUES
-                (:nom_type_tache,
-                 :code_type_tache
+                (:code_metier,
+                 :nom_metier
             )';
             $stmt = Config::getInstance()->getPDO()->prepare($sql);
-            $stmt->bindValue(':nom_type_tache', $this->nom_type_tache);
-            $stmt->bindValue(':code_type_tache', $this->code_type_tache);
+            $stmt->bindValue(':code_metier', $this->code_metier);
+            $stmt->bindValue(':nom_metier', $this->nom_metier);
 
             if ($stmt->execute() === false) {
                 print_r($stmt->errorInfo());
@@ -219,7 +219,7 @@ class TypeTache extends DbObject{
     {
         $sql = '
                 DELETE
-                FROM `type_tache`
+                FROM `metier`
                 where id= :id
                 ';
         $stmt = Config::getInstance()->getPDO()->prepare($sql);

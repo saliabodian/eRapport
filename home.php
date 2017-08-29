@@ -7,6 +7,10 @@ $conf = Config::getInstance();
 
 // var_dump($_SESSION);
 
-include $conf->getViewsDir().'header.php';
-include $conf->getViewsDir().'sidebar.php';
-include $conf->getViewsDir().'footer.php';
+if(!empty($_SESSION)){
+    include $conf->getViewsDir().'header.php';
+    include $conf->getViewsDir().'sidebar.php';
+    include $conf->getViewsDir().'footer.php';
+}else{
+    header('Location: index.php');
+}
