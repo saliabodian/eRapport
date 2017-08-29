@@ -247,7 +247,7 @@ Class User {
                 $data['post_id']
             );
         }
-        return $data ;
+        return $userObject ;
     }
 
     // Fonction pour récupérer un user par son username
@@ -375,17 +375,20 @@ Class User {
            // var_dump($ok);
             if($ok==true){
             //    session_start();
-                $userConnected = new User();
-                $userSessionValues = $userConnected->getByUsername($login);
-            //
-            //    var_dump($userSessionValues);
+                $user = new User();
+                $userSessionValues = $user->getByUsername($login);
+
+
+            //($id=0, $username='', $firstname='', $lastname='', $email='', $registration_number=0, $created='', $password='', $post_id=0)
+
+            //   var_dump($userSessionValues);
                 $_SESSION['id']=$userSessionValues['id'];
                 $_SESSION['username']=$userSessionValues['username'];
                 $_SESSION['lastname']=$userSessionValues['lastname'];
                 $_SESSION['firstname']=$userSessionValues['firstname'];
                 $_SESSION['email']=$userSessionValues['email'];
-                header('Location:views\home.php');
             //    var_dump($_SESSION);
+                header('Location:home.php');
             }
         }
         return $conf;

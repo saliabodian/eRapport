@@ -11,7 +11,7 @@ namespace Classes\Cdcl\Db;
 use Classes\Cdcl\Config\Config;
 
 
-class Agence {
+class Agence extends DbObject{
     /*----------------Properties------------------*/
 
     /**
@@ -43,7 +43,7 @@ class Agence {
      */
     public $pays;
 
-    function __construct($nom='', $telephone=0, $adresse='', $code_postal='', $ville='', $pays='', $created=0)
+    function __construct($id=0, $nom='', $telephone=0, $adresse='', $code_postal='', $ville='', $pays='', $created=0)
     {
         $this->nom = $nom;
         $this->telephone = $telephone;
@@ -52,6 +52,8 @@ class Agence {
         $this->ville = $ville;
         $this->pays = $pays;
         $this->created = $created;
+        //parent constructeur
+        parent::__construct($id, $created);
     }
 
 
@@ -168,6 +170,74 @@ class Agence {
         $this->pays = $pays;
     }
 
+    /* return bool*/
+    public function saveDB(){
+        var_dump($this->id);
+    //    exit;
+        if ($this->id > 0){
+            $sql = '
+                UPDATE agence
+                SET
+                `nom` = :nom,
+                `telephone` = :telephone,
+                `adresse` = :adresse,
+                `code_postal` = :code_postal,
+                `ville` = :ville,
+                `pays` = :pays
+                WHERE `id` = :id
+                ';
+            $stmt = Config::getInstance()->getPDO()->prepare($sql);
+            $stmt->bindValue(':id', $this->id, \PDO::PARAM_INT);
+            $stmt->bindValue(':nom', $this->nom);
+            $stmt->bindValue(':telephone', $this->telephone);
+            $stmt->bindValue(':adresse', $this->adresse);
+            $stmt->bindValue(':code_postal', $this->code_postal);
+            $stmt->bindValue(':ville', $this->ville);
+            $stmt->bindValue(':pays', $this->pays);
+
+            if ($stmt->execute() === false) {
+                print_r($stmt->errorInfo());
+                return false ;
+            }
+            else {
+                return true ;
+            }
+        }
+
+        else {
+            $sql = 'INSERT INTO `agence`
+                    (`nom`,
+                    `telephone`,
+                    `adresse`,
+                    `code_postal`,
+                    `ville`,
+                    `pays`)
+                VALUES
+                (:nom,
+                 :telephone,
+                 :adresse,
+                 :code_postal,
+                 :ville,
+                 :pays
+            )';
+            $stmt = Config::getInstance()->getPDO()->prepare($sql);
+            $stmt->bindValue(':nom', $this->nom);
+            $stmt->bindValue(':telephone', $this->telephone, \PDO::PARAM_INT);
+            $stmt->bindValue(':adresse', $this->adresse);
+            $stmt->bindValue(':code_postal', $this->code_postal);
+            $stmt->bindValue(':ville', $this->ville);
+            $stmt->bindValue(':pays', $this->pays);
+
+            if ($stmt->execute() === false) {
+                print_r($stmt->errorInfo());
+                return false;
+            }
+            else {
+                return true;
+            }
+        }
+    }
+
     public function getAgenceById($id){
         $sql = '
                 SELECT `id`,
@@ -198,10 +268,66 @@ class Agence {
                 $data['pays']
             );
         }
-        return $data ;
+        return $userObject ;
     }
 
-    public static function getAllAgence(){
+
+
+    public static function deleteById($id){
+        $sql = '
+                DELETE
+                FROM `agence`
+                where id= :id
+                ';
+        $stmt = Config::getInstance()->getPDO()->prepare($sql);
+        $stmt->bindValue(':id', $id, \PDO::PARAM_INT);
+
+        if ($stmt->execute() === false) {
+            print_r($stmt->errorInfo());
+            $isDeleted = false;
+        }
+        else {
+            return true;
+        }
+    }
+
+    public static function get($id){
+
+        $sql = '
+                SELECT `id`,
+                    `nom`,
+                    `telephone`,
+                    `adresse`,
+                    `code_postal`,
+                    `ville`,
+                    `pays`
+                FROM `agence`
+                where id= :id
+                ';
+        $stmt = Config::getInstance()->getPDO()->prepare($sql);
+        $stmt->bindValue(':id', $id, \PDO::PARAM_INT);
+
+        if ($stmt->execute() === false) {
+            print_r($stmt->errorInfo());
+        }
+        else {
+            $data = $stmt->fetch() ;
+            $agenceObject = new Agence(
+                $data['id'],
+                $data['nom'],
+                $data['telephone'],
+                $data['adresse'],
+                $data['code_postal'],
+                $data['ville'],
+                $data['pays']
+            );
+        }
+        return $agenceObject ;
+    }
+
+
+    /* return DbObject[]*/
+    public static function getAll(){
         $sql=' SELECT * FROM agence
         ';
         $pdoStmt = Config::getInstance()->getPDO()->prepare($sql);
@@ -222,24 +348,61 @@ class Agence {
         }
         return $returnList;
     }
-
-    public function deleteAgence($id){
+    /*return array */
+    public static function getAllForSelect(){
         $sql = '
-                DELETE
-                FROM `agence`
-                where id= :id
-                ';
+            SELECT
+                `agence`.`id`,
+                `agence`.`nom`,
+                `agence`.`telephone`,
+                `agence`.`adresse`,
+                `agence`.`code_postal`,
+                `agence`.`ville`,
+                `agence`.`pays`
+            FROM `agence`
+            ';
         $stmt = Config::getInstance()->getPDO()->prepare($sql);
-        $stmt->bindValue(':id', $id, \PDO::PARAM_INT);
-
         if ($stmt->execute() === false) {
             print_r($stmt->errorInfo());
-            $isDeleted = false;
         }
         else {
-            $isDeleted = true;
+            $allDatas = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+            foreach ($allDatas as $row) {
+                $returnList[$row['id']] = $row['nom'].' '.$row['ville'].' '.$row['pays'];
+            }
         }
-        return $isDeleted ;
+
+        return $returnList;
+    }
+
+    public static function getAllForSelect2(){
+        $sql = '
+            SELECT
+                `agence`.`id`,
+                `agence`.`nom`,
+                `agence`.`telephone`,
+                `agence`.`adresse`,
+                `agence`.`code_postal`,
+                `agence`.`ville`,
+                `agence`.`pays`
+            FROM `agence`
+            ';
+        $stmt = Config::getInstance()->getPDO()->prepare($sql);
+        if ($stmt->execute() === false) {
+            print_r($stmt->errorInfo());
+        }
+        else {
+            $allDatas = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+            foreach ($allDatas as $row) {
+                $returnList[$row['id']]['nom'] = $row['nom'];
+                $returnList[$row['id']]['adresse'] = $row['adresse'];
+                $returnList[$row['id']]['code_postal'] = $row['code_postal'];
+                $returnList[$row['id']]['telephone'] = $row['telephone'];
+                $returnList[$row['id']]['ville'] = $row['ville'];
+                $returnList[$row['id']]['pays'] = $row['pays'];
+            }
+        }
+        return $returnList;
     }
 
     public function agenceCreate(){

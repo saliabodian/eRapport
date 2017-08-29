@@ -12,12 +12,7 @@
         <li><a href="form-validation.php">Liste des utilisateurs</a></li>
       </ul>
     </li>
-    <li class="submenu"> <a href="#"><i class="icon icon-th-list"></i> <span>Gestion des agences</span> <span class="label label-important">3</span></a>
-      <ul>
-        <li><a href="agenceCreate.php">Ajout d'une agence</a></li>
-        <li><a href="form-validation.php">Liste des agences</a></li>
-      </ul>
-    </li>
+    <li> <a href="agence.php"><i class="icon icon-th-list"></i> <span>Gestion des agences</span> <span class="label label-important"></span></a></li>
   </ul>
 </div>
 <!--sidebar-menu-->
