@@ -172,7 +172,7 @@ class Agence extends DbObject{
 
     /* return bool*/
     public function saveDB(){
-        var_dump($this->id);
+    //    var_dump($this->id);
     //    exit;
         if ($this->id > 0){
             $sql = '
@@ -335,8 +335,8 @@ class Agence extends DbObject{
             print_r($pdoStmt->errorInfo());
         }
         else {
-            $allUsers = $pdoStmt->fetchAll(\PDO::FETCH_ASSOC);
-            foreach ($allUsers as $row) {
+            $allAgences = $pdoStmt->fetchAll(\PDO::FETCH_ASSOC);
+            foreach ($allAgences as $row) {
 
                 $returnList[$row['id']]['nom'] = $row['nom'];
                 $returnList[$row['id']]['telephone'] = $row['telephone'];
