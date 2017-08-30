@@ -13,6 +13,7 @@
         <li> <a href="post.php">Gestion des rôles</a></li>
         <li> <a href="metier.php">Gestion des métiers</a></li>
         <li> <a href="typeTache.php">Gestion des types de tâches</a></li>
+        <li> <a href="tache.php">Gestion des tâches</a></li>
         <li> <a href="interimaire.php">Gestion des intérimaires</a></li>
         <li> <a href="">Gestion des utilisateurs</a></li>
         <li><a href="userCreate.php">Ajout d'un utilisateur</a></li>
