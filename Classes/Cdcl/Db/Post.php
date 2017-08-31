@@ -189,11 +189,12 @@ class Post extends DbObject{
 
         else {
             $sql = 'INSERT INTO `post`
-                    (`name`,
-                    `code`)
+                    (`code`,
+                    `name`
+                    )
                 VALUES
-                (:name,
-                 :code
+                (:code,
+                 :name
             )';
             $stmt = Config::getInstance()->getPDO()->prepare($sql);
             $stmt->bindValue(':name', $this->name);

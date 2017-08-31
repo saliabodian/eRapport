@@ -74,8 +74,8 @@ if(!empty($_SESSION)){
             // Je remplis l'objet Post avec les valeurs récupérées en POST
             $postObject = new Post(
                 $postId,
-                $postName,
-                $postCode
+                $postCode,
+                $postName
             );
         //    var_dump($postObject);
 

@@ -154,17 +154,6 @@ class Tache extends DbObject{
     public function saveDB()
     {
         if ($this->id > 0){
-        var_dump($this->id);
-
-
-        var_dump($this->code);
-
-        var_dump($this->nom);
-        var_dump($this->typeTache->getId());
-//
-
-
-
             $sql = '
                 UPDATE tache
                 SET
@@ -179,9 +168,7 @@ class Tache extends DbObject{
             $stmt->bindValue(':nom', $this->nom);
             $stmt->bindValue(':type_tache_id', $this->typeTache->getId(), \PDO::PARAM_INT);
 
-            //var_dump($sql);
 
-            // exit;
             if ($stmt->execute() === false) {
                 print_r($stmt->errorInfo());
                 return false ;
@@ -189,7 +176,6 @@ class Tache extends DbObject{
             else {
                 return true ;
             }
-            exit;
         }
         else {
             $sql = 'INSERT INTO `tache`
@@ -201,8 +187,7 @@ class Tache extends DbObject{
                  :nom,
                  :type_tache_id
             )';
-            // var_dump($sql);
-        //    exit;
+
             $stmt = Config::getInstance()->getPDO()->prepare($sql);
             $stmt->bindValue(':code', $this->code);
             $stmt->bindValue(':nom', $this->nom);
@@ -217,7 +202,6 @@ class Tache extends DbObject{
                 return true;
             }
         }
-
     }
 
     /**
@@ -242,6 +226,4 @@ class Tache extends DbObject{
             return true;
         }
     }
-
-
 }

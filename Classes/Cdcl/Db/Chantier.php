@@ -203,6 +203,34 @@ class Chantier extends DbObject{
         return $returnList;
     }
 
+    public static function getAllForSelectActif()
+    {
+        $sql = '
+            SELECT
+                `id`,
+                `nom`,
+                `code`,
+                `adresse`,
+                `adresse_fac`,
+                `date_exec`,
+                `actif`
+            FROM `chantier`
+            WHERE `actif`=1
+            ';
+        $stmt = Config::getInstance()->getPDO()->prepare($sql);
+        if ($stmt->execute() === false) {
+            print_r($stmt->errorInfo());
+        }
+        else {
+            $allDatas = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+            foreach ($allDatas as $row) {
+                $returnList[$row['id']] = $row['code'].' '.$row['nom'];
+            }
+        }
+
+        return $returnList;
+    }
+
     public static function getAllForSelect2(){
         $sql = '
             SELECT
