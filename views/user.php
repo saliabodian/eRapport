@@ -38,7 +38,7 @@
                     </div>
                     <div class="widget-content nopadding">
                         <?php include 'alert.php'; ?>
-                        <form action="" method="post" class="form-horizontal">
+                        <form action="" method="post" class="form-horizontal" id="demoform">
                             <input type="hidden" name="user_id" value="<?= $userObject->getId() ?>">
                             <div class="control-group">
                                 <label class="control-label" >Prénom <span>*</span>:</label>
@@ -77,9 +77,16 @@
                                 </div>
                             </div>
                             <div class="control-group">
-                                <label for="rols" class="control-label">Fonction :</label>
-                                <div class="controls">
+                                <label for="role" class="control-label">Fonction :</label>
+                                <div class="controls mySelect">
                                     <?php $selectPost->displayHTML(); ?>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <div class="controls">
+                                    <select multiple="multiple" size="10" name="duallistbox_demo1[]">
+
+                                    </select>
                                 </div>
                             </div>
                             <div class="form-actions">

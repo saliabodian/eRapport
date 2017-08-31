@@ -29,6 +29,10 @@
 <script src="js/matrix.tables.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/prettify/r298/run_prettify.min.js"></script>
+<script src="js/jquery.bootstrap-duallistbox.js"></script>
 
 <script type="text/javascript">
   // This function is called from the pop-up menus to transfer to
@@ -53,6 +57,12 @@
 function resetMenu() {
    document.gomenu.selector.selectedIndex = 2;
 }
+  var demo1 = $('select[name="duallistbox_demo1[]"]').bootstrapDualListbox();
+  $("#demoform").submit(function() {
+      a
+      //    alert($('[name="duallistbox_demo1[]"]').val());
+      return false;
+  });
 </script>
 </body>
 </html>
