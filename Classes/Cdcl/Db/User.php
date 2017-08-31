@@ -10,13 +10,10 @@ namespace Classes\Cdcl\Db;
 
 use Classes\Cdcl\Config\Config;
 
-Class User {
+Class User extends DbObject{
 
     /*----------------Properties------------------*/
-    /**
-     * @var int
-     */
-    public $id;
+
     /**
      * @var string
      */
@@ -38,46 +35,25 @@ Class User {
      */
     public $registration_number;
     /**
-     * @var timestamp
-     */
-    public $created;
-    /**
      * @var int
      */
     public $password;
     /**
-     * @var int
+     * @var Post
      */
     public $post_id;
 
     // Constructeur pour la classe User
-    function __construct($id=0, $username='', $firstname='', $lastname='', $email='', $registration_number=0, $created='', $password='', $post_id=0)
+    function __construct($id=0, $username='', $firstname='', $lastname='', $email='', $registration_number=0,  $password='', $post_id=null, $created=0)
     {
-        $this->id = $id;
         $this->username = $username;
         $this->firstname = $firstname;
         $this->lastname = $lastname;
         $this->email = $email;
         $this->registration_number = $registration_number;
-        $this->created = $created;
         $this->password = $password;
-        $this->post_id = $post_id;
-    }
-
-    /**
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * @param int $id
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
+        $this->post_id = isset($post_id)? $post_id: new Post();
+        parent::__construct($id, $created);
     }
 
     /**
@@ -89,27 +65,11 @@ Class User {
     }
 
     /**
-     * @param string $username
-     */
-    public function setUsername($username)
-    {
-        $this->username = $username;
-    }
-
-    /**
      * @return string
      */
     public function getFirstname()
     {
         return $this->firstname;
-    }
-
-    /**
-     * @param string $firstname
-     */
-    public function setFirstname($firstname)
-    {
-        $this->firstname = $firstname;
     }
 
     /**
@@ -121,27 +81,11 @@ Class User {
     }
 
     /**
-     * @param string $lastname
-     */
-    public function setLastname($lastname)
-    {
-        $this->lastname = $lastname;
-    }
-
-    /**
      * @return string
      */
     public function getEmail()
     {
         return $this->email;
-    }
-
-    /**
-     * @param string $email
-     */
-    public function setEmail($email)
-    {
-        $this->email = $email;
     }
 
     /**
@@ -153,30 +97,6 @@ Class User {
     }
 
     /**
-     * @param int $registration_number
-     */
-    public function setRegistrationNumber($registration_number)
-    {
-        $this->registration_number = $registration_number;
-    }
-
-    /**
-     * @return timestamp
-     */
-    public function getCreated()
-    {
-        return $this->created;
-    }
-
-    /**
-     * @param timestamp $created
-     */
-    public function setCreated($created)
-    {
-        $this->created = $created;
-    }
-
-    /**
      * @return int
      */
     public function getPassword()
@@ -185,15 +105,7 @@ Class User {
     }
 
     /**
-     * @param int $password
-     */
-    public function setPassword($password)
-    {
-        $this->password = $password;
-    }
-
-    /**
-     * @return int
+     * @return Post
      */
     public function getPostId()
     {
@@ -201,40 +113,31 @@ Class User {
     }
 
     /**
-     * @param int $post_id
+     * @param int $id
+     * @return DbObject
+     * @throws InvalidSqlQueryException
      */
-    public function setPostId($post_id)
+    public static function get($id)
     {
-        $this->post_id = $post_id;
-    }
+        $sql='
+                 SELECT `id`,
+                `username`,
+                `firstname`,
+                `lastname`,
+                `email`,
+                `registration_number`,
+                `created`,
+                `password`,
+                `post_id`
+                FROM user where id= :id';
+        $stmt = Config::getInstance()->getPDO()->prepare($sql);
+        $stmt->bindValue(':id', $id, \PDO::PARAM_INT);
 
-
-
-    // Fonction pour récupérer un user par son user
-    public static function get($id){
-        $sql = '
-                SELECT
-                        id,
-                        username,
-                        firstname,
-                        lastname,
-                        email,
-                        registration_number,
-                        created,
-                        password,
-                        post_id
-                    FROM
-                        user
-                where user.id= :id
-                ';
-        $pdoStmt = Config::getInstance()->getPDO()->prepare($sql);
-        $pdoStmt->bindValue(':id', $id, \PDO::PARAM_INT);
-
-        if ($pdoStmt->execute() === false) {
-            print_r($pdoStmt->errorInfo());
+        if ($stmt->execute() === false) {
+            print_r($stmt->errorInfo());
         }
         else {
-            $data = $pdoStmt->fetch() ;
+            $data = $stmt->fetch() ;
             $userObject = new User(
                 $data['id'],
                 $data['username'],
@@ -242,13 +145,171 @@ Class User {
                 $data['lastname'],
                 $data['email'],
                 $data['registration_number'],
-                $data['created'],
                 $data['password'],
-                $data['post_id']
+                new Post($data['post_id']),
+                $data['created']
             );
         }
         return $userObject ;
     }
+
+    /**
+     * @return DbObject[]
+     * @throws InvalidSqlQueryException
+     */
+    public static function getAll()
+    {
+       $sql = 'SELECT * FROM user';
+        $pdoStmt = Config::getInstance()->getPDO()->prepare($sql);
+        if ($pdoStmt->execute() === false) {
+            print_r($pdoStmt->errorInfo());
+        }
+        else {
+            $allUsers = $pdoStmt->fetchAll(\PDO::FETCH_ASSOC);
+            foreach ($allUsers as $row) {
+
+                $returnList[$row['id']]['username'] = $row['username'];
+                $returnList[$row['id']]['firstname'] = $row['firstname'];
+                $returnList[$row['id']]['lastname'] = $row['lastname'];
+                $returnList[$row['id']]['email'] = $row['email'];
+                $returnList[$row['id']]['registration_number'] = $row['registration_number'];
+                $returnList[$row['id']]['password'] = $row['password'];
+                $returnList[$row['id']]['post_id'] = $row['post_id'];
+                $returnList[$row['id']]['lastname'] = $row['lastname'];
+            }
+        }
+        return $returnList;
+    }
+
+    /**
+     * @return array
+     * @throws InvalidSqlQueryException
+     */
+    public static function getAllForSelect()
+    {
+        $sql = '
+            SELECT
+                `id`,
+                `username`,
+                `firstname`,
+                `lastname`,
+                `email`
+            FROM `user`
+            ';
+        $stmt = Config::getInstance()->getPDO()->prepare($sql);
+        if ($stmt->execute() === false) {
+            print_r($stmt->errorInfo());
+        }
+        else {
+            $allDatas = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+            foreach ($allDatas as $row) {
+                $returnList[$row['id']] = $row['firstname'].' '.$row['lastname'];
+            }
+        }
+        return $returnList;
+    }
+
+    /**
+     * @return bool
+     * @throws InvalidSqlQueryException
+     */
+    public function saveDB()
+    {
+        if ($this->id > 0){
+            $sql = '
+                UPDATE user
+                SET
+                `username` = :username,
+                `firstname` = :firstname,
+                `lastname`= :lastname,
+                `email`= :email,
+                `registration_number`= :registration_number,
+                `password`= :password,
+                `post_id`= :post_id
+                WHERE `id` = :id
+                ';
+            $stmt = Config::getInstance()->getPDO()->prepare($sql);
+            $stmt->bindValue(':id', $this->id, \PDO::PARAM_INT);
+            $stmt->bindValue(':username', $this->username);
+            $stmt->bindValue(':firstname', $this->firstname);
+            $stmt->bindValue(':lastname', $this->lastname);
+            $stmt->bindValue(':email', $this->email);
+            $stmt->bindValue(':registration_number', $this->registration_number);
+            $stmt->bindValue(':password', md5($this->password));
+            $stmt->bindValue(':post_id', $this->post_id->getId(), \PDO::PARAM_INT);
+
+            if ($stmt->execute() === false) {
+                print_r($stmt->errorInfo());
+                return false ;
+            }
+            else {
+                return true ;
+            }
+
+        }else{
+            $sql='
+                INSERT INTO `user`
+                    (`username`,
+                    `firstname`,
+                    `lastname`,
+                    `email`,
+                    `registration_number`,
+                    `password`,
+                    `post_id`)
+                VALUES(
+                  :username,
+                  :firstname,
+                  :lastname,
+                  :email,
+                  :registration_number,
+                  :password,
+                  :post_id
+              )';
+
+
+            $stmt = Config::getInstance()->getPDO()->prepare($sql);
+            $stmt->bindValue(':username', $this->username);
+            $stmt->bindValue(':firstname', $this->firstname);
+            $stmt->bindValue(':lastname', $this->lastname);
+            $stmt->bindValue(':email', $this->email);
+            $stmt->bindValue(':registration_number', $this->registration_number);
+            $stmt->bindValue(':password', md5($this->password));
+            $stmt->bindValue(':post_id', $this->post_id->getId(), \PDO::PARAM_INT);
+
+
+
+            // exit;
+            if ($stmt->execute() === false) {
+                print_r($stmt->errorInfo());
+                return false;
+            }
+            else {
+                return true;
+            }
+        }
+    }
+
+    /**
+     * @param int $id
+     * @return bool
+     * @throws InvalidSqlQueryException
+     */
+    public static function deleteById($id)
+    {
+        $sql = '
+        DELETE FROM user WHERE id= :id';
+
+        $stmt = Config::getInstance()->getPDO()->prepare($sql);
+        $stmt->bindValue(':id', $id, \PDO::PARAM_INT);
+
+        if ($stmt->execute() === false) {
+            print_r($stmt->errorInfo());
+        }
+        else {
+            return true;
+        }
+    }
+
 
     // Fonction pour récupérer un user par son username
     public static function getByUsername($username){
@@ -291,31 +352,7 @@ Class User {
         return $data ;
     }
 
-    // Fonction pour récupérer tous les user
-    public static function getAllUser(){
-        $sql=' SELECT * FROM user
-        ';
-        $pdoStmt = Config::getInstance()->getPDO()->prepare($sql);
-        if ($pdoStmt->execute() === false) {
-            print_r($pdoStmt->errorInfo());
-        }
-        else {
-            $allUsers = $pdoStmt->fetchAll(\PDO::FETCH_ASSOC);
-            foreach ($allUsers as $row) {
-
-                $returnList[$row['id']]['username'] = $row['username'];
-                $returnList[$row['id']]['firstname'] = $row['firstname'];
-                $returnList[$row['id']]['lastname'] = $row['lastname'];
-                $returnList[$row['id']]['email'] = $row['email'];
-                $returnList[$row['id']]['password'] = $row['password'];
-                $returnList[$row['id']]['registration_number'] = $row['registration_number'];
-                $returnList[$row['id']]['post_id'] = $row['post_id'];
-            }
-        }
-        return $returnList;
-    }
-
-    // Fonction
+    // Fonction de connexion et de gestion des sessions
     public function loginPost(){
         // Get the config object
         $conf = Config::getInstance();
@@ -387,6 +424,7 @@ Class User {
                 $_SESSION['lastname']=$userSessionValues['lastname'];
                 $_SESSION['firstname']=$userSessionValues['firstname'];
                 $_SESSION['email']=$userSessionValues['email'];
+                $_SESSION['post_id']=$userSessionValues['post_id'];
             //    var_dump($_SESSION);
                 header('Location:home.php');
             }
@@ -394,93 +432,8 @@ Class User {
         return $conf;
     }
 
-    public function userCreate(){
-        if(!empty($_POST)) {
-            $firstname = isset($_POST['firstname']) ? $_POST['firstname'] : '';
-            $lastname = isset($_POST['lastname']) ? $_POST['lastname'] : '';
-            $login = isset($_POST['login']) ? $_POST['login'] : '';
-            $password = isset($_POST['password']) ? $_POST['password'] : '';
-            $password2 = isset($_POST['password2']) ? $_POST['password2'] : '';
-            $role = isset($_POST['role']) ? $_POST['role'] : '';
-            $formOk = true;
 
-            if (empty($_POST['firstname'])) {
-                $conf->addError('Veuillez renseigner le prénom');
-                $formOk = false;
-            }
 
-            if (empty($_POST['lastname'])) {
-                $conf->addError('Veuillez renseigner le nom');
-                $formOk = false;
-            }
 
-            if (empty($_POST['login'])) {
-                $conf->addError('Veuillez renseigner le login');
-                $formOk = false;
-            }else{
-                $sql='SELECT * FROM user WHERE username=:username';
-                $stmt = Config::getInstance()->getPDO()->prepare($sql);
-                $stmt->bindValue(':username', $_POST['login']);
-                if ($stmt->execute() === false) {
-                    print_r($stmt->errorInfo());
-                    return false;
-                } else {
-                    $usernameExist = $stmt->rowCount();
-                    if($usernameExist>0){
-                        $conf->addError('Ce nom d\'utilisateur existe déjà');
-                        $formOk = false;
-                    }
-                }
-            }
-
-            if (empty($_POST['password'])) {
-                $conf->addError('Veuillez renseigner le mot de passe');
-                $formOk = false;
-            }
-
-            if ($_POST['password2'] != $_POST['password']) {
-                $conf->addError('Veuillez confirmer votre mot de passe');
-                $formOk = false;
-            }
-
-            if ($formOk = true) {
-                $sql = 'INSERT INTO user
-                        (`firstname`,
-                        `lastname`,
-                        `username`,
-                        `created`,
-                        `password`,
-                        `post_id`)
-                        VALUES
-                        (:firstname,
-                         :lastname,
-                         :username,
-                         :created,
-                         :password,
-                         :post_id
-                    )';
-                $stmt = Config::getInstance()->getPDO()->prepare($sql);
-                $stmt->bindValue(':firstname', $this->firstname);
-                $stmt->bindValue(':lastname', $this->lastname);
-                $stmt->bindValue(':username', $this->username);
-                $stmt->bindValue(':username', $this->age, \PDO::PARAM_INT);
-                $stmt->bindValue(':friendliness', $this->friendliness->getId(), \PDO::PARAM_INT);
-                $stmt->bindValue(':city', $this->city->getId(), \PDO::PARAM_INT);
-                $stmt->bindValue(':training', $this->training->getId(), \PDO::PARAM_INT);
-
-                if ($stmt->execute() === false) {
-                    print_r($stmt->errorInfo());
-                    return false;
-                } else {
-                    return true;
-                    header('Location:views\userList.php');
-                }
-            }
-        }
-    }
-
-    public function logout(){
-
-    }
 
 }

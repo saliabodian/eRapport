@@ -8,6 +8,7 @@
     <li><a href="tables.php"><i class="icon icon-th"></i> <span>Tables</span></a></li>
     <li class="submenu"> <a href="#"><i class="icon-cog"></i> <span>Administration</span> <span class="label label-important"></span></a>
       <ul>
+        <li> <a href="user.php">Gestion des utilisateurs</a></li>
         <li> <a href="agence.php"> Gestion des agences</a></li>
         <li> <a href="chantier.php">Gestion des chantiers</a></li>
         <li> <a href="post.php">Gestion des rôles</a></li>
