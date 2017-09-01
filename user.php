@@ -34,9 +34,36 @@ if(!empty($_SESSION)){
 
     $postList = Post::getAllForSelect();
 
+    // Tous les chantiers actifs suceptibles d'être choisies
     $chantierActifs = Chantier::getAllForSelectActif();
 
+    $chantierSelected = array();
 
+    $isSelected = array();
+    $isNotSelected = array();
+
+    // Dans le cas d'une modification les chantiers qui n'ont pas encore été choisi
+
+    foreach ($chantierActifs as $id => $isActve){
+        if ( in_array( $id, $chantierSelected ) ) {
+                $isSelected[$id]= $isActve;
+            }
+        }
+
+    // Dans le cas d'une modification les chantiers les chantiers déjà choisis
+
+    foreach ($chantierActifs as $id => $isActve){
+        if ( !in_array( $id, $chantierSelected ) ) {
+            $isNotSelected[$id]=$isActve;
+        }
+    }
+
+//    var_dump($chantierActifs);
+//    var_dump($isSelected);
+//    var_dump($isNotSelected);
+
+
+//    exit;
 
     if ($userId > 0)
     {
@@ -56,9 +83,7 @@ if(!empty($_SESSION)){
 
 
     if(!empty($_POST)) {
-    //    var_dump($_POST);
-    //    echo "<br>";
-        //    exit;
+   // exit;
         $userId = isset($_POST['user_id']) ? $_POST['user_id'] : '';
         $username = isset($_POST['username']) ? $_POST['username'] : '';
         $firstname = isset($_POST['firstname']) ? $_POST['firstname'] : '';

@@ -84,8 +84,14 @@
                             </div>
                             <div class="control-group">
                                 <div class="controls">
-                                    <select multiple="multiple" size="10" name="duallistbox_demo1[]">
 
+                                    <select multiple="multiple" size="10" name="duallistbox_demo1[]">
+                                        <?php foreach($isNotSelected as $id => $selectable) : ?>
+                                                <option value="<?=intval($id) ?>" ><?= $selectable ?></option>
+                                         <?php endforeach; ?>
+                                        <?php foreach($isSelected as $id => $selected) : ?>
+                                            <option value="<?=intval($id) ?>" selected="selected"><?= $selected ?></option>
+                                        <?php endforeach; ?>
                                     </select>
                                 </div>
                             </div>
