@@ -76,6 +76,12 @@
                                     <input type="text" class="span11" placeholder="Pays" name="pays"  value="<?= $agenceObject->getPays()?>"/>
                                 </div>
                             </div>
+                            <div class="control-group">
+                                <label for="is_actif" class="control-label">Est Actif ?</label>
+                                <div class="controls">
+                                    <input type="checkbox" name="actif" <?php if($agenceObject->isActif()==1) : ?> checked <?php endif; ?> value="<?= $agenceObject->isActif()?> "/>
+                                </div>
+                            </div>
                             <div class="form-actions">
                                 <div class=" span2 btn-block"></div>
                                 <div class="span4">

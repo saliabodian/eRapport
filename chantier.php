@@ -48,7 +48,9 @@ if(!empty($_SESSION)){
 
     if(!empty($_POST)) {
         //var_dump($_POST);
-
+       // exit;
+       // exit;
+       // exit;
         $chantierId = isset($_POST['chantier_id']) ? $_POST['chantier_id'] : '';
         $chantierName = isset($_POST['nom']) ? $_POST['nom'] : '';
         $chantierCode = isset($_POST['code']) ? $_POST['code'] : '';

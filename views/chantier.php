@@ -73,7 +73,7 @@
                             <div class="control-group">
                                 <label for="is_actif" class="control-label">Est Actif ?</label>
                                 <div class="controls">
-                                    <input type="checkbox" name="actif"  value="<?= $chantierObject->isActif()?> "/>
+                                    <input type="checkbox" name="actif" <?php if($chantierObject->isActif()==1) : ?> checked <?php endif; ?> value="<?= $chantierObject->isActif()?> "/>
                                 </div>
                             </div>
                             <div class="form-actions">

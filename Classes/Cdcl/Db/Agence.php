@@ -42,8 +42,12 @@ class Agence extends DbObject{
      * @var int
      */
     public $pays;
+    /**
+     * @var bool
+     */
+    public $actif;
 
-    function __construct($id=0, $nom='', $telephone=0, $adresse='', $code_postal='', $ville='', $pays='', $created=0)
+    function __construct($id=0, $nom='', $telephone=0, $adresse='', $code_postal='', $ville='', $pays='', $actif=0, $created=0)
     {
         $this->nom = $nom;
         $this->telephone = $telephone;
@@ -52,6 +56,7 @@ class Agence extends DbObject{
         $this->ville = $ville;
         $this->pays = $pays;
         $this->created = $created;
+        $this->actif = $actif;
         //parent constructeur
         parent::__construct($id, $created);
     }
@@ -170,6 +175,24 @@ class Agence extends DbObject{
         $this->pays = $pays;
     }
 
+    /**
+     * @return boolean
+     */
+    public function isActif()
+    {
+        return $this->actif;
+    }
+
+    /**
+     * @param boolean $actif
+     */
+    public function setActif($actif)
+    {
+        $this->actif = $actif;
+    }
+
+
+
     /* return bool*/
     public function saveDB(){
     //    var_dump($this->id);
@@ -183,7 +206,8 @@ class Agence extends DbObject{
                 `adresse` = :adresse,
                 `code_postal` = :code_postal,
                 `ville` = :ville,
-                `pays` = :pays
+                `pays` = :pays,
+                `actif` = :actif
                 WHERE `id` = :id
                 ';
             $stmt = Config::getInstance()->getPDO()->prepare($sql);
@@ -194,6 +218,7 @@ class Agence extends DbObject{
             $stmt->bindValue(':code_postal', $this->code_postal);
             $stmt->bindValue(':ville', $this->ville);
             $stmt->bindValue(':pays', $this->pays);
+            $stmt->bindValue(':actif', $this->actif);
 
             if ($stmt->execute() === false) {
                 print_r($stmt->errorInfo());
@@ -211,14 +236,16 @@ class Agence extends DbObject{
                     `adresse`,
                     `code_postal`,
                     `ville`,
-                    `pays`)
+                    `pays`,
+                    `actif`)
                 VALUES
                 (:nom,
                  :telephone,
                  :adresse,
                  :code_postal,
                  :ville,
-                 :pays
+                 :pays,
+                 :actif
             )';
             $stmt = Config::getInstance()->getPDO()->prepare($sql);
             $stmt->bindValue(':nom', $this->nom);
@@ -227,6 +254,7 @@ class Agence extends DbObject{
             $stmt->bindValue(':code_postal', $this->code_postal);
             $stmt->bindValue(':ville', $this->ville);
             $stmt->bindValue(':pays', $this->pays);
+            $stmt->bindValue(':actif', $this->actif);
 
             if ($stmt->execute() === false) {
                 print_r($stmt->errorInfo());
@@ -246,7 +274,8 @@ class Agence extends DbObject{
                     `adresse`,
                     `code_postal`,
                     `ville`,
-                    `pays`
+                    `pays`,
+                    `actif`
                 FROM `agence`
                 where id= :id
                 ';
@@ -265,7 +294,8 @@ class Agence extends DbObject{
                 $data['adresse'],
                 $data['code_postal'],
                 $data['ville'],
-                $data['pays']
+                $data['pays'],
+                $data['actif']
             );
         }
         return $userObject ;
@@ -300,7 +330,8 @@ class Agence extends DbObject{
                     `adresse`,
                     `code_postal`,
                     `ville`,
-                    `pays`
+                    `pays`,
+                    `actif`
                 FROM `agence`
                 where id= :id
                 ';
@@ -319,7 +350,8 @@ class Agence extends DbObject{
                 $data['adresse'],
                 $data['code_postal'],
                 $data['ville'],
-                $data['pays']
+                $data['pays'],
+                $data['actif']
             );
         }
         return $agenceObject ;
@@ -344,6 +376,7 @@ class Agence extends DbObject{
                 $returnList[$row['id']]['code_postal'] = $row['code_postal'];
                 $returnList[$row['id']]['ville'] = $row['ville'];
                 $returnList[$row['id']]['pays'] = $row['pays'];
+                $returnList[$row['id']]['actif'] = $row['actif'];
             }
         }
         return $returnList;
@@ -358,7 +391,8 @@ class Agence extends DbObject{
                 `agence`.`adresse`,
                 `agence`.`code_postal`,
                 `agence`.`ville`,
-                `agence`.`pays`
+                `agence`.`pays`,
+                `agence`.`actif`
             FROM `agence`
             ';
         $stmt = Config::getInstance()->getPDO()->prepare($sql);
@@ -384,7 +418,8 @@ class Agence extends DbObject{
                 `agence`.`adresse`,
                 `agence`.`code_postal`,
                 `agence`.`ville`,
-                `agence`.`pays`
+                `agence`.`pays`,
+                `agence`.`actif`
             FROM `agence`
             ';
         $stmt = Config::getInstance()->getPDO()->prepare($sql);
@@ -400,6 +435,7 @@ class Agence extends DbObject{
                 $returnList[$row['id']]['telephone'] = $row['telephone'];
                 $returnList[$row['id']]['ville'] = $row['ville'];
                 $returnList[$row['id']]['pays'] = $row['pays'];
+                $returnList[$row['id']]['actif'] = $row['actif'];
             }
         }
         return $returnList;
@@ -412,14 +448,16 @@ class Agence extends DbObject{
                     `adresse`,
                     `code_postal`,
                     `ville`,
-                    `pays`)
+                    `pays`,
+                    `actif`)
                 VALUES
                 (:nom,
                  :telephone,
                  :adresse,
                  :code_postal,
                  :ville,
-                 :pays
+                 :pays,
+                 :actif
             )';
         $stmt = Config::getInstance()->getPDO()->prepare($sql);
         $stmt->bindValue(':nom', $this->nom);
@@ -428,6 +466,7 @@ class Agence extends DbObject{
         $stmt->bindValue(':code_postal', $this->code_postal);
         $stmt->bindValue(':ville', $this->ville);
         $stmt->bindValue(':pays', $this->pays);
+        $stmt->bindValue(':actif', $this->actif);
 
         if ($stmt->execute() === false) {
             print_r($stmt->errorInfo());

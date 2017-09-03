@@ -46,6 +46,7 @@ if(!empty($_SESSION)) {
         $code_postal = isset($_POST['code_postal']) ? $_POST['code_postal'] : '';
         $ville = isset($_POST['ville']) ? $_POST['ville'] : '';
         $pays = isset($_POST['pays']) ? $_POST['pays'] : '';
+        $actif = isset($_POST['actif']) ? 1 : 0;
         $formOk = true;
 
         if (empty($_POST['agence'])) {
@@ -74,7 +75,8 @@ if(!empty($_SESSION)) {
                 $adresse,
                 $code_postal,
                 $ville,
-                $pays
+                $pays,
+                $actif
             );
             //var_dump($agence);
 
