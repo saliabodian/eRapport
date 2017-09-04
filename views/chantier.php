@@ -67,7 +67,7 @@
                             <div class="control-group">
                                 <label for="date_exex" class="control-label">Date d'exécution :</label>
                                 <div class="controls">
-                                    <input type="text"  placeholder="Date d'exécution" name="date_exec"  value="<?= $chantierObject->getDate_exec()?>"/>
+                                    <input type="text"  placeholder="Date d'exécution" name="date_exec" id="datepicker" value="<?= $chantierObject->getDate_exec()?>"/>
                                 </div>
                             </div>
                             <div class="control-group">

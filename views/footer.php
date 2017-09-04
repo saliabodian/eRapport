@@ -33,6 +33,7 @@
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/prettify/r298/run_prettify.min.js"></script>
 <script src="js/jquery.bootstrap-duallistbox.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
 <script type="text/javascript">
   // This function is called from the pop-up menus to transfer to
@@ -63,6 +64,9 @@ function resetMenu() {
       //    alert($('[name="duallistbox_demo1[]"]').val());
       return false;
   });
+  $( function() {
+      $( "#datepicker" ).datepicker();
+  } );
 </script>
 </body>
 </html>

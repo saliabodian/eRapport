@@ -47,18 +47,18 @@ if(!empty($_SESSION)){
 
 
     if(!empty($_POST)) {
-        //var_dump($_POST);
-       // exit;
-       // exit;
-       // exit;
+
         $chantierId = isset($_POST['chantier_id']) ? $_POST['chantier_id'] : '';
         $chantierName = isset($_POST['nom']) ? $_POST['nom'] : '';
         $chantierCode = isset($_POST['code']) ? $_POST['code'] : '';
         $chantierAdresse = isset($_POST['adresse']) ? $_POST['adresse'] : '';
         $chantierAdresseFac = isset($_POST['adresse_fac']) ? $_POST['adresse_fac'] : '';
-        $chantierDateExec = isset($_POST['date_exec']) ? $_POST['date_exec'] : '';
+        $chantierDateExec = isset($_POST['date_exec']) ? date('Y-m-d', strtotime($_POST['date_exec'])) : '';
         $chantierActif = isset($_POST['actif']) ? 1 : 0;
         $formOk = true;
+
+        //var_dump($chantierDateExec);
+        //exit;
 
         // var_dump($chantierActif);
         // exit;
