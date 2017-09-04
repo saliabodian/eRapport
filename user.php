@@ -39,6 +39,11 @@ if(!empty($_SESSION)){
 
     $chantierSelected = array();
 
+    // $chantierSelected = $userObject->listChantierByUser($userId);
+
+   // var_dump($chantierSelected);
+   // exit;
+    //Les chantiers déjà sélectionnés pour le User en question
     $isSelected = array();
     $isNotSelected = array();
 
@@ -95,7 +100,14 @@ if(!empty($_SESSION)){
         $post_id = isset($_POST['post_id']) ? $_POST['post_id'] : '';
         $formOk = true;
 
-        // exit;
+
+
+        /*foreach ($_POST['duallistbox_demo1'] as $chantier_id) {
+            var_dump($chantier_id);
+        }
+        */
+
+        //exit;
 
         if (empty($_POST['username'])) {
             $conf->addError('Veuillez donner un login.');
@@ -143,6 +155,16 @@ if(!empty($_SESSION)){
             $formOk = false;
         }
 
+        // var_dump($_POST['duallistbox_demo1']);
+        for ($i=0; $i<= sizeof($_POST['duallistbox_demo1']); $i++){
+            $sql='INSERT INTO chantier_has_user (chantier_id, user_id)VALUES (:chantier_id, :user_id)';
+            $stmt = $conf::getInstance()->getPDO()->prepare($sql);
+            $stmt->bindValue(':chantier_id', $_POST['duallistbox_demo1'][$i], \PDO::PARAM_INT);
+            $stmt->bindValue(':user_id', $userId, \PDO::PARAM_INT);
+            if ($stmt->execute() === false) {
+                print_r($stmt->errorInfo());
+            }
+        }
 
 
         if ($formOk) {
@@ -158,7 +180,13 @@ if(!empty($_SESSION)){
                 new Post($post_id)
             );
 
+
+
+
+
+            //$userObject->userHasChantierSaveDb($userId, $_POST['duallistbox_demo1']);
             $userObject->saveDB();
+
             header('Location: user.php?success='.urlencode('Ajout/Modification effectuée').'&user_id='.$userObject->getId());
             exit;
 

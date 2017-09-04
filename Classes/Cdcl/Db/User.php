@@ -432,7 +432,39 @@ Class User extends DbObject{
         return $conf;
     }
 
+    function userHasChantierSaveDb($user_id, $chantiers){
+        foreach($chantiers as $chantier_id){
+            $sql= 'INSERT INTO `chantier_has_user`
+                (`chantier_id`,
+                `user_id`)
+                VALUES(
+                :chantier_id,
+                :user_id
+                )';
+            $stmt = Config::getInstance()->getPDO()->prepare($sql);
+            $stmt->bindValue(':user_id', $user_id, \PDO::PARAM_INT);
+            $stmt->bindValue(':chantier_id', $chantier_id, \PDO::PARAM_INT);
+            if ($stmt->execute() === false) {
+                print_r($stmt->errorInfo());
+            }
+            else {
+                return true;
+            }
+        }
+    }
 
+    function listChantierByUser($user_id){
+        $sql='SELECT * FROM chantier_has_user WHERE user_id= :user_id';
+        $stmt = Config::getInstance()->getPDO()->prepare($sql);
+        $stmt->bindValue(':user_id', $user_id, \PDO::PARAM_INT);
+        if ($stmt->execute() === false) {
+            print_r($stmt->errorInfo());
+        }
+        else {
+            $listChantiers = $stmt->fetch() ;
+            return $listChantiers;
+        }
+    }
 
 
 
