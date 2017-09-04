@@ -24,7 +24,7 @@ if(!empty($_SESSION)){
 
     $userId = isset($_GET['id'])? $_GET['id'] : '';
 
-    // var_dump($userId);
+    //var_dump($userId);
 
     // exit;
 
@@ -35,40 +35,49 @@ if(!empty($_SESSION)){
     $postList = Post::getAllForSelect();
 
     // Tous les chantiers actifs suceptibles d'être choisies
+
+
     $chantierActifs = Chantier::getAllForSelectActif();
+    //var_dump($chantierActifs);
 
-    $chantierSelected = array();
 
-    // $chantierSelected = $userObject->listChantierByUser($userId);
+   // $chantierSelected = array();
 
-   // var_dump($chantierSelected);
-   // exit;
+    // Les chantiers déjà sélectionnés pour l'utilisateur connecté
+
+    //exit;
     //Les chantiers déjà sélectionnés pour le User en question
     $isSelected = array();
     $isNotSelected = array();
+    $selected = $userObject->listChantierByUser($userId);
 
-    // Dans le cas d'une modification les chantiers qui n'ont pas encore été choisi
+    // transformation du tableau à deux dimensions $selected en tableau à une dimension $chantierSelectedLight
+    if(!empty($selected)){
+        foreach($selected as $chantierSelected){
+            $chantierSelectedLight[]=$chantierSelected['chantier_id'];
+        }
 
-    foreach ($chantierActifs as $id => $isActve){
-        if ( in_array( $id, $chantierSelected ) ) {
+        //var_dump($chantierSelectedLight);
+
+        // Dans le cas d'une modification les chantiers qui n'ont pas encore été choisi
+
+        foreach ($chantierActifs as $id => $isActve){
+            if ( in_array( $id, $chantierSelectedLight ) ) {
                 $isSelected[$id]= $isActve;
             }
         }
 
-    // Dans le cas d'une modification les chantiers les chantiers déjà choisis
+        // Dans le cas d'une modification les chantiers les chantiers déjà choisis
 
-    foreach ($chantierActifs as $id => $isActve){
-        if ( !in_array( $id, $chantierSelected ) ) {
-            $isNotSelected[$id]=$isActve;
+        foreach ($chantierActifs as $id => $isActve){
+            if ( !in_array( $id, $chantierSelectedLight ) ) {
+                $isNotSelected[$id]=$isActve;
+            }
         }
+    }else{
+        $isNotSelected = $chantierActifs;
     }
 
-//    var_dump($chantierActifs);
-//    var_dump($isSelected);
-//    var_dump($isNotSelected);
-
-
-//    exit;
 
     if ($userId > 0)
     {
@@ -155,17 +164,6 @@ if(!empty($_SESSION)){
             $formOk = false;
         }
 
-        // var_dump($_POST['duallistbox_demo1']);
-        for ($i=0; $i<= sizeof($_POST['duallistbox_demo1']); $i++){
-            $sql='INSERT INTO chantier_has_user (chantier_id, user_id)VALUES (:chantier_id, :user_id)';
-            $stmt = $conf::getInstance()->getPDO()->prepare($sql);
-            $stmt->bindValue(':chantier_id', $_POST['duallistbox_demo1'][$i], \PDO::PARAM_INT);
-            $stmt->bindValue(':user_id', $userId, \PDO::PARAM_INT);
-            if ($stmt->execute() === false) {
-                print_r($stmt->errorInfo());
-            }
-        }
-
 
         if ($formOk) {
             // Je remplis l'objet User avec les valeurs récupérées en POST
@@ -181,8 +179,7 @@ if(!empty($_SESSION)){
             );
 
 
-
-
+            $userObject->userHasChantierSaveDb($userId,$_POST['duallistbox_demo1']);
 
             //$userObject->userHasChantierSaveDb($userId, $_POST['duallistbox_demo1']);
             $userObject->saveDB();

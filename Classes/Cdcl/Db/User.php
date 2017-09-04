@@ -433,6 +433,13 @@ Class User extends DbObject{
     }
 
     function userHasChantierSaveDb($user_id, $chantiers){
+        $sql='DELETE FROM chantier_has_user WHERE user_id= :user_id';
+        $stmt = Config::getInstance()->getPDO()->prepare($sql);
+        $stmt->bindValue(':user_id', $user_id, \PDO::PARAM_INT);
+        if ($stmt->execute() === false) {
+            print_r($stmt->errorInfo());
+        }
+
         foreach($chantiers as $chantier_id){
             $sql= 'INSERT INTO `chantier_has_user`
                 (`chantier_id`,
@@ -447,21 +454,18 @@ Class User extends DbObject{
             if ($stmt->execute() === false) {
                 print_r($stmt->errorInfo());
             }
-            else {
-                return true;
-            }
         }
     }
 
     function listChantierByUser($user_id){
-        $sql='SELECT * FROM chantier_has_user WHERE user_id= :user_id';
+        $sql='SELECT chantier_id FROM chantier_has_user WHERE user_id= :user_id';
         $stmt = Config::getInstance()->getPDO()->prepare($sql);
         $stmt->bindValue(':user_id', $user_id, \PDO::PARAM_INT);
         if ($stmt->execute() === false) {
             print_r($stmt->errorInfo());
         }
         else {
-            $listChantiers = $stmt->fetch() ;
+            $listChantiers = $stmt->fetchAll(\PDO::FETCH_ASSOC); ;
             return $listChantiers;
         }
     }
