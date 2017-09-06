@@ -9,7 +9,7 @@
             <div class="span12">
                 <div class="widget-box">
                     <div class="widget-title"> <span class="icon"> <i class="icon-align-justify"></i> </span>
-                        <h5>Sélection d'une tâche</h5>
+                        <h5>Sélection d'un utilisateur</h5>
                     </div>
                     <div class="widget-content nopadding">
                         <form action="" method="get" class="form-horizontal">

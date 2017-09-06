@@ -65,7 +65,7 @@ function resetMenu() {
       return false;
   });
   $( function() {
-      $( "#datepicker" ).datepicker();
+      $( ".datepicker" ).datepicker();
   } );
 </script>
 </body>

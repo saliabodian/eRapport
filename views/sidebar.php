@@ -16,9 +16,6 @@
         <li> <a href="typeTache.php">Gestion des types de tâches</a></li>
         <li> <a href="tache.php">Gestion des tâches</a></li>
         <li> <a href="interimaire.php">Gestion des intérimaires</a></li>
-        <li> <a href="">Gestion des utilisateurs</a></li>
-        <li><a href="userCreate.php">Ajout d'un utilisateur</a></li>
-        <li><a href="form-validation.php">Liste des utilisateurs</a></li>
       </ul>
     </li>
   </ul>

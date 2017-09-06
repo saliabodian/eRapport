@@ -103,7 +103,7 @@ if(!empty($_SESSION)){
         $firstname = isset($_POST['firstname']) ? $_POST['firstname'] : '';
         $lastname = isset($_POST['lastname']) ? $_POST['lastname'] : '';
         $email = isset($_POST['email']) ? $_POST['email'] : '';
-        $registration_number = isset($_POST['$registration_number']) ? $_POST['$registration_number'] : '';
+        $registration_number = isset($_POST['registration_number']) ? $_POST['registration_number'] : '';
         $password1 = isset($_POST['password1']) ? $_POST['password1'] : '';
         $password2 = isset($_POST['password2']) ? $_POST['password2'] : '';
         $post_id = isset($_POST['post_id']) ? $_POST['post_id'] : '';
