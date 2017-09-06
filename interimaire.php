@@ -40,8 +40,7 @@ if(!empty($_SESSION)){
 
     $chantierList = Chantier::getAllForSelect();
 
-    //var_dump($agenceList);
-    //exit;
+
 
 
     if ($interimaireId > 0)
@@ -65,6 +64,8 @@ if(!empty($_SESSION)){
         // exit;
         $interimaireId = isset($_POST['interimaire_id']) ? $_POST['interimaire_id'] : '';
         $matricule = isset($_POST['matricule']) ? $_POST['matricule'] : '';
+        //var_dump($matricule);
+        //exit;
         $matricule_cns = isset($_POST['matricule_cns']) ? $_POST['matricule_cns'] : '';
         $firstname = isset($_POST['firstname']) ? $_POST['firstname'] : '';
         $lastname = isset($_POST['lastname']) ? $_POST['lastname'] : '';
@@ -72,7 +73,9 @@ if(!empty($_SESSION)){
         $taux = isset($_POST['taux']) ? $_POST['taux'] : '';
         $evaluateur = isset($_POST['evaluateur']) ? $_POST['evaluateur'] : '';
         $evaluation = isset($_POST['evaluation']) ? $_POST['evaluation'] : '';
-        $chantier_id = isset($_POST['chantier_id']) ? $_POST['chantier_id'] : '';
+        $chantier_id = isset($_POST['chantier_id']) ? $_POST['chantier_id'] : 0;
+        //var_dump($chantier_id);
+        //exit;
         $charte_securite = isset($_POST['charte_securite']) ?  1 : 0;
         $date_evaluation = isset($_POST['date_evaluation']) ? date('Y-m-d',strtotime($_POST['date_evaluation'])) : '';
         $date_vm = isset($_POST['date_vm']) ? date('Y-m-d',strtotime($_POST['date_vm'])): '';
@@ -84,8 +87,8 @@ if(!empty($_SESSION)){
         $rem_med = isset($_POST['rem_med']) ? $_POST['rem_med'] : '';
         $remarques = isset($_POST['remarques']) ? $_POST['remarques'] : '';
         $old_metier_denomination = isset($_POST['old_metier_denomination']) ? $_POST['old_metier_denomination'] : '';
-        $metier_id = isset($_POST['metier_id']) ? $_POST['metier_id'] : '';
-        $agence_id = isset($_POST['agence_id']) ? $_POST['agence_id'] : '';
+        $metier_id = isset($_POST['metier_id']) ? $_POST['metier_id'] : 0;
+        $agence_id = isset($_POST['agence_id']) ? $_POST['agence_id'] : 0;
 
         $formOk = true;
 
@@ -113,7 +116,7 @@ if(!empty($_SESSION)){
 
 
         if ($formOk) {
-            // Je remplis l'objet User avec les valeurs récupérées en POST
+            // Je remplis l'objet Interimaire avec les valeurs récupérées en POST
             $interimaireObject = new Interimaire
             ($interimaireId,
             $matricule,
@@ -122,6 +125,7 @@ if(!empty($_SESSION)){
             $lastname,
             $actif,
             $taux,
+            $taux_horaire,
             $evaluation,
             $evaluateur,
             new Chantier($chantier_id),
@@ -139,35 +143,11 @@ if(!empty($_SESSION)){
             new Metier($metier_id),
             new Agence($agence_id)
             );
-            /*$data['id'],
-                $data['matricule'],
-                $data['matricule_cns'],
-                $data['firstname'],
-                $data['lastname'],
-                $data['actif'],
-                $data['taux'],
-                $data['taux_horaire'],
-                $data['evaluation'],
-                $data['evaluateur'],
-                new Chantier($data['evaluation_chantier_id']),
-                $data['charte_securite'],
-                $data['date_evaluation'],
-                $data['date_vm'],
-                $data['date_prem_cont'],
-                $data['date_cont_rec'],
-                $data['date_deb'],
-                $data['date_fin'],
-                $data['worker_status'],
-                $data['rem_med'],
-                $data['remarques'],
-                $data['old_metier_denomination'],
-                new Metier($data['metier_id']),
-                new Agence($data['agence_id']),
-                $data['created']
-                */
+
+
             $interimaireObject->saveDB();
 
-            header('Location: user.php?success='.urlencode('Ajout/Modification effectuée').'&user_id='.$userObject->getId());
+            header('Location: interimaire.php?success='.urlencode('Ajout/Modification effectuée').'&interimaire_id='.$interimaireObject->getId());
             exit;
 
         }else{
@@ -194,12 +174,15 @@ if(!empty($_SESSION)){
     ));
 
     $selectAgence = new SelectHelper($agenceList, $interimaireObject->getAgenceId()->getId(), array(
-        'name' => 'post_id',
+        'name' => 'agence_id',
         'id' => 'id',
         'class' => 'form-control',
     ));
 
-
+    // var_dump($selectChantier);
+    // echo "<br>";
+    // var_dump($selectAgence)
+    // exit;
     include $conf->getViewsDir().'header.php';
     include $conf->getViewsDir().'sidebar.php';
     include $conf->getViewsDir().'interimaire.php';

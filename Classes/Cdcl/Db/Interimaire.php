@@ -128,7 +128,7 @@ class Interimaire extends DbObject{
      */
     public $agence_id;
 
-    function __construct($id=0, $matricule='', $matricule_cns=0, $firstname='', $lastname='', $actif=0, $taux=0, $taux_horaire=0, $evaluation='', $evaluateur='', $chantier_id=null, $charte_securite=0, $date_evaluation=0, $date_vm=0, $date_prem_cont=0, $date_cont_rec=0, $date_deb=0, $date_fin=0, $worker_status='', $rem_med='', $remarques='', $old_metier_denomination='', $metier_id=null, $agence_id=null, $created=0)
+    function __construct($id=0, $matricule='', $matricule_cns=0, $firstname='', $lastname='', $actif=0, $taux=0, $taux_horaire=0, $evaluation=null, $evaluateur=null, $chantier_id=null, $charte_securite=0, $date_evaluation=0, $date_vm=0, $date_prem_cont=0, $date_cont_rec=0, $date_deb=0, $date_fin=0, $worker_status=0, $rem_med='', $remarques='', $old_metier_denomination='', $metier_id=null, $agence_id=null, $created=0)
     {
         $this->matricule = $matricule;
         $this->matricule_cns = $matricule_cns;
@@ -151,10 +151,11 @@ class Interimaire extends DbObject{
         $this->rem_med = $rem_med;
         $this->remarques = $remarques;
         $this->old_metier_denomination = $old_metier_denomination;
-        $this->metier_id = isset($metier_id)? $metier_id : new Metier();
-        $this->agence_id = isset($agence_id)? $agence_id : new Agence();
+        $this->metier_id = isset($metier_id) ? $metier_id : new Metier();
+        $this->agence_id = isset($agence_id) ? $agence_id : new Agence();
         parent::__construct($id, $created);
     }
+
 
     /**
      * @return string
@@ -375,8 +376,7 @@ class Interimaire extends DbObject{
                 `remarques`,
                 `old_metier_denomination`,
                 `metier_id`,
-                `agence_id`,
-                `created`
+                `agence_id`
                  FROM interimaire
                  WHERE id= :id' ;
         $stmt = Config::getInstance()->getPDO()->prepare($sql);
@@ -493,6 +493,9 @@ class Interimaire extends DbObject{
      */
     public function saveDB()
     {
+    //    var_dump($this->agence_id->getId());
+    //exit;
+
         if ($this->id > 0){
             $sql = '
                 UPDATE interimaire
@@ -504,8 +507,8 @@ class Interimaire extends DbObject{
                 `actif`= :actif,
                 `taux`= :taux,
                 `taux_horaire`= :taux_horaire,
+                `evaluateur`= :evaluateur,
                 `evaluation`= :evaluation,
-                 `evaluateur`= :evaluateur,
                 `evaluation_chantier_id`= :evaluation_chantier_id,
                 `charte_securite`= :charte_securite,
                 `date_evaluation`= :date_evaluation,
@@ -531,9 +534,9 @@ class Interimaire extends DbObject{
             $stmt->bindValue(':actif', $this->actif);
             $stmt->bindValue(':taux', $this->taux);
             $stmt->bindValue(':taux_horaire', $this->taux_horaire);
-            $stmt->bindValue(':evaluation', $this->evaluation);
             $stmt->bindValue(':evaluateur', $this->evaluateur);
-            $stmt->bindValue(':evaluation_chantier_id', $this->chantier_id->getId() , \PDO::PARAM_INT);
+            $stmt->bindValue(':evaluation', $this->evaluation);
+            $stmt->bindValue(':evaluation_chantier_id', $this->chantier_id->getId(), \PDO::PARAM_INT);
             $stmt->bindValue(':charte_securite', $this->charte_securite);
             $stmt->bindValue(':date_evaluation', $this->date_evaluation);
             $stmt->bindValue(':date_vm', $this->date_vm);
@@ -547,7 +550,9 @@ class Interimaire extends DbObject{
             $stmt->bindValue(':old_metier_denomination', $this->old_metier_denomination);
             $stmt->bindValue(':metier_id', $this->metier_id->getId(), \PDO::PARAM_INT);
             $stmt->bindValue(':agence_id', $this->agence_id->getId(), \PDO::PARAM_INT);
+            // print_r($this->chantier_id->getId());
 
+            // exit;
             if ($stmt->execute() === false) {
                 print_r($stmt->errorInfo());
                 return false ;
@@ -590,8 +595,8 @@ class Interimaire extends DbObject{
                 :actif,
                 :taux,
                 :taux_horaire,
-                :evaluation,
                 :evaluateur,
+                :evaluation,
                 :evaluation_chantier_id,
                 :charte_securite,
                 :date_evaluation,
@@ -616,8 +621,8 @@ class Interimaire extends DbObject{
             $stmt->bindValue(':actif', $this->actif);
             $stmt->bindValue(':taux', $this->taux);
             $stmt->bindValue(':taux_horaire', $this->taux_horaire);
-            $stmt->bindValue(':evaluation', $this->evaluation);
             $stmt->bindValue(':evaluateur', $this->evaluateur);
+            $stmt->bindValue(':evaluation', $this->evaluation);
             $stmt->bindValue(':evaluation_chantier_id', $this->chantier_id->getId(), \PDO::PARAM_INT);
             $stmt->bindValue(':charte_securite', $this->charte_securite);
             $stmt->bindValue(':date_evaluation', $this->date_evaluation);

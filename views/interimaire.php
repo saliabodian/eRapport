@@ -40,16 +40,18 @@
                         <?php include 'alert.php'; ?>
                         <form action="" method="post" class="form-horizontal" id="demoform">
                             <input type="hidden" name="interimaire_id" value="<?= $interimaireObject->getId() ?>">
+                            <input type="hidden" name="matricule" value="<?= $interimaireObject->getMatricule() ?>">
+                            <input type="hidden" name="matricule_cns" value="<?= $interimaireObject->getMatriculeCns() ?>">
                             <div class="control-group">
                                 <label for="matricule" class="control-label" >Matricule :</label>
                                 <div class="controls">
-                                    <input disabled type="text" class="span11" placeholder="" name="matricule" value="<?= $interimaireObject->getMatricule() ?>"/>
+                                    <input disabled type="text" class="span11" placeholder="" name="" value="<?= $interimaireObject->getMatricule() ?>"/>
                                 </div>
                             </div>
                             <div class="control-group">
                                 <label for="matricule_cns" class="control-label" >Matricule CNS :</label>
                                 <div class="controls">
-                                    <input disabled type="text" class="span11" placeholder="" name="matricule_cns" value="<?= $interimaireObject->getMatriculeCns() ?>"/>
+                                    <input disabled type="text" class="span11" placeholder="" name="" value="<?= $interimaireObject->getMatriculeCns() ?>"/>
                                 </div>
                             </div>
                             <div class="control-group">
@@ -95,7 +97,7 @@
                                 </div>
                             </div>
                             <div class="control-group">
-                                <label for="evaluation_chantier_id" class="control-label">Chantier d'évaluation :</label>
+                                <label for="chantier_id" class="control-label">Chantier évalué :</label>
                                 <div class="controls mySelect">
                                     <?php $selectChantier->displayHTML(); ?>
                                 </div>
