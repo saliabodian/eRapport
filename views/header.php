@@ -18,6 +18,10 @@
 <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700,800' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 
+
+  <link rel="stylesheet" href="css/uniform.css" />
+  <link rel="stylesheet" href="css/select2.css" />
+
 </head>
 <body>
 

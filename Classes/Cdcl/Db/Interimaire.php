@@ -460,6 +460,50 @@ class Interimaire extends DbObject{
         return $returnList;
     }
 
+    public static function getAllIntActifs()
+    {
+        $sql='SELECT interimaire.id, interimaire.matricule, interimaire.matricule_cns, interimaire.firstname, interimaire.lastname, interimaire.actif,
+              interimaire.taux, interimaire.taux_horaire, interimaire.evaluateur, interimaire.evaluation, evaluation_chantier_id, interimaire.charte_securite,
+              interimaire.date_evaluation,interimaire.date_vm, interimaire.date_prem_cont, interimaire.date_cont_rec, interimaire.date_deb, interimaire.date_fin,
+              interimaire.worker_status, interimaire.rem_med, interimaire.remarques, metier.nom_metier, agence.nom
+              FROM interimaire, metier, agence
+              WHERE interimaire.agence_id=agence.id AND interimaire.metier_id=metier.id AND interimaire.actif=1';
+        $pdoStmt = Config::getInstance()->getPDO()->prepare($sql);
+        if ($pdoStmt->execute() === false) {
+            print_r($pdoStmt->errorInfo());
+        }
+        else {
+            $allInterimaires = $pdoStmt->fetchAll(\PDO::FETCH_ASSOC);
+            foreach ($allInterimaires as $row) {
+
+                $returnList[$row['id']]['matricule'] = $row['matricule'];
+                $returnList[$row['id']]['matricule_cns'] = $row['matricule_cns'];
+                $returnList[$row['id']]['firstname'] = $row['firstname'];
+                $returnList[$row['id']]['lastname'] = $row['lastname'];
+                $returnList[$row['id']]['actif'] = $row['actif'];
+                $returnList[$row['id']]['taux'] = $row['taux'];
+                $returnList[$row['id']]['taux_horaire'] = $row['taux_horaire'];
+                $returnList[$row['id']]['evaluateur'] = $row['evaluateur'];
+                $returnList[$row['id']]['evaluation'] = $row['evaluation'];
+                $returnList[$row['id']]['evaluation_chantier_id'] = $row['evaluation_chantier_id'];
+                $returnList[$row['id']]['charte_securite'] = $row['charte_securite'];
+                $returnList[$row['id']]['date_evaluation'] = $row['date_evaluation'];
+                $returnList[$row['id']]['date_vm'] = $row['date_vm'];
+                $returnList[$row['id']]['date_prem_cont'] = $row['date_prem_cont'];
+                $returnList[$row['id']]['date_cont_rec'] = $row['date_cont_rec'];
+                $returnList[$row['id']]['date_deb'] = $row['date_deb'];
+                $returnList[$row['id']]['date_fin'] = $row['date_fin'];
+                $returnList[$row['id']]['worker_status'] = $row['worker_status'];
+                $returnList[$row['id']]['rem_med'] = $row['rem_med'];
+                $returnList[$row['id']]['remarques'] = $row['remarques'];
+                $returnList[$row['id']]['old_metier_denomination'] = $row['old_metier_denomination'];
+                $returnList[$row['id']]['nom_metier'] = $row['nom_metier'];
+                $returnList[$row['id']]['nom_agence'] = $row['nom'];
+            }
+        }
+        return $returnList;
+    }
+
     /**
      * @return array
      * @throws InvalidSqlQueryException
@@ -473,6 +517,30 @@ class Interimaire extends DbObject{
                 `firstname`,
                 `lastname`
             FROM `interimaire`
+            ';
+        $stmt = Config::getInstance()->getPDO()->prepare($sql);
+        if ($stmt->execute() === false) {
+            print_r($stmt->errorInfo());
+        }
+        else {
+            $allDatas = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+            foreach ($allDatas as $row) {
+                $returnList[$row['id']] = $row['matricule'].' '.$row['firstname'].' '.$row['lastname'];
+            }
+        }
+        return $returnList;
+    }
+
+    public static function getAllForSelectActif()
+    {
+        $sql = '
+            SELECT
+                `id`,
+                `matricule`,
+                `firstname`,
+                `lastname`
+            FROM `interimaire`
+            WHERE `actif` = 1
             ';
         $stmt = Config::getInstance()->getPDO()->prepare($sql);
         if ($stmt->execute() === false) {
@@ -666,6 +734,172 @@ class Interimaire extends DbObject{
         else {
             return true;
         }
+    }
+
+    public static function getInterimaireAffected($woy, $chantier_id){
+        $sql='SELECT interimaire_has_chantier.id as int_has_cht_id,
+              interimaire_has_chantier.doy,
+              interimaire_has_chantier.woy,
+              interimaire_has_chantier.chantier_id,
+              interimaire_has_chantier.date_debut,
+              interimaire_has_chantier.date_fin,
+              interimaire_has_chantier.interimaire_id,
+              interimaire.matricule,
+              interimaire.id,
+              interimaire.firstname,
+              interimaire.lastname,
+              chantier.nom,
+              chantier.code
+              FROM interimaire_has_chantier, chantier,interimaire
+          where woy= :woy
+          AND chantier_id= :chantier_id
+          AND interimaire.id= interimaire_has_chantier.interimaire_id
+          AND chantier.id =interimaire_has_chantier.chantier_id';
+        $stmt=Config::getInstance()->getPDO()->prepare($sql);
+        $stmt->bindValue(':woy', $woy, \PDO::PARAM_INT);
+        $stmt->bindValue(':chantier_id', $chantier_id, \PDO::PARAM_INT);
+
+       // print_r($sql);
+
+        if ($stmt->execute() === false) {
+            print_r($stmt->errorInfo());
+        }
+        else {
+            $allDatas = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+            return $allDatas;
+        }
+
+    }
+
+    public static function affectationSaved($chantier_id, $week, $listInterimaire, $date_debut){
+        foreach($listInterimaire as $isAffected){
+            for($i=0; $i<7; $i++){
+                $sql= 'INSERT INTO `interimaire_has_chantier`
+                    (`interimaire_id`,
+                    `chantier_id`,
+                    doy,
+                    woy,
+                    date_debut,
+                    date_fin)
+                    VALUES(
+                    :interimaire_id,
+                    :chantier_id,
+                    :doy,
+                    :woy,
+                    :date_debut,
+                    :date_fin
+                    )';
+                $stmt = Config::getInstance()->getPDO()->prepare($sql);
+                $stmt->bindValue(':interimaire_id', $isAffected, \PDO::PARAM_INT);
+                $stmt->bindValue(':chantier_id', $chantier_id, \PDO::PARAM_INT);
+                $stmt->bindValue(':doy', date('Y-m-d', mktime(0,0,0, date('m', strtotime($date_debut)), date('d', strtotime($date_debut))+$i, date('Y', strtotime($date_debut)))), \PDO::PARAM_INT);
+                $stmt->bindValue(':woy', $week, \PDO::PARAM_INT);
+                $stmt->bindValue(':date_debut', $date_debut, \PDO::PARAM_INT);
+                $stmt->bindValue(':date_fin', date('Y-m-d', mktime(0,0,0, date('m', strtotime($date_debut)), date('d', strtotime($date_debut))+6, date('Y', strtotime($date_debut)))), \PDO::PARAM_INT);
+                if ($stmt->execute() === false) {
+                    print_r($stmt->errorInfo());
+                }
+            }
+        }
+    }
+
+    // Vérification de l'existance des affectationd pour un chantier une semaine et des intérimaires
+
+    public static function checkAffectation($chantier_id, $week, $listInterimaire){
+        foreach($listInterimaire as $interimaire_id){
+            $sql = 'SELECT * FROM interimaire_has_chantier WHERE
+                interimaire_id= :interimaire_id
+                AND chantier_id= :chantier_id
+                AND woy= :woy';
+            $stmt = Config::getInstance()->getPDO()->prepare($sql);
+            $stmt->bindValue(':interimaire_id', $interimaire_id, \PDO::PARAM_INT);
+            $stmt->bindValue(':chantier_id', $chantier_id, \PDO::PARAM_INT);
+            $stmt->bindValue(':woy', $week, \PDO::PARAM_INT);
+            if ($stmt->execute() === false) {
+                print_r($stmt->errorInfo());
+            }else{
+                return $stmt->rowCount();
+            }
+        }
+
+    }
+
+    public static function interimaireSelected($int_has_chant_id) {
+        $sql='SELECT interimaire_has_chantier.id as int_has_cht_id,
+              interimaire_has_chantier.doy,
+              interimaire_has_chantier.woy,
+              interimaire_has_chantier.chantier_id,
+              interimaire_has_chantier.interimaire_id,
+              interimaire_has_chantier.date_debut,
+              interimaire_has_chantier.date_fin,
+              interimaire.matricule,
+              interimaire.id,
+              interimaire.firstname,
+              interimaire.lastname,
+              chantier.nom,
+              chantier.code
+              FROM interimaire_has_chantier, chantier,interimaire
+          where interimaire_has_chantier.id= :id
+            AND chantier.id=interimaire_has_chantier.chantier_id
+            AND interimaire.id = interimaire_has_chantier.interimaire_id';
+        $stmt=Config::getInstance()->getPDO()->prepare($sql);
+        $stmt->bindValue(':id', $int_has_chant_id, \PDO::PARAM_INT);
+
+
+        if ($stmt->execute() === false) {
+            print_r($stmt->errorInfo());
+        }
+        else {
+            $interimaireSelected = $stmt->fetch();
+            return $interimaireSelected;
+        }
+    }
+    /**fetchAll(\PDO::FETCH_ASSOC);*/
+
+    public static function changeChantierAffectation($day, $id, $chantier_id){
+
+        /*$sql = 'SELECT * FROM interimaire_has_chantier WHERE doy BETWEEN (date_debut and date_fin) AND woy = :woy ';*/
+        $sql = 'UPDATE interimaire_has_chantier SET doy = :doy AND chantier_id= :chantier_id WHERE id = :id';
+        $stmt=Config::getInstance()->getPDO()->prepare($sql);
+        $stmt->bindValue(':doy', $day, \PDO::PARAM_INT);
+        $stmt->bindValue(':id', $id, \PDO::PARAM_INT);
+        $stmt->bindValue(':chantier_id', $chantier_id, \PDO::PARAM_INT);
+
+        if ($stmt->execute() === false) {
+            print_r($stmt->errorInfo());
+        }
+    }
+
+    public static function checkChantierAndDoyAffectation($day, $interimaire_id, $chantier_id){
+        $sql='SELECT * FROM interimaire_has_chantier WHERE chantier_id= :chantier_id AND doy= :doy AND interimaire_id = :interimaire_id';
+        $stmt=Config::getInstance()->getPDO()->prepare($sql);
+        $stmt->bindValue(':doy', $day, \PDO::PARAM_INT);
+        $stmt->bindValue(':id', $interimaire_id, \PDO::PARAM_INT);
+        $stmt->bindValue(':chantier_id', $chantier_id, \PDO::PARAM_INT);
+        if ($stmt->execute() === false) {
+            print_r($stmt->errorInfo());
+        }else{
+            $row = $stmt->rowCount();
+        }
+        return $row;
+    }
+
+    public static function compareDateForChangeAffectation($day){
+        $sql = 'SELECT * FROM interimaire_has_chantier WHERE doy= :doy AND :doy BETWEEN date_debut AND date_fin';
+
+        $stmt=Config::getInstance()->getPDO()->prepare($sql);
+        $stmt->bindValue(':doy', $day, \PDO::PARAM_INT);
+
+        if ($stmt->execute() === false) {
+            print_r($stmt->errorInfo());
+        }else{
+            $row = $stmt->rowCount();
+        }
+        return $row;
+    }
+
+    public static function duplicateAffectation(){
+
     }
 
 }

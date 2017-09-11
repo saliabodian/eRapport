@@ -163,12 +163,6 @@
                                 </div>
                             </div>
                             <div class="control-group">
-                                <label for="old_metier_denomination" class="control-label">Ancien poste :</label>
-                                <div class="controls">
-                                    <input type="text"  class="span11" placeholder="Ancien poste" name="old_metier_denomination" value="<?= $interimaireObject->getOldMetierDenomination() ?>"/>
-                                </div>
-                            </div>
-                            <div class="control-group">
                                 <label for="metier_id" class="control-label">Poste actuel :</label>
                                 <div class="controls mySelect">
                                     <?php $selectMetier->displayHTML(); ?>
