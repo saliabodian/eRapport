@@ -9,6 +9,34 @@
             <div class="span12">
                 <div class="widget-box">
                     <div class="widget-title"> <span class="icon"> <i class="icon-align-justify"></i> </span>
+                        <h5>Choix du chantier & de la date</h5>
+                    </div>
+                    <div class="widget-content nopadding">
+                        <form action="" method="get" class="form-horizontal">
+                            <div class="control-group">
+                                <label class="control-label span3 m-wrap">Liste des chantiers</label>
+                                <div class="controls span3 m-wrap">
+                                    <?php $selectChantier->displayHTML(); ?>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label span3 m-wrap">Semaine du</label>
+                                <div class="controls span3 m-wrap">
+                                    <input type="text" name="date_deb" class="btn datepicker btn-block" value=""/>
+                                </div>
+                            </div>
+                            <div class="form-actions">
+                                <input type="submit" class="btn btn-success" value="Sélectionner" />
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row-fluid">
+            <div class="span12">
+                <div class="widget-box">
+                    <div class="widget-title"> <span class="icon"> <i class="icon-align-justify"></i> </span>
                         <h5>Liste des intérmaires à affecter</h5>
                     </div>
                     <div class="widget-content nopadding">

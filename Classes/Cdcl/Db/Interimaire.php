@@ -792,10 +792,10 @@ class Interimaire extends DbObject{
                 $stmt = Config::getInstance()->getPDO()->prepare($sql);
                 $stmt->bindValue(':interimaire_id', $isAffected, \PDO::PARAM_INT);
                 $stmt->bindValue(':chantier_id', $chantier_id, \PDO::PARAM_INT);
-                $stmt->bindValue(':doy', date('Y-m-d', mktime(0,0,0, date('m', strtotime($date_debut)), date('d', strtotime($date_debut))+$i, date('Y', strtotime($date_debut)))), \PDO::PARAM_INT);
+                $stmt->bindValue(':doy', date('Y-m-d', mktime(0,0,0, date('m', strtotime($date_debut)), date('d', strtotime($date_debut))+$i, date('Y', strtotime($date_debut)))));
                 $stmt->bindValue(':woy', $week, \PDO::PARAM_INT);
-                $stmt->bindValue(':date_debut', $date_debut, \PDO::PARAM_INT);
-                $stmt->bindValue(':date_fin', date('Y-m-d', mktime(0,0,0, date('m', strtotime($date_debut)), date('d', strtotime($date_debut))+6, date('Y', strtotime($date_debut)))), \PDO::PARAM_INT);
+                $stmt->bindValue(':date_debut', $date_debut);
+                $stmt->bindValue(':date_fin', date('Y-m-d', mktime(0,0,0, date('m', strtotime($date_debut)), date('d', strtotime($date_debut))+6, date('Y', strtotime($date_debut)))));
                 if ($stmt->execute() === false) {
                     print_r($stmt->errorInfo());
                 }
@@ -856,24 +856,31 @@ class Interimaire extends DbObject{
     }
     /**fetchAll(\PDO::FETCH_ASSOC);*/
 
-    public static function changeChantierAffectation($day, $id, $chantier_id){
+    public static function changeChantierAffectation($day, $chantier_id, $id){
 
-        /*$sql = 'SELECT * FROM interimaire_has_chantier WHERE doy BETWEEN (date_debut and date_fin) AND woy = :woy ';*/
-        $sql = 'UPDATE interimaire_has_chantier SET doy = :doy AND chantier_id= :chantier_id WHERE id = :id';
+        $sql = 'UPDATE interimaire_has_chantier SET interimaire_has_chantier.doy =:doy AND interimaire_has_chantier.chantier_id=:chantier_id WHERE interimaire_has_chantier.id =:id';
         $stmt=Config::getInstance()->getPDO()->prepare($sql);
-        $stmt->bindValue(':doy', $day, \PDO::PARAM_INT);
-        $stmt->bindValue(':id', $id, \PDO::PARAM_INT);
+    //    $stmt->bindValue(':doy', $day);
+        $stmt->bindValue(':doy', date('Y-m-d', mktime(0,0,0, date('m', strtotime($day)), date('d', strtotime($day)), date('Y', strtotime($day)))), \PDO::PARAM_STR);
         $stmt->bindValue(':chantier_id', $chantier_id, \PDO::PARAM_INT);
+        $stmt->bindValue(':id', $id, \PDO::PARAM_INT);
+
+    //    var_dump($sql);
+
+    //    exit;
 
         if ($stmt->execute() === false) {
             print_r($stmt->errorInfo());
+            return false;
+        }else{
+            return true;
         }
     }
 
     public static function checkChantierAndDoyAffectation($day, $interimaire_id, $chantier_id){
         $sql='SELECT * FROM interimaire_has_chantier WHERE chantier_id= :chantier_id AND doy= :doy AND interimaire_id = :interimaire_id';
         $stmt=Config::getInstance()->getPDO()->prepare($sql);
-        $stmt->bindValue(':doy', $day, \PDO::PARAM_INT);
+        $stmt->bindValue(':doy', $day);
         $stmt->bindValue(':id', $interimaire_id, \PDO::PARAM_INT);
         $stmt->bindValue(':chantier_id', $chantier_id, \PDO::PARAM_INT);
         if ($stmt->execute() === false) {
@@ -888,7 +895,7 @@ class Interimaire extends DbObject{
         $sql = 'SELECT * FROM interimaire_has_chantier WHERE doy= :doy AND :doy BETWEEN date_debut AND date_fin';
 
         $stmt=Config::getInstance()->getPDO()->prepare($sql);
-        $stmt->bindValue(':doy', $day, \PDO::PARAM_INT);
+        $stmt->bindValue(':doy', $day);
 
         if ($stmt->execute() === false) {
             print_r($stmt->errorInfo());
