@@ -858,16 +858,16 @@ class Interimaire extends DbObject{
 
     public static function changeChantierAffectation($day, $chantier_id, $id){
 
-        $sql = 'UPDATE interimaire_has_chantier SET interimaire_has_chantier.doy =:doy AND interimaire_has_chantier.chantier_id=:chantier_id WHERE interimaire_has_chantier.id =:id';
+        $sql = 'UPDATE interimaire_has_chantier SET doy = :doy , chantier_id=:chantier_id WHERE id = :id';
         $stmt=Config::getInstance()->getPDO()->prepare($sql);
-    //    $stmt->bindValue(':doy', $day);
-        $stmt->bindValue(':doy', date('Y-m-d', mktime(0,0,0, date('m', strtotime($day)), date('d', strtotime($day)), date('Y', strtotime($day)))), \PDO::PARAM_STR);
+        $stmt->bindValue(':doy', $day, \PDO::PARAM_INT);
+    //    $stmt->bindValue(':doy', date('Y-m-d', mktime(0,0,0, date('m', strtotime($day)), date('d', strtotime($day)), date('Y', strtotime($day)))), \PDO::PARAM_INT);
         $stmt->bindValue(':chantier_id', $chantier_id, \PDO::PARAM_INT);
         $stmt->bindValue(':id', $id, \PDO::PARAM_INT);
 
-    //    var_dump($sql);
+        // var_dump($stmt->debugDumpParams());
 
-    //    exit;
+        // exit;
 
         if ($stmt->execute() === false) {
             print_r($stmt->errorInfo());
@@ -880,8 +880,8 @@ class Interimaire extends DbObject{
     public static function checkChantierAndDoyAffectation($day, $interimaire_id, $chantier_id){
         $sql='SELECT * FROM interimaire_has_chantier WHERE chantier_id= :chantier_id AND doy= :doy AND interimaire_id = :interimaire_id';
         $stmt=Config::getInstance()->getPDO()->prepare($sql);
-        $stmt->bindValue(':doy', $day);
-        $stmt->bindValue(':id', $interimaire_id, \PDO::PARAM_INT);
+        $stmt->bindValue(':doy', $day, \PDO::PARAM_INT);
+        $stmt->bindValue(':interimaire_id', $interimaire_id, \PDO::PARAM_INT);
         $stmt->bindValue(':chantier_id', $chantier_id, \PDO::PARAM_INT);
         if ($stmt->execute() === false) {
             print_r($stmt->errorInfo());
@@ -891,11 +891,17 @@ class Interimaire extends DbObject{
         return $row;
     }
 
-    public static function compareDateForChangeAffectation($day){
-        $sql = 'SELECT * FROM interimaire_has_chantier WHERE doy= :doy AND :doy BETWEEN date_debut AND date_fin';
+    public static function compareDateForChangeAffectation($day, $date_debut, $date_fin){
+        $sql = "
+                SELECT * FROM interimaire_has_chantier
+                WHERE doy=:doy AND :doy
+                BETWEEN :date_debut AND :date_fin
+                ";
 
         $stmt=Config::getInstance()->getPDO()->prepare($sql);
-        $stmt->bindValue(':doy', $day);
+        $stmt->bindValue(':doy', $day, \PDO::PARAM_INT);
+        $stmt->bindValue(':date_debut', $date_debut, \PDO::PARAM_INT);
+        $stmt->bindValue(':date_fin', $date_fin, \PDO::PARAM_INT);
 
         if ($stmt->execute() === false) {
             print_r($stmt->errorInfo());

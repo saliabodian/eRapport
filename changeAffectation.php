@@ -64,31 +64,37 @@ if(!empty($_SESSION)) {
 
 
     if(!empty($_POST)){
-       //  var_dump($_POST);
 
-       // exit;
+         // var_dump(date('Y-m-d', strtotime($_POST['doy'])));
+
+        // exit;
         $date_debut = isset($_POST['debut'])? $_POST['debut'] : "";
         $date_fin = isset($_POST['fin'])? $_POST['fin'] : "";
         $row_id = isset($_POST['int_has_cht_id'])? $_POST['int_has_cht_id'] : "";
         $newChantierId = isset($_POST['new_chantier'])? $_POST['new_chantier'] : "";
         $newDate = isset($_POST['doy']) ? date('Y-m-d', strtotime($_POST['doy'])) : '';
+        $interimaireId = isset($_POST['interimaire_id']) ? $_POST['interimaire_id'] : '';
         $form = true;
 
         //var_dump($newDate);
 
-        if(empty($newDate) || ($newDate =='1970-01-01')){
+        if(empty($newDate)){
             $conf->addError("Veuillez choisir une date");
             $form = false;
         }
 
-    //   var_dump($newDate);
-    //   var_dump('<br>');
-    //    var_dump($row_id);
-    //   var_dump('<br>');
-    //    var_dump($newChantierId);
+        $affectationExist = Interimaire::checkChantierAndDoyAffectation($newDate, $interimaireId, $newChantierId);
 
-    //     exit;
-
+        $dateIsOk = Interimaire::compareDateForChangeAffectation($newDate, $date_debut, $date_fin);
+        if($dateIsOk>=1){
+            if($affectationExist>=1){
+                $conf->addError('Cet interimaire posséde déjà une affectation pour ce chantier et pour cette date');
+                $form = false;
+            }
+        }else{
+            $conf->addError('La date choisie n\'appartient pas à la semaine courantre');
+            $form = false;
+        }
 
         if($form){
            // var_dump($form);

@@ -14,6 +14,8 @@
                             <input type="hidden" name="int_has_cht_id" value="<?= $interimaireSelected['int_has_cht_id'] ?>">
                             <input type="hidden" name="debut" value="<?= $interimaireSelected['date_debut'] ?>">
                             <input type="hidden" name="fin" value="<?= $interimaireSelected['date_fin'] ?>">
+                            <input type="hidden" name="interimaire_id" value="<?= $interimaireSelected['interimaire_id'] ?>">
+                            <input type="hidden" name="chantier_id" value="<?= $interimaireSelected['chantier_id'] ?>">
                             <div class="control-group">
                                 <label class="control-label" for="interimaire"> Intérimaire <span></span>:</label>
                                 <div class="controls">
