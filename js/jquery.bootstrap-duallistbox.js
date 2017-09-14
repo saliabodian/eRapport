@@ -3,7 +3,7 @@
   var pluginName = 'bootstrapDualListbox',
     defaults = {
       bootstrap2Compatible: false,
-      filterTextClear: 'show all',
+  //    filterTextClear: 'show all',
       filterPlaceHolder: 'Filter',
       moveSelectedLabel: 'Move selected',
       moveAllLabel: 'Move all',
@@ -433,7 +433,7 @@
       this.sortIndex = 0;
       this.elementCount = 0;
       this.setBootstrap2Compatible(this.settings.bootstrap2Compatible);
-      this.setFilterTextClear(this.settings.filterTextClear);
+//      this.setFilterTextClear(this.settings.filterTextClear);
       this.setFilterPlaceHolder(this.settings.filterPlaceHolder);
       this.setMoveSelectedLabel(this.settings.moveSelectedLabel);
       this.setMoveAllLabel(this.settings.moveAllLabel);
