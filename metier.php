@@ -55,10 +55,12 @@ if(!empty($_SESSION)){
 
         // exit;
 
+        /*
+        Code metier n'est plus obligatoire proposition par Laurent
         if (empty($_POST['code_metier'])) {
             $conf->addError('Veuillez définir le code du métier.');
             $formOk = false;
-        }
+        }*/
         //var_dump($formOk);
 
 

@@ -76,7 +76,10 @@ if(!empty($_SESSION)){
             $formOk = false;
         }
         //var_dump($formOk);
-
+        if (empty($_POST['type_tache_id'])) {
+            $conf->addError('Veuillez le type de tâche.');
+            $formOk = false;
+        }
 
 
         if ($formOk) {

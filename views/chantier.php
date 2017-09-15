@@ -41,15 +41,15 @@
                         <form action="" method="post" class="form-horizontal">
                             <input type="hidden" name="chantier_id" value="<?= $chantierObject->getId() ?>">
                             <div class="control-group">
-                                <label class="control-label" for="nom">Chantier <span>*</span>:</label>
+                                <label for="code" class="control-label">Numéro de chantier <span>*</span> :</label>
                                 <div class="controls">
-                                    <input type="text" class="span11" placeholder="Nom" name="nom"  value="<?= $chantierObject->getNom() ?>"/>
+                                    <input type="text" class="span11" placeholder="Numéro de chantier" name="code"  value="<?= $chantierObject->getCode()?>"/>
                                 </div>
                             </div>
                             <div class="control-group">
-                                <label for="code" class="control-label">Code :</label>
+                                <label class="control-label" for="nom">Chantier <span>*</span> :</label>
                                 <div class="controls">
-                                    <input type="text" class="span11" placeholder="Code" name="code"  value="<?= $chantierObject->getCode()?>"/>
+                                    <input type="text" class="span11" placeholder="Nom" name="nom"  value="<?= $chantierObject->getNom() ?>"/>
                                 </div>
                             </div>
                             <div class="control-group">
@@ -59,21 +59,15 @@
                                 </div>
                             </div>
                             <div class="control-group">
-                                <label for="adresse_fac" class="control-label">Adresse Fac :</label>
-                                <div class="controls">
-                                    <input type="text" class="span11" placeholder="Adresse Fac" name="adresse_fac"  value="<?= $chantierObject->getAdresseFac()?>"/>
-                                </div>
-                            </div>
-                            <div class="control-group">
-                                <label for="date_exex" class="control-label">Date d'exécution :</label>
-                                <div class="controls">
-                                    <input type="text"  placeholder="Date d'exécution" name="date_exec" class="datepicker" value="<?= $chantierObject->getDate_exec()?>"/>
-                                </div>
-                            </div>
-                            <div class="control-group">
                                 <label for="is_actif" class="control-label">Est Actif ?</label>
                                 <div class="controls">
                                     <input type="checkbox" name="actif" <?php if($chantierObject->isActif()==1) : ?> checked <?php endif; ?> value="<?= $chantierObject->isActif()?> "/>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label for="is_asc_mtn" class="control-label">Est une A.M. ?</label>
+                                <div class="controls">
+                                    <input type="checkbox" name="asc_mtn" <?php if($chantierObject->isAsc_mtn()==1) : ?> checked <?php endif; ?> value="<?= $chantierObject->isAsc_mtn()?> "/>
                                 </div>
                             </div>
                             <div class="form-actions">

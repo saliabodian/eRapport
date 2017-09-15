@@ -41,19 +41,19 @@
                         <form action="" method="post" class="form-horizontal">
                             <input type="hidden" name="tache_id" value="<?= $tacheObject->getId() ?>">
                             <div class="control-group">
-                                <label class="control-label" for="code">Code <span>*</span>:</label>
+                                <label class="control-label" for="code">Code<span>*</span><span>*</span>:</label>
                                 <div class="controls">
                                     <input type="text" class="span11" placeholder="Code" name="code"  value="<?= $tacheObject->getCode() ?>"/>
                                 </div>
                             </div>
                             <div class="control-group">
-                                <label for="nom" class="control-label">Nom :</label>
+                                <label for="nom" class="control-label">Nom<span>*</span> :</label>
                                 <div class="controls">
                                     <input type="text" class="span11" placeholder="Nom" name="nom"  value="<?= $tacheObject->getNom()?>"/>
                                 </div>
                             </div>
                             <div class="control-group">
-                                <label for="type_tache" class="control-label">Type de tâche :</label>
+                                <label for="type_tache" class="control-label">Type de tâche<span>*</span> :</label>
                                 <div class="controls">
                                     <?php $selectTypeTache->displayHTML(); ?>
                                 </div>

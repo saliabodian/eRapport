@@ -125,7 +125,7 @@ class Metier extends DbObject{
         else {
             $allDatas = $stmt->fetchAll(\PDO::FETCH_ASSOC);
             foreach ($allDatas as $row) {
-                $returnList[$row['id']] = $row['code_metier'].' '.$row['nom_metier'];
+                $returnList[$row['id']] = $row['nom_metier'];
             }
         }
 

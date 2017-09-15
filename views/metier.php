@@ -41,16 +41,16 @@
                         <form action="" method="post" class="form-horizontal">
                             <input type="hidden" name="metier_id" value="<?= $metierObject->getId() ?>">
                             <div class="control-group">
-                                <label class="control-label" for="code">Code <span>*</span>:</label>
+                                <label for="nom" class="control-label">Nom<span>*</span> :</label>
                                 <div class="controls">
-                                    <input type="text" class="span11" placeholder="Code" name="code_metier"  value="<?= $metierObject->getCodeMetier() ?>"
-                                        />
+                                    <input type="text" class="span11" placeholder="Nom" name="nom_metier"  value="<?= $metierObject->getNomMetier()?>"/>
                                 </div>
                             </div>
                             <div class="control-group">
-                                <label for="nom" class="control-label">Nom :</label>
+                                <label class="control-label" for="code">Code :</label>
                                 <div class="controls">
-                                    <input type="text" class="span11" placeholder="Nom" name="nom_metier"  value="<?= $metierObject->getNomMetier()?>"/>
+                                    <input type="text" class="span11" placeholder="Code" name="code_metier"  value="<?= $metierObject->getCodeMetier() ?>"
+                                        />
                                 </div>
                             </div>
                             <div class="form-actions">

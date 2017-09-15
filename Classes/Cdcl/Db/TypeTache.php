@@ -125,7 +125,7 @@ class TypeTache extends DbObject{
         else {
             $allDatas = $stmt->fetchAll(\PDO::FETCH_ASSOC);
             foreach ($allDatas as $row) {
-                $returnList[$row['id']] = $row['code_type_tache'].' '.$row['nom_type_tache'];
+                $returnList[$row['id']] = $row['nom_type_tache'];
             }
         }
 

@@ -77,27 +77,29 @@
                                 </div>
                             </div>
                             <div class="control-group">
-                                <label for="role" class="control-label">Fonction :</label>
+                                <label for="role" class="control-label">Fonction<span>*</span> :</label>
                                 <div class="controls mySelect">
                                     <?php $selectPost->displayHTML(); ?>
                                 </div>
                             </div>
-                            <div class="control-group">
-                                <!--label style="text-align: center" for="role" class="control-label">Affectation des chantiers :</label-->
-                                <div class="custom-title" style="text-align: center">Affectation des chantiers :</div>
-                            </div>
-                            <div class="control-group">
-                                <div class="controls">
-                                    <select multiple="multiple" size="10" name="duallistbox_demo1[]">
-                                        <?php foreach($isNotSelected as $id => $selectable) : ?>
-                                                <option value="<?=intval($id) ?>" ><?= $selectable ?></option>
-                                        <?php endforeach; ?>
-                                        <?php foreach($isSelected as $id => $selected) : ?>
-                                            <option value="<?=intval($id) ?>" selected="selected"><?= $selected ?></option>
-                                        <?php endforeach; ?>
-                                    </select>
+                            <?php if ($userObject->getId() > 0) : ?>
+                                <div class="control-group">
+                                    <!--label style="text-align: center" for="role" class="control-label">Affectation des chantiers :</label-->
+                                    <div class="custom-title" style="text-align: center">Affectation des chantiers :</div>
                                 </div>
-                            </div>
+                                <div class="control-group">
+                                    <div class="controls">
+                                        <select multiple="multiple" size="10" name="duallistbox_demo1[]">
+                                            <?php foreach($isNotSelected as $id => $selectable) : ?>
+                                                    <option value="<?=intval($id) ?>" ><?= $selectable ?></option>
+                                            <?php endforeach; ?>
+                                            <?php foreach($isSelected as $id => $selected) : ?>
+                                                <option value="<?=intval($id) ?>" selected="selected"><?= $selected ?></option>
+                                            <?php endforeach; ?>
+                                        </select>
+                                    </div>
+                                </div>
+                            <?php endif ?>
                             <div class="form-actions">
                                 <div class=" span2 btn-block"></div>
                                 <div class="span4">

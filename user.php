@@ -151,16 +151,21 @@ if(!empty($_SESSION)){
         }
 
         if (empty($email) || filter_var($email, FILTER_VALIDATE_EMAIL) === false) {
-            $conf->addError('Email non valide');
+            $conf->addError('Email non valide.');
         }
 
         if (empty($_POST['password1'])) {
-            $conf->addError('Veuillez renseigner le mot de passe');
+            $conf->addError('Veuillez renseigner le mot de passe.');
             $formOk = false;
         }
 
         if ($_POST['password2'] != $_POST['password1']) {
-            $conf->addError('Veuillez confirmer votre mot de passe');
+            $conf->addError('Veuillez confirmer votre mot de passe.');
+            $formOk = false;
+        }
+
+        if (empty($post_id)) {
+            $conf->addError('Veuillez définir une fonction.');
             $formOk = false;
         }
 
@@ -184,11 +189,11 @@ if(!empty($_SESSION)){
             //$userObject->userHasChantierSaveDb($userId, $_POST['duallistbox_demo1']);
             $userObject->saveDB();
 
-            header('Location: user.php?success='.urlencode('Ajout/Modification effectuée').'&user_id='.$userObject->getId());
+            header('Location: user.php?success='.urlencode('Ajout/Modification effectuée.').'&user_id='.$userObject->getId());
             exit;
 
         }else{
-            $conf->addError('Erreur dans l\'ajout ou la modification');
+            $conf->addError('Erreur dans l\'ajout ou la modification.');
         }
     }
 

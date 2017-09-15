@@ -47,7 +47,7 @@ if(!empty($_SESSION)){
 
 
     if(!empty($_POST)) {
-
+    //    var_dump($_POST);
         $chantierId = isset($_POST['chantier_id']) ? $_POST['chantier_id'] : '';
         $chantierName = isset($_POST['nom']) ? $_POST['nom'] : '';
         $chantierCode = isset($_POST['code']) ? $_POST['code'] : '';
@@ -55,6 +55,7 @@ if(!empty($_SESSION)){
         $chantierAdresseFac = isset($_POST['adresse_fac']) ? $_POST['adresse_fac'] : '';
         $chantierDateExec = isset($_POST['date_exec']) ? date('Y-m-d', strtotime($_POST['date_exec'])) : '';
         $chantierActif = isset($_POST['actif']) ? 1 : 0;
+        $chantierAscMtn = isset($_POST['asc_mtn']) ? 1 : 0;
         $formOk = true;
 
         //var_dump($chantierDateExec);
@@ -69,6 +70,11 @@ if(!empty($_SESSION)){
         }
         //var_dump($formOk);
 
+        if (empty($_POST['code'])) {
+            $conf->addError('Veuillez renseigner le numéro de chantier');
+            $formOk = false;
+        }
+
         if ($formOk) {
             // Je remplis l'objet Chantier avec les valeurs récupérées en POST
             $chantierObject = new Chantier(
@@ -78,13 +84,14 @@ if(!empty($_SESSION)){
                 $chantierAdresse,
                 $chantierAdresseFac,
                 $chantierDateExec,
-                $chantierActif
+                $chantierActif,
+                $chantierAscMtn
             );
-            //var_dump($chantierObject);
+        //    var_dump($chantierObject);
 
             //var_dump($chantierId);
 
-            //exit;
+        //    exit;
 
             $chantierObject->saveDB();
             header('Location: chantier.php?success='.urlencode('Ajout/Modification effectuée').'&chantier_id='.$chantierObject->getId());

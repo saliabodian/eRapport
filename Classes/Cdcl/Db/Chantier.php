@@ -46,8 +46,12 @@ class Chantier extends DbObject{
      * @var bool
      */
     public $actif;
+    /**
+     * @var bool
+     */
+    public $asc_mtn;
 
-    function __construct($id=0, $nom='',$code=0, $adresse='', $adresse_fac='', $date_exec=0, $actif=0, $created=0)
+    function __construct($id=0, $nom='',$code=0, $adresse='', $adresse_fac='', $date_exec=0, $actif=0,$asc_mtn=0, $created=0)
     {
         $this->nom = $nom;
         $this->code = $code;
@@ -55,6 +59,7 @@ class Chantier extends DbObject{
         $this->adresse_fac = $adresse_fac;
         $this->date_exec = $date_exec;
         $this->actif = $actif;
+        $this->asc_mtn = $asc_mtn;
         parent::__construct($id, $created);
     }
 
@@ -105,6 +110,10 @@ class Chantier extends DbObject{
     {
         return $this->actif;
     }
+    public function isAsc_mtn()
+    {
+        return $this->asc_mtn;
+    }
 
     /**
      * @param int $id
@@ -120,7 +129,8 @@ class Chantier extends DbObject{
                     `adresse`,
                     `adresse_fac`,
                     `date_exec`,
-                    `actif`
+                    `actif`,
+                    `asc_mtn`
                 FROM `chantier`
                 where id= :id
                 ';
@@ -139,7 +149,8 @@ class Chantier extends DbObject{
                 $data['adresse'],
                 $data['adresse_fac'],
                 $data['date_exec'],
-                $data['actif']
+                $data['actif'],
+                $data['asc_mtn']
             );
         }
         return $chantierObject ;
@@ -167,6 +178,7 @@ class Chantier extends DbObject{
                 $returnList[$row['id']]['adresse_fac'] = $row['adresse_fac'];
                 $returnList[$row['id']]['date_exec'] = $row['date_exec'];
                 $returnList[$row['id']]['actif'] = $row['actif'];
+                $returnList[$row['id']]['asc_mtn'] = $row['asc_mtn'];
             }
         }
         return $returnList;
@@ -186,7 +198,8 @@ class Chantier extends DbObject{
                 `adresse`,
                 `adresse_fac`,
                 `date_exec`,
-                `actif`
+                `actif`,
+                `asc_mtn`
             FROM `chantier`
             ';
         $stmt = Config::getInstance()->getPDO()->prepare($sql);
@@ -196,7 +209,7 @@ class Chantier extends DbObject{
         else {
             $allDatas = $stmt->fetchAll(\PDO::FETCH_ASSOC);
             foreach ($allDatas as $row) {
-                $returnList[$row['id']] = $row['nom'].' '.$row['code'].' '.$row['adresse'];
+                $returnList[$row['id']] = $row['code'].' '.$row['nom'];
             }
         }
 
@@ -213,7 +226,8 @@ class Chantier extends DbObject{
                 `adresse`,
                 `adresse_fac`,
                 `date_exec`,
-                `actif`
+                `actif`,
+                `asc_mtn`
             FROM `chantier`
             WHERE `actif`=1
             ';
@@ -240,7 +254,8 @@ class Chantier extends DbObject{
                 `adresse`,
                 `adresse_fac`,
                 `date_exec`,
-                `actif`
+                `actif`,
+                `asc_mtn`
             FROM `chantier`
             ';
         $stmt = Config::getInstance()->getPDO()->prepare($sql);
@@ -256,6 +271,7 @@ class Chantier extends DbObject{
                 $returnList[$row['id']]['adresse_fac'] = $row['adresse_fac'];
                 $returnList[$row['id']]['date_exec'] = $row['date_exec'];
                 $returnList[$row['id']]['actif'] = $row['actif'];
+                $returnList[$row['id']]['asc_mtn'] = $row['asc_mtn'];
             }
         }
         return $returnList;
@@ -278,7 +294,8 @@ class Chantier extends DbObject{
                 `adresse` = :adresse,
                 `adresse_fac` = :adresse_fac,
                 `date_exec` = :date_exec,
-                `actif` = :actif
+                `actif` = :actif,
+                `asc_mtn` = :asc_mtn
                 WHERE `id` = :id
                 ';
             $stmt = Config::getInstance()->getPDO()->prepare($sql);
@@ -289,6 +306,7 @@ class Chantier extends DbObject{
             $stmt->bindValue(':adresse_fac', $this->adresse_fac);
             $stmt->bindValue(':date_exec', $this->date_exec);
             $stmt->bindValue(':actif', $this->actif);
+            $stmt->bindValue(':asc_mtn', $this->asc_mtn);
 
             //var_dump($sql);
 
@@ -309,14 +327,16 @@ class Chantier extends DbObject{
                     `adresse`,
                     `adresse_fac`,
                     `date_exec`,
-                    `actif`)
+                    `actif`,
+                    `asc_mtn`)
                 VALUES
                 (:nom,
                  :code,
                  :adresse,
                  :adresse_fac,
                  :date_exec,
-                 :actif
+                 :actif,
+                 :asc_mtn
             )';
             $stmt = Config::getInstance()->getPDO()->prepare($sql);
             $stmt->bindValue(':nom', $this->nom);
@@ -325,6 +345,10 @@ class Chantier extends DbObject{
             $stmt->bindValue(':adresse_fac', $this->adresse_fac);
             $stmt->bindValue(':date_exec', $this->date_exec);
             $stmt->bindValue(':actif', $this->actif);
+            $stmt->bindValue(':asc_mtn', $this->asc_mtn);
+
+            // var_dump($stmt);
+            // exit;
 
             if ($stmt->execute() === false) {
                 print_r($stmt->errorInfo());
