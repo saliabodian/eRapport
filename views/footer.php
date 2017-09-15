@@ -19,8 +19,6 @@
 <script src="js/jquery.gritter.min.js"></script>
 <script src="js/matrix.interface.js"></script>
 <script src="js/matrix.chat.js"></script>
-<!--script src="js/jquery.validate.js"></script-->
-<!--script src="js/matrix.form_validation.js"></script-->
 <script src="js/jquery.wizard.js"></script>
 <script src="js/jquery.uniform.js"></script>
 <script src="js/select2.min.js"></script>
@@ -30,10 +28,13 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/prettify/r298/run_prettify.min.js"></script>
 <script src="js/jquery.bootstrap-duallistbox.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script src="js/jquery.validate.js"></script>
+<script src="js/matrix.form_validation.js"></script>
 
 <script type="text/javascript">
   // This function is called from the pop-up menus to transfer to

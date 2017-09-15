@@ -41,6 +41,7 @@ if(!empty($_SESSION)) {
         //    exit;
         $agenceId = isset($_POST['agence_id']) ? $_POST['agence_id'] : '';
         $agenceName = isset($_POST['agence']) ? $_POST['agence'] : '';
+        $indicatif = isset($_POST['indicatif']) ? $_POST['indicatif'] : '';
         $telephone = isset($_POST['telephone']) ? $_POST['telephone'] : '';
         $adresse = isset($_POST['adresse']) ? $_POST['adresse'] : '';
         $code_postal = isset($_POST['code_postal']) ? $_POST['code_postal'] : '';
@@ -53,17 +54,28 @@ if(!empty($_SESSION)) {
             $conf->addError('Veuillez renseigner le nom de l\'Agence');
             $formOk = false;
         }
-        //var_dump($formOk);
+        var_dump(strlen($indicatif));
 
+        //exit;
 
-        if (!empty($_POST['telephone'])) {
-            if (!is_numeric($_POST['telephone'])) {
-                $conf->addError('Veuillez saisir des chiffres');
+        if (!empty($indicatif)) {
+            if(strlen($indicatif)>5){
+                $conf->addError('L\'indicatif ne doit pas dépasser 5 chiffres');
                 $formOk = false;
             }
         }
 
-        //var_dump($formOk);
+
+        if (!empty($telephone)) {
+            if(strlen($telephone)>10){
+                $conf->addError('Le numéro de téléphone ne doit pas dépasser 10 chiffres');
+                $formOk = false;
+            }
+        }
+
+        // var_dump($telephone);
+        // var_dump($formOk);
+
 
 
         if ($formOk) {
@@ -71,6 +83,7 @@ if(!empty($_SESSION)) {
             $agenceObject = new Agence(
                 $agenceId,
                 $agenceName,
+                $indicatif,
                 $telephone,
                 $adresse,
                 $code_postal,
@@ -78,7 +91,9 @@ if(!empty($_SESSION)) {
                 $pays,
                 $actif
             );
-            //var_dump($agence);
+             var_dump($agenceObject);
+
+            // exit;
 
             //var_dump($formOk);
 

@@ -125,7 +125,7 @@ class Post extends DbObject{
         else {
             $allDatas = $stmt->fetchAll(\PDO::FETCH_ASSOC);
             foreach ($allDatas as $row) {
-                $returnList[$row['id']] = $row['code'].' '.$row['name'];
+                $returnList[$row['id']] = $row['name'];
             }
         }
 

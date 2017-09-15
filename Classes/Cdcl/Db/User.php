@@ -194,7 +194,7 @@ Class User extends DbObject{
                 `firstname`,
                 `lastname`,
                 `email`
-            FROM `user`
+            FROM `user` ORDER BY `lastname`
             ';
         $stmt = Config::getInstance()->getPDO()->prepare($sql);
         if ($stmt->execute() === false) {

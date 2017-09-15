@@ -38,7 +38,7 @@
                     </div>
                     <div class="widget-content nopadding">
                         <?php include 'alert.php'; ?>
-                        <form action="" method="post" class="form-horizontal">
+                        <form id="agenceForm" action="" method="post" class="form-horizontal">
                             <input type="hidden" name="agence_id" value="<?= $agenceObject->getId() ?>">
                             <div class="control-group">
                                 <label class="control-label" for="agence">Agence <span>*</span>:</label>
@@ -49,7 +49,8 @@
                             <div class="control-group">
                                 <label for="telephone" class="control-label">Téléphone :</label>
                                 <div class="controls">
-                                    <input type="text" class="span11" placeholder="003524859591" name="telephone"  value="<?= $agenceObject->getTelephone()?>"/>
+                                    <input type="number" class="span2" maxlength="5" placeholder="00352" name="indicatif"  value="<?= $agenceObject->getIndicatif()?>"/>
+                                    <input type="number" class="span3" maxlength="10" placeholder="4859591" name="telephone"  value="<?= $agenceObject->getTelephone()?>"/>
                                 </div>
                             </div>
                             <div class="control-group">

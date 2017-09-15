@@ -1,7 +1,7 @@
 <div id="content">
     <div id="content-header">
         <hr>
-        <h1>Gestion des rôles</h1>
+        <h1>Gestion des fonctions</h1>
     </div>
     <div class="container-fluid">
         <hr>
@@ -9,12 +9,12 @@
             <div class="span12">
                 <div class="widget-box">
                     <div class="widget-title"> <span class="icon"> <i class="icon-align-justify"></i> </span>
-                        <h5>Sélection d'un rôle</h5>
+                        <h5>Sélection d'une fonction</h5>
                     </div>
                     <div class="widget-content nopadding">
                         <form action="" method="get" class="form-horizontal">
                             <div class="controls-row">
-                                <label class="control-label span3 m-wrap">Liste des rôles</label>
+                                <label class="control-label span3 m-wrap">Liste des fonctions</label>
                                 <div class="controls span3 m-wrap">
                                     <?php $selectPost->displayHTML(); ?>
                                 </div>
@@ -34,7 +34,7 @@
             <div class="span12">
                 <div class="widget-box">
                     <div class="widget-title"> <span class="icon"> <i class="icon-align-justify"></i> </span>
-                        <h5><?php if ($postObject->getId() > 0) : ?>Modification d'un <?php else : ?>Ajout d'un <?php endif ?>rôle</h5>
+                        <h5><?php if ($postObject->getId() > 0) : ?>Modification d'un <?php else : ?>Ajout d'une <?php endif ?>fonction</h5>
                     </div>
                     <div class="widget-content nopadding">
                         <?php include 'alert.php'; ?>

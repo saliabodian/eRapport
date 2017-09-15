@@ -83,8 +83,11 @@
                                 </div>
                             </div>
                             <div class="control-group">
+                                <!--label style="text-align: center" for="role" class="control-label">Affectation des chantiers :</label-->
+                                <div class="custom-title" style="text-align: center">Affectation des chantiers :</div>
+                            </div>
+                            <div class="control-group">
                                 <div class="controls">
-
                                     <select multiple="multiple" size="10" name="duallistbox_demo1[]">
                                         <?php foreach($isNotSelected as $id => $selectable) : ?>
                                                 <option value="<?=intval($id) ?>" ><?= $selectable ?></option>

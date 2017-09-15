@@ -4,6 +4,8 @@ use \Classes\Cdcl\Config\Config;
 
 use \Classes\Cdcl\Db\User ;
 
+unset($_SESSION);
+
 $conf = Config::getInstance();
 
 // print_r($_POST);
@@ -12,9 +14,10 @@ $user = new User();
 
 $res = $user->loginPost();
 
+
 //Gestion de la déconnexion
 if($_GET['logout']){
-    session_unset();
+    unset($_SESSION);
 }
 
 //print_r($res);

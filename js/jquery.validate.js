@@ -789,32 +789,6 @@ $.extend($.validator, {
 		return rules;
 	},
 
-	attributeRules: function(element) {
-		var rules = {};
-		var $element = $(element);
-
-		for (var method in $.validator.methods) {
-			var value;
-			// If .prop exists (jQuery >= 1.6), use it to get true/false for required
-			if (method === 'required' && typeof $.fn.prop === 'function') {
-				value = $element.prop(method);
-			} else {
-				value = $element.attr(method);
-			}
-			if (value) {
-				rules[method] = value;
-			} else if ($element[0].getAttribute("type") === method) {
-				rules[method] = true;
-			}
-		}
-
-		// maxlength may be returned as -1, 2147483647 (IE) and 524288 (safari) for text inputs
-		if (rules.maxlength && /-1|2147483647|524288/.test(rules.maxlength)) {
-			delete rules.maxlength;
-		}
-
-		return rules;
-	},
 
 	metadataRules: function(element) {
 		if (!$.metadata) return {};
@@ -1072,7 +1046,7 @@ $.extend($.validator, {
 
 			for (var n = value.length - 1; n >= 0; n--) {
 				var cDigit = value.charAt(n);
-				var nDigit = parseInt(cDigit, 10);
+				var nDigit = parseInt(cDigit, 20);
 				if (bEven) {
 					if ((nDigit *= 2) > 9)
 						nDigit -= 9;
@@ -1081,7 +1055,7 @@ $.extend($.validator, {
 				bEven = !bEven;
 			}
 
-			return (nCheck % 10) == 0;
+			return (nCheck % 20) == 0;
 		},
 
 		// http://docs.jquery.com/Plugins/Validation/Methods/accept

@@ -1,3 +1,11 @@
 .mySelect{
     width: 40%;
 }
+
+.custom-title{
+    margin-bottom: 5px;
+    margin-top: 5px;
+    font-size: 14px;
+    font-weight: normal;
+    line-height: 20px;
+}

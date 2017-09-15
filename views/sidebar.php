@@ -11,7 +11,7 @@
         <li> <a href="user.php">Gestion des utilisateurs</a></li>
         <li> <a href="agence.php"> Gestion des agences</a></li>
         <li> <a href="chantier.php">Gestion des chantiers</a></li>
-        <li> <a href="post.php">Gestion des rôles</a></li>
+        <li> <a href="post.php">Gestion des fonctions</a></li>
         <li> <a href="metier.php">Gestion des métiers</a></li>
         <li> <a href="typeTache.php">Gestion des types de tâches</a></li>
         <li> <a href="tache.php">Gestion des tâches</a></li>

@@ -21,7 +21,12 @@ class Agence extends DbObject{
     /**
      * @var int
      */
+    public $indicatif;
+    /**
+     * @var int
+     */
     public $telephone;
+
     /**
      * @var string
      */
@@ -47,9 +52,10 @@ class Agence extends DbObject{
      */
     public $actif;
 
-    function __construct($id=0, $nom='', $telephone=0, $adresse='', $code_postal='', $ville='', $pays='', $actif=0, $created=0)
+    function __construct($id=0, $nom='',$indicatif=0, $telephone=0, $adresse='', $code_postal='', $ville='', $pays='', $actif=0, $created=0)
     {
         $this->nom = $nom;
+        $this->indicatif = $indicatif;
         $this->telephone = $telephone;
         $this->adresse = $adresse;
         $this->code_postal = $code_postal;
@@ -78,6 +84,23 @@ class Agence extends DbObject{
     {
         $this->nom = $nom;
     }
+
+    /**
+     * @return int
+     */
+    public function getIndicatif()
+    {
+        return $this->indicatif;
+    }
+
+    /**
+     * @param int $indicatif
+     */
+    public function setIndicatif($indicatif)
+    {
+        $this->indicatif = $indicatif;
+    }
+
 
     /**
      * @return int
@@ -144,22 +167,6 @@ class Agence extends DbObject{
     }
 
     /**
-     * @return timestamp
-     */
-    public function getCreated()
-    {
-        return $this->created;
-    }
-
-    /**
-     * @param timestamp $created
-     */
-    public function setCreated($created)
-    {
-        $this->created = $created;
-    }
-
-    /**
      * @return int
      */
     public function getPays()
@@ -202,6 +209,7 @@ class Agence extends DbObject{
                 UPDATE agence
                 SET
                 `nom` = :nom,
+                `indicatif` = :indicatif,
                 `telephone` = :telephone,
                 `adresse` = :adresse,
                 `code_postal` = :code_postal,
@@ -213,12 +221,17 @@ class Agence extends DbObject{
             $stmt = Config::getInstance()->getPDO()->prepare($sql);
             $stmt->bindValue(':id', $this->id, \PDO::PARAM_INT);
             $stmt->bindValue(':nom', $this->nom);
-            $stmt->bindValue(':telephone', $this->telephone);
+            $stmt->bindValue(':indicatif', $this->indicatif, \PDO::PARAM_INT);
+            $stmt->bindValue(':telephone', $this->telephone, \PDO::PARAM_INT);
             $stmt->bindValue(':adresse', $this->adresse);
             $stmt->bindValue(':code_postal', $this->code_postal);
             $stmt->bindValue(':ville', $this->ville);
             $stmt->bindValue(':pays', $this->pays);
             $stmt->bindValue(':actif', $this->actif);
+
+            var_dump($stmt);
+
+            //exit;
 
             if ($stmt->execute() === false) {
                 print_r($stmt->errorInfo());
@@ -232,6 +245,7 @@ class Agence extends DbObject{
         else {
             $sql = 'INSERT INTO `agence`
                     (`nom`,
+                    `indicatif`,
                     `telephone`,
                     `adresse`,
                     `code_postal`,
@@ -240,6 +254,7 @@ class Agence extends DbObject{
                     `actif`)
                 VALUES
                 (:nom,
+                 :indicatif,
                  :telephone,
                  :adresse,
                  :code_postal,
@@ -249,6 +264,7 @@ class Agence extends DbObject{
             )';
             $stmt = Config::getInstance()->getPDO()->prepare($sql);
             $stmt->bindValue(':nom', $this->nom);
+            $stmt->bindValue(':indicatif', $this->indicatif, \PDO::PARAM_INT);
             $stmt->bindValue(':telephone', $this->telephone, \PDO::PARAM_INT);
             $stmt->bindValue(':adresse', $this->adresse);
             $stmt->bindValue(':code_postal', $this->code_postal);
@@ -270,6 +286,7 @@ class Agence extends DbObject{
         $sql = '
                 SELECT `id`,
                     `nom`,
+                    `indicatif`,
                     `telephone`,
                     `adresse`,
                     `code_postal`,
@@ -287,9 +304,10 @@ class Agence extends DbObject{
         }
         else {
             $data = $stmt->fetch() ;
-            $userObject = new User(
+            $agenceObject = new User(
                 $data['id'],
                 $data['nom'],
+                $data['indicatif'],
                 $data['telephone'],
                 $data['adresse'],
                 $data['code_postal'],
@@ -298,7 +316,7 @@ class Agence extends DbObject{
                 $data['actif']
             );
         }
-        return $userObject ;
+        return $agenceObject ;
     }
 
 
@@ -326,6 +344,7 @@ class Agence extends DbObject{
         $sql = '
                 SELECT `id`,
                     `nom`,
+                    `indicatif`,
                     `telephone`,
                     `adresse`,
                     `code_postal`,
@@ -346,6 +365,7 @@ class Agence extends DbObject{
             $agenceObject = new Agence(
                 $data['id'],
                 $data['nom'],
+                $data['indicatif'],
                 $data['telephone'],
                 $data['adresse'],
                 $data['code_postal'],
@@ -371,6 +391,7 @@ class Agence extends DbObject{
             foreach ($allAgences as $row) {
 
                 $returnList[$row['id']]['nom'] = $row['nom'];
+                $returnList[$row['id']]['indicatif'] = $row['indicatif'];
                 $returnList[$row['id']]['telephone'] = $row['telephone'];
                 $returnList[$row['id']]['adresse'] = $row['adresse'];
                 $returnList[$row['id']]['code_postal'] = $row['code_postal'];
@@ -387,6 +408,7 @@ class Agence extends DbObject{
             SELECT
                 `agence`.`id`,
                 `agence`.`nom`,
+                `agence`.`indicatif`,
                 `agence`.`telephone`,
                 `agence`.`adresse`,
                 `agence`.`code_postal`,
@@ -402,7 +424,7 @@ class Agence extends DbObject{
         else {
             $allDatas = $stmt->fetchAll(\PDO::FETCH_ASSOC);
             foreach ($allDatas as $row) {
-                $returnList[$row['id']] = $row['nom'].' '.$row['ville'].' '.$row['pays'];
+                $returnList[$row['id']] = $row['nom'];
             }
         }
 
@@ -414,6 +436,7 @@ class Agence extends DbObject{
             SELECT
                 `agence`.`id`,
                 `agence`.`nom`,
+                `agence`.`indicatif`,
                 `agence`.`telephone`,
                 `agence`.`adresse`,
                 `agence`.`code_postal`,
@@ -432,6 +455,7 @@ class Agence extends DbObject{
                 $returnList[$row['id']]['nom'] = $row['nom'];
                 $returnList[$row['id']]['adresse'] = $row['adresse'];
                 $returnList[$row['id']]['code_postal'] = $row['code_postal'];
+                $returnList[$row['id']]['indicatif'] = $row['indicatif'];
                 $returnList[$row['id']]['telephone'] = $row['telephone'];
                 $returnList[$row['id']]['ville'] = $row['ville'];
                 $returnList[$row['id']]['pays'] = $row['pays'];
@@ -444,6 +468,7 @@ class Agence extends DbObject{
     public function agenceCreate(){
         $sql = 'INSERT INTO `agence`
                     (`nom`,
+                    `indicatif`,
                     `telephone`,
                     `adresse`,
                     `code_postal`,
@@ -452,6 +477,7 @@ class Agence extends DbObject{
                     `actif`)
                 VALUES
                 (:nom,
+                 :indicatif,
                  :telephone,
                  :adresse,
                  :code_postal,
@@ -461,6 +487,7 @@ class Agence extends DbObject{
             )';
         $stmt = Config::getInstance()->getPDO()->prepare($sql);
         $stmt->bindValue(':nom', $this->nom);
+        $stmt->bindValue(':indicatif', $this->indicatif, \PDO::PARAM_INT);
         $stmt->bindValue(':telephone', $this->telephone, \PDO::PARAM_INT);
         $stmt->bindValue(':adresse', $this->adresse);
         $stmt->bindValue(':code_postal', $this->code_postal);

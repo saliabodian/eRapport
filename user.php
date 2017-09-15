@@ -24,7 +24,7 @@ if(!empty($_SESSION)){
 
     $userId = isset($_GET['id'])? $_GET['id'] : '';
 
-    //var_dump($userId);
+    // var_dump($_SESSION);
 
     // exit;
 
