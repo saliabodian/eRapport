@@ -7,6 +7,16 @@
         <hr>
         <div class="row-fluid">
             <div class="span12">
+                <div class="controls controls-row">
+                    <label class="control-label span2 ">Recherche multicritère :</label>
+                    <input type="text" class="span6" name="search"/>
+                    <button type="submit" class="btn btn-success span3" >Rechercher</button>
+                </div>
+            </div>
+        </div>
+        <hr>
+        <div class="row-fluid">
+            <div class="span12">
                 <div class="widget-box">
                     <div class="widget-title"> <span class="icon"> <i class="icon-align-justify"></i> </span>
                         <h5>Sélection d'un interimaire</h5>
@@ -41,29 +51,24 @@
                         <form action="" method="post" class="form-horizontal" id="demoform">
                             <input type="hidden" name="interimaire_id" value="<?= $interimaireObject->getId() ?>">
                             <input type="hidden" name="matricule" value="<?= $interimaireObject->getMatricule() ?>">
-                            <input type="hidden" name="matricule_cns" value="<?= $interimaireObject->getMatriculeCns() ?>">
-                            <div class="control-group">
-                                <label for="matricule" class="control-label" >Matricule :</label>
-                                <div class="controls">
-                                    <input disabled type="text" class="span11" placeholder="" name="" value="<?= $interimaireObject->getMatricule() ?>"/>
+                            <?php if ($interimaireObject->getId() > 0) : ?>
+                                <div class="control-group">
+                                    <label for="matricule" class="control-label" >Matricule :</label>
+                                    <div class="controls">
+                                        <input disabled type="text" class="span11" placeholder="" name="" value="<?= $interimaireObject->getMatricule() ?>"/>
+                                    </div>
                                 </div>
-                            </div>
+                            <?php endif ?>
                             <div class="control-group">
-                                <label for="matricule_cns" class="control-label" >Matricule CNS :</label>
+                                <label for="nom" class="control-label">Nom <span>*</span>:</label>
                                 <div class="controls">
-                                    <input disabled type="text" class="span11" placeholder="" name="" value="<?= $interimaireObject->getMatriculeCns() ?>"/>
+                                    <input type="text" class="span11" placeholder="Nom" name="lastname" value="<?= $interimaireObject->getLastname() ?>"/>
                                 </div>
                             </div>
                             <div class="control-group">
                                 <label for="prenom" class="control-label">Prénom <span>*</span>:</label>
                                 <div class="controls">
-                                    <input type="text" class="span11" placeholder="Nom" name="firstname" value="<?= $interimaireObject->getFirstname() ?>"/>
-                                </div>
-                            </div>
-                            <div class="control-group">
-                                <label for="nom" class="control-label">Nom <span>*</span>:</label>
-                                <div class="controls">
-                                    <input type="text" class="span11" placeholder="Nom" name="lastname" value="<?= $interimaireObject->getLastname() ?>"/>
+                                    <input type="text" class="span11" placeholder="Préom" name="firstname" value="<?= $interimaireObject->getFirstname() ?>"/>
                                 </div>
                             </div>
                             <div class="control-group">
@@ -73,109 +78,59 @@
                                 </div>
                             </div>
                             <div class="control-group">
-                                <label for="taux" class="control-label">Taux:</label>
-                                <div class="controls">
-                                    <input type="text" class="span11" placeholder="taux" name="email" value="<?= $interimaireObject->getTaux() ?>"/>
-                                </div>
-                            </div>
-                            <div class="control-group">
-                                <label for="taux_horaire" class="control-label">Taux horaire :</label>
-                                <div class="controls">
-                                    <input type="text"  class="span11" placeholder="Taux horaire" name="taux_horaire" value="<?= $interimaireObject->getTauxHoraire() ?>"/>
-                                </div>
-                            </div>
-                            <div class="control-group">
-                                <label for="evaluateur" class="control-label">Evaluateur :</label>
-                                <div class="controls">
-                                    <input type="text"  class="span11" placeholder="Evaluateur" name="evaluateur" value="<?= $interimaireObject->getEvaluateur()  ?>"/>
-                                </div>
-                            </div>
-                            <div class="control-group">
-                                <label for="evaluation" class="control-label">Evaluation :</label>
-                                <div class="controls">
-                                    <input type="text"  class="span11" placeholder="Evaluation" name="evaluation" value="<?= $interimaireObject->getEvaluation() ?>"/>
-                                </div>
-                            </div>
-                            <div class="control-group">
-                                <label for="chantier_id" class="control-label">Chantier évalué :</label>
-                                <div class="controls mySelect">
-                                    <?php $selectChantier->displayHTML(); ?>
-                                </div>
-                            </div>
-                            <div class="control-group">
-                                <label for="charte_securite" class="control-label">Charte de sécurité ?</label>
-                                <div class="controls">
-                                    <input type="checkbox" name="charte_securite" <?php if($interimaireObject->isCharteSecurite()==1) : ?> checked <?php endif; ?> value="<?= $interimaireObject->isCharteSecurite()?> "/>
-                                </div>
-                            </div>
-                            <div class="control-group">
-                                <label for="date_evaluation" class="control-label">Date d'évaluation :</label>
-                                <div class="controls">
-                                    <input type="text"  name="date_evaluation" class="datepicker" value="<?= $interimaireObject->getDateEvaluation()?>"/>
-                                </div>
-                            </div>
-                            <div class="control-group">
-                                <label for="date_vm" class="control-label">Date VM :</label>
-                                <div class="controls">
-                                    <input type="text"  name="date_vm" class="datepicker" value="<?= $interimaireObject->getDateVm()?>"/>
-                                </div>
-                            </div>
-                            <div class="control-group">
-                                <label for="date_prem_cont" class="control-label">Date premier contrat :</label>
-                                <div class="controls">
-                                    <input type="text"   name="date_prem_cont" class="datepicker" value="<?= $interimaireObject->getDatePremCont()?>"/>
-                                </div>
-                            </div>
-                            <div class="control-group">
-                                <label for="date_cont_rec" class="control-label">Date contrat reconduit :</label>
-                                <div class="controls">
-                                    <input type="text"   name="date_cont_rec" class="datepicker" value="<?= $interimaireObject->getDateContRec()?>"/>
-                                </div>
-                            </div>
-                            <div class="control-group">
-                                <label for="date_deb" class="control-label">Date début :</label>
-                                <div class="controls">
-                                    <input type="text"   name="date_deb" class="datepicker" value="<?= $interimaireObject->getDateDeb()?>"/>
-                                </div>
-                            </div>
-                            <div class="control-group">
-                                <label for="date_fin" class="control-label">Date fin :</label>
-                                <div class="controls">
-                                    <input type="text"  name="date_fin" class="datepicker" value="<?= $interimaireObject->getDateFin()?>"/>
-                                </div>
-                            </div>
-                            <div class="control-group">
-                                <label for="worker_status" class="control-label">Type de travailleur :</label>
-                                <div class="controls">
-                                    <input type="text"  class="span11" placeholder="Type de travailleur" name="worker_status" value="<?= $interimaireObject->getWorkerStatus() ?>"/>
-                                </div>
-                            </div>
-                            <div class="control-group">
-                                <label for="rem_med" class="control-label">Remarques médicales :</label>
-                                <div class="controls">
-                                    <input type="text"  class="span11" placeholder="Remarques médicales" name="rem_med" value="<?= $interimaireObject->getRemMed() ?>"/>
-                                </div>
-                            </div>
-                            <div class="control-group">
-                                <label for="remarques" class="control-label">Remarques :</label>
-                                <div class="controls">
-                                    <input type="text"  class="span11" placeholder="Remarques" name="remarques" value="<?= $interimaireObject->getRemarques() ?>"/>
-                                </div>
-                            </div>
-                            <div class="control-group">
-                                <label for="metier_id" class="control-label">Poste actuel :</label>
-                                <div class="controls mySelect">
-                                    <?php $selectMetier->displayHTML(); ?>
-                                </div>
-                            </div>
-                            <div class="control-group">
                                 <label for="agence_id" class="control-label">Agence d'intérim :</label>
                                 <div class="controls mySelect">
                                     <?php $selectAgence->displayHTML(); ?>
                                 </div>
                             </div>
-
-
+                            <div class="control-group">
+                                <label for="metier_id" class="control-label">Métier :</label>
+                                <div class="controls mySelect">
+                                    <?php $selectMetier->displayHTML(); ?>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label for="qualification" class="control-label">Qualification :</label>
+                                <div class="controls mySelect">
+                                    <?php $selectMetier->displayHTML(); ?>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label for="departement" class="control-label">Département :</label>
+                                <div class="controls mySelect">
+                                    <?php $selectMetier->displayHTML(); ?>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label for="chef_dequipe" class="control-label">Chef d'équipe :</label>
+                                <div class="controls mySelect">
+                                    <?php $selectMetier->displayHTML(); ?>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label for="chantier" class="control-label">Chantier :</label>
+                                <div class="controls mySelect">
+                                    <?php $selectChantier->displayHTML(); ?>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label for="date_prem_cont" class="control-label">Date 1ère mise à disposition :</label>
+                                <div class="controls">
+                                    <input type="text"   name="date_prem_cont" class="datepicker" value="<?= $interimaireObject->getDatePremCont()?>"/>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label for="date_deb" class="control-label">Date début de mission:</label>
+                                <div class="controls">
+                                    <input type="text"   name="date_deb" class="datepicker" value="<?= $interimaireObject->getDateDeb()?>"/>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label for="date_fin" class="control-label">Date fin de mission:</label>
+                                <div class="controls">
+                                    <input type="text"  name="date_fin" class="datepicker" value="<?= $interimaireObject->getDateFin()?>"/>
+                                </div>
+                            </div>
                             <div class="form-actions">
                                 <div class=" span2 btn-block"></div>
                                 <div class="span4">

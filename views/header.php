@@ -38,7 +38,7 @@
 <!--top-Header-menu-->
 <div id="user-nav" class="navbar">
   <ul class="nav">
-    <li  class="dropdown" id="profile-messages" ><a title="" href="#" data-toggle="dropdown" data-target="#profile-messages" class="dropdown-toggle"><i class="icon icon-user"></i>  <span class="text">Welcome User</span></a></li>
+    <li  class="dropdown" id="profile-messages" ><a title="" href="#" data-toggle="dropdown" data-target="#profile-messages" class="dropdown-toggle"><i class="icon icon-user"></i>  <span class="text"><?=$_SESSION['username'].' - '.$_SESSION['firstname'].' '.$_SESSION['lastname'] ?></span></a></li>
     <li class=""><a title="" href="index.php?logout=true"><i class="icon icon-share-alt"></i> <span class="text">Logout</span></a></li>
   </ul>
 </div>

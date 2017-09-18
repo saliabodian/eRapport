@@ -531,6 +531,29 @@ class Interimaire extends DbObject{
         return $returnList;
     }
 
+    public static function getAllForSelectFilter()
+    {
+        $sql = '
+            SELECT
+                `id`,
+                `matricule`,
+                `firstname`,
+                `lastname`
+            FROM `interimaire`
+            ';
+        $stmt = Config::getInstance()->getPDO()->prepare($sql);
+        if ($stmt->execute() === false) {
+            print_r($stmt->errorInfo());
+        }
+        else {
+            $allDatas = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+            foreach ($allDatas as $row) {
+                $returnList[$row['id']] = $row['matricule'].' '.$row['firstname'].' '.$row['lastname'];
+            }
+        }
+        return $returnList;
+    }
+
     public static function getAllForSelectActif()
     {
         $sql = '

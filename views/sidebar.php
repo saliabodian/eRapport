@@ -15,6 +15,8 @@
         <li> <a href="metier.php">Gestion des métiers</a></li>
         <li> <a href="typeTache.php">Gestion des types de tâches</a></li>
         <li> <a href="tache.php">Gestion des tâches</a></li>
+        <li> <a href="qualification.php">Gestion des qualifications</a></li>
+        <li> <a href="departement.php">Gestion des départements</a></li>
         <li> <a href="interimaire.php">Gestion des intérimaires</a></li>
         <li> <a href="affectation.php">Affectation des intérimaires</a></li>
         <li> <a href="showAffectation.php">Intérimaires affectés par chantier</a></li>
