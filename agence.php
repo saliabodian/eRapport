@@ -37,8 +37,8 @@ if(!empty($_SESSION)) {
 
 
     if (!empty($_POST)) {
-        //    var_dump($_POST);
-        //    exit;
+    //        var_dump($_POST);
+    //        exit;
         $agenceId = isset($_POST['agence_id']) ? $_POST['agence_id'] : '';
         $agenceName = isset($_POST['agence']) ? $_POST['agence'] : '';
         $indicatif = isset($_POST['indicatif']) ? $_POST['indicatif'] : '';
@@ -48,13 +48,15 @@ if(!empty($_SESSION)) {
         $ville = isset($_POST['ville']) ? $_POST['ville'] : '';
         $pays = isset($_POST['pays']) ? $_POST['pays'] : '';
         $actif = isset($_POST['actif']) ? 1 : 0;
+        $firstMatricule = isset($_POST['first_matricule']) ? $_POST['first_matricule'] : '';
+        $lastMatricule = isset($_POST['last_matricule']) ? $_POST['last_matricule'] : '';
         $formOk = true;
 
         if (empty($_POST['agence'])) {
             $conf->addError('Veuillez renseigner le nom de l\'Agence');
             $formOk = false;
         }
-        var_dump(strlen($indicatif));
+        // var_dump(strlen($indicatif));
 
         //exit;
 
@@ -76,7 +78,56 @@ if(!empty($_SESSION)) {
         // var_dump($telephone);
         // var_dump($formOk);
 
+        if (!empty($firstMatricule)) {
+            if(strlen($firstMatricule)!=5){
+                $conf->addError('Le premier matricule doit être composé de 5 chiffres');
+                $formOk = false;
+            }
+        }
+        if (!empty($lastMatricule)) {
+            if(strlen($lastMatricule)!=5){
+                $conf->addError('Le dernier matricule doit être composé de 5 chiffres');
+                $formOk = false;
+            }
+        }
 
+        if(!empty($firstMatricule) && !empty($lastMatricule)){
+            if($firstMatricule >= $lastMatricule){
+                $conf->addError('Le premier matricule doit être inférieur au dernier matricule');
+                $formOk = false;
+            }
+        }
+
+
+
+        if(isset($_POST['agence_id'])){
+            $firstMatriculeExist = Agence::checkFirstMatriculeUpdate($_POST['agence_id'], $firstMatricule);
+            $lastMatriculeExist = Agence::checkLastMatriculeUpdate($_POST['agence_id'], $lastMatricule);
+            if($firstMatriculeExist>=1){
+                $conf->addError('Ce premier matricule est déjà utilisé');
+                $formOk = false;
+            }
+            if($lastMatriculeExist>=1){
+                $conf->addError('Ce dernier matricule est déjà utilisé');
+                $formOk = false;
+            }
+        }else{
+            $firstMatriculeExist = Agence::checkFirstMatricule($firstMatricule);
+            $lastMatriculeExist = Agence::checkLastMatricule($lastMatricule);
+            if($firstMatriculeExist>=1){
+                $conf->addError('Ce premier matricule est déjà utilisé');
+                $formOk = false;
+            }
+            if($lastMatriculeExist>=1){
+                $conf->addError('Ce dernier matricule est déjà utilisé');
+                $formOk = false;
+            }
+        }
+
+    //    var_dump($firstMatriculeExist);
+    //    var_dump($lastMatriculeExist);
+
+    //    exit;
 
         if ($formOk) {
             // Je remplis l'objet Agence avec les valeurs récupérées en POST
@@ -89,7 +140,9 @@ if(!empty($_SESSION)) {
                 $code_postal,
                 $ville,
                 $pays,
-                $actif
+                $actif,
+                $firstMatricule,
+                $lastMatricule
             );
              var_dump($agenceObject);
 

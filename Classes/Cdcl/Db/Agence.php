@@ -40,10 +40,6 @@ class Agence extends DbObject{
      */
     public $ville;
     /**
-     * @var timestamp
-     */
-    public $created;
-    /**
      * @var int
      */
     public $pays;
@@ -51,8 +47,17 @@ class Agence extends DbObject{
      * @var bool
      */
     public $actif;
+    /**
+     * @var int
+     */
+    public $firstMatricule;
+    /**
+     * @var int
+     */
+    public $lastMatricule;
 
-    function __construct($id=0, $nom='',$indicatif=0, $telephone=0, $adresse='', $code_postal='', $ville='', $pays='', $actif=0, $created=0)
+
+    function __construct($id=0, $nom='',$indicatif=0, $telephone=0, $adresse='', $code_postal='', $ville='', $pays='', $actif=0, $firstMatricule=0, $lastMatricule=0, $created=0)
     {
         $this->nom = $nom;
         $this->indicatif = $indicatif;
@@ -61,13 +66,28 @@ class Agence extends DbObject{
         $this->code_postal = $code_postal;
         $this->ville = $ville;
         $this->pays = $pays;
-        $this->created = $created;
         $this->actif = $actif;
+        $this->firstMatricule = $firstMatricule;
+        $this->lastMatricule = $lastMatricule;
         //parent constructeur
         parent::__construct($id, $created);
     }
 
+    /**
+     * @return int
+     */
+    public function getFirstMatricule()
+    {
+        return $this->firstMatricule;
+    }
 
+    /**
+     * @return int
+     */
+    public function getLastMatricule()
+    {
+        return $this->lastMatricule;
+    }
 
     /**
      * @return string
@@ -215,7 +235,9 @@ class Agence extends DbObject{
                 `code_postal` = :code_postal,
                 `ville` = :ville,
                 `pays` = :pays,
-                `actif` = :actif
+                `actif` = :actif,
+                `first_matricule` = :first_matricule ,
+                `last_matricule` = :last_matricule
                 WHERE `id` = :id
                 ';
             $stmt = Config::getInstance()->getPDO()->prepare($sql);
@@ -228,6 +250,8 @@ class Agence extends DbObject{
             $stmt->bindValue(':ville', $this->ville);
             $stmt->bindValue(':pays', $this->pays);
             $stmt->bindValue(':actif', $this->actif);
+            $stmt->bindValue(':first_matricule', $this->firstMatricule, \PDO::PARAM_INT);
+            $stmt->bindValue(':last_matricule', $this->lastMatricule, \PDO::PARAM_INT);
 
             var_dump($stmt);
 
@@ -251,7 +275,9 @@ class Agence extends DbObject{
                     `code_postal`,
                     `ville`,
                     `pays`,
-                    `actif`)
+                    `actif`,
+                    `first_matricule`,
+                    `last_matricule`)
                 VALUES
                 (:nom,
                  :indicatif,
@@ -260,7 +286,9 @@ class Agence extends DbObject{
                  :code_postal,
                  :ville,
                  :pays,
-                 :actif
+                 :actif,
+                 :first_matricule,
+                 :last_matricule
             )';
             $stmt = Config::getInstance()->getPDO()->prepare($sql);
             $stmt->bindValue(':nom', $this->nom);
@@ -271,6 +299,8 @@ class Agence extends DbObject{
             $stmt->bindValue(':ville', $this->ville);
             $stmt->bindValue(':pays', $this->pays);
             $stmt->bindValue(':actif', $this->actif);
+            $stmt->bindValue(':first_matricule', $this->firstMatricule, \PDO::PARAM_INT);
+            $stmt->bindValue(':last_matricule', $this->lastMatricule, \PDO::PARAM_INT);
 
             if ($stmt->execute() === false) {
                 print_r($stmt->errorInfo());
@@ -292,7 +322,9 @@ class Agence extends DbObject{
                     `code_postal`,
                     `ville`,
                     `pays`,
-                    `actif`
+                    `actif`,
+                    `first_matricule`,
+                    `last_matricule`
                 FROM `agence`
                 where id= :id
                 ';
@@ -313,7 +345,9 @@ class Agence extends DbObject{
                 $data['code_postal'],
                 $data['ville'],
                 $data['pays'],
-                $data['actif']
+                $data['actif'],
+                $data['first_matricule'],
+                $data['last_matricule']
             );
         }
         return $agenceObject ;
@@ -350,7 +384,9 @@ class Agence extends DbObject{
                     `code_postal`,
                     `ville`,
                     `pays`,
-                    `actif`
+                    `actif`,
+                    `first_matricule`,
+                    `last_matricule`
                 FROM `agence`
                 where id= :id
                 ';
@@ -371,7 +407,9 @@ class Agence extends DbObject{
                 $data['code_postal'],
                 $data['ville'],
                 $data['pays'],
-                $data['actif']
+                $data['actif'],
+                $data['first_matricule'],
+                $data['last_matricule']
             );
         }
         return $agenceObject ;
@@ -398,6 +436,8 @@ class Agence extends DbObject{
                 $returnList[$row['id']]['ville'] = $row['ville'];
                 $returnList[$row['id']]['pays'] = $row['pays'];
                 $returnList[$row['id']]['actif'] = $row['actif'];
+                $returnList[$row['id']]['first_matricule'] = $row['first_matricule'];
+                $returnList[$row['id']]['last_matricule'] = $row['last_matricule'];
             }
         }
         return $returnList;
@@ -414,7 +454,9 @@ class Agence extends DbObject{
                 `agence`.`code_postal`,
                 `agence`.`ville`,
                 `agence`.`pays`,
-                `agence`.`actif`
+                `agence`.`actif`,
+                `agence`.`first_matricule`,
+                `agence`.`last_matricule`
             FROM `agence`
             ';
         $stmt = Config::getInstance()->getPDO()->prepare($sql);
@@ -442,7 +484,9 @@ class Agence extends DbObject{
                 `agence`.`code_postal`,
                 `agence`.`ville`,
                 `agence`.`pays`,
-                `agence`.`actif`
+                `agence`.`actif`,
+                `agence`.`first_matricule`,
+                `agence`.`last_matricule`
             FROM `agence`
             ';
         $stmt = Config::getInstance()->getPDO()->prepare($sql);
@@ -460,6 +504,8 @@ class Agence extends DbObject{
                 $returnList[$row['id']]['ville'] = $row['ville'];
                 $returnList[$row['id']]['pays'] = $row['pays'];
                 $returnList[$row['id']]['actif'] = $row['actif'];
+                $returnList[$row['id']]['first_matricule'] = $row['first_matricule'];
+                $returnList[$row['id']]['last_matricule'] = $row['last_matricule'];
             }
         }
         return $returnList;
@@ -474,7 +520,9 @@ class Agence extends DbObject{
                     `code_postal`,
                     `ville`,
                     `pays`,
-                    `actif`)
+                    `actif`,
+                    `first_matricule`,
+                    `last_matricule`)
                 VALUES
                 (:nom,
                  :indicatif,
@@ -483,7 +531,10 @@ class Agence extends DbObject{
                  :code_postal,
                  :ville,
                  :pays,
-                 :actif
+                 :actif,
+                 :first_matricule,
+                 :last_matricule
+
             )';
         $stmt = Config::getInstance()->getPDO()->prepare($sql);
         $stmt->bindValue(':nom', $this->nom);
@@ -494,6 +545,8 @@ class Agence extends DbObject{
         $stmt->bindValue(':ville', $this->ville);
         $stmt->bindValue(':pays', $this->pays);
         $stmt->bindValue(':actif', $this->actif);
+        $stmt->bindValue(':first_matricule', $this->firstMatricule, \PDO::PARAM_INT);
+        $stmt->bindValue(':last_matricule', $this->lastMatricule, \PDO::PARAM_INT);
 
         if ($stmt->execute() === false) {
             print_r($stmt->errorInfo());
@@ -502,6 +555,54 @@ class Agence extends DbObject{
             return true;
         }
     }
+
+    public static function checkFirstMatricule($firstMatricule){
+        $sql='SELECT first_matricule from agence where first_matricule=:fisrt_matricule';
+        $stmt = Config::getInstance()->getPDO()->prepare($sql);
+        $stmt->bindValue(':fisrt_matricule', $firstMatricule, \PDO::PARAM_INT);
+        if($stmt->execute()=== false){
+            print_r($stmt->errorInfo());
+        }else{
+            return $firstMatriculeExist = $stmt->rowCount();
+        }
+    }
+
+    public static function checkLastMatricule($lastMatricule){
+        $sql='SELECT last_matricule from agence where last_matricule=:last_matricule';
+        $stmt = Config::getInstance()->getPDO()->prepare($sql);
+        $stmt->bindValue(':last_matricule', $lastMatricule, \PDO::PARAM_INT);
+        if($stmt->execute()===false){
+            print_r($stmt->errorInfo());
+        }else{
+            return $lastMatriculeExist = $stmt->rowCount();
+        }
+    }
+
+
+    public static function checkFirstMatriculeUpdate($agence_id, $firstMatricule){
+        $sql='SELECT first_matricule from agence where id <> :agence_id AND first_matricule=:fisrt_matricule';
+        $stmt = Config::getInstance()->getPDO()->prepare($sql);
+        $stmt->bindValue(':agence_id', $agence_id, \PDO::PARAM_INT);
+        $stmt->bindValue(':fisrt_matricule', $firstMatricule, \PDO::PARAM_INT);
+        if($stmt->execute()=== false){
+            print_r($stmt->errorInfo());
+        }else{
+            return $fstMatriculeExist = $stmt->rowCount();
+        }
+    }
+
+    public static function checkLastMatriculeUpdate($agence_id, $lastMatricule){
+        $sql='SELECT last_matricule from agence where id <> :agence_id AND last_matricule=:last_matricule';
+        $stmt = Config::getInstance()->getPDO()->prepare($sql);
+        $stmt->bindValue(':agence_id', $agence_id, \PDO::PARAM_INT);
+        $stmt->bindValue(':last_matricule', $lastMatricule, \PDO::PARAM_INT);
+        if($stmt->execute()===false){
+            print_r($stmt->errorInfo());
+        }else{
+            return $lstMatriculeExist = $stmt->rowCount();
+        }
+    }
+
 
 
 }

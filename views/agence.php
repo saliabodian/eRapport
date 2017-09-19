@@ -77,6 +77,12 @@
                                     <input type="text" class="span11" placeholder="Pays" name="pays"  value="<?= $agenceObject->getPays()?>"/>
                                 </div>
                             </div>
+                            <div class="control-group controls controls-row">
+                                <label for="first_matricule" class="span2 m-wrap">Premier matricule</label>
+                                <input type="number" class="span2 m-wrap" name="first_matricule" value="<?= $agenceObject->getFirstMatricule(); ?>">
+                                <label for="last_matricule" class="span2 m-wrap">Dernier matricule</label>
+                                <input type="number" class="span2 m-wrap" name="last_matricule" value="<?= $agenceObject->getLastMatricule(); ?>">
+                            </div>
                             <div class="control-group">
                                 <label for="is_actif" class="control-label">Est Actif ?</label>
                                 <div class="controls">
