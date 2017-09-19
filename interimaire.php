@@ -20,6 +20,12 @@ use Classes\Cdcl\Db\Agence;
 
 use Classes\Cdcl\Db\Chantier;
 
+use Classes\Cdcl\Db\Qualification;
+
+use Classes\Cdcl\Db\Departement;
+
+use Classes\Cdcl\Db\User;
+
 $conf = Config::getInstance();
 
 if(!empty($_SESSION)){
@@ -31,12 +37,25 @@ if(!empty($_SESSION)){
     // exit;
 
     $interimaireObject = new Interimaire();
+    if(!empty($_GET['search'])){
+        $interimaireList = Interimaire::getAllForSelectFilter($_GET['search']);
+    }else{
+        $interimaireList = Interimaire::getAllForSelect();
+    }
 
-    $interimaireList = Interimaire::getAllForSelect();
+    // var_dump($interimaireList);
+
+    // exit;
 
     $metierList = Metier::getAllForSelect();
 
     $agenceList = Agence::getAllForSelect();
+
+    $qualifList = Qualification::getAllForSelect();
+
+    $dptList = Departement::getAllForSelect();
+
+    $userList = User::getAllForSelect();
 
     $chantierList = Chantier::getAllForSelect();
 
@@ -89,6 +108,9 @@ if(!empty($_SESSION)){
         $old_metier_denomination = isset($_POST['old_metier_denomination']) ? $_POST['old_metier_denomination'] : '';
         $metier_id = isset($_POST['metier_id']) ? $_POST['metier_id'] : 0;
         $agence_id = isset($_POST['agence_id']) ? $_POST['agence_id'] : 0;
+        $qualif_id = isset($_POST['qualif_id']) ? $_POST['qualif_id'] : 0;
+        $dpt_id = isset($_POST['dpt_id']) ? $_POST['dpt_id'] : 0;
+        $user_id = isset($_POST['user_id']) ? $_POST['user_id'] : 0;
 
         $formOk = true;
 
@@ -141,7 +163,10 @@ if(!empty($_SESSION)){
             $remarques,
             $old_metier_denomination,
             new Metier($metier_id),
-            new Agence($agence_id)
+            new Agence($agence_id),
+            new Qualification($qualif_id),
+            new Departement($dpt_id),
+            new User($user_id)
             );
 
 
@@ -178,6 +203,25 @@ if(!empty($_SESSION)){
         'id' => 'id',
         'class' => 'form-control',
     ));
+
+    $selectQualif = new SelectHelper($qualifList, $interimaireObject->getQualifId()->getId(), array(
+        'name' => 'qualif_id',
+        'id' => 'id',
+        'class' => 'form-control',
+    ));
+
+    $selectDpt = new SelectHelper($dptList, $interimaireObject->getDptId()->getId(), array(
+        'name' => 'dpt_id',
+        'id' => 'id',
+        'class' => 'form-control',
+    ));
+
+    $selectUser = new SelectHelper($userList, $interimaireObject->getUserId()->getId(), array(
+        'name' => 'user_id',
+        'id' => 'id',
+        'class' => 'form-control',
+    ));
+
 
     // var_dump($selectChantier);
     // echo "<br>";

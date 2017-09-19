@@ -127,8 +127,20 @@ class Interimaire extends DbObject{
      * @var Agence
      */
     public $agence_id;
+    /**
+     * @var Qualification
+     */
+    public $qualif_id;
+    /**
+     * @var Departement
+     */
+    public $dpt_id;
+    /**
+     * @var User
+     */
+    public $user_id;
 
-    function __construct($id=0, $matricule='', $matricule_cns=0, $firstname='', $lastname='', $actif=0, $taux=0, $taux_horaire=0, $evaluation=null, $evaluateur=null, $chantier_id=null, $charte_securite=0, $date_evaluation=0, $date_vm=0, $date_prem_cont=0, $date_cont_rec=0, $date_deb=0, $date_fin=0, $worker_status=0, $rem_med='', $remarques='', $old_metier_denomination='', $metier_id=null, $agence_id=null, $created=0)
+    function __construct($id=0, $matricule='', $matricule_cns=0, $firstname='', $lastname='', $actif=0, $taux=0, $taux_horaire=0, $evaluation=null, $evaluateur=null, $chantier_id=null, $charte_securite=0, $date_evaluation=0, $date_vm=0, $date_prem_cont=0, $date_cont_rec=0, $date_deb=0, $date_fin=0, $worker_status=0, $rem_med='', $remarques='', $old_metier_denomination='', $metier_id=null, $agence_id=null, $qualif_id=null, $dpt_id=null, $user_id=null, $created=0)
     {
         $this->matricule = $matricule;
         $this->matricule_cns = $matricule_cns;
@@ -153,8 +165,36 @@ class Interimaire extends DbObject{
         $this->old_metier_denomination = $old_metier_denomination;
         $this->metier_id = isset($metier_id) ? $metier_id : new Metier();
         $this->agence_id = isset($agence_id) ? $agence_id : new Agence();
+        $this->qualif_id = isset($qualif_id) ? $qualif_id : new Qualification();
+        $this->dpt_id = isset($dpt_id) ? $dpt_id : new Departement();
+        $this->user_id = isset($user_id) ? $user_id : new User();
         parent::__construct($id, $created);
     }
+
+    /**
+     * @return Qualification
+     */
+    public function getQualifId()
+    {
+        return $this->qualif_id;
+    }
+
+    /**
+     * @return Departement
+     */
+    public function getDptId()
+    {
+        return $this->dpt_id;
+    }
+
+    /**
+     * @return User
+     */
+    public function getUserId()
+    {
+        return $this->user_id;
+    }
+
 
 
     /**
@@ -376,7 +416,10 @@ class Interimaire extends DbObject{
                 `remarques`,
                 `old_metier_denomination`,
                 `metier_id`,
-                `agence_id`
+                `agence_id`,
+                `qualif_id`,
+                `dpt_id`,
+                `user_id`
                  FROM interimaire
                  WHERE id= :id' ;
         $stmt = Config::getInstance()->getPDO()->prepare($sql);
@@ -411,6 +454,9 @@ class Interimaire extends DbObject{
                 $data['old_metier_denomination'],
                 new Metier($data['metier_id']),
                 new Agence($data['agence_id']),
+                new Agence($data['qualif_id']),
+                new Agence($data['dpt_id']),
+                new Agence($data['user_id']),
                 $data['created']
             );
         }
@@ -455,6 +501,9 @@ class Interimaire extends DbObject{
                 $returnList[$row['id']]['old_metier_denomination'] = $row['old_metier_denomination'];
                 $returnList[$row['id']]['metier_id'] = $row['metier_id'];
                 $returnList[$row['id']]['agence_id'] = $row['agence_id'];
+                $returnList[$row['id']]['qualif_id'] = $row['qualif_id'];
+                $returnList[$row['id']]['dpt_id'] = $row['dpt_id'];
+                $returnList[$row['id']]['user_id'] = $row['user_id'];
             }
         }
         return $returnList;
@@ -462,12 +511,41 @@ class Interimaire extends DbObject{
 
     public static function getAllIntActifs()
     {
-        $sql='SELECT interimaire.id, interimaire.matricule, interimaire.matricule_cns, interimaire.firstname, interimaire.lastname, interimaire.actif,
-              interimaire.taux, interimaire.taux_horaire, interimaire.evaluateur, interimaire.evaluation, evaluation_chantier_id, interimaire.charte_securite,
-              interimaire.date_evaluation,interimaire.date_vm, interimaire.date_prem_cont, interimaire.date_cont_rec, interimaire.date_deb, interimaire.date_fin,
-              interimaire.worker_status, interimaire.rem_med, interimaire.remarques, metier.nom_metier, agence.nom
-              FROM interimaire, metier, agence
-              WHERE interimaire.agence_id=agence.id AND interimaire.metier_id=metier.id AND interimaire.actif=1';
+        $sql='SELECT interimaire.id,
+                    interimaire.matricule,
+                    interimaire.matricule_cns,
+                    interimaire.firstname,
+                    interimaire.lastname,
+                    interimaire.actif,
+                    interimaire.taux,
+                    interimaire.taux_horaire,
+                    interimaire.evaluateur,
+                    interimaire.evaluation,
+                    interimaire.evaluation_chantier_id,
+                    interimaire.charte_securite,
+                    interimaire.date_evaluation,
+                    interimaire.date_vm,
+                    interimaire.date_prem_cont,
+                    interimaire.date_cont_rec,
+                    interimaire.date_deb,
+                    interimaire.date_fin,
+                    interimaire.worker_status,
+                    interimaire.rem_med,
+                    interimaire.remarques,
+                    metier.nom_metier,
+                    agence.nom
+              FROM interimaire
+                LEFT OUTER JOIN
+                    `metier` ON `interimaire`.`metier_id` = `metier`.`id`
+                LEFT OUTER JOIN
+                    `agence` ON `interimaire`.`agence_id` = `agence`.`id`
+                LEFT OUTER JOIN
+                    `qualification` ON `interimaire`.`qualif_id` = `qualification`.`id`
+                LEFT OUTER JOIN
+                    `departement` ON `interimaire`.`dpt_id` = `departement`.`id`
+                LEFT OUTER JOIN
+                    `user` ON `interimaire`.`user_id` = `user`.`id`
+                AND interimaire.actif=1';
         $pdoStmt = Config::getInstance()->getPDO()->prepare($sql);
         if ($pdoStmt->execute() === false) {
             print_r($pdoStmt->errorInfo());
@@ -512,11 +590,21 @@ class Interimaire extends DbObject{
     {
         $sql = '
             SELECT
-                `id`,
-                `matricule`,
-                `firstname`,
-                `lastname`
+                `interimaire`.`id`,
+                `interimaire`.`matricule`,
+                `interimaire`.`firstname`,
+                `interimaire`.`lastname`
             FROM `interimaire`
+              LEFT OUTER JOIN
+                 `metier` ON `interimaire`.`metier_id` = `metier`.`id`
+              LEFT OUTER JOIN
+                 `agence` ON `interimaire`.`agence_id` = `agence`.`id`
+              LEFT OUTER JOIN
+                 `qualification` ON `interimaire`.`qualif_id` = `qualification`.`id`
+              LEFT OUTER JOIN
+                  `departement` ON `interimaire`.`dpt_id` = `departement`.`id`
+              LEFT OUTER JOIN
+                 `user` ON `interimaire`.`user_id` = `user`.`id`
             ';
         $stmt = Config::getInstance()->getPDO()->prepare($sql);
         if ($stmt->execute() === false) {
@@ -531,17 +619,40 @@ class Interimaire extends DbObject{
         return $returnList;
     }
 
-    public static function getAllForSelectFilter()
+    public static function getAllForSelectFilter($search)
     {
         $sql = '
             SELECT
-                `id`,
-                `matricule`,
-                `firstname`,
-                `lastname`
+                `interimaire`.`id`,
+                `interimaire`.`matricule`,
+                `interimaire`.`firstname`,
+                `interimaire`.`lastname`,
+                `metier`.`nom_metier`,
+                `agence`.`nom`,
+                `qualification`.`nom_qualif`,
+                `departement`.`nom_dpt`,
+                `user`.`username`
             FROM `interimaire`
+              LEFT OUTER JOIN
+                 `metier` ON `interimaire`.`metier_id` = `metier`.`id`
+              LEFT OUTER JOIN
+                 `agence` ON `interimaire`.`agence_id` = `agence`.`id`
+              LEFT OUTER JOIN
+                 `qualification` ON `interimaire`.`qualif_id` = `qualification`.`id`
+              LEFT OUTER JOIN
+                  `departement` ON `interimaire`.`dpt_id` = `departement`.`id`
+              LEFT OUTER JOIN
+                 `user` ON `interimaire`.`user_id` = `user`.`id`
+            WHERE `interimaire`.`matricule` LIKE :search
+			OR `interimaire`.`firstname` LIKE :search
+			OR `interimaire`.`lastname` LIKE :search
+			OR `metier`.`nom_metier` LIKE :search
+			OR `agence`.`nom` LIKE :search
+			OR `qualification`.`nom_qualif` LIKE :search
+			OR `departement`.`nom_dpt` LIKE :search
             ';
         $stmt = Config::getInstance()->getPDO()->prepare($sql);
+        $stmt->bindValue(':search', '%'.$search.'%', \PDO::PARAM_STR);
         if ($stmt->execute() === false) {
             print_r($stmt->errorInfo());
         }
@@ -563,6 +674,16 @@ class Interimaire extends DbObject{
                 `firstname`,
                 `lastname`
             FROM `interimaire`
+              LEFT OUTER JOIN
+                 `metier` ON `interimaire`.`metier_id` = `metier`.`id`
+              LEFT OUTER JOIN
+                 `agence` ON `interimaire`.`agence_id` = `agence`.`id`
+              LEFT OUTER JOIN
+                 `qualification` ON `interimaire`.`qualif_id` = `qualification`.`id`
+              LEFT OUTER JOIN
+                  `departement` ON `interimaire`.`dpt_id` = `departement`.`id`
+              LEFT OUTER JOIN
+                  `user` ON `interimaire`.`user_id` = `user`.`id`
             WHERE `actif` = 1
             ';
         $stmt = Config::getInstance()->getPDO()->prepare($sql);
@@ -613,7 +734,11 @@ class Interimaire extends DbObject{
                 `remarques`= :remarques,
                 `old_metier_denomination`= :old_metier_denomination,
                 `metier_id`= :metier_id,
-                `agence_id`= :agence_id
+                `agence_id`= :agence_id,
+                `qualif_id`= :qualif_id,
+                `dpt_id`= :dpt_id,
+                `user_id`= :user_id
+
                 WHERE `id` = :id
                 ';
             $stmt = Config::getInstance()->getPDO()->prepare($sql);
@@ -641,6 +766,9 @@ class Interimaire extends DbObject{
             $stmt->bindValue(':old_metier_denomination', $this->old_metier_denomination);
             $stmt->bindValue(':metier_id', $this->metier_id->getId(), \PDO::PARAM_INT);
             $stmt->bindValue(':agence_id', $this->agence_id->getId(), \PDO::PARAM_INT);
+            $stmt->bindValue(':qualif_id', $this->qualif_id->getId(), \PDO::PARAM_INT);
+            $stmt->bindValue(':dpt_id', $this->dpt_id->getId(), \PDO::PARAM_INT);
+            $stmt->bindValue(':user_id', $this->user_id->getId(), \PDO::PARAM_INT);
             // print_r($this->chantier_id->getId());
 
             // exit;
@@ -677,7 +805,11 @@ class Interimaire extends DbObject{
                 `remarques`,
                 `old_metier_denomination`,
                 `metier_id`,
-                `agence_id`)
+                `agence_id`,
+                `qualif_id`,
+                `dpt_id`,
+                `user_id`
+                )
                 VALUES(
                 :matricule,
                 :matricule_cns,
@@ -701,7 +833,10 @@ class Interimaire extends DbObject{
                 :remarques,
                 :old_metier_denomination,
                 :metier_id,
-                :agence_id
+                :agence_id,
+                :qualif_id,
+                :dpt_id,
+                :user_id
               )';
 
             $stmt = Config::getInstance()->getPDO()->prepare($sql);
@@ -728,6 +863,9 @@ class Interimaire extends DbObject{
             $stmt->bindValue(':old_metier_denomination', $this->old_metier_denomination);
             $stmt->bindValue(':metier_id', $this->metier_id->getId(), \PDO::PARAM_INT);
             $stmt->bindValue(':agence_id', $this->agence_id->getId(), \PDO::PARAM_INT);
+            $stmt->bindValue(':qualif_id', $this->qualif_id->getId(), \PDO::PARAM_INT);
+            $stmt->bindValue(':dpt_id', $this->dpt_id->getId(), \PDO::PARAM_INT);
+            $stmt->bindValue(':user_id', $this->user_id->getId(), \PDO::PARAM_INT);
 
             // exit;
             if ($stmt->execute() === false) {

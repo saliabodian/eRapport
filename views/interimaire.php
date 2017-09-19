@@ -7,14 +7,21 @@
         <hr>
         <div class="row-fluid">
             <div class="span12">
-                <div class="controls controls-row">
-                    <label class="control-label span2 ">Recherche multicritère :</label>
-                    <input type="text" class="span6" name="search"/>
-                    <button type="submit" class="btn btn-success span3" >Rechercher</button>
+                <div class="widget-box">
+                    <div class="widget-title"> <span class="icon"> <i class="icon-align-justify"></i> </span>
+                        <h5>Recherche multicritères</h5>
+                    </div>
+                        <form action="" method="get" class="form-horizontal">
+                            <div class="controls controls-row">
+                                <label class="span2 m-wrap">Rechercher :</label>
+                                <input type="text" class="span6 m-wrap" name="search"/>
+                                <button type="submit" class="btn btn-success span3 m-wrap" >Rechercher</button>
+                            </div>
+                        </form>
+
                 </div>
             </div>
         </div>
-        <hr>
         <div class="row-fluid">
             <div class="span12">
                 <div class="widget-box">
@@ -78,7 +85,7 @@
                                 </div>
                             </div>
                             <div class="control-group">
-                                <label for="agence_id" class="control-label">Agence d'intérim :</label>
+                                <label for="agence_id" class="control-label">Agence :</label>
                                 <div class="controls mySelect">
                                     <?php $selectAgence->displayHTML(); ?>
                                 </div>
@@ -92,19 +99,19 @@
                             <div class="control-group">
                                 <label for="qualification" class="control-label">Qualification :</label>
                                 <div class="controls mySelect">
-                                    <?php $selectMetier->displayHTML(); ?>
+                                    <?php $selectQualif->displayHTML(); ?>
                                 </div>
                             </div>
                             <div class="control-group">
                                 <label for="departement" class="control-label">Département :</label>
                                 <div class="controls mySelect">
-                                    <?php $selectMetier->displayHTML(); ?>
+                                    <?php $selectDpt->displayHTML(); ?>
                                 </div>
                             </div>
                             <div class="control-group">
                                 <label for="chef_dequipe" class="control-label">Chef d'équipe :</label>
                                 <div class="controls mySelect">
-                                    <?php $selectMetier->displayHTML(); ?>
+                                    <?php $selectUser->displayHTML(); ?>
                                 </div>
                             </div>
                             <div class="control-group">
@@ -113,22 +120,23 @@
                                     <?php $selectChantier->displayHTML(); ?>
                                 </div>
                             </div>
+
                             <div class="control-group">
-                                <label for="date_prem_cont" class="control-label">Date 1ère mise à disposition :</label>
+                                <label for="date_prem_cont" class="control-label">Date première mise à disposition :</label>
                                 <div class="controls">
-                                    <input type="text"   name="date_prem_cont" class="datepicker" value="<?= $interimaireObject->getDatePremCont()?>"/>
+                                    <input name="date_prem_cont" class="datepicker" value="<?= $interimaireObject->getDatePremCont()?>"/>
                                 </div>
                             </div>
                             <div class="control-group">
                                 <label for="date_deb" class="control-label">Date début de mission:</label>
                                 <div class="controls">
-                                    <input type="text"   name="date_deb" class="datepicker" value="<?= $interimaireObject->getDateDeb()?>"/>
+                                    <input name="date_deb" class="datepicker" value="<?= $interimaireObject->getDateDeb()?>"/>
                                 </div>
                             </div>
                             <div class="control-group">
                                 <label for="date_fin" class="control-label">Date fin de mission:</label>
                                 <div class="controls">
-                                    <input type="text"  name="date_fin" class="datepicker" value="<?= $interimaireObject->getDateFin()?>"/>
+                                    <input name="date_fin" class="datepicker" value="<?= $interimaireObject->getDateFin()?>"/>
                                 </div>
                             </div>
                             <div class="form-actions">
