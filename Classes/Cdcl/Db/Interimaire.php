@@ -628,7 +628,8 @@ class Interimaire extends DbObject{
                 `agence`.`nom`,
                 `qualification`.`nom_qualif`,
                 `departement`.`nom_dpt`,
-                `user`.`username`
+                `user`.`username`,
+                `chantier`.`nom`
             FROM `interimaire`
               LEFT OUTER JOIN
                  `metier` ON `interimaire`.`metier_id` = `metier`.`id`
@@ -640,6 +641,8 @@ class Interimaire extends DbObject{
                   `departement` ON `interimaire`.`dpt_id` = `departement`.`id`
               LEFT OUTER JOIN
                  `user` ON `interimaire`.`user_id` = `user`.`id`
+             LEFT OUTER JOIN
+                 `chantier` ON `interimaire`.`evaluation_chantier_id` = `chantier`.`id`
             WHERE `interimaire`.`matricule` LIKE :search
 			OR `interimaire`.`firstname` LIKE :search
 			OR `interimaire`.`lastname` LIKE :search
@@ -647,6 +650,8 @@ class Interimaire extends DbObject{
 			OR `agence`.`nom` LIKE :search
 			OR `qualification`.`nom_qualif` LIKE :search
 			OR `departement`.`nom_dpt` LIKE :search
+			OR `chantier`.`nom` LIKE :search
+			OR `user`.`username` LIKE :search
 			ORDER BY `interimaire`.`lastname`
             ';
         $stmt = Config::getInstance()->getPDO()->prepare($sql);
@@ -1255,9 +1260,41 @@ class Interimaire extends DbObject{
                     print_r($stmt->errorInfo());
                 }
             }
+        }
+    }
+    // Modification des champs de date de début de mission et date de fin de mission après ré-affectation.
+    // Cette fonction ne devrait fonctionner au cas ou la réaffectation se fait pour la semaine courrante.
 
+    public static function updateDateDebutDateFinInterimaire($week){
+
+        $sql = 'SElECT date_debut, date_fin FROM interimaire_has_chantier WHERE woy=:woy limit 1';
+        $stmt = Config::getInstance()->getPDO()->prepare($sql);
+        $stmt->bindValue(':woy', $week, \PDO::PARAM_INT);
+        if($stmt->execute()===false){
+            print_r($stmt->errorInfo());
+        }else{
+            $dates = $stmt->fetch();
         }
 
+        $sql = 'SElECT DISTINCT interimaire_id FROM interimaire_has_chantier WHERE woy=:woy';
+        $stmt = Config::getInstance()->getPDO()->prepare($sql);
+        $stmt->bindValue(':woy', $week, \PDO::PARAM_INT);
+        if($stmt->execute()===false){
+            print_r($stmt->errorInfo());
+        }else{
+            $interimaireToUpdate = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        }
+
+        for($i=0; $i<sizeof($interimaireToUpdate); $i++){
+            $sql = 'UPDATE interimaire SET date_deb=:date_deb, date_fin=:date_fin WHERE id=:id';
+            $stmt=Config::getInstance()->getPDO()->prepare($sql);
+            $stmt->bindValue(':date_deb', $dates['date_debut']);
+            $stmt->bindValue(':date_fin', $dates['date_fin']);
+            $stmt->bindValue(':id', $interimaireToUpdate[$i]['interimaire_id']);
+            if($stmt->execute()===false){
+                print_r($stmt->errorInfo());
+            }
+        }
     }
 
 }

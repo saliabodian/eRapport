@@ -20,8 +20,8 @@ use Classes\Cdcl\Db\Interimaire;
 $conf = Config::getInstance();
 
 if(!empty($_SESSION)) {
-    //var_dump ($_GET);
-    // exit;
+    //var_dump (date('W',time()));
+   //  exit;
     if($_GET['reaffect']== true){
         $weekToDuplicate =$_GET['weekToDuplicate'] ;
         $weekToAffect =$_GET['weekToAffect'] ;
@@ -35,6 +35,14 @@ if(!empty($_SESSION)) {
         }
         if($formOk){
             Interimaire::duplicateAffectation($weekToDuplicate, $weekToAffect);
+            
+            // NB: Si les RH veulent les réaffectations avant la semaine courante
+            // c'est à dire à week-1 par exemple la condition sera de la sorte
+            // $weekToAffect===date('W',time())+1
+
+            if($weekToAffect === date('W',time())){
+                Interimaire::updateDateDebutDateFinInterimaire($weekToAffect);
+            }
             header('Location: affectation.php?success='.urlencode('Affectation des intérimaires effectuée avec succés'));
             exit;
         }else{
