@@ -6,27 +6,53 @@
     <div class="container-fluid">
         <hr>
         <div class="row-fluid">
-            <div class="span12">
+            <div class="span6">
                 <div class="widget-box">
                     <div class="widget-title"> <span class="icon"> <i class="icon-align-justify"></i> </span>
-                        <h5>Choix du chantier & de la date</h5>
+                        <h5>Choix du chantier & de la semaine</h5>
                     </div>
                     <div class="widget-content nopadding">
                         <form action="" method="get" class="form-horizontal">
                             <div class="control-group">
-                                <label class="control-label span3 m-wrap">Liste des chantiers</label>
-                                <div class="controls span3 m-wrap">
+                                <label class="control-label">Liste des chantiers</label>
+                                <div class="controls">
                                     <?php $selectChantier->displayHTML(); ?>
                                 </div>
                             </div>
                             <div class="control-group">
-                                <label class="control-label span3 m-wrap">Semaine du</label>
-                                <div class="controls span3 m-wrap">
-                                    <input type="text" name="date_deb" class="btn datepicker btn-block" value=""/>
+                                <label class="control-label">Semaine du</label>
+                                <div class="controls">
+                                    <input type="text" name="date_deb" class="btn datepicker btn-block span11 " value=""/>
                                 </div>
                             </div>
                             <div class="form-actions">
-                                <input type="submit" class="btn btn-success" value="Sélectionner" />
+                                <button type="submit" class="btn btn-success span4" value="">Rechercher</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="span6">
+                <div class="widget-box">
+                    <div class="widget-title"> <span class="icon"> <i class="icon-align-justify"></i> </span>
+                        <h5>Choix du chantier & du jour</h5>
+                    </div>
+                    <div class="widget-content nopadding">
+                        <form action="" method="post" class="form-horizontal">
+                            <div class="control-group">
+                                <label class="control-label">Liste des chantiers</label>
+                                <div class="controls">
+                                    <?php $selectChantier->displayHTML(); ?>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label">Date</label>
+                                <div class="controls">
+                                    <input type="text" name="date_deb" class="btn datepicker btn-block span11 " value=""/>
+                                </div>
+                            </div>
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-success span4" value="">Rechercher</button>
                             </div>
                         </form>
                     </div>
@@ -46,6 +72,7 @@
                                     <thead>
                                     <tr>
                                         <th>Intérimaires</th>
+                                        <th>Chantier</th>
                                         <th>Semaine</th>
                                         <th>Jour</th>
                                         <th></th>
@@ -55,8 +82,9 @@
                                     <?php foreach ($listInterimaires as $interimaireAffectes ) : ?>
                                         <tr class="odd gradeX">
                                             <td><?= $interimaireAffectes['matricule'].' - '.$interimaireAffectes['lastname'].' '.$interimaireAffectes['firstname'] ?></td>
-                                            <td><?= $interimaireAffectes['woy'] ?></td>
-                                            <td><?= $interimaireAffectes['doy'] ?></td>
+                                            <td style="text-align: center"><?= $interimaireAffectes['nom'] ?></td>
+                                            <td style="text-align: center"><?= $interimaireAffectes['woy'] ?></td>
+                                            <td style="text-align: center"><?= $interimaireAffectes['doy'].' - '.date('l', strtotime($interimaireAffectes['doy'])) ?></td>
                                             <td>
                                                 <a href="changeAffectation.php?row_id=<?= $interimaireAffectes['int_has_cht_id']?>&date_debut=<?= $interimaireAffectes['date_debut'] ?>&date_fin=<?= $interimaireAffectes['date_fin'] ?>&maj=true"  class="btn btn-warning  btn-block">Modifier</a>
                                             </td>

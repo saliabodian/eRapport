@@ -933,6 +933,43 @@ class Interimaire extends DbObject{
 
     }
 
+    public static function getInterimaireAffectedDay($doy, $chantier_id){
+        $sql='SELECT interimaire_has_chantier.id as int_has_cht_id,
+              interimaire_has_chantier.doy,
+              interimaire_has_chantier.woy,
+              interimaire_has_chantier.chantier_id,
+              interimaire_has_chantier.date_debut,
+              interimaire_has_chantier.date_fin,
+              interimaire_has_chantier.interimaire_id,
+              interimaire.matricule,
+              interimaire.id,
+              interimaire.firstname,
+              interimaire.lastname,
+              chantier.nom,
+              chantier.code
+              FROM interimaire_has_chantier, chantier,interimaire
+          where doy= :doy
+          AND interimaire_has_chantier.chantier_id= :chantier_id
+          AND interimaire.id= interimaire_has_chantier.interimaire_id
+          AND chantier.id =interimaire_has_chantier.chantier_id
+          ORDER BY `interimaire`.`lastname`, interimaire_has_chantier.date_debut, interimaire_has_chantier.doy, interimaire_has_chantier.woy, interimaire_has_chantier.woy';
+        $stmt=Config::getInstance()->getPDO()->prepare($sql);
+        $stmt->bindValue(':doy', $doy, \PDO::PARAM_INT);
+        $stmt->bindValue(':chantier_id', $chantier_id, \PDO::PARAM_INT);
+
+        // print_r($sql);
+
+        if ($stmt->execute() === false) {
+            print_r($stmt->errorInfo());
+        }
+        else {
+            $allDatas = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+            //var_dump($allDatas);
+            return $allDatas;
+        }
+
+    }
+
     public static function affectationSaved($chantier_id, $week, $listInterimaire, $date_debut){
         foreach($listInterimaire as $isAffected){
             for($i=0; $i<7; $i++){

@@ -40,27 +40,38 @@ if(!empty($_SESSION)) {
 
     // Date du jour sélectionné
     //$_GET['date_deb'] = timestamp
-    $selectedDay = !empty(date('Y-m-d', strtotime($_GET['date_deb']))) ? date('Y-m-d', strtotime($_GET['date_deb'])) : "";
+    if(!empty($_GET)){
 
+        $selectedDay = !empty(date('Y-m-d', strtotime($_GET['date_deb']))) ? date('Y-m-d', strtotime($_GET['date_deb'])) : "";
+        $selectedWeek = date('W', strtotime($selectedDay));
+        $listInterimaires = Interimaire::getInterimaireAffected($selectedWeek, $_GET['chantier_id']);
+
+    }
+
+    if(!empty($_POST)){
+
+        $selectedDay = !empty(date('Y-m-d', strtotime($_POST['date_deb']))) ? date('Y-m-d', strtotime($_POST['date_deb'])) : "";
+
+        $listInterimaires = Interimaire::getInterimaireAffectedDay($selectedDay, $_POST['chantier_id']);
+    }
+
+    // var_dump($_GET['date_deb']);
+
+ //   exit;
 
     // Semanine  correspondant au jour sélectionné
-    $selectedWeek = date('W', strtotime($selectedDay));
+    ;
 
 
     $selectChantier = new SelectHelper($listChantierActifs, $chantier_id->getId(), array(
         'name' => 'chantier_id',
         'id' => 'id',
-        'class' => 'form-control',
+        'class' => 'select2-container',
     ));
 
-    $listInterimaires = Interimaire::getInterimaireAffected($selectedWeek, $_GET['chantier_id']);
-
-
-
-
-    // $interiamireSelected=Interimaire::interimaireSelected($_POS['row_id']);
-
-    // var_dump($interiamireSelected);
+    if($_GET['day']===true){
+        $listInterimaires = Interimaire::getInterimaireAffected($selectedDay, $_GET['chantier_id']);
+    }
 
 
 
