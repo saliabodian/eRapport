@@ -18,7 +18,7 @@
         <li> <a href="qualification.php">Gestion des qualifications</a></li>
         <li> <a href="departement.php">Gestion des départements</a></li>
         <li> <a href="interimaire.php">Gestion des intérimaires</a></li>
-        <li> <a href="affectation.php">Affectation des intérimaires</a></li>
+        <li> <a href="affectation.php">Ré-affectation des intérimaires</a></li>
         <li> <a href="showAffectation.php">Intérimaires affectés par chantier</a></li>
       </ul>
     </li>

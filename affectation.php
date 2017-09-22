@@ -35,7 +35,7 @@ if(!empty($_SESSION)) {
         }
         if($formOk){
             Interimaire::duplicateAffectation($weekToDuplicate, $weekToAffect);
-            
+
             // NB: Si les RH veulent les réaffectations avant la semaine courante
             // c'est à dire à week-1 par exemple la condition sera de la sorte
             // $weekToAffect===date('W',time())+1
