@@ -387,10 +387,6 @@ class Interimaire extends DbObject{
      * @throws InvalidSqlQueryException
      */
     public static function get($id)
-        /**
-         *
-         *     $agence_id=null, $created=0
-        */
     {
         $sql='SELECT
                 `id`,
@@ -469,7 +465,7 @@ class Interimaire extends DbObject{
      */
     public static function getAll()
     {
-        $sql='SELECT * FROM interimaire';
+        $sql='SELECT * FROM interimaire ORDER BY lastname';
         $pdoStmt = Config::getInstance()->getPDO()->prepare($sql);
         if ($pdoStmt->execute() === false) {
             print_r($pdoStmt->errorInfo());
@@ -545,7 +541,8 @@ class Interimaire extends DbObject{
                     `departement` ON `interimaire`.`dpt_id` = `departement`.`id`
                 LEFT OUTER JOIN
                     `user` ON `interimaire`.`user_id` = `user`.`id`
-                AND interimaire.actif=1';
+                AND interimaire.actif=1
+                 ORDER BY interimaire.lastname';
         $pdoStmt = Config::getInstance()->getPDO()->prepare($sql);
         if ($pdoStmt->execute() === false) {
             print_r($pdoStmt->errorInfo());
@@ -605,7 +602,7 @@ class Interimaire extends DbObject{
                   `departement` ON `interimaire`.`dpt_id` = `departement`.`id`
               LEFT OUTER JOIN
                  `user` ON `interimaire`.`user_id` = `user`.`id`
-            ';
+              ORDER BY `interimaire`.`lastname`';
         $stmt = Config::getInstance()->getPDO()->prepare($sql);
         if ($stmt->execute() === false) {
             print_r($stmt->errorInfo());
@@ -650,6 +647,7 @@ class Interimaire extends DbObject{
 			OR `agence`.`nom` LIKE :search
 			OR `qualification`.`nom_qualif` LIKE :search
 			OR `departement`.`nom_dpt` LIKE :search
+			ORDER BY `interimaire`.`lastname`
             ';
         $stmt = Config::getInstance()->getPDO()->prepare($sql);
         $stmt->bindValue(':search', '%'.$search.'%', \PDO::PARAM_STR);
@@ -669,10 +667,10 @@ class Interimaire extends DbObject{
     {
         $sql = '
             SELECT
-                `id`,
-                `matricule`,
-                `firstname`,
-                `lastname`
+                `interimaire`.`id`,
+                `interimaire`.`matricule`,
+                `interimaire`.`firstname`,
+                `interimaire`.`lastname`
             FROM `interimaire`
               LEFT OUTER JOIN
                  `metier` ON `interimaire`.`metier_id` = `metier`.`id`
@@ -684,7 +682,9 @@ class Interimaire extends DbObject{
                   `departement` ON `interimaire`.`dpt_id` = `departement`.`id`
               LEFT OUTER JOIN
                   `user` ON `interimaire`.`user_id` = `user`.`id`
-            WHERE `actif` = 1
+            WHERE `interimaire`.`actif` = 1
+            ORDER BY `interimaire`.`lastname`
+
             ';
         $stmt = Config::getInstance()->getPDO()->prepare($sql);
         if ($stmt->execute() === false) {
@@ -913,9 +913,10 @@ class Interimaire extends DbObject{
               chantier.code
               FROM interimaire_has_chantier, chantier,interimaire
           where woy= :woy
-          AND chantier_id= :chantier_id
+          AND interimaire_has_chantier.chantier_id= :chantier_id
           AND interimaire.id= interimaire_has_chantier.interimaire_id
-          AND chantier.id =interimaire_has_chantier.chantier_id';
+          AND chantier.id =interimaire_has_chantier.chantier_id
+          ORDER BY `interimaire`.`lastname`, interimaire_has_chantier.date_debut, interimaire_has_chantier.doy, interimaire_has_chantier.woy, interimaire_has_chantier.woy';
         $stmt=Config::getInstance()->getPDO()->prepare($sql);
         $stmt->bindValue(':woy', $woy, \PDO::PARAM_INT);
         $stmt->bindValue(':chantier_id', $chantier_id, \PDO::PARAM_INT);
@@ -964,6 +965,36 @@ class Interimaire extends DbObject{
         }
     }
 
+    public static function affectationInterimaireSaved($chantier_id, $week, $isAffected, $date_debut){
+        for($i=0; $i<7; $i++){
+            $sql= 'INSERT INTO `interimaire_has_chantier`
+                (`interimaire_id`,
+                `chantier_id`,
+                doy,
+                woy,
+                date_debut,
+                date_fin)
+                VALUES(
+                :interimaire_id,
+                :chantier_id,
+                :doy,
+                :woy,
+                :date_debut,
+                :date_fin
+                )';
+            $stmt = Config::getInstance()->getPDO()->prepare($sql);
+            $stmt->bindValue(':interimaire_id', $isAffected, \PDO::PARAM_INT);
+            $stmt->bindValue(':chantier_id', $chantier_id, \PDO::PARAM_INT);
+            $stmt->bindValue(':doy', date('Y-m-d', mktime(0,0,0, date('m', strtotime($date_debut)), date('d', strtotime($date_debut))+$i, date('Y', strtotime($date_debut)))));
+            $stmt->bindValue(':woy', $week, \PDO::PARAM_INT);
+            $stmt->bindValue(':date_debut', $date_debut);
+            $stmt->bindValue(':date_fin', date('Y-m-d', mktime(0,0,0, date('m', strtotime($date_debut)), date('d', strtotime($date_debut))+6, date('Y', strtotime($date_debut)))));
+            if ($stmt->execute() === false) {
+                print_r($stmt->errorInfo());
+            }
+        }
+    }
+
     // Vérification de l'existance des affectationd pour un chantier une semaine et des intérimaires
 
     public static function checkAffectation($chantier_id, $week, $listInterimaire){
@@ -983,6 +1014,22 @@ class Interimaire extends DbObject{
             }
         }
 
+    }
+
+    public static function checkInterimaireAffectation($chantier_id, $week, $interimaire_id){
+        $sql = 'SELECT * FROM interimaire_has_chantier WHERE
+            interimaire_id= :interimaire_id
+            AND chantier_id= :chantier_id
+            AND woy= :woy';
+        $stmt = Config::getInstance()->getPDO()->prepare($sql);
+        $stmt->bindValue(':interimaire_id', $interimaire_id, \PDO::PARAM_INT);
+        $stmt->bindValue(':chantier_id', $chantier_id, \PDO::PARAM_INT);
+        $stmt->bindValue(':woy', $week, \PDO::PARAM_INT);
+        if ($stmt->execute() === false) {
+            print_r($stmt->errorInfo());
+        }else{
+            return $stmt->rowCount();
+        }
     }
 
     public static function interimaireSelected($int_has_chant_id) {
@@ -1072,7 +1119,107 @@ class Interimaire extends DbObject{
         return $row;
     }
 
-    public static function duplicateAffectation(){
+    public static function getLastMatricule($agence_id){
+        $sql='select matricule
+                from interimaire
+                WHERE agence_id= :agence_id
+              AND matricule >=10000 order by matricule desc limit 1';
+        $stmt= Config::getInstance()->getPDO()->prepare($sql);
+        $stmt->bindValue(':agence_id', $agence_id, \PDO::PARAM_INT);
+
+        if($stmt->execute()===false){
+            print_r($stmt->errorInfo());
+        }else{
+            $matricule =  $stmt->fetch();
+        }
+        return $newMatricule = $matricule['matricule'];
+    }
+
+    public static function getLastId($agence_id, $matricule){
+        $sql='select id
+                from interimaire
+                WHERE agence_id= :agence_id AND matricule = :matricule
+              AND matricule >=10000 order by matricule desc limit 1';
+        $stmt= Config::getInstance()->getPDO()->prepare($sql);
+        $stmt->bindValue(':agence_id', $agence_id, \PDO::PARAM_INT);
+        $stmt->bindValue(':matricule', $matricule, \PDO::PARAM_INT);
+
+        if($stmt->execute()===false){
+            print_r($stmt->errorInfo());
+        }else{
+            $id =  $stmt->fetch();
+        }
+        return $lastId = $id['id'];
+    }
+    public static function duplicateAffectation($weekToDuplicate, $weekToAffect){
+        /* Récupération des éléments de la semaine que l'on veut dupliquer*/
+        $sql = 'SELECT * FROM interimaire_has_chantier WHERE woy= :week';
+        $stmt = Config::getInstance()->getPDO()->prepare($sql);
+        $stmt->bindValue(':week', $weekToDuplicate, \PDO::PARAM_INT);
+        if($stmt->execute()=== false){
+            print_r($stmt->errorInfo());
+        }else{
+            $affectationEnCours = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        }
+        //var_dump($affectationEnCours);
+        // Calcul du nombre de jour à ajouter pour avoir les bonnes dates,
+        // ce nombre de jours nous permet d'avoir un pas et donc de faire une duplication entre des semaines n'étant pas juxtaposées
+        // exple duplicatat de ls semaine 38 pour semaine 46
+
+        $d= ($weekToAffect - $weekToDuplicate)*7;
+
+        // Vérification de l'existance d'affectation pour la nouvelle semaine d'affectation pour éviter les doublons
+
+        for($i=0; $i<sizeof($affectationEnCours); $i++) {
+        //    var_dump($affectationEnCours[$i]['interimaire_id']);
+        //    var_dump($weekToAffect);
+
+            $sql = 'SELECT interimaire_id as int_id FROM interimaire_has_chantier WHERE interimaire_id= :interimaire_id AND woy= :weekToAffect';
+            $stmt = Config::getInstance()->getPDO()->prepare($sql);
+            $stmt->bindValue(':weekToAffect', $weekToAffect, \PDO::PARAM_INT);
+            $stmt->bindValue(':interimaire_id', $affectationEnCours[$i]['interimaire_id'], \PDO::PARAM_INT);
+            if ($stmt->execute() === false) {
+                print_r($stmt->errorInfo());
+            } else {
+                $int_id[$i]=$stmt->fetch();
+                $row[$i] = $stmt->rowCount();
+            }
+        }
+
+    //    var_dump($row);
+    //    var_dump($int_id);
+
+
+
+       for($i=0; $i<sizeof($affectationEnCours); $i++){
+           // Insertion en base de données pour les intérimaires n'étant pas encore affectés pour la semaine choisie
+            if($row[$i]<1){
+                $sql='INSERT INTO interimaire_has_chantier (interimaire_id,
+                  chantier_id,
+                  doy,
+                  woy,
+                  date_debut,
+                  date_fin)
+                  VALUES
+                  (:interimaire_id,
+                  :chantier_id,
+                  :doy,
+                  :woy,
+                  :date_debut,
+                  :date_fin)';
+                $stmt=Config::getInstance()->getPDO()->prepare($sql);
+                $stmt->bindValue(':interimaire_id',$affectationEnCours[$i]['interimaire_id'], \PDO::PARAM_INT);
+                $stmt->bindValue(':chantier_id',$affectationEnCours[$i]['chantier_id'], \PDO::PARAM_INT);
+                $stmt->bindValue(':doy', date('Y-m-d', mktime(0,0,0, date('m', strtotime($affectationEnCours[$i]['doy'])), date('d', strtotime($affectationEnCours[$i]['doy']))+$d, date('Y', strtotime($affectationEnCours[$i]['doy'])))));
+                $stmt->bindValue(':woy',$weekToAffect, \PDO::PARAM_INT);
+                $stmt->bindValue(':date_debut', date('Y-m-d', mktime(0,0,0, date('m', strtotime($affectationEnCours[$i]['date_debut'])), date('d', strtotime($affectationEnCours[$i]['date_debut']))+$d, date('Y', strtotime($affectationEnCours[$i]['date_debut'])))));
+                $stmt->bindValue(':date_fin', date('Y-m-d', mktime(0,0,0, date('m', strtotime($affectationEnCours[$i]['date_fin'])), date('d', strtotime($affectationEnCours[$i]['date_fin']))+$d, date('Y', strtotime($affectationEnCours[$i]['date_fin'])))));
+                if($stmt->execute()===false){
+                    print_r($stmt->errorInfo());
+                }
+            }
+
+        }
 
     }
 

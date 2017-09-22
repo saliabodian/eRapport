@@ -209,6 +209,31 @@ Class User extends DbObject{
         return $returnList;
     }
 
+    public static function getAllForSelectChefDEquipe()
+    {
+        $sql = '
+            SELECT
+                `id`,
+                `username`,
+                `firstname`,
+                `lastname`,
+                `email`
+            FROM `user`
+            WHERE post_id = 1
+            ORDER BY `lastname`
+            ';
+        $stmt = Config::getInstance()->getPDO()->prepare($sql);
+        if ($stmt->execute() === false) {
+            print_r($stmt->errorInfo());
+        }
+        else {
+            $allDatas = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+            foreach ($allDatas as $row) {
+                $returnList[$row['id']] = $row['username'].' '.$row['firstname'].' '.$row['lastname'];
+            }
+        }
+        return $returnList;
+    }
     /**
      * @return bool
      * @throws InvalidSqlQueryException

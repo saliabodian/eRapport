@@ -85,7 +85,7 @@
                                 </div>
                             </div>
                             <div class="control-group">
-                                <label for="agence_id" class="control-label">Agence :</label>
+                                <label for="agence_id" class="control-label">Agence <span>*</span>:</label>
                                 <div class="controls mySelect">
                                     <?php $selectAgence->displayHTML(); ?>
                                 </div>

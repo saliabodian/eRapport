@@ -65,7 +65,10 @@
         return false;
     });
     $( function() {
-        $( ".datepicker" ).datepicker();
+        $( ".datepicker" ).datepicker({
+            showWeek: true,
+            firstDay: 1
+        });
     } );
 </script>
 </body>

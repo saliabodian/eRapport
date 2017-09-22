@@ -1,10 +1,49 @@
 <div id="content">
     <div id="content-header">
         <hr>
-        <h1>Affectation des intérimaires</h1>
+        <h1>Ré-affectation des intérimaires</h1>
     </div>
     <div class="container-fluid">
         <hr>
+        <div class="row-fluid">
+            <div class="span12">
+                <div class="widget-box">
+                    <div class="widget-title"> <span class="icon"> <i class="icon-align-justify"></i> </span>
+                        <h5>Ré-affectation des intérimaires</h5>
+                    </div>
+                    <div class="widget-content nopadding">
+                        <?php include 'alert.php'; ?>
+                        <form action="" method="get"  class="form-horizontal">
+                            <input type="hidden" name="reaffect" value="true"/>
+                            <div class="control-group">
+                                <label class="control-label span3 m-wrap">Semaine à dupliquer :</label>
+                                <div class="controls span3 m-wrap">
+                                    <select class="form-control" name="weekToDuplicate" id="">
+                                        <?php for($i=1; $i<=52; $i++): ?>
+                                            <option value="<?= $i ?>" <?php if($i== (date('W',time())-1)) : ?> selected="selected" <?php endif; ?>><?= 'Semaine '.$i ?> </option>
+                                        <?php endfor; ?>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label span4 m-wrap">Nouvelle semaine d'affectation :</label>
+                                <div class="controls span3 m-wrap">
+                                    <select class="form-control" name="weekToAffect" id="">
+                                        <?php for($i=1; $i<=52; $i++): ?>
+                                            <option value="<?= $i ?>" <?php if($i== (date('W',time()))) : ?> selected="selected" <?php endif; ?>><?= 'Semaine '.$i ?> </option>
+                                        <?php endfor; ?>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-actions">
+                                <input type="submit" class="btn btn-success" value="Ré-affecter" />
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="row-fluid">
             <div class="span12">
                 <div class="widget-box">
@@ -69,7 +108,7 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="form-actions">
+                            <!--div class="form-actions">
                                 <div class=" span2 btn-block"></div>
                                 <div class="span4">
                                     <button type="submit" class="btn btn-success btn-block" >Enregistrer</button>
@@ -78,7 +117,7 @@
                                     <a href="?delete=<? ?>" class="btn btn-warning  btn-block<?php  ?> disabled" role="button" aria-disabled="true">Supprimer</a>
                                 </div>
                                 <div class=" span2 btn-block"></div>
-                            </div>
+                            </div-->
                         </form>
                     </div>
                 </div>

@@ -473,6 +473,37 @@ class Agence extends DbObject{
         return $returnList;
     }
 
+    public static function getAllForSelectActif(){
+        $sql = '
+            SELECT
+                `agence`.`id`,
+                `agence`.`nom`,
+                `agence`.`indicatif`,
+                `agence`.`telephone`,
+                `agence`.`adresse`,
+                `agence`.`code_postal`,
+                `agence`.`ville`,
+                `agence`.`pays`,
+                `agence`.`actif`,
+                `agence`.`first_matricule`,
+                `agence`.`last_matricule`
+            FROM `agence`
+            WHERE `agence`.`actif` = 1
+            ';
+        $stmt = Config::getInstance()->getPDO()->prepare($sql);
+        if ($stmt->execute() === false) {
+            print_r($stmt->errorInfo());
+        }
+        else {
+            $allDatas = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+            foreach ($allDatas as $row) {
+                $returnList[$row['id']] = $row['nom'];
+            }
+        }
+
+        return $returnList;
+    }
+
     public static function getAllForSelect2(){
         $sql = '
             SELECT

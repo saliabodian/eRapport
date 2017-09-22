@@ -20,7 +20,27 @@ use Classes\Cdcl\Db\Interimaire;
 $conf = Config::getInstance();
 
 if(!empty($_SESSION)) {
-
+    //var_dump ($_GET);
+    // exit;
+    if($_GET['reaffect']== true){
+        $weekToDuplicate =$_GET['weekToDuplicate'] ;
+        $weekToAffect =$_GET['weekToAffect'] ;
+     //   var_dump($weekToDuplicate);
+     //   var_dump($weekToAffect);
+     //   exit;
+        $formOk = true;
+        if($weekToAffect <= $weekToDuplicate){
+            $conf->addError(' Le numéro de la semaine d\'affection doit être supérieure à celui de la semaine dupliquer ');
+            $form = false;
+        }
+        if($formOk){
+            Interimaire::duplicateAffectation($weekToDuplicate, $weekToAffect);
+            header('Location: affectation.php?success='.urlencode('Affectation des intérimaires effectuée avec succés'));
+            exit;
+        }else{
+            $conf->addError('Erreur : lors de la ré-affectation');
+        }
+    }
     $chantier_id = new Chantier();
 // Liste des chantiers actifs
     $listChantierActifs = Chantier::getAllForSelectActif();
@@ -37,7 +57,8 @@ if(!empty($_SESSION)) {
 
     $nomChantierChoisi = $chantierChoisiValues->getNom();
 
-
+    // Gestion de l'affectation des intérimaires supprimés pour prendre l'affectation direct
+    // à la création d'un intérimaire
 
     // Date du jour sélectionné
     //$_GET['date_deb'] = timestamp
@@ -74,7 +95,6 @@ if(!empty($_SESSION)) {
             $interimaireSelectedLight[]=$interimaireSelected['interimaire_id'];
         }
 
-    //    var_dump($interimaireSelectedLight);
 
 
 

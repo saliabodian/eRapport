@@ -49,15 +49,15 @@ if(!empty($_SESSION)){
 
     $metierList = Metier::getAllForSelect();
 
-    $agenceList = Agence::getAllForSelect();
+    $agenceList = Agence::getAllForSelectActif();
 
     $qualifList = Qualification::getAllForSelect();
 
     $dptList = Departement::getAllForSelect();
 
-    $userList = User::getAllForSelect();
+    $userList = User::getAllForSelectChefDEquipe();
 
-    $chantierList = Chantier::getAllForSelect();
+    $chantierList = Chantier::getAllForSelectActif();
 
 
 
@@ -82,7 +82,7 @@ if(!empty($_SESSION)){
     if(!empty($_POST)) {
         // exit;
         $interimaireId = isset($_POST['interimaire_id']) ? $_POST['interimaire_id'] : '';
-        $matricule = isset($_POST['matricule']) ? $_POST['matricule'] : '';
+
         //var_dump($matricule);
         //exit;
         $matricule_cns = isset($_POST['matricule_cns']) ? $_POST['matricule_cns'] : '';
@@ -136,6 +136,94 @@ if(!empty($_SESSION)){
             $formOk = false;
         }
 
+        if (empty($_POST['agence_id'])) {
+            $conf->addError('Veuillez renseigner l\'agence.');
+            $formOk = false;
+        }
+
+
+        // Génération automatique des matricules à partir du choîx de l'agence et des valeurs premiers matricules et dernier matricules définis
+        // pour l'agence correspondante
+
+        if($_POST['interimaire_id'] != 0){
+        //  Cas de Mise à jour d'un intérimaire
+        //  var_dump($_POST['interimaire_id']);
+            $matricule = isset($_POST['matricule']) ? $_POST['matricule'] : '';
+            // echo "Le matricule exist<br>";
+            // var_dump($matricule );
+            // exit;
+        }else{
+        //    echo "Nouvel Intérimaire<br>";
+            $matricule=Interimaire::getLastMatricule($agence_id);
+
+            if(empty($matricule)){
+                $agence=Agence::get($agence_id);
+                $matricule=$agence->getFirstMatricule()+1;
+                // echo "aucun matricule<br>";
+                // var_dump($matricule );
+                // exit;
+            }else{
+                $matricule=Interimaire::getLastMatricule($agence_id)+1;
+            }
+
+            $conf->addError('Le matricule n\'a pas pu être généré.');
+        }
+
+
+        // Affectation automatique d'un intérimaire si ce dernier est actif, et en fonction de sa date de début de mission (semaine correspondante)
+        // et du chantier qu'il lui est affecté
+
+        if($actif === 1){
+            if (empty($_POST['chantier_id'])) {
+                $conf->addError('Veuillez l\'affecter à un chantier.');
+                $formOk = false;
+            }
+
+            if (empty($_POST['user_id'])) {
+                $conf->addError('Veuillez lui rattacher un chef d\'équipe.');
+                $formOk = false;
+            }
+
+            if($date_deb <= '1970-01-01'){
+                $conf->addError('Veuillez renseigner une date de début de mission valide.');
+                $formOk = false;
+            }
+
+            if($date_deb >= $date_fin){
+                $conf->addError('Veuillez renseigner une date de fin de mission valide.');
+                $formOk = false;
+            }
+
+            // Date du jour sélectionné
+            //$_GET['date_deb'] = timestamp
+            $selectedDay = !empty(date('Y-m-d', strtotime($date_deb))) ? date('Y-m-d', strtotime($date_deb)) : "";
+            // var_dump($selectedDay);
+            // echo "<br>";
+
+            // Semanine  correspondant au jour sélectionné
+            $selectedWeek = date('W', strtotime($selectedDay));
+            // var_dump($selectedWeek);
+            // echo "<br>";
+
+            // Calcul de l'écart entre le jour de $day et le lundi (=1)
+            $rel = 1 - date('N', strtotime($selectedDay));
+
+            //calcul du premier jour de la semaine sélectionnée
+            // $firstDaySelectedWeek est une la valeur de la date au format 2017-09-18"
+            // strtotime($firstDaySelectedWeek) renvoie le timestamp de la valeur $firstDaySelectedWeek
+            $firstDaySelectedWeek = date('Y-m-d', strtotime("$rel days", strtotime($selectedDay)));
+            if($_POST['interimaire_id'] != 0){
+                $affectationExists = Interimaire::checkInterimaireAffectation($_POST['chantier_id'],$selectedWeek,$_POST['interimaire_id']);
+            //    var_dump($affectationExists);
+            //    exit;
+                if ($affectationExists >= 1){
+                    $conf->addWarning("Cet intérimaire a déjà été affecté pour ce chantier et cette date");
+                    // var_dump($conf->getInstance()->getWarningList());
+                    // exit;
+                }
+            }
+        }
+
 
         if ($formOk) {
             // Je remplis l'objet Interimaire avec les valeurs récupérées en POST
@@ -169,8 +257,26 @@ if(!empty($_SESSION)){
             new User($user_id)
             );
 
+            // var_dump($interimaireObject);
 
+            // exit;
             $interimaireObject->saveDB();
+
+            //  var_dump($interimaireObject);
+
+            // exit;
+
+            if($_POST['interimaire_id'] != 0){
+                if($affectationExists < 1){
+                    $affectation = Interimaire::affectationInterimaireSaved($chantier_id, $selectedWeek,$_POST['interimaire_id'], $firstDaySelectedWeek);
+                }
+            }else{
+                $id = Interimaire::getLastId($agence_id, $matricule);
+                // var_dump($id);
+                // exit;
+                 $affectation = Interimaire::affectationInterimaireSaved($chantier_id, $selectedWeek,$id, $firstDaySelectedWeek);
+            }
+
 
             header('Location: interimaire.php?success='.urlencode('Ajout/Modification effectuée').'&interimaire_id='.$interimaireObject->getId());
             exit;
