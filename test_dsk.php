@@ -50,7 +50,7 @@ echo "Ce sont tous les chantiers sur lesquels les chefs d’équipe ont fait au 
 
 
 $sql = "
-SELECT Booking.NoPers, Pers.FULLNAME, ACCOUNT.CUSTOM  FROM BOOKING
+SELECT Booking.NoPers, Pers.FULLNAME, ACCOUNT.CUSTOM, PERSHISTORY.CUSTOM3  FROM BOOKING
 INNER JOIN Pers on (Pers.NoPers=Booking.NoPers)
 INNER JOIN PERSHISTORY ON
 ((PERSHISTORY.NOPERS=BOOKING.NOPERS)
@@ -151,6 +151,7 @@ $all_chef_dequipe_of_the_day[$i]["FULLNAME"] = $row->FULLNAME;
 //$pointeuse[$i]["hpoint"] = $row->MINTOH;
 
 $all_chef_dequipe_of_the_day[$i]["CUSTOM"] = $row->CUSTOM;
+$all_chef_dequipe_of_the_day[$i]["Noyau"] = $row->CUSTOM3;
 
 
 $i++;
@@ -165,7 +166,7 @@ var_dump($all_chef_dequipe_of_the_day);
 echo "2. Liste des chefs d'équipe sur un chantier et une date donnée :<br><br>";
 
 $sql = "
-        SELECT Booking.NoPers, Pers.FULLNAME, ACCOUNT.CUSTOM  FROM BOOKING
+        SELECT Booking.NoPers, Pers.FULLNAME, ACCOUNT.CUSTOM, PERSHISTORY.CUSTOM3  FROM BOOKING
 INNER JOIN Pers on (Pers.NoPers=Booking.NoPers)
 INNER JOIN PERSHISTORY ON
  ((PERSHISTORY.NOPERS=BOOKING.NOPERS)
@@ -262,6 +263,7 @@ while($row = ibase_fetch_object($sth)) {
 //$pointeuse[$i]["hpoint"] = $row->MINTOH;
 
     $chef_dequipe_onsite[$i]["CUSTOM"] = $row->CUSTOM;
+    $chef_dequipe_onsite[$i]["CUSTOM3"] = $row->CUSTOM3;
 
 
     $i++;
@@ -282,7 +284,7 @@ INNER JOIN PERSHISTORY ON
 ((PERSHISTORY.NOPERS=BOOKING.NOPERS)
     AND (PERSHISTORY.STARTDATE<= BOOKING.THEDATE)
     AND ((PERSHISTORY.ENDDATE IS NULL) OR (PERSHISTORY.ENDDATE>= Booking.THEDATE))
-    AND (PERSHISTORY.CUSTOM3='0')
+    AND (PERSHISTORY.CUSTOM3= '748')
 )
 LEFT JOIN TERMS ON (
     (
@@ -503,7 +505,7 @@ LEFT JOIN TERMS ON (
 
  INNER JOIN account on (Account.NoAccount=TERMSHISTORY.SIte and ACCOUNT.CUSTOM=156100)
 
- WHERE THEDATE='2017-03-12'
+ WHERE THEDATE='2017-09-26'
 
 AND PERSHISTORY.CUSTOM3 NOT IN (SELECT PERSHISTORY.CUSTOM3  FROM BOOKING
 INNER JOIN Pers on (Pers.NoPers=Booking.NoPers)
@@ -581,7 +583,7 @@ LEFT JOIN TERMS ON (
 
  INNER JOIN account on (Account.NoAccount=TERMSHISTORY.SITE and ACCOUNT.CUSTOM=156100)
 
- WHERE THEDATE='2017-09-13'
+ WHERE THEDATE='2017-09-26'
 
 
 
@@ -633,6 +635,24 @@ while($row = ibase_fetch_object($sth)) {
 }
 
 var_dump($absence_cumulee);
+
+echo "<br>7. Liste des noyaux<br><br>";
+
+    $sql="SELECT DISTINCT CUSTOM3 FROM  PERSHISTORY";
+
+
+    $sth = ibase_query($dbh, $sql);
+
+    $i=0;
+
+    while($row = ibase_fetch_object($sth)) {
+
+        $team[$i]["noyau"] = $row->CUSTOM3;
+
+        $i++;
+    }
+
+    var_dump($team);
 ?>
 </pre>
 
