@@ -22,7 +22,7 @@ class Dsk {
         $dbh = ibase_connect("31.204.90.68:C:\DSK\Data\dsk2.fdb","SYSDBA","masterkey");
 
         $sql = "
-        SELECT Booking.NoPers, Pers.FULLNAME, ACCOUNT.CUSTOM  FROM BOOKING
+        SELECT Booking.NoPers,Pers.CODEPERS, Pers.FULLNAME, ACCOUNT.CUSTOM  FROM BOOKING
         INNER JOIN Pers on (Pers.NoPers=Booking.NoPers)
         INNER JOIN PERSHISTORY ON
         ((PERSHISTORY.NOPERS=BOOKING.NOPERS)
@@ -99,16 +99,16 @@ class Dsk {
             INNER JOIN account on Account.NoAccount=TERMSHISTORY.SITE
             WHERE THEDATE='".$date."'
 
-        AND PERSHISTORY.CUSTOM1 LIKE 'Chef d''%quipe' " ;
+        AND PERSHISTORY.CUSTOM3 = PERS.CODEPERS " ;
 
         $sth = ibase_query($dbh, $sql);
 
         $i=0;
 
         while($row = ibase_fetch_object($sth)){
-            $allChefDEquipeByDay[$i]["NoPers"] = $row->NOPERS;
-            $allChefDEquipeByDay[$i]["FULLNAME"] = $row->FULLNAME;
-            $allChefDEquipeByDay[$i]["CUSTOM"] = $row->CUSTOM;
+            $allChefDEquipeByDay[$i]["matricule"] = trim($row->CODEPERS);
+            $allChefDEquipeByDay[$i]["fullname"] = $row->FULLNAME;
+            $allChefDEquipeByDay[$i]["chantier"] = $row->CUSTOM;
             $i++;
         }
         return $allChefDEquipeByDay;
@@ -120,7 +120,7 @@ class Dsk {
 
         $dbh = ibase_connect("31.204.90.68:C:\DSK\Data\dsk2.fdb","SYSDBA","masterkey");
         $sql = "
-        SELECT Booking.NoPers, Pers.FULLNAME, ACCOUNT.CUSTOM  FROM BOOKING
+        SELECT Booking.NoPers, PERS.CODEPERS, Pers.FULLNAME, ACCOUNT.CUSTOM,PERSHISTORY.CUSTOM3 FROM BOOKING
         INNER JOIN Pers on (Pers.NoPers=Booking.NoPers)
         INNER JOIN PERSHISTORY ON
          ((PERSHISTORY.NOPERS=BOOKING.NOPERS)
@@ -196,15 +196,16 @@ class Dsk {
 
       INNER JOIN account on ((Account.NoAccount=TERMSHISTORY.SITE) AND (ACCOUNT.CUSTOM = ".$chantier.") )
       WHERE THEDATE ='".$date."'
-      AND PERSHISTORY.CUSTOM1 LIKE 'Chef d''%quipe'
+      AND PERSHISTORY.CUSTOM3 = PERS.CODEPERS
     ";
 
         $sth = ibase_query($dbh, $sql);
         $i=0;
         while($row = ibase_fetch_object($sth)) {
-            $chefDEquipeOnsite[$i]["NoPers"] = $row->NOPERS;
-            $chefDEquipeOnsite[$i]["FULLNAME"] = $row->FULLNAME;
-            $chefDEquipeOnsite[$i]["CUSTOM"] = $row->CUSTOM;
+            $chefDEquipeOnsite[$i]["matricule"] = trim($row->CODEPERS);
+            $chefDEquipeOnsite[$i]["fullname"] = $row->FULLNAME;
+            $chefDEquipeOnsite[$i]["chantier"] = $row->CUSTOM;
+            $chefDEquipeOnsite[$i]["noyau"] = $row->CUSTOM3;
             $i++;
         }
     return $chefDEquipeOnsite;
@@ -216,14 +217,13 @@ class Dsk {
 
         $dbh = ibase_connect("31.204.90.68:C:\DSK\Data\dsk2.fdb","SYSDBA","masterkey");
 
-        $sql = "
-        SELECT Booking.NoPers, Pers.FULLNAME, ACCOUNT.CUSTOM,PERSHISTORY.CUSTOM3  FROM BOOKING
+        $sql = " SELECT Booking.NoPers, Pers.CODEPERS, Pers.FULLNAME, ACCOUNT.CUSTOM, PERSHISTORY.CUSTOM3  FROM BOOKING
         INNER JOIN Pers on (Pers.NoPers=Booking.NoPers)
         INNER JOIN PERSHISTORY ON
         ((PERSHISTORY.NOPERS=BOOKING.NOPERS)
             AND (PERSHISTORY.STARTDATE<= BOOKING.THEDATE)
             AND ((PERSHISTORY.ENDDATE IS NULL) OR (PERSHISTORY.ENDDATE>= Booking.THEDATE))
-            AND (PERSHISTORY.CUSTOM3=".$noyau.")
+            AND (PERSHISTORY.CUSTOM3= '".$noyau."')
         )
         LEFT JOIN TERMS ON (
             (
@@ -292,21 +292,25 @@ class Dsk {
         ON ((TERMSHISTORY.NOTERM = TERMS.NOTERM)
             AND (TERMSHISTORY.STARTDATE<=BOOKING.THEDATE)
             AND ((TERMSHISTORY.ENDDATE>=BOOKING.THEDATE) OR TERMSHISTORY.ENDDATE IS NULL))
-            INNER JOIN account on ((Account.NoAccount=TERMSHISTORY.SITE) AND (ACCOUNT.CUSTOM = ".$chantier.") )
+            INNER JOIN account on ((Account.NoAccount=TERMSHISTORY.SITE) AND (ACCOUNT.CUSTOM = ".$chantier."))
          WHERE THEDATE='".$date."'
          ";
 
         $sth = ibase_query($dbh, $sql);
         $i=0;
-        while($row = ibase_fetch_object($sth)) {
 
-            $team[$i]["NoPers"] = $row->NOPERS;$noyau[$i]["FULLNAME"] = $row->FULLNAME;
-            $team[$i]["CUSTOM"] = $row->CUSTOM;
-            $team[$i]["CUSTOM3"] = $row->CUSTOM3;
+
+
+        while($row = ibase_fetch_object($sth)) {
+            $team[$i]["id"] = $row->NOPERS;
+            $team[$i]["matricule"] = trim($row->CODEPERS);
+            $team[$i]["fullname"] = $row->FULLNAME;
+            $team[$i]["chantier"] = $row->CUSTOM;
+            $team[$i]["noyau"] = $row->CUSTOM3;
             $i++;
         }
-        return $team;
 
+        return $team;
     }
 
     ###   4. Liste détaillée des absences pour la personne et la date :
@@ -316,7 +320,7 @@ class Dsk {
         $dbh = ibase_connect("31.204.90.68:C:\DSK\Data\dsk2.fdb","SYSDBA","masterkey");
 
         $sql = "
-            SELECT PERS.NOPERS, PERS.FULLNAME, ABSENCE.THEDATE, ABSENCE.TIMEMIN, ACCOUNT.CAPTION1 FROM ABSENCE
+            SELECT PERS.NOPERS, PERS.CODEPERS, PERS.FULLNAME, ABSENCE.THEDATE, ABSENCE.TIMEMIN, ACCOUNT.CAPTION1 FROM ABSENCE
             INNER JOIN PERS ON PERS.NOPERS = ABSENCE.NOPERS
             INNER JOIN ACCOUNT ON ABSENCE.NOACCOUNT= ACCOUNT.NOACCOUNT
             WHERE THEDATE='".$date."'
@@ -328,12 +332,12 @@ class Dsk {
         $i=0;
 
         while($row = ibase_fetch_object($sth)) {
-            $absence[$i]["NoPers"] = $row->NOPERS;
-            $absence[$i]["FULLNAME"] = $row->FULLNAME;
-            $absence[$i]["FULLNAME"] = $row->FULLNAME;
-            $absence[$i]["THEDATE"] = $row->THEDATE;
-            $absence[$i]["TIMEMIN"] = $row->TIMEMIN;
-            $absence[$i]["CUSTOM3"] = $row->CAPTION1;
+            $absence[$i]["id"] = $row->NOPERS;
+            $absence[$i]["matricule"] = trim($row->CODEPERS);
+            $absence[$i]["fullname"] = $row->FULLNAME;
+            $absence[$i]["date"] = $row->THEDATE;
+            $absence[$i]["timemin"] = $row->TIMEMIN;
+            $absence[$i]["caption1"] = $row->CAPTION1;
             $i++;
         }
 
@@ -347,7 +351,7 @@ class Dsk {
         $dbh = ibase_connect("31.204.90.68:C:\DSK\Data\dsk2.fdb","SYSDBA","masterkey");
 
         $sql = "
-            SELECT PERS.NOPERS, PERS.FULLNAME, ABSENCE.THEDATE, ABSENCE.TIMEMIN, ACCOUNT.CAPTION1 FROM ABSENCE
+            SELECT PERS.NOPERS,PERS.CODEPERS, PERS.FULLNAME, ABSENCE.THEDATE, ABSENCE.TIMEMIN, ACCOUNT.CAPTION1 FROM ABSENCE
             INNER JOIN PERS ON PERS.NOPERS = ABSENCE.NOPERS
             INNER JOIN ACCOUNT ON ABSENCE.NOACCOUNT= ACCOUNT.NOACCOUNT
             WHERE THEDATE='".$date."'
@@ -358,12 +362,12 @@ class Dsk {
         $i=0;
 
         while($row = ibase_fetch_object($sth)) {
-            $allAbsence[$i]["NoPers"] = $row->NOPERS;
-            $allAbsence[$i]["FULLNAME"] = $row->FULLNAME;
-            $allAbsence[$i]["FULLNAME"] = $row->FULLNAME;
-            $allAbsence[$i]["THEDATE"] = $row->THEDATE;
-            $allAbsence[$i]["TIMEMIN"] = $row->TIMEMIN;
-            $allAbsence[$i]["CUSTOM3"] = $row->CAPTION1;
+            $allAbsence[$i]["id"] = $row->NOPERS;
+            $allAbsence[$i]["matricule"] = trim($row->CODEPERS);
+            $allAbsence[$i]["fullname"] = $row->FULLNAME;
+            $allAbsence[$i]["date"] = $row->THEDATE;
+            $allAbsence[$i]["timemin"] = $row->TIMEMIN;
+            $allAbsence[$i]["motif"] = $row->CAPTION1;
             $i++;
         }
 
@@ -376,7 +380,7 @@ class Dsk {
 
         $dbh = ibase_connect("31.204.90.68:C:\DSK\Data\dsk2.fdb","SYSDBA","masterkey");
 
-        $sql= "SELECT PERSHISTORY.CUSTOM3, Booking.NoPers, Pers.FULLNAME, ACCOUNT.CUSTOM  FROM BOOKING
+        $sql= "SELECT PERSHISTORY.CUSTOM3, Booking.NoPers, Pers.FULLNAME,PERS.CODEPERS, ACCOUNT.CUSTOM  FROM BOOKING
                 INNER JOIN Pers on (Pers.NoPers=Booking.NoPers)
                 INNER JOIN PERSHISTORY ON
                 ((PERSHISTORY.NOPERS=BOOKING.NOPERS)
@@ -532,7 +536,7 @@ class Dsk {
 
                  WHERE THEDATE='".$date."'
 
-                AND PERSHISTORY.CUSTOM1 LIKE 'Chef d''%quipe'
+                AND PERSHISTORY.CUSTOM3 = PERS.CODEPERS
                 )";
 
         $sth = ibase_query($dbh, $sql);
@@ -540,10 +544,11 @@ class Dsk {
         $i=0;
 
         while($row = ibase_fetch_object($sth)) {
-            $horsNoyau[$i]["CUSTOM3"] = $row->CUSTOM3;
-            $horsNoyau[$i]["NoPers"] = $row->NOPERS;
-            $horsNoyau[$i]["FULLNAME"] = $row->FULLNAME;
-            $horsNoyau[$i]["CUSTOM"] = $row->CUSTOM;
+            $horsNoyau[$i]["noyau"] = $row->CUSTOM3;
+            $horsNoyau[$i]["id"] = $row->NOPERS;
+            $horsNoyau[$i]["matricule"] = trim($row->CODEPERS);
+            $horsNoyau[$i]["fullname"] = $row->FULLNAME;
+            $horsNoyau[$i]["chantier"] = $row->CUSTOM;
             $i++;
         }
 
@@ -557,7 +562,7 @@ class Dsk {
 
         $dbh = ibase_connect("31.204.90.68:C:\DSK\Data\dsk2.fdb","SYSDBA","masterkey");
 
-        $sql = "SELECT PERS.FULLNAME, ABSENCE.THEDATE, SUM(ABSENCE.TIMEMIN) FROM ABSENCE
+        $sql = "SELECT PERS.NOPERS, PERS.CODEPERS,PERS.FULLNAME, ABSENCE.THEDATE, SUM(ABSENCE.TIMEMIN) FROM ABSENCE
         INNER JOIN PERS ON PERS.NOPERS = ABSENCE.NOPERS
         INNER JOIN ACCOUNT ON ABSENCE.NOACCOUNT= ACCOUNT.NOACCOUNT
         WHERE THEDATE='".$date."' AND PERS.NOPERS=".$worker."
@@ -570,9 +575,11 @@ class Dsk {
 
         while($row = ibase_fetch_object($sth)) {
 
-            $absence_cumulee[$i]["FULLNAME"] = $row->FULLNAME;
-            $absence_cumulee[$i]["THEDATE"] = $row->THEDATE;
-            $absence_cumulee[$i]["ABSENCE"] = $row->ABSENCE;
+            $absence_cumulee[$i]["id"] = $row->NOPERS;
+            $absence_cumulee[$i]["matricule"] = trim($row->CODEPERS);
+            $absence_cumulee[$i]["fullname"] = $row->FULLNAME;
+            $absence_cumulee[$i]["date"] = $row->THEDATE;
+            $absence_cumulee[$i]["absence"] = $row->ABSENCE;
 
             $i++;
         }
@@ -587,14 +594,18 @@ class Dsk {
 
         $dbh = ibase_connect("31.204.90.68:C:\DSK\Data\dsk2.fdb","SYSDBA","masterkey");
 
-        $sql="SELECT DISTINCT CUSTOM3 FROM  PERSHISTORY";
+        $sql="
+                SELECT trim(PERS.CODEPERS) AS CODEPERS FROM PERS
+                INNER JOIN PERSHISTORY ON PERSHISTORY.NOPERS=PERS.NOPERS
+                WHERE PERSHISTORY.CUSTOM3=PERS.CODEPERS ORDER BY PERS.CODEPERS
+                ";
 
         $sth = ibase_query($dbh, $sql);
 
         $i=0;
 
         while($row = ibase_fetch_object($sth)) {
-            $team[$i]["noyau"] = $row->CUSTOM3;
+            $team[$i]["noyau"] = $row->CODEPERS;
             $i++;
         }
 
@@ -615,7 +626,7 @@ class Dsk {
 
         while ($row = ibase_fetch_object($sth))
         {
-            $pointeuse[$i]["matricule"] = $row->CODEPERS;
+            $pointeuse[$i]["matricule"] = trim($row->CODEPERS);
             $pointeuse[$i]["id"] = $row->NOPERS;
             $pointeuse[$i]["nom"] = $row->FULLNAME;
             $pointeuse[$i]["hpoint"] = $row->RVALUE;
@@ -643,8 +654,8 @@ class Dsk {
         {
             $profession[$i]["matricule"] = $row->NOPERS;
             $profession[$i]["nom"] = $row->FULLNAME;
-            $profession[$i]["CUSTOM1"] = $row->CUSTOM1;
-            $profession[$i]["CODEDEPT"] = $row->CODEDEPT;
+            $profession[$i]["metier"] = $row->CUSTOM1;
+            $profession[$i]["dpt"] = $row->CODEDEPT;
 
             $i++;
         }
@@ -668,7 +679,7 @@ class Dsk {
 
         while ($row = ibase_fetch_object($sth))
         {
-            $dept[$i]["CODEDEPT"] = $row->CODEDEPT;
+            $dept[$i]["dpt"] = $row->CODEDEPT;
 
             $i++;
         }
@@ -690,11 +701,45 @@ class Dsk {
 
         while ($row = ibase_fetch_object($sth))
         {
-            $metier[$i]["CUSTOM1"] = $row->CUSTOM1;
+            $metier[$i]["metier"] = $row->CUSTOM1;
 
             $i++;
         }
         return $metier;
+    }
+
+    public static function getAllNoyauAbsence($noyau, $date){
+
+        $dbh = ibase_connect("31.204.90.68:C:\DSK\Data\dsk2.fdb","SYSDBA","masterkey");
+
+        $sql="SELECT PERS.FULLNAME, PERS.CODEPERS, ABSENCE.THEDATE, ABSENCE.TIMEMIN, ACCOUNT.CAPTION1 , PERSHISTORY.CUSTOM3 FROM ABSENCE
+                INNER JOIN PERS ON PERS.NOPERS = ABSENCE.NOPERS
+                INNER JOIN PERSHISTORY ON (PERS.NOPERS = PERSHISTORY.NOPERS )
+                INNER JOIN ACCOUNT ON ABSENCE.NOACCOUNT= ACCOUNT.NOACCOUNT
+
+                WHERE THEDATE='".$date."' AND
+                (PERSHISTORY.STARTDATE<='".$date."'
+                AND (PERSHISTORY.ENDDATE>='".$date."' OR PERSHISTORY.ENDDATE IS NULL) )
+
+                AND PERSHISTORY.CUSTOM3= '".$noyau."'
+                ";
+
+        $sth = ibase_query($dbh, $sql);
+
+        $i=0;
+
+        while ($row = ibase_fetch_object($sth))
+        {
+            $membreNoyauAbsence[$i]["matricule"] = trim($row->CODEPERS);
+            $membreNoyauAbsence[$i]["fullname"] = $row->FULLNAME;
+            $membreNoyauAbsence[$i]["date"] = $row->THEDATE;
+            $membreNoyauAbsence[$i]["timemin"] = $row->TIMEMIN;
+            $membreNoyauAbsence[$i]["motif"] = $row->CAPTION1;
+
+            $i++;
+        }
+
+        return $membreNoyauAbsence;
     }
 
 }

@@ -20,7 +20,8 @@
         <li> <a href="interimaire.php">Gestion des intérimaires</a></li>
         <li> <a href="affectation.php">Ré-affectation des intérimaires</a></li>
         <li> <a href="showAffectation.php">Intérimaires affectés par chantier</a></li>
-        <li> <a href="ereport.php">Les rapports journaliers</a></li>
+        <li> <a href="erapport.php">Génération du erapport</a></li>
+        <li> <a href="erapportShow.php">Les erapports</a></li>
       </ul>
     </li>
   </ul>

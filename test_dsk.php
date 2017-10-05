@@ -128,7 +128,7 @@ LEFT JOIN TERMS ON (
 
  WHERE THEDATE='2017-09-12'
 
-AND PERSHISTORY.CUSTOM1 LIKE 'Chef d''%quipe'
+AND PERSHISTORY.CUSTOM3 = PERS.CODEPERS
 "
 ;
 
@@ -243,7 +243,7 @@ LEFT JOIN TERMS ON (
 INNER JOIN account on ((Account.NoAccount=TERMSHISTORY.SITE) AND (ACCOUNT.CUSTOM = 156100) )
  WHERE THEDATE = '2017-09-13'
 
-AND PERSHISTORY.CUSTOM1 LIKE 'Chef d''%quipe'
+AND PERSHISTORY.CUSTOM3 = PERS.CODEPERS
 ";
 
 
@@ -356,7 +356,7 @@ LEFT JOIN TERMS ON (
 
  INNER JOIN account on ((Account.NoAccount=TERMSHISTORY.SITE) AND (ACCOUNT.CUSTOM = 156100) )
 
- WHERE THEDATE='2017-09-13'
+ WHERE THEDATE='2017-09-27'
  ";
 
 $sth = ibase_query($dbh, $sql);
@@ -429,7 +429,7 @@ var_dump($absence);
 
 echo "<br>5. Liste des personnes ayant pointé sur le chantier sélectionné mais ne faisant pas parti d'un chef d'équipe sur ce chantier<br><br>";
 
-$sql= "SELECT PERSHISTORY.CUSTOM3, Booking.NoPers, Pers.FULLNAME, ACCOUNT.CUSTOM  FROM BOOKING
+$sql= "SELECT PERSHISTORY.CUSTOM3, Booking.NoPers, Pers.FULLNAME, Pers.CODEPERS, ACCOUNT.CUSTOM  FROM BOOKING
 INNER JOIN Pers on (Pers.NoPers=Booking.NoPers)
 INNER JOIN PERSHISTORY ON
 ((PERSHISTORY.NOPERS=BOOKING.NOPERS)
@@ -587,7 +587,7 @@ LEFT JOIN TERMS ON (
 
 
 
-AND PERSHISTORY.CUSTOM1 LIKE 'Chef d''%quipe'
+AND PERSHISTORY.CUSTOM3 = PERS.CODEPERS
 )";
 
 $sth = ibase_query($dbh, $sql);
@@ -597,8 +597,9 @@ $i=0;
 while($row = ibase_fetch_object($sth)) {
 
 
-    $horsNoyau[$i]["CUSTOM3"] = $row->CUSTOM3;
-    $horsNoyau[$i]["NoPers"] = $row->NOPERS;
+    $horsNoyau[$i]["noyau"] = $row->CUSTOM3;
+    $horsNoyau[$i]["id"] = $row->NOPERS;
+    $horsNoyau[$i]["matricule"] = $row->CODEPERS;
     $horsNoyau[$i]["FULLNAME"] = $row->FULLNAME;
     $horsNoyau[$i]["CUSTOM"] = $row->CUSTOM;
 
@@ -636,9 +637,9 @@ while($row = ibase_fetch_object($sth)) {
 
 var_dump($absence_cumulee);
 
-echo "<br>7. Liste des noyaux<br><br>";
+//echo "<br>7. Liste des noyaux<br><br>";
 
-    $sql="SELECT DISTINCT CUSTOM3 FROM  PERSHISTORY";
+    $sql="SELECT DISTINCT  CUSTOM3 FROM  PERSHISTORY WHERE CUSTOM3 IS NOT NULL ";
 
 
     $sth = ibase_query($dbh, $sql);
@@ -652,7 +653,29 @@ echo "<br>7. Liste des noyaux<br><br>";
         $i++;
     }
 
-    var_dump($team);
+//    var_dump($team);
+
+
+echo "<br>Autres méthodes de récupérer les noyaux<br>";
+
+$sql="SELECT trim(PERS.CODEPERS) AS CODEPERS FROM PERS
+INNER JOIN PERSHISTORY ON PERSHISTORY.NOPERS=PERS.NOPERS
+WHERE PERSHISTORY.CUSTOM3=PERS.CODEPERS ORDER BY PERS.CODEPERS";
+
+$sth = ibase_query($dbh, $sql);
+
+$i=0;
+
+while($row = ibase_fetch_object($sth)) {
+
+    $noyau_new[$i]["noyau_new"] = $row->CODEPERS;
+
+    $i++;
+}
+
+var_dump($noyau_new);
+
+
 ?>
 </pre>
 

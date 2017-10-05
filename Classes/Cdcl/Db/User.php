@@ -482,7 +482,7 @@ Class User extends DbObject{
         }
     }
 
-    function listChantierByUser($user_id){
+    public static function listChantierByUser($user_id){
         $sql='SELECT chantier_id FROM chantier_has_user WHERE user_id= :user_id';
         $stmt = Config::getInstance()->getPDO()->prepare($sql);
         $stmt->bindValue(':user_id', $user_id, \PDO::PARAM_INT);
@@ -495,6 +495,84 @@ Class User extends DbObject{
         }
     }
 
+    public static function listChantierByUserForSelect($user_id){
+        $sql='SELECT chantier_has_user.chantier_id, chantier.id, chantier.nom, chantier.code FROM chantier_has_user
+              INNER JOIN
+              chantier ON chantier.id = chantier_has_user.chantier_id
+              WHERE user_id= :user_id';
+        $stmt = Config::getInstance()->getPDO()->prepare($sql);
+        $stmt->bindValue(':user_id', $user_id, \PDO::PARAM_INT);
+        if ($stmt->execute() === false) {
+            print_r($stmt->errorInfo());
+        }
+        else {
+            $listChantiers = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+            foreach ($listChantiers as $row) {
+                $returnList[$row['id']] = $row['code'].' '.$row['nom'];
+            }
+            return $returnList;
+        }
+    }
+
+    public static function getAllForSelectChefDEquipebyChantier($chantier_id)
+    {
+        $sql = '
+            SELECT
+                `user`.`id`,
+                `user`.`username`,
+                `user`.`firstname`,
+                `user`.`lastname`,
+                `user`.`email`
+            FROM `user` INNER JOIN
+            chantier_has_user ON chantier_has_user.user_id = user.id
+            WHERE post_id = 1
+            AND chantier_has_user.chantier_id = :chantier_id
+            ORDER BY `lastname`
+            ';
+        $stmt = Config::getInstance()->getPDO()->prepare($sql);
+        $stmt->bindValue(':chantier_id', $chantier_id, \PDO::PARAM_INT);
+        if ($stmt->execute() === false) {
+            print_r($stmt->errorInfo());
+        }
+        else {
+            $allDatas = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+            foreach ($allDatas as $row) {
+                $returnList[$row['id']] = $row['username'].' '.$row['firstname'].' '.$row['lastname'];
+            }
+        }
+        return $returnList;
+    }
+
+    public static function getChefDEquipeForSelectbyChantier($chantier_id, $user_id)
+    {
+        $sql = '
+            SELECT
+                `user`.`id`,
+                `user`.`username`,
+                `user`.`firstname`,
+                `user`.`lastname`,
+                `user`.`email`
+            FROM `user` INNER JOIN
+            chantier_has_user ON chantier_has_user.user_id = user.id
+            WHERE post_id = 1
+            AND chantier_has_user.chantier_id = :chantier_id
+            AND user.id = :user_id
+            ORDER BY `lastname`
+            ';
+        $stmt = Config::getInstance()->getPDO()->prepare($sql);
+        $stmt->bindValue(':chantier_id', $chantier_id, \PDO::PARAM_INT);
+        $stmt->bindValue(':user_id', $user_id, \PDO::PARAM_INT);
+        if ($stmt->execute() === false) {
+            print_r($stmt->errorInfo());
+        }
+        else {
+            $allDatas = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+            foreach ($allDatas as $row) {
+                $returnList[$row['id']] = $row['username'].' '.$row['firstname'].' '.$row['lastname'];
+            }
+        }
+        return $returnList;
+    }
 
 
 }
