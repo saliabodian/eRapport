@@ -9,3 +9,8 @@
     font-weight: normal;
     line-height: 20px;
 }
+
+.moreActions{
+    display: none;
+/*    background-color: blue; */
+}

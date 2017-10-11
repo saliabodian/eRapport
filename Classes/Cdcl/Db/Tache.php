@@ -226,4 +226,16 @@ class Tache extends DbObject{
             return true;
         }
     }
+
+    public static function getTacheByTypeTache($typeTacheId){
+        $sql = "SELECT tache.* FROM tache, type_tache where tache.type_tache_id =:typeTacheId AND tache.type_tache_id=type_tache.id";
+        $stmt = Config::getInstance()->getPDO()->prepare($sql);
+        $stmt->bindValue(':typeTacheId', $typeTacheId, \PDO::PARAM_INT);
+        if($stmt->execute()===false){
+            print_r($stmt->errorInfo());
+        }else{
+            $tasks = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        }
+        return $tasks;
+    }
 }

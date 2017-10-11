@@ -70,6 +70,224 @@
             firstDay: 1
         });
     } );
+
+
+    $(document).ready(function(){
+        $('#check_all').click(function(){
+            if(this.checked){
+                $('.checkbox_noyau').each(function(){
+                    this.checked = true;
+                });
+            }else{
+                $('.checkbox_noyau').each(function(){
+                    this.checked = false;
+                });
+            }
+        });
+
+        $('.checkbo_noyaux').click(function(){
+            if($('.checkbox_noyau:checked').length == $('.checkbox_noyau').length){
+                $('#check_all').prop('checked',true);
+            }else{
+                $('#check_all').prop('checked',false);
+            }
+        });
+    });
+
+    $(document).ready(function(){
+        $('#check_all_abs').click(function(){
+            if(this.checked){
+                $('.checkbox_abs').each(function(){
+                    this.checked = true;
+                });
+            }else{
+                $('.checkbox_abs').each(function(){
+                    this.checked = false;
+                });
+            }
+        });
+
+        $('.checkbox_abs').click(function(){
+            if($('.checkbox_abs:checked').length == $('.checkbox_abs').length){
+                $('#check_all_abs').prop('checked',true);
+            }else{
+                $('#check_all_abs').prop('checked',false);
+            }
+        });
+    });
+    $(document).ready(function(){
+        $('#check_hn').click(function(){
+            if(this.checked){
+                $('.checkbox_hn').each(function(){
+                    this.checked = true;
+                });
+            }else{
+                $('.checkbox_hn').each(function(){
+                    this.checked = false;
+                });
+            }
+        });
+
+        $('.checkbox_hn').click(function(){
+            if($('.checkbox_hn:checked').length == $('.checkbox_hn').length){
+                $('#check_hn').prop('checked',true);
+            }else{
+                $('#check_hn').prop('checked',false);
+            }
+        });
+    });
+    /*
+
+    Gestion de l'ajout dynamique des lignes
+    je mets cette option en suspens à cause d'un bug que je n'arrive pas à corriger
+    $(document).ready(function() {
+
+        $(".add-more").click(function(){
+            var html = $(".copy").html();
+            $(".tasks").after(html);
+        });
+
+        $("body").on("click",".remove",function(){
+            $(this).parents(".addRow").remove();
+        });
+
+    });
+    */
+    $(document).ready(function() {
+        $(".typeTask").change(function () {
+
+            var id = $(this).val();
+            var dataString = 'tsk_type_id=' + id;
+            //alert(dataString);
+            $.ajax
+            ({
+                type: "POST",
+                url: "getTache.php",
+                data: dataString,
+                success: function (html) {
+                    $(".task").html(html);
+                }
+            });
+        });
+    });
+
+    $(document).ready(function() {
+        $(".typeTask2").change(function () {
+
+            var id = $(this).val();
+            var dataString = 'tsk_type_id=' + id;
+            //alert(dataString);
+            $.ajax
+            ({
+                type: "POST",
+                url: "getTache.php",
+                data: dataString,
+                success: function (html) {
+                    $(".task2").html(html);
+                }
+            });
+        });
+    });
+
+    $(document).ready(function() {
+        $(".typeTask3").change(function () {
+
+            var id = $(this).val();
+            var dataString = 'tsk_type_id=' + id;
+            //alert(dataString);
+            $.ajax
+            ({
+                type: "POST",
+                url: "getTache.php",
+                data: dataString,
+                success: function (html) {
+                    $(".task3").html(html);
+                }
+            });
+        });
+    });$(document).ready(function() {
+        $(".typeTask4").change(function () {
+
+            var id = $(this).val();
+            var dataString = 'tsk_type_id=' + id;
+            //alert(dataString);
+            $.ajax
+            ({
+                type: "POST",
+                url: "getTache.php",
+                data: dataString,
+                success: function (html) {
+                    $(".task4").html(html);
+                }
+            });
+        });
+    });$(document).ready(function() {
+        $(".typeTask5").change(function () {
+
+            var id = $(this).val();
+            var dataString = 'tsk_type_id=' + id;
+            //alert(dataString);
+            $.ajax
+            ({
+                type: "POST",
+                url: "getTache.php",
+                data: dataString,
+                success: function (html) {
+                    $(".task5").html(html);
+                }
+            });
+        });
+    });$(document).ready(function() {
+        $(".typeTask6").change(function () {
+
+            var id = $(this).val();
+            var dataString = 'tsk_type_id=' + id;
+            //alert(dataString);
+            $.ajax
+            ({
+                type: "POST",
+                url: "getTache.php",
+                data: dataString,
+                success: function (html) {
+                    $(".task6").html(html);
+                }
+            });
+        });
+    });
+
+    $(document).ready(function() {
+        $('#addButton').on('click', function(e) {
+            e.preventDefault();
+            //    alert("ok");
+            $('fieldset').removeClass('moreActions');
+        });
+    });
+    $(document).ready(function() {
+        $('#minusButton').on('click', function(e) {
+            e.preventDefault();
+            //alert("ok");
+            $('fieldset').addClass('moreActions');
+        });
+
+    });
+
+
+
+    /*    function getId(val){
+        //test du javascript
+        //alert("ok");
+        //implémentation de la fonction AJAX
+        $.ajax({
+            type : "POST",
+            url : "getTache.php",
+            data : "tsk_type_id="+val,
+            cache : false,
+            success : function(data){
+                $("#tsk1").html(data);
+            }
+        });
+    }
+    */
 </script>
 </body>
 </html>
