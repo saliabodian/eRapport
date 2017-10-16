@@ -110,7 +110,7 @@ class Tache extends DbObject{
         else {
             $allTaches = $pdoStmt->fetchAll(\PDO::FETCH_ASSOC);
             foreach ($allTaches as $row) {
-
+                $returnList[$row['id']]['id'] = $row['id'];
                 $returnList[$row['id']]['code'] = $row['code'];
                 $returnList[$row['id']]['nom'] = $row['nom'];
                 $returnList[$row['id']]['type_tache_id'] = $row['type_tache_id'];

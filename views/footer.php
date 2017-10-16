@@ -136,124 +136,6 @@
             }
         });
     });
-    /*
-
-    Gestion de l'ajout dynamique des lignes
-    je mets cette option en suspens à cause d'un bug que je n'arrive pas à corriger
-    $(document).ready(function() {
-
-        $(".add-more").click(function(){
-            var html = $(".copy").html();
-            $(".tasks").after(html);
-        });
-
-        $("body").on("click",".remove",function(){
-            $(this).parents(".addRow").remove();
-        });
-
-    });
-    */
-    $(document).ready(function() {
-        $(".typeTask").change(function () {
-
-            var id = $(this).val();
-            var dataString = 'tsk_type_id=' + id;
-            //alert(dataString);
-            $.ajax
-            ({
-                type: "POST",
-                url: "getTache.php",
-                data: dataString,
-                success: function (html) {
-                    $(".task").html(html);
-                }
-            });
-        });
-    });
-
-    $(document).ready(function() {
-        $(".typeTask2").change(function () {
-
-            var id = $(this).val();
-            var dataString = 'tsk_type_id=' + id;
-            //alert(dataString);
-            $.ajax
-            ({
-                type: "POST",
-                url: "getTache.php",
-                data: dataString,
-                success: function (html) {
-                    $(".task2").html(html);
-                }
-            });
-        });
-    });
-
-    $(document).ready(function() {
-        $(".typeTask3").change(function () {
-
-            var id = $(this).val();
-            var dataString = 'tsk_type_id=' + id;
-            //alert(dataString);
-            $.ajax
-            ({
-                type: "POST",
-                url: "getTache.php",
-                data: dataString,
-                success: function (html) {
-                    $(".task3").html(html);
-                }
-            });
-        });
-    });$(document).ready(function() {
-        $(".typeTask4").change(function () {
-
-            var id = $(this).val();
-            var dataString = 'tsk_type_id=' + id;
-            //alert(dataString);
-            $.ajax
-            ({
-                type: "POST",
-                url: "getTache.php",
-                data: dataString,
-                success: function (html) {
-                    $(".task4").html(html);
-                }
-            });
-        });
-    });$(document).ready(function() {
-        $(".typeTask5").change(function () {
-
-            var id = $(this).val();
-            var dataString = 'tsk_type_id=' + id;
-            //alert(dataString);
-            $.ajax
-            ({
-                type: "POST",
-                url: "getTache.php",
-                data: dataString,
-                success: function (html) {
-                    $(".task5").html(html);
-                }
-            });
-        });
-    });$(document).ready(function() {
-        $(".typeTask6").change(function () {
-
-            var id = $(this).val();
-            var dataString = 'tsk_type_id=' + id;
-            //alert(dataString);
-            $.ajax
-            ({
-                type: "POST",
-                url: "getTache.php",
-                data: dataString,
-                success: function (html) {
-                    $(".task6").html(html);
-                }
-            });
-        });
-    });
 
     $(document).ready(function() {
         $('#addButton').on('click', function(e) {
@@ -272,8 +154,7 @@
     });
 
 
-
-    /*    function getId(val){
+    function getId(val){
         //test du javascript
         //alert("ok");
         //implémentation de la fonction AJAX
@@ -281,13 +162,102 @@
             type : "POST",
             url : "getTache.php",
             data : "tsk_type_id="+val,
-            cache : false,
             success : function(data){
-                $("#tsk1").html(data);
+                $(".task").html(data);
             }
         });
     }
-    */
+    function getId2(val){
+        //test du javascript
+        //alert("ok");
+        //implémentation de la fonction AJAX
+        $.ajax({
+            type : "POST",
+            url : "getTache.php",
+            data : "tsk_type_id="+val,
+            success : function(data){
+                $(".task2").html(data);
+            }
+        });
+    }
+
+    function getId3(val){
+        //test du javascript
+        //alert("ok");
+        //implémentation de la fonction AJAX
+        $.ajax({
+            type : "POST",
+            url : "getTache.php",
+            data : "tsk_type_id="+val,
+            success : function(data){
+                $(".task3").html(data);
+            }
+        });
+    }
+
+    function getId4(val){
+        //test du javascript
+        //alert("ok");
+        //implémentation de la fonction AJAX
+        $.ajax({
+            type : "POST",
+            url : "getTache.php",
+            data : "tsk_type_id="+val,
+            success : function(data){
+                $(".task4").html(data);
+            }
+        });
+    }
+
+    function getId5(val){
+        //test du javascript
+        //alert("ok");
+        //implémentation de la fonction AJAX
+        $.ajax({
+            type : "POST",
+            url : "getTache.php",
+            data : "tsk_type_id="+val,
+            success : function(data){
+                $(".task5").html(data);
+            }
+        });
+    }
+
+
+    function getId6(val) {
+        //test du javascript
+        //alert("ok");
+        //implémentation de la fonction AJAX
+        $.ajax({
+            type: "POST",
+            url: "getTache.php",
+            data: "tsk_type_id=" + val,
+            success: function (data) {
+                $(".task6").html(data);
+            }
+        });
+    }
+
+
+/*
+
+    Gestion de l'ajout dynamique des lignes
+    je mets cette option en suspens à cause d'un bug que je n'arrive pas à corriger
+    $(document).ready(function() {
+
+        $(".add-more").click(function(){
+            var html = $(".copy").html();
+            $(".tasks").after(html);
+        });
+
+        $("body").on("click",".remove",function(){
+            $(this).parents(".addRow").remove();
+        });
+
+    });
+
+
+*/
 </script>
 </body>
 </html>

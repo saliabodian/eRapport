@@ -869,10 +869,7 @@ class Rapport extends DbObject{
         }else{
             $rapportDetail= $stmt->fetchAll(\PDO::FETCH_ASSOC);
         }
-
-
         return $rapportDetail;
-
     }
 
     public static function getRapportAbsentNoyau($equipeId, $date, $chantier){
@@ -935,4 +932,386 @@ class Rapport extends DbObject{
         }
         return $rapportDetailHorsNoyau;
     }
+
+    public static function updateRapportDetail($rapportDetailIdList, $htot, $hins, $abs, $habs, $dpl_pers, $remarque, $chef_dequipe_updated,
+                                                $type_task, $task, $bat, $axe, $et, $ht,
+                                                $type_task2, $task2, $bat2, $axe2, $et2, $ht2,
+                                                $type_task3, $task3, $bat3, $axe3, $et3, $ht3,
+                                                $type_task4, $task4, $bat4, $axe4, $et4, $ht4,
+                                                $type_task5, $task5, $bat5, $axe5, $et5, $ht5,
+                                                $type_task6, $task6, $bat6, $axe6, $et6, $ht6)
+    {
+        foreach($rapportDetailIdList as $rapportDetail){
+            $sql = 'DELETE FROM `rapport_detail_has_tache`
+                    WHERE rapport_detail_id = :rapportDetailId';
+            $stmt = Config::getInstance()->getPDO()->prepare($sql);
+            $stmt->bindValue(':rapportDetailId', $rapportDetail, \PDO::PARAM_INT );
+            if($stmt->execute()=== false){
+                print_r($stmt->errorInfo());
+            }else{
+                $deleteStatus = true;
+            }
+
+
+            $sql = 'UPDATE `rapport_detail`
+                    SET
+                        `htot` = :htot,
+                        `hins` = :hins,
+                        `abs` = :abs,
+                        `habs` = :habs,
+                        `dpl_pers` = :dpl_pers,
+                        `km` = :km,
+
+                        `type_task_id_1` = :type_task_id_1,
+                        `task_id_1` = :task_id_1,
+                        `ht1` = :ht1,
+                        `bat_1` = :bat_1,
+                        `axe_1` = :axe_1,
+                        `et_1` = :et_1,
+
+                        `type_task_id_2` = :type_task_id_2,
+                        `task_id_2` = :task_id_2,
+                        `ht2` = :ht2,
+                        `bat_2` = :bat_2,
+                        `axe_2` = :axe_2,
+                        `et_2` = :et_2,
+
+
+                        `type_task_id_3` = :type_task_id_3,
+                        `task_id_3` = :task_id_3,
+                        `ht3` = :ht3,
+                        `bat_3` = :bat_3,
+                        `axe_3` = :axe_3,
+                        `et_3` = :et_3,
+
+
+                        `type_task_id_4` = :type_task_id_4,
+                        `task_id_4` = :task_id_4,
+                        `ht4` = :ht4,
+                        `bat_4` = :bat_4,
+                        `axe_4` = :axe_4,
+                        `et_4` = :et_4,
+
+
+                        `type_task_id_5` = :type_task_id_5,
+                        `task_id_5` = :task_id_5,
+                        `ht5` = :ht5,
+                        `bat_5` = :bat_5,
+                        `axe_5` = :axe_5,
+                        `et_5` = :et_5,
+
+
+                        `type_task_id_6` = :type_task_id_6,
+                        `task_id_6` = :task_id_6,
+                        `ht6` = :ht6,
+                        `bat_6` = :bat_6,
+                        `axe_6` = :axe_6,
+                        `et_6` = :et_6,
+
+
+                        `remarque` = :remarque,
+                        `updated` = :updated,
+                        `chef_dequipe_updated` = :chef_dequipe_updated
+
+                    WHERE `id` = :rapportDetailId
+                    ';
+            $stmt = Config::getInstance()->getPDO()->prepare($sql);
+            $stmt->bindValue(':rapportDetailId', $rapportDetail, \PDO::PARAM_INT);
+            $stmt->bindValue(':htot', $htot, \PDO::PARAM_INT);
+            $stmt->bindValue(':hins', $hins, \PDO::PARAM_INT);
+            $stmt->bindValue(':abs', $abs, \PDO::PARAM_INT);
+            $stmt->bindValue(':habs', $habs, \PDO::PARAM_INT);
+            $stmt->bindValue(':dpl_pers', $dpl_pers, \PDO::PARAM_INT);
+            $stmt->bindValue(':km', $km, \PDO::PARAM_INT);
+            $stmt->bindValue(':remarque', $remarque, \PDO::PARAM_STR);
+            $stmt->bindValue(':updated', $updated, \PDO::PARAM_INT);
+
+            $stmt->bindValue(':type_task_id_1', $type_task, \PDO::PARAM_INT);
+            $stmt->bindValue(':task_id_1', $task, \PDO::PARAM_INT);
+            $stmt->bindValue(':ht1', $ht, \PDO::PARAM_INT);
+            $stmt->bindValue(':bat_1', $bat, \PDO::PARAM_INT);
+            $stmt->bindValue(':axe_1', $axe, \PDO::PARAM_INT);
+            $stmt->bindValue(':et_1', $et, \PDO::PARAM_INT);
+
+            $stmt->bindValue(':type_task_id_2', $type_task2, \PDO::PARAM_INT);
+            $stmt->bindValue(':task_id_2', $task2, \PDO::PARAM_INT);
+            $stmt->bindValue(':ht2', $ht2, \PDO::PARAM_INT);
+            $stmt->bindValue(':bat_2', $bat2, \PDO::PARAM_INT);
+            $stmt->bindValue(':axe_2', $axe2, \PDO::PARAM_INT);
+            $stmt->bindValue(':et_2', $et2, \PDO::PARAM_INT);
+
+            $stmt->bindValue(':type_task_id_3', $type_task3, \PDO::PARAM_INT);
+            $stmt->bindValue(':task_id_3', $task3, \PDO::PARAM_INT);
+            $stmt->bindValue(':ht3', $ht3, \PDO::PARAM_INT);
+            $stmt->bindValue(':bat_3', $bat3, \PDO::PARAM_INT);
+            $stmt->bindValue(':axe_3', $axe3, \PDO::PARAM_INT);
+            $stmt->bindValue(':et_3', $et3, \PDO::PARAM_INT);
+
+            $stmt->bindValue(':type_task_id_4', $type_task4, \PDO::PARAM_INT);
+            $stmt->bindValue(':task_id_4', $task4, \PDO::PARAM_INT);
+            $stmt->bindValue(':ht4', $ht4, \PDO::PARAM_INT);
+            $stmt->bindValue(':bat_4', $bat4, \PDO::PARAM_INT);
+            $stmt->bindValue(':axe_4', $axe4, \PDO::PARAM_INT);
+            $stmt->bindValue(':et_4', $et4, \PDO::PARAM_INT);
+
+            $stmt->bindValue(':type_task_id_5', $type_task5, \PDO::PARAM_INT);
+            $stmt->bindValue(':task_id_5', $task5, \PDO::PARAM_INT);
+            $stmt->bindValue(':ht5', $ht5, \PDO::PARAM_INT);
+            $stmt->bindValue(':bat_5', $bat5, \PDO::PARAM_INT);
+            $stmt->bindValue(':axe_5', $axe5, \PDO::PARAM_INT);
+            $stmt->bindValue(':et_5', $et5, \PDO::PARAM_INT);
+
+            $stmt->bindValue(':type_task_id_6', $type_task6, \PDO::PARAM_INT);
+            $stmt->bindValue(':task_id_6', $task6, \PDO::PARAM_INT);
+            $stmt->bindValue(':ht6', $ht6, \PDO::PARAM_INT);
+            $stmt->bindValue(':bat_6', $bat6, \PDO::PARAM_INT);
+            $stmt->bindValue(':axe_6', $axe6, \PDO::PARAM_INT);
+            $stmt->bindValue(':et_6', $et6, \PDO::PARAM_INT);
+
+            $stmt->bindValue(':chef_dequipe_updated', $chef_dequipe_updated, \PDO::PARAM_INT);
+
+            // var_dump($stmt);
+
+            //exit;
+
+            if($stmt->execute()=== false){
+                print_r($stmt->errorInfo());
+            }else{
+                $updateStatus = true;
+            }
+            //exit;
+            $sql = 'INSERT INTO rapport_detail_has_tache(
+                        `rapport_detail_id`,
+                        `tache_id`,
+                        `type_tache_id`,
+                        `batiment`,
+                        `etage`,
+                        `axe`,
+                        `heures`
+                    )
+                    VALUES(
+                            :rapportDetailId,
+                            :task,
+                            :type_task,
+                            :bat,
+                            :axe,
+                            :et,
+                            :ht
+                             )';
+            $stmt = Config::getInstance()->getPDO()->prepare($sql);
+            $stmt->bindValue(':type_task', $type_task, \PDO::PARAM_INT);
+            $stmt->bindValue(':task', $task, \PDO::PARAM_INT);
+            $stmt->bindValue(':bat', $bat);
+            $stmt->bindValue(':axe', $axe);
+            $stmt->bindValue(':et', $et, \PDO::PARAM_INT);
+            $stmt->bindValue(':ht', $ht, \PDO::PARAM_INT);
+            $stmt->bindValue(':rapportDetailId', $rapportDetail, \PDO::PARAM_INT);
+
+            if($stmt->execute()=== false){
+                print_r($stmt->errorInfo());
+            }else{
+                $insertStatus = true;
+            }
+
+            $sql = 'INSERT INTO rapport_detail_has_tache(
+                        `rapport_detail_id`,
+                        `tache_id`,
+                        `type_tache_id`,
+                        `batiment`,
+                        `etage`,
+                        `axe`,
+                        `heures`
+                    )
+                    VALUES(
+                            :rapportDetailId,
+                            :task2,
+                            :type_task2,
+                            :bat2,
+                            :axe2,
+                            :et2,
+                            :ht2
+                             )';
+            $stmt = Config::getInstance()->getPDO()->prepare($sql);
+            $stmt->bindValue(':type_task2', $type_task2, \PDO::PARAM_INT);
+            $stmt->bindValue(':task2', $task2, \PDO::PARAM_INT);
+            $stmt->bindValue(':bat2', $bat2);
+            $stmt->bindValue(':axe2', $axe2);
+            $stmt->bindValue(':et2', $et2, \PDO::PARAM_INT);
+            $stmt->bindValue(':ht2', $ht2, \PDO::PARAM_INT);
+            $stmt->bindValue(':rapportDetailId', $rapportDetail, \PDO::PARAM_INT);
+
+            if($stmt->execute()=== false){
+                print_r($stmt->errorInfo());
+            }else{
+                $insertStatus = true;
+            }
+
+            $sql = 'INSERT INTO rapport_detail_has_tache(
+                        `rapport_detail_id`,
+                        `tache_id`,
+                        `type_tache_id`,
+                        `batiment`,
+                        `etage`,
+                        `axe`,
+                        `heures`
+                    )
+                    VALUES(
+                            :rapportDetailId,
+                            :task3,
+                            :type_task3,
+                            :bat3,
+                            :axe3,
+                            :et3,
+                            :ht3
+                             )';
+            $stmt = Config::getInstance()->getPDO()->prepare($sql);
+            $stmt->bindValue(':type_task3', $type_task3, \PDO::PARAM_INT);
+            $stmt->bindValue(':task3', $task3, \PDO::PARAM_INT);
+            $stmt->bindValue(':bat3', $bat3);
+            $stmt->bindValue(':axe3', $axe3);
+            $stmt->bindValue(':et3', $et3, \PDO::PARAM_INT);
+            $stmt->bindValue(':ht3', $ht3, \PDO::PARAM_INT);
+            $stmt->bindValue(':rapportDetailId',$rapportDetail, \PDO::PARAM_INT);
+
+            if($stmt->execute()=== false){
+                print_r($stmt->errorInfo());
+            }else{
+                $insertStatus = true;
+            }
+
+            $sql = 'INSERT INTO rapport_detail_has_tache(
+                        `rapport_detail_id`,
+                        `tache_id`,
+                        `type_tache_id`,
+                        `batiment`,
+                        `etage`,
+                        `axe`,
+                        `heures`
+                    )
+                    VALUES(
+                            :rapportDetailId,
+                            :task4,
+                            :type_task4,
+                            :bat4,
+                            :axe4,
+                            :et4,
+                            :ht4
+                             )';
+            $stmt = Config::getInstance()->getPDO()->prepare($sql);
+            $stmt->bindValue(':type_task4', $type_task4, \PDO::PARAM_INT);
+            $stmt->bindValue(':task4', $task4, \PDO::PARAM_INT);
+            $stmt->bindValue(':bat4', $bat4);
+            $stmt->bindValue(':axe4', $axe4);
+            $stmt->bindValue(':et4', $et4, \PDO::PARAM_INT);
+            $stmt->bindValue(':ht4', $ht4, \PDO::PARAM_INT);
+            $stmt->bindValue(':rapportDetailId', $rapportDetail, \PDO::PARAM_INT);
+
+            if($stmt->execute()=== false){
+                print_r($stmt->errorInfo());
+            }else{
+                $insertStatus = true;
+            }
+
+            $sql = 'INSERT INTO rapport_detail_has_tache(
+                        `rapport_detail_id`,
+                        `tache_id`,
+                        `type_tache_id`,
+                        `batiment`,
+                        `etage`,
+                        `axe`,
+                        `heures`
+                    )
+                    VALUES(
+                            :rapportDetailId,
+                            :task5,
+                            :type_task5,
+                            :bat5,
+                            :axe5,
+                            :et5,
+                            :ht5
+                             )';
+            $stmt = Config::getInstance()->getPDO()->prepare($sql);
+            $stmt->bindValue(':type_task5', $type_task5, \PDO::PARAM_INT);
+            $stmt->bindValue(':task5', $task5, \PDO::PARAM_INT);
+            $stmt->bindValue(':bat5', $bat5);
+            $stmt->bindValue(':axe5', $axe5);
+            $stmt->bindValue(':et5', $et5, \PDO::PARAM_INT);
+            $stmt->bindValue(':ht5', $ht5, \PDO::PARAM_INT);
+            $stmt->bindValue(':rapportDetailId', $rapportDetail, \PDO::PARAM_INT);
+
+            if($stmt->execute()=== false){
+                print_r($stmt->errorInfo());
+            }else{
+                $insertStatus = true;
+            }
+
+            $sql = 'INSERT INTO rapport_detail_has_tache(
+                        `rapport_detail_id`,
+                        `tache_id`,
+                        `type_tache_id`,
+                        `batiment`,
+                        `etage`,
+                        `axe`,
+                        `heures`
+                    )
+                    VALUES(
+                            :rapportDetailId,
+                            :task6,
+                            :type_task6,
+                            :bat6,
+                            :axe6,
+                            :et6,
+                            :ht6
+                             )';
+            $stmt = Config::getInstance()->getPDO()->prepare($sql);
+            $stmt->bindValue(':type_task6', $type_task6, \PDO::PARAM_INT);
+            $stmt->bindValue(':task6', $task6, \PDO::PARAM_INT);
+            $stmt->bindValue(':bat6', $bat6);
+            $stmt->bindValue(':axe6', $axe6);
+            $stmt->bindValue(':et6', $et6, \PDO::PARAM_INT);
+            $stmt->bindValue(':ht6', $ht6, \PDO::PARAM_INT);
+            $stmt->bindValue(':rapportDetailId', $rapportDetail, \PDO::PARAM_INT);
+
+            if($stmt->execute()=== false){
+                print_r($stmt->errorInfo());
+            }else{
+                $insertStatus = true;
+            }
+        }
+    }
+
+    public static function getWorkerNoyauTask($rapport_detail_id){
+
+          //  var_dump($rapport['id']);
+
+            $sql='
+                        SELECT
+    rapport_detail_has_tache.*,
+    tache.code,
+    tache.nom,
+    type_tache.nom_type_tache,
+    type_tache.code_type_tache
+FROM
+    rapport_detail_has_tache
+    INNER JOIN
+    tache ON tache.id= rapport_detail_has_tache.tache_id
+    INNER JOIN
+    type_tache ON type_tache.id = rapport_detail_has_tache.type_tache_id
+WHERE
+    rapport_detail_has_tache.rapport_detail_id = :rapport_detail_id';
+
+            $stmt=Config::getInstance()->getPDO()->prepare($sql);
+            $stmt->bindValue(':rapport_detail_id', $rapport_detail_id, \PDO::PARAM_INT);
+            if($stmt->execute()===false){
+                print_r($stmt->errorInfo());
+            }else{
+                $taskList = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+            }
+
+            return $taskList;
+    }
+
+    public static function getWorkerHorsNoyauTask(){}
+
+    public static function getWorkerAbsentTask(){}
 }
