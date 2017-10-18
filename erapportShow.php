@@ -35,16 +35,58 @@ if(!empty($_SESSION)){
    // $_GET["chantier_id"]=> string(6) "205"
    // $_GET["chantier_code"]=> string(6) "156100"
    // }
+    $allPointage = Dsk::getCalculTotalHoraire($_GET["date_generation"], $_GET["chantier_code"]);
+
+    //var_dump($pointage);
+
+    //exit;
 
     $rapportJournalier = Rapport::get($_GET["rapport_id"]);
     // var_dump($rapportJournalier);
     $chefDequipeMatricule = $rapportJournalier->getChefDEquipeMatricule();
     $rapportJournalierDate = $rapportJournalier->getDate();
 
-    $rapportNoyau = Rapport::getRapportNoyau($_GET['chef_dequipe_id'], $_GET['date_generation'], $_GET['chantier_id']);
-    // var_dump($rapportNoyau);
-    //exit;
+    $noyau = Rapport::getRapportNoyau($_GET['chef_dequipe_id'], $_GET['date_generation'], $_GET['chantier_id']);
+    $noyauAbsent = Rapport::getRapportAbsentNoyau($_GET['chef_dequipe_id'], $_GET['date_generation'], $_GET['chantier_id']);
+    $horsNoyau = Rapport::getRapportHorsNoyau($_GET['date_generation'], $_GET['chantier_id']);
 
+    //var_dump($noyau);
+
+    //exit;
+    if(!empty($allPointage)){
+        foreach($allPointage as $pointage){
+            foreach($noyau as $rapport){
+                if($rapport['ouvrier_id'] === $pointage['matricule']){
+                    //    var_dump($pointage['hpoint']);
+                    //    var_dump($rapport['id']);
+                    Rapport::setWorkerHourCalculated($pointage['hpoint'], $rapport['id']);
+                }
+            }
+        }
+
+        //exit;
+
+        foreach($allPointage as $pointage){
+            foreach($noyauAbsent as $rapport){
+                if($rapport['ouvrier_id']=== $pointage['matricule']){
+                    Rapport::setWorkerHourCalculated($pointage['hpoint'], $rapport['id']);
+                }
+            }
+        }
+
+        foreach($allPointage as $pointage){
+            foreach($horsNoyau as $rapport){
+                if($rapport['ouvrier_id']=== $pointage['matricule']){
+                    Rapport::setWorkerHourCalculated($pointage['hpoint'], $rapport['id']);
+                }
+            }
+        }
+    }
+
+
+//    exit;
+
+    $rapportNoyau = Rapport::getRapportNoyau($_GET['chef_dequipe_id'], $_GET['date_generation'], $_GET['chantier_id']);
     $rapportNoyauAbsent = Rapport::getRapportAbsentNoyau($_GET['chef_dequipe_id'], $_GET['date_generation'], $_GET['chantier_id']);
     $rapportHorsNoyau = Rapport::getRapportHorsNoyau($_GET['date_generation'], $_GET['chantier_id']);
 

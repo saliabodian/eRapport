@@ -15,6 +15,8 @@ use Classes\Cdcl\Db\Rapport;
 
 use Classes\Cdcl\Db\Tache;
 
+use Classes\Cdcl\Config\Dsk;
+
 $conf = Config::getInstance();
 
 if(!empty($_SESSION)){
@@ -174,6 +176,7 @@ if(!empty($_SESSION)){
                 }
             }
         }
+
         if(($_POST['type_task2']) != 'Catégorie'){
             if(($_POST['tasks2'])=== 'Tâche'){
                 $conf->addError('Veuillez renseigner la tâche 2');
@@ -237,7 +240,7 @@ if(!empty($_SESSION)){
         $dpl_pers = ($_POST['dpl_pers']=== 'on')? 1 : 0;
         if($form){
             Rapport::updateRapportDetail($_POST['rapport_detail_id'], $_POST['htot'], $_POST['hins'], $_POST['abs'],
-                $_POST['habs'], $dpl_pers, $_POST['remarque'], $_POST['chef_dequipe_updated'],
+                $_POST['habs'], $dpl_pers,$_POST['km'], $_POST['remarque'], $_POST['chef_dequipe_updated'],
                 $_POST['type_task'], $_POST['tasks'], $_POST['bat'], $_POST['axe'], $_POST['et'], $_POST['ht'],
                 $_POST['type_task2'], $_POST['tasks2'], $_POST['bat2'], $_POST['axe2'], $_POST['et2'], $_POST['ht2'],
                 $_POST['type_task3'], $_POST['tasks3'], $_POST['bat3'], $_POST['axe3'], $_POST['et3'], $_POST['ht3'],
@@ -665,6 +668,31 @@ if(!empty($_SESSION)){
 
         */    // var_dump($_POST);
 
+            // Gestion de la composition de la matrice si ce sont uniquement des ouvriers
+            // ou si ce sont uniquement des intérimaires ou si c'est un mix
+
+            foreach($workerToUpdate as $worker) {
+                if(isset($worker['ouvrier_id'])) {
+                    $workerType[] = 'Ouvrier';
+                }else {
+                    $workerType[] = 'Interimaire';
+                }
+            }
+
+            /*
+             * Test de vérification du txpe de matrice Mix, Ouvrier uniquement ou Interimaire uniquement
+             *
+            if(in_array('Ouvrier', $workerType) && in_array('Interimaire',$workerType )){
+                var_dump('Hello Mix');
+            }
+            if(!(in_array('Ouvrier', $workerType)) && in_array('Interimaire',$workerType )){
+                var_dump('Hello Interimaire');
+            }
+            if(in_array('Ouvrier', $workerType) && !(in_array('Interimaire',$workerType ))){
+                var_dump('Hello ouvrier');
+            }
+            */
+
             include $conf->getViewsDir().'header.php';
             include $conf->getViewsDir().'sidebar.php';
             include $conf->getViewsDir().'rapportDetail.php';
@@ -677,6 +705,15 @@ if(!empty($_SESSION)){
 
     if(!empty($matriculeList)){
 
+    //    $date = "2017-10-16" ;
+
+    //    $chantier = 156100;
+
+     //   $test = Dsk::getCalculTotalHoraire($date, $chantier);
+
+    //    var_dump($test);
+
+    //    exit;
 
         if($_POST["rapport_type"]==='NOYAU'){
             $rapportNoyau = Rapport::getRapportNoyau($_POST["chef_dequipe_id"], $_POST["date_generation"], $_POST["chantier_id"]);
@@ -1090,9 +1127,32 @@ if(!empty($_SESSION)){
 
         $listTache= Tache::getAll();
 
-        // var_dump($listTypeTache);
 
-        // exit;
+        // Gestion de la composition de la matrice si ce sont uniquement des ouvriers
+        // ou si ce sont uniquement des intérimaires ou si c'est un mix
+
+        foreach($workerToUpdate as $worker) {
+            if(isset($worker['ouvrier_id'])) {
+                $workerType[] = 'Ouvrier';
+            }else {
+                $workerType[] = 'Interimaire';
+            }
+        }
+
+        /*
+         * Test de vérification du txpe de matrice Mix, Ouvrier uniquement ou Interimaire uniquement
+         *
+        if(in_array('Ouvrier', $workerType) && in_array('Interimaire',$workerType )){
+            var_dump('Hello Mix');
+        }
+        if(!(in_array('Ouvrier', $workerType)) && in_array('Interimaire',$workerType )){
+            var_dump('Hello Interimaire');
+        }
+        if(in_array('Ouvrier', $workerType) && !(in_array('Interimaire',$workerType ))){
+            var_dump('Hello ouvrier');
+        }
+        */
+
 
         include $conf->getViewsDir().'header.php';
         include $conf->getViewsDir().'sidebar.php';

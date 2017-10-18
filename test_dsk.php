@@ -706,6 +706,33 @@ while($row = ibase_fetch_object($sth)) {
 var_dump($noyau_new);
 
 
+echo "<br>récupération des pointages<br>";
+
+/*$sql = "Select Rvalue,fullname, codepers, nopers
+                from listaccountdate('2017-10-16','2017-10-16') left join pers on pers.nopers = listaccountdate.rnopers where raccount in (156100)";
+*/
+$rapport_annee = 2017;
+$rapport_mois = 10;
+$rapport_jour = 16;
+$chantier_int = 156100;
+
+$sql = "Select Rvalue,fullname, codepers, nopers from listaccountdate('".$rapport_annee."-".$rapport_mois."-".$rapport_jour."','".$rapport_annee."-".$rapport_mois."-".$rapport_jour."') left join pers on pers.nopers = listaccountdate.rnopers where raccount in (".$chantier_int.")";
+$sth = ibase_query($dbh, $sql);
+
+$i = 0;
+
+while ($row = ibase_fetch_object($sth))
+{
+    $pointeuse[$i]["matricule"] = trim($row->CODEPERS);
+    $pointeuse[$i]["id"] = $row->NOPERS;
+    $pointeuse[$i]["nom"] = $row->FULLNAME;
+    $pointeuse[$i]["hpoint"] = $row->RVALUE;
+
+    $i++;
+}
+var_dump($pointeuse) ;
+
+
 ?>
 </pre>
 

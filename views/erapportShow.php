@@ -31,16 +31,18 @@
                                             <th>Heures</th>
                                             <th>Abs</th>
                                             <th>T. Pénibles</th>
+                                            <th>T. (Km)</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <?php foreach ($rapportNoyau as $rapport ) : ?>
                                             <tr>
                                                 <td><input type="checkbox" name="selected_matricule[]" class="checkbox checkbox_noyau" value="<?= isset($rapport['ouvrier_id'])? $rapport['ouvrier_id'] : (isset($rapport['interimaire_id'])? $rapport['interimaire_id'] : '')?>" /></td>
-                                                <td ><?= isset($rapport['ouvrier_id'])? $rapport['ouvrier_id'] : (isset($rapport['interimaire_id'])? $rapport['interimaire_id'] : '')?> - <?=$rapport['fullname']?></td>
-                                                <td ></td>
-                                                <td ></td>
-                                                <td ></td>
+                                                <td><?= isset($rapport['ouvrier_id'])? $rapport['ouvrier_id'] : (isset($rapport['interimaire_id'])? $rapport['interimaire_id'] : '')?> - <?=$rapport['fullname']?></td>
+                                                <td><?= $rapport['htot'] ?></td>
+                                                <td ><?= $rapport['habs'] ?></td>
+                                                <td ><?= $rapport['hins'] ?></td>
+                                                <td ><?= $rapport['km'] ?></td>
                                             </tr>
                                         <?php  endforeach;  ?>
                                     </tbody>
@@ -79,6 +81,7 @@
                                                 <th>Heures</th>
                                                 <th>Abs</th>
                                                 <th>T. Pénibles</th>
+                                                <th>T. (Km)</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -86,9 +89,10 @@
                                                 <tr>
                                                     <td><input type="checkbox" name="selected_matricule[]" class="checkbox checkbox_abs" value="<?= isset($rapport['ouvrier_id'])? $rapport['ouvrier_id'] : (isset($rapport['interimaire_id'])? $rapport['interimaire_id'] : '')?>" /></td>
                                                     <td><?= isset($rapport['ouvrier_id'])? $rapport['ouvrier_id'] : (isset($rapport['interimaire_id'])? $rapport['interimaire_id'] : '')?> - <?=$rapport['fullname']?></td>
-                                                    <td ></td>
-                                                    <td ></td>
-                                                    <td ></td>
+                                                    <td ><?= $rapport['htot'] ?></td>
+                                                    <td ><?= $rapport['habs'] ?></td>
+                                                    <td ><?= $rapport['hins'] ?></td>
+                                                    <td ><?= $rapport['km'] ?></td>
                                                 </tr>
                                             <?php  endforeach;  ?>
                                         </tbody>
@@ -127,6 +131,7 @@
                                             <th>Heures</th>
                                             <th>Abs</th>
                                             <th>T. Pénibles</th>
+                                            <th>T. (Km)</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -134,9 +139,10 @@
                         <tr>
                             <td><input type="checkbox" name="selected_matricule[]" class="checkbox checkbox_hn" value="<?= isset($rapport['ouvrier_id'])? $rapport['ouvrier_id'] : (isset($rapport['interimaire_id'])? $rapport['interimaire_id'] : '')?>" /></td>
                             <td ><?= isset($rapport['ouvrier_id'])? $rapport['ouvrier_id'] : (isset($rapport['interimaire_id'])? $rapport['interimaire_id'] : '')?> - <?=$rapport['fullname']?></td>
-                            <td ></td>
-                            <td ></td>
-                            <td ></td>
+                            <td ><?= $rapport['htot'] ?></td>
+                            <td ><?= $rapport['habs'] ?></td>
+                            <td ><?= $rapport['hins'] ?></td>
+                            <td ><?= $rapport['km'] ?></td>
                         </tr>
                     <?php  endforeach;  ?>
                                     </tbody>

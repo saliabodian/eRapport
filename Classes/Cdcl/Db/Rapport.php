@@ -933,7 +933,23 @@ class Rapport extends DbObject{
         return $rapportDetailHorsNoyau;
     }
 
-    public static function updateRapportDetail($rapportDetailIdList, $htot, $hins, $abs, $habs, $dpl_pers, $remarque, $chef_dequipe_updated,
+    public static function setWorkerHourCalculated($htot, $id){
+        $sql = '
+                UPDATE `rapport_detail` SET `htot`=:htot WHERE `id`=:id
+              ';
+
+        $stmt = Config::getInstance()->getPDO()->prepare($sql);
+        $stmt->bindValue(':htot', $htot);
+        $stmt->bindValue(':id', $id);
+
+        //var_dump($sql);
+
+        if(($stmt->execute()) === false) {
+            print_r($stmt->errorInfo());
+        }
+    }
+
+    public static function updateRapportDetail($rapportDetailIdList, $htot, $hins, $abs, $habs, $dpl_pers,$km, $remarque, $chef_dequipe_updated,
                                                 $type_task, $task, $bat, $axe, $et, $ht,
                                                 $type_task2, $task2, $bat2, $axe2, $et2, $ht2,
                                                 $type_task3, $task3, $bat3, $axe3, $et3, $ht3,
@@ -1017,53 +1033,53 @@ class Rapport extends DbObject{
                     ';
             $stmt = Config::getInstance()->getPDO()->prepare($sql);
             $stmt->bindValue(':rapportDetailId', $rapportDetail, \PDO::PARAM_INT);
-            $stmt->bindValue(':htot', $htot, \PDO::PARAM_INT);
-            $stmt->bindValue(':hins', $hins, \PDO::PARAM_INT);
-            $stmt->bindValue(':abs', $abs, \PDO::PARAM_INT);
-            $stmt->bindValue(':habs', $habs, \PDO::PARAM_INT);
+            $stmt->bindValue(':htot', $htot);
+            $stmt->bindValue(':hins', $hins);
+            $stmt->bindValue(':abs', $abs);
+            $stmt->bindValue(':habs', $habs);
             $stmt->bindValue(':dpl_pers', $dpl_pers, \PDO::PARAM_INT);
-            $stmt->bindValue(':km', $km, \PDO::PARAM_INT);
+            $stmt->bindValue(':km', $km);
             $stmt->bindValue(':remarque', $remarque, \PDO::PARAM_STR);
             $stmt->bindValue(':updated', $updated, \PDO::PARAM_INT);
 
             $stmt->bindValue(':type_task_id_1', $type_task, \PDO::PARAM_INT);
             $stmt->bindValue(':task_id_1', $task, \PDO::PARAM_INT);
-            $stmt->bindValue(':ht1', $ht, \PDO::PARAM_INT);
+            $stmt->bindValue(':ht1', $ht);
             $stmt->bindValue(':bat_1', $bat, \PDO::PARAM_INT);
             $stmt->bindValue(':axe_1', $axe, \PDO::PARAM_INT);
             $stmt->bindValue(':et_1', $et, \PDO::PARAM_INT);
 
             $stmt->bindValue(':type_task_id_2', $type_task2, \PDO::PARAM_INT);
             $stmt->bindValue(':task_id_2', $task2, \PDO::PARAM_INT);
-            $stmt->bindValue(':ht2', $ht2, \PDO::PARAM_INT);
+            $stmt->bindValue(':ht2', $ht2);
             $stmt->bindValue(':bat_2', $bat2, \PDO::PARAM_INT);
             $stmt->bindValue(':axe_2', $axe2, \PDO::PARAM_INT);
             $stmt->bindValue(':et_2', $et2, \PDO::PARAM_INT);
 
             $stmt->bindValue(':type_task_id_3', $type_task3, \PDO::PARAM_INT);
             $stmt->bindValue(':task_id_3', $task3, \PDO::PARAM_INT);
-            $stmt->bindValue(':ht3', $ht3, \PDO::PARAM_INT);
+            $stmt->bindValue(':ht3', $ht3);
             $stmt->bindValue(':bat_3', $bat3, \PDO::PARAM_INT);
             $stmt->bindValue(':axe_3', $axe3, \PDO::PARAM_INT);
             $stmt->bindValue(':et_3', $et3, \PDO::PARAM_INT);
 
             $stmt->bindValue(':type_task_id_4', $type_task4, \PDO::PARAM_INT);
             $stmt->bindValue(':task_id_4', $task4, \PDO::PARAM_INT);
-            $stmt->bindValue(':ht4', $ht4, \PDO::PARAM_INT);
+            $stmt->bindValue(':ht4', $ht4);
             $stmt->bindValue(':bat_4', $bat4, \PDO::PARAM_INT);
             $stmt->bindValue(':axe_4', $axe4, \PDO::PARAM_INT);
             $stmt->bindValue(':et_4', $et4, \PDO::PARAM_INT);
 
             $stmt->bindValue(':type_task_id_5', $type_task5, \PDO::PARAM_INT);
             $stmt->bindValue(':task_id_5', $task5, \PDO::PARAM_INT);
-            $stmt->bindValue(':ht5', $ht5, \PDO::PARAM_INT);
+            $stmt->bindValue(':ht5', $ht5);
             $stmt->bindValue(':bat_5', $bat5, \PDO::PARAM_INT);
             $stmt->bindValue(':axe_5', $axe5, \PDO::PARAM_INT);
             $stmt->bindValue(':et_5', $et5, \PDO::PARAM_INT);
 
             $stmt->bindValue(':type_task_id_6', $type_task6, \PDO::PARAM_INT);
             $stmt->bindValue(':task_id_6', $task6, \PDO::PARAM_INT);
-            $stmt->bindValue(':ht6', $ht6, \PDO::PARAM_INT);
+            $stmt->bindValue(':ht6', $ht6);
             $stmt->bindValue(':bat_6', $bat6, \PDO::PARAM_INT);
             $stmt->bindValue(':axe_6', $axe6, \PDO::PARAM_INT);
             $stmt->bindValue(':et_6', $et6, \PDO::PARAM_INT);
