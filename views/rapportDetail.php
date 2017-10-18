@@ -39,12 +39,34 @@
                                 <div class="control-group">
                                     <label class="control-label">Heures totales :</label>
                                     <div class="controls">
-                                        <?php if(sizeof($workerToUpdate) === 1) : ?>
-                                            <?php foreach ($workerToUpdate as $worker) : ?>
-                                                <input type="number" class="span2" name="htot" value="<?= $worker['htot'] ?>"/>
-                                            <?php endforeach; ?>
-                                        <?php else : ?>
-                                            <input type="number" class="span2" name="htot" value=""/>
+                                        <?php if(in_array('Ouvrier', $workerType) && in_array('Interimaire',$workerType ) && sizeof($workerToUpdate) > 1): ?>
+                                            <?php foreach($workerToUpdate as $worker) : ?>
+                                                <input type="hidden" class="span2" name="htot" value="<?= $worker['htot']  ?>" />
+                                            <?php endforeach ; ?>
+                                            <input type="number" class="span2" name="" value="" disabled/>
+                                        <?php endif; ?>
+                                        <?php if(!(in_array('Ouvrier', $workerType)) && in_array('Interimaire',$workerType ) && sizeof($workerToUpdate) > 1 ):?>
+                                            <?php foreach($workerToUpdate as $worker) : ?>
+                                                <input type="hidden" class="span2" name="htot" value="<?= $worker['htot']?>"/>
+                                            <?php endforeach ; ?>
+                                            <input type="number" class="span2" name="" value="" disabled/>
+                                        <?php endif; ?>
+                                        <?php if(!(in_array('Ouvrier', $workerType)) && in_array('Interimaire',$workerType ) && sizeof($workerToUpdate) === 1 ):?>
+                                            <?php foreach($workerToUpdate as $worker) : ?>
+                                                <input type="number" class="span2" name="htot" value="<?= $worker['htot']  ?>"/>
+                                            <?php endforeach ; ?>
+                                        <?php endif; ?>
+                                        <?php if((in_array('Ouvrier', $workerType)) && !(in_array('Interimaire',$workerType )) && sizeof($workerToUpdate) === 1 ):?>
+                                            <?php foreach($workerToUpdate as $worker) : ?>
+                                                <input type="hidden" class="span2" name="htot" value="<?= $worker['htot']  ?>"/>
+                                                <input type="number" class="span2" name="htot" value="<?= $worker['htot'] ?>" disabled/>
+                                            <?php endforeach ; ?>
+                                        <?php endif; ?>
+                                        <?php if((in_array('Ouvrier', $workerType)) && !(in_array('Interimaire',$workerType )) && sizeof($workerToUpdate) > 1 ):?>
+                                            <?php foreach($workerToUpdate as $worker) : ?>
+                                                <input type="hidden" class="span2" name="htot" value="<?= $worker['htot']  ?>"/>
+                                            <?php endforeach ; ?>
+                                            <input type="number" class="span2" name="" value="" disabled/>
                                         <?php endif; ?>
                                     </div>
                                 </div>

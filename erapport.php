@@ -57,6 +57,7 @@ if(!empty($_SESSION)){
         $chantierId = isset($_POST['chantier_id'])? $_POST['chantier_id']: 0;
         $chefDEquipeId = isset($_POST['user_id'])? $_POST['user_id'] : 0;
         $dateRapport = isset($_POST['date_gen'])? date('Y-m-d',strtotime($_POST['date_gen'])) : 0;
+        $today = date('Y-m-d', time());
         $form = true;
 
         // var_dump($chantierId);
@@ -75,6 +76,12 @@ if(!empty($_SESSION)){
             $conf->addError('Merci de définir la date de génération du rapport.');
             $form = false;
         }
+
+        if($dateRapport > $today){
+            $conf->addError(' Aucun rapport ne peut être généré pour cette date');
+            $form=false;
+        }
+
 
         $chantier = Chantier::get($chantierId);
 
@@ -95,11 +102,14 @@ if(!empty($_SESSION)){
 
 
         // Je récupére le noyau du chef d'équipe pour lequel nous voulons générer le rapport
-        foreach($teamLeaderOnsite as $teamLeader){
-            if (in_array($matricule,$teamLeader)){
-                $noyau = $teamLeader['noyau'];
+        if(!empty($teamLeaderOnsite)){
+            foreach($teamLeaderOnsite as $teamLeader){
+                if (in_array($matricule,$teamLeader)){
+                    $noyau = $teamLeader['noyau'];
+                }
             }
         }
+
 
         // Vérification de l'existence des différents rapports
 
@@ -109,7 +119,7 @@ if(!empty($_SESSION)){
 
         $rjAbsentNoyauExist = Rapport::checkRapportAbsentExist($dateRapport, $chantierId, $noyau);
 
-                if($rjAbsentNoyauExist===true || $rjNoyauExist === true){
+        if($rjAbsentNoyauExist===true || $rjNoyauExist === true){
             $conf->addError('Le rapport a déjà été généré.');
             $form = false;
         }
