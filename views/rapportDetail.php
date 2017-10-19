@@ -88,6 +88,7 @@
                                                         <?php elseif  (($worker['abs'] === 'Travaux Autre Chantier (TAC)')) : ?>
                                                         <?php elseif  (($worker['abs'] === 'Maladie (M)')) : ?>
                                                         selected = "selected" <?php endif; ?> ><?= $worker['abs'] ?></option>
+                                                        <option></option>
                                                         <option value="Maladie (M)">Maladie (M)</option>
                                                         <option value="Accident (A)">Accident (A)</option>
                                                         <option value="Congé (C)">Congé (C)</option>
@@ -103,7 +104,7 @@
                                             <?php endforeach; ?>
                                         <?php else : ?>
                                             <select name="abs">
-                                                <option>Chosir le type d'absence</option>
+                                                <option></option>
                                                 <option value="Maladie (M)">Maladie (M)</option>
                                                 <option value="Accident (A)">Accident (A)</option>
                                                 <option value="Congé (C)">Congé (C)</option>
@@ -111,8 +112,8 @@
                                                 <option value="Formation (FOR)">Formation (FOR)</option>
                                                 <option value="Intempéries (INT)">Intempéries (INT)</option>
                                                 <option value="Congé Extraordinaire (CE)">Congé Extraordinaire (CE)</option>
-                                                <option value="">Absence non Excusée (ABS)</option>
-                                                <option value="Absence non Excusée (ABS)">Congé Syndical (CS)</option>
+                                                <option value="Absence non Excusée (ABS)">Absence non Excusée (ABS)</option>
+                                                <option value="Congé Syndical (CS)">Congé Syndical (CS)</option>
                                                 <option value="Visite Médicale STI (STI)">Visite Médicale STI (STI)</option>
                                                 <option value="Travaux Autre Chantier (TAC)">Travaux Autre Chantier (TAC)</option>
                                             </select>
@@ -169,13 +170,13 @@
                                                 <input type="text" class="span2" id="bat" name="bat" value="<?=$worker['bat_1']?>" placeholder="Batiment">
                                                 <input type="text" class="span2" id="axe" name="axe" value="<?=$worker['axe_1']?>" placeholder="Axe">
                                                 <input type="text" class="span1" id="et" name="et" value="<?=$worker['et_1']?>" placeholder="Etage">
-                                                <input type="number" class="span1" id="ht" name="ht" value="<?=$worker['ht1']?>" placeholder="Hre">
+                                                <input type="text" class="span1" id="ht" name="ht" value="<?=$worker['ht1']?>" placeholder="Hre">
                                             <?php endforeach ; ?>
                                         <?php else : ?>
                                             <input type="text" class="span2" id="bat" name="bat" value="" placeholder="Batiment">
                                             <input type="text" class="span2" id="axe" name="axe" value="" placeholder="Axe">
                                             <input type="text" class="span1" id="et" name="et" value="" placeholder="Etage">
-                                            <input type="number" class="span1" id="ht" name="ht" value="" placeholder="Hre">
+                                            <input type="text" class="span1" id="ht" name="ht" value="" placeholder="Hre">
                                         <?php endif ; ?>
                                         <!--a Gestion dynamique de l'ajout d'une tache mis en suspend</a-->
                                         <!--a class="sAdd btn btn-success add-more" title="" href="#"><i class="icon-plus"></i></a-->
@@ -218,13 +219,13 @@
                                                 <input type="text" class="span2" id="bat2" name="bat2" value="<?= $worker['bat_2'] ?>" placeholder="Batiment">
                                                 <input type="text" class="span2" id="axe2" name="axe2" value="<?= $worker['axe_2'] ?>" placeholder="Axe">
                                                 <input type="text" class="span1" id="et2" name="et2" value="<?= $worker['et_2'] ?>" placeholder="Etage">
-                                                <input type="number" class="span1" id="ht2" name="ht2" value="<?= $worker['ht2'] ?>" placeholder="Hre">
+                                                <input type="text" class="span1" id="ht2" name="ht2" value="<?= $worker['ht2'] ?>" placeholder="Hre">
                                             <?php endforeach ; ?>
                                         <?php else : ?>
                                             <input type="text" class="span2" id="bat2" name="bat2" value="" placeholder="Batiment">
                                             <input type="text" class="span2" id="axe2" name="axe2" value="" placeholder="Axe">
                                             <input type="text" class="span1" id="et2" name="et2" value="" placeholder="Etage">
-                                            <input type="number" class="span1" id="ht2" name="ht2" value="" placeholder="Hre">
+                                            <input type="text" class="span1" id="ht2" name="ht2" value="" placeholder="Hre">
                                         <?php endif ; ?>
                                         <!--a Gestion dynamique de l'ajout d'une tache mis en suspend</a-->
                                         <!--a class="sAdd btn btn-success add-more" title="" href="#"><i class="icon-plus"></i></a-->
@@ -278,13 +279,13 @@
                                                 <input type="text" class="span2" id="bat3" name="bat3" value="<?= $worker['bat_3'] ?>" placeholder="Batiment">
                                                 <input type="text" class="span2" id="axe3" name="axe3" value="<?= $worker['axe_3'] ?>" placeholder="Axe">
                                                 <input type="text" class="span1" id="et3" name="et3" value="<?= $worker['et_3'] ?>" placeholder="Etage">
-                                                <input type="number" class="span1" id="ht3" name="ht3" value="<?= $worker['ht3'] ?>" placeholder="Hre">
+                                                <input type="text" class="span1" id="ht3" name="ht3" value="<?= $worker['ht3'] ?>" placeholder="Hre">
                                            <?php endforeach ;?>
                                             <?php else : ?>
                                                 <input type="text" class="span2" id="bat3" name="bat3" value="" placeholder="Batiment">
                                                 <input type="text" class="span2" id="axe3" name="axe3" value="" placeholder="Axe">
                                                 <input type="text" class="span1" id="et3" name="et3" value="" placeholder="Etage">
-                                                <input type="number" class="span1" id="ht3" name="ht3" value="" placeholder="Hre">
+                                                <input type="text" class="span1" id="ht3" name="ht3" value="" placeholder="Hre">
                                             <?php endif ; ?>
                                         </div>
                                     </div>
@@ -326,7 +327,7 @@
                                                     <input type="text" class="span2" id="bat4" name="bat4" value="<?= $worker['bat_4'] ?>" placeholder="Batiment">
                                                     <input type="text" class="span2" id="axe4" name="axe4" value="<?= $worker['axe_4'] ?>" placeholder="Axe">
                                                     <input type="text" class="span1" id="et4" name="et4" value="<?= $worker['et_4'] ?>" placeholder="Etage">
-                                                    <input type="number" class="span1" id="ht4" name="ht4" value="<?= $worker['ht4'] ?>" placeholder="Hre">
+                                                    <input type="text" class="span1" id="ht4" name="ht4" value="<?= $worker['ht4'] ?>" placeholder="Hre">
                                                     <!--a Gestion dynamique de l'ajout d'une tache mis en suspend</a-->
                                                     <!--a class="sAdd btn btn-success add-more" title="" href="#"><i class="icon-plus"></i></a-->
                                                 <?php endforeach ; ?>
@@ -334,7 +335,7 @@
                                                 <input type="text" class="span2" id="bat4" name="bat4" value="" placeholder="Batiment">
                                                 <input type="text" class="span2" id="axe4" name="axe4" value="" placeholder="Axe">
                                                 <input type="text" class="span1" id="et4" name="et4" value="" placeholder="Etage">
-                                                <input type="number" class="span1" id="ht4" name="ht4" value="" placeholder="Hre">
+                                                <input type="text" class="span1" id="ht4" name="ht4" value="" placeholder="Hre">
                                                 <!--a Gestion dynamique de l'ajout d'une tache mis en suspend</a-->
                                                 <!--a class="sAdd btn btn-success add-more" title="" href="#"><i class="icon-plus"></i></a-->
                                             <?php endif; ?>
@@ -378,7 +379,7 @@
                                                     <input type="text" class="span2" id="bat5" name="bat5" value="<?= $worker['bat_5'] ?>" placeholder="Batiment">
                                                     <input type="text" class="span2" id="axe5" name="axe5" value="<?= $worker['axe_5'] ?>" placeholder="Axe">
                                                     <input type="text" class="span1" id="et5" name="et5" value="<?= $worker['et_5'] ?>" placeholder="Etage">
-                                                    <input type="number" class="span1" id="ht5" name="ht5" value="<?= $worker['ht5'] ?>" placeholder="Hre">
+                                                    <input type="text" class="span1" id="ht5" name="ht5" value="<?= $worker['ht5'] ?>" placeholder="Hre">
                                                     <!--a Gestion dynamique de l'ajout d'une tache mis en suspend</a-->
                                                     <!--a class="sAdd btn btn-success add-more" title="" href="#"><i class="icon-plus"></i></a-->
                                                 <?php endforeach ; ?>
@@ -386,7 +387,7 @@
                                                 <input type="text" class="span2" id="bat5" name="bat5" value="" placeholder="Batiment">
                                                 <input type="text" class="span2" id="axe5" name="axe5" value="" placeholder="Axe">
                                                 <input type="text" class="span1" id="et5" name="et5" value="" placeholder="Etage">
-                                                <input type="number" class="span1" id="ht5" name="ht5" value="" placeholder="Hre">
+                                                <input type="text" class="span1" id="ht5" name="ht5" value="" placeholder="Hre">
                                                 <!--a Gestion dynamique de l'ajout d'une tache mis en suspend</a-->
                                                 <!--a class="sAdd btn btn-success add-more" title="" href="#"><i class="icon-plus"></i></a-->
                                             <?php endif; ?>
@@ -430,7 +431,7 @@
                                                     <input type="text" class="span2" id="bat6" name="bat6" value="<?= $worker['bat_6'] ?>" placeholder="Batiment">
                                                     <input type="text" class="span2" id="axe6" name="axe6" value="<?= $worker['axe_6'] ?>" placeholder="Axe">
                                                     <input type="text" class="span1" id="et6" name="et6" value="<?= $worker['et_6'] ?>" placeholder="Etage">
-                                                    <input type="number" class="span1" id="ht6" name="ht6" value="<?= $worker['ht6'] ?>" placeholder="Hre">
+                                                    <input type="text" class="span1" id="ht6" name="ht6" value="<?= $worker['ht6'] ?>" placeholder="Hre">
                                                     <!--a Gestion dynamique de l'ajout d'une tache mis en suspend</a-->
                                                     <!--a class="sAdd btn btn-success add-more" title="" href="#"><i class="icon-plus"></i></a-->
                                                 <?php endforeach;?>
@@ -438,7 +439,7 @@
                                                 <input type="text" class="span2" id="bat6" name="bat6" value="" placeholder="Batiment">
                                                 <input type="text" class="span2" id="axe6" name="axe6" value="" placeholder="Axe">
                                                 <input type="text" class="span1" id="et6" name="et6" value="" placeholder="Etage">
-                                                <input type="number" class="span1" id="ht6" name="ht6" value="" placeholder="Hre">
+                                                <input type="text" class="span1" id="ht6" name="ht6" value="" placeholder="Hre">
                                                 <!--a Gestion dynamique de l'ajout d'une tache mis en suspend</a-->
                                                 <!--a class="sAdd btn btn-success add-more" title="" href="#"><i class="icon-plus"></i></a-->
                                             <?php endif ; ?>

@@ -85,7 +85,7 @@
                                         <tr class="odd gradeX">
                                             <td><?= $rapportGenerated['date'] ?></td>
                                             <td style="text-align: center"><?= $rapportGenerated['username'].' - '.$rapportGenerated['lastname'].' '.$rapportGenerated['firstname'] ?></td>
-                                            <td style="text-align: center"><?= $rapportGenerated['code'].''.$rapportGenerated['nom'] ?></td>
+                                            <td style="text-align: center"><?= $rapportGenerated['code'].' - '.$rapportGenerated['nom'] ?></td>
                                             <td>
                                                 <a href="erapportShow.php?rapport_id=<?=$rapportGenerated['id_rapport']?>&rapport_type=<?=$rapportGenerated['rapport_type']?>&chef_dequipe_id=<?= $rapportGenerated['user_id']?>&chef_dequipe_matricule=<?= $rapportGenerated['username']?>&date_generation=<?= $rapportGenerated['date']?>&chantier_id=<?= $rapportGenerated['chantier_id']?>&chantier_code=<?= $rapportGenerated['code']?>"  class="btn btn-warning  btn-block">Consulter</a>
                                             </td>

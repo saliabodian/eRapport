@@ -23,7 +23,7 @@
                                 <input type="hidden" name="date_generation" value="<?= $_GET['date_generation']?>"/>
                                 <input type="hidden" name="chantier_code" value="<?= $_GET['chantier_code']?>"/>
                                 <input type="hidden" name="chantier_id" value="<?= $_GET['chantier_id']?>"/>
-                                <table class="table table-bordered table-striped with-check">
+                                <table class="table table-bordered with-check">
                                     <thead>
                                         <tr>
                                             <th><input type="checkbox" name="check_all" id="check_all" value=""/></th>
@@ -41,7 +41,15 @@
                                     </thead>
                                     <tbody>
                                         <?php foreach ($rapportNoyau as $rapport ) : ?>
-                                            <tr>
+                                            <?php if (($rapport['htot'] != ($rapport['ht1'] + $rapport['ht2'] +$rapport['ht3'] +$rapport['ht4'] +$rapport['ht5'] + $rapport['ht6'])) && empty($rapport['abs'])) : ?>
+                                                <tr class="anomalieVH">
+                                            <?php elseif(!empty($rapport['abs']) && ($rapport['htot'] === ($rapport['ht1'] + $rapport['ht2'] +$rapport['ht3'] +$rapport['ht4'] +$rapport['ht5'] + $rapport['ht6']))) : ?>
+                                                <tr class="absence">
+                                            <?php elseif(($rapport['htot'] != ($rapport['ht1'] + $rapport['ht2'] +$rapport['ht3'] +$rapport['ht4'] +$rapport['ht5'] + $rapport['ht6'])) && !(empty($rapport['abs']))) : ?>
+                                                <tr class="absenceHeure">
+                                            <?php else : ?>
+                                                <tr>
+                                            <?php endif ; ?>
                                                 <td><input type="checkbox" name="selected_matricule[]" class="checkbox checkbox_noyau" value="<?= isset($rapport['ouvrier_id'])? $rapport['ouvrier_id'] : (isset($rapport['interimaire_id'])? $rapport['interimaire_id'] : '')?>" /></td>
                                                 <td><?= isset($rapport['ouvrier_id'])? $rapport['ouvrier_id'] : (isset($rapport['interimaire_id'])? $rapport['interimaire_id'] : '')?> - <?=$rapport['fullname']?><?= ($rapport['dpl_pers']=== '1')? ' (T)' : '' ?></td>
                                                 <td><?= $rapport['htot'] ?></td>
@@ -133,7 +141,7 @@
                                     <input type="hidden" name="date_generation" value="<?= $_GET['date_generation']?>"/>
                                     <input type="hidden" name="chantier_code" value="<?= $_GET['chantier_code']?>"/>
                                     <input type="hidden" name="chantier_id" value="<?= $_GET['chantier_id']?>"/>
-                                    <table class="table table-bordered table-striped with-check">
+                                    <table class="table table-bordered with-check">
                                         <thead>
                                             <tr>
                                                 <th><input type="checkbox" name="check_all_abs" id="check_all_abs" value=""/></th>
@@ -151,7 +159,15 @@
                                         </thead>
                                         <tbody>
                                             <?php foreach ($rapportNoyauAbsent as $rapport ) : ?>
-                                                <tr>
+                                                <?php if (($rapport['htot'] != ($rapport['ht1'] + $rapport['ht2'] +$rapport['ht3'] +$rapport['ht4'] +$rapport['ht5'] + $rapport['ht6'])) && empty($rapport['abs'])) : ?>
+                                                    <tr class="anomalieVH">
+                                                <?php elseif(!empty($rapport['abs']) && ($rapport['htot'] === ($rapport['ht1'] + $rapport['ht2'] +$rapport['ht3'] +$rapport['ht4'] +$rapport['ht5'] + $rapport['ht6']))) : ?>
+                                                    <tr class="absence">
+                                                <?php elseif(($rapport['htot'] != ($rapport['ht1'] + $rapport['ht2'] +$rapport['ht3'] +$rapport['ht4'] +$rapport['ht5'] + $rapport['ht6'])) && !(empty($rapport['abs']))) : ?>
+                                                    <tr class="absenceHeure">
+                                                <?php else : ?>
+                                                    <tr>
+                                                <?php endif ; ?>
                                                     <td><input type="checkbox" name="selected_matricule[]" class="checkbox checkbox_abs" value="<?= isset($rapport['ouvrier_id'])? $rapport['ouvrier_id'] : (isset($rapport['interimaire_id'])? $rapport['interimaire_id'] : '')?>" /></td>
                                                     <td><?= isset($rapport['ouvrier_id'])? $rapport['ouvrier_id'] : (isset($rapport['interimaire_id'])? $rapport['interimaire_id'] : '')?> - <?=$rapport['fullname']?></td>
                                                     <td ><?= $rapport['htot'] ?></td>
@@ -243,7 +259,7 @@
                                 <input type="hidden" name="date_generation" value="<?= $_GET['date_generation']?>"/>
                                 <input type="hidden" name="chantier_code" value="<?= $_GET['chantier_code']?>"/>
                                 <input type="hidden" name="chantier_id" value="<?= $_GET['chantier_id']?>"/>
-                                <table class="table table-bordered table-striped with-check">
+                                <table class="table table-bordered with-check">
                                     <thead>
                                         <tr>
                                             <th><input type="checkbox" name="check_hn" id="check_hn" value=""/></th>
@@ -261,7 +277,15 @@
                                     </thead>
                                     <tbody>
                                         <?php foreach ($rapportHorsNoyau as $rapport ) : ?>
-                                            <tr>
+                                            <?php if (($rapport['htot'] != ($rapport['ht1'] + $rapport['ht2'] +$rapport['ht3'] +$rapport['ht4'] +$rapport['ht5'] + $rapport['ht6'])) && empty($rapport['abs'])) : ?>
+                                                <tr class="anomalieVH">
+                                            <?php elseif(!empty($rapport['abs']) && ($rapport['htot'] === ($rapport['ht1'] + $rapport['ht2'] +$rapport['ht3'] +$rapport['ht4'] +$rapport['ht5'] + $rapport['ht6']))) : ?>
+                                                <tr class="absence">
+                                            <?php elseif(($rapport['htot'] != ($rapport['ht1'] + $rapport['ht2'] +$rapport['ht3'] +$rapport['ht4'] +$rapport['ht5'] + $rapport['ht6'])) && !(empty($rapport['abs']))) : ?>
+                                                <tr class="absenceHeure">
+                                            <?php else : ?>
+                                                <tr>
+                                            <?php endif ; ?>
                                                 <td><input type="checkbox" name="selected_matricule[]" class="checkbox checkbox_hn" value="<?= isset($rapport['ouvrier_id'])? $rapport['ouvrier_id'] : (isset($rapport['interimaire_id'])? $rapport['interimaire_id'] : '')?>" /></td>
                                                 <td ><?= isset($rapport['ouvrier_id'])? $rapport['ouvrier_id'] : (isset($rapport['interimaire_id'])? $rapport['interimaire_id'] : '')?> - <?=$rapport['fullname']?></td>
                                                 <td ><?= $rapport['htot'] ?></td>

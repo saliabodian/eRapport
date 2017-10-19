@@ -14,3 +14,15 @@
     display: none;
 /*    background-color: blue; */
 }
+
+.anomalieVH{
+    background-color: red;
+}
+
+.absence{
+    background-color: orange;
+}
+
+.absenceHeure{
+    background-color: darkgoldenrod;
+}
