@@ -1086,9 +1086,9 @@ class Rapport extends DbObject{
 
             $stmt->bindValue(':chef_dequipe_updated', $chef_dequipe_updated, \PDO::PARAM_INT);
 
-            // var_dump($stmt);
+        //    var_dump($stmt);
 
-            //exit;
+        //    exit;
 
             if($stmt->execute()=== false){
                 print_r($stmt->errorInfo());
@@ -1296,25 +1296,31 @@ class Rapport extends DbObject{
         }
     }
 
-    public static function getWorkerNoyauTask($rapport_detail_id){
+    // Récupération de manière groupée les volumes horaires cumulées par taches
+
+    public static function getWorkerTask($rapport_detail_id){
 
           //  var_dump($rapport['id']);
 
             $sql='
-                        SELECT
-    rapport_detail_has_tache.*,
-    tache.code,
-    tache.nom,
-    type_tache.nom_type_tache,
-    type_tache.code_type_tache
-FROM
-    rapport_detail_has_tache
-    INNER JOIN
-    tache ON tache.id= rapport_detail_has_tache.tache_id
-    INNER JOIN
-    type_tache ON type_tache.id = rapport_detail_has_tache.type_tache_id
-WHERE
-    rapport_detail_has_tache.rapport_detail_id = :rapport_detail_id';
+                SELECT rapport_detail_has_tache.id,
+                    rapport_detail_has_tache.tache_id,
+                    sum(rapport_detail_has_tache.heures) as vhr,
+                    tache.code,
+                    tache.nom,
+                    type_tache.nom_type_tache,
+                    type_tache.code_type_tache
+                FROM
+                    rapport_detail_has_tache
+                    INNER JOIN
+                    tache ON tache.id= rapport_detail_has_tache.tache_id
+                    INNER JOIN
+                    type_tache ON type_tache.id = rapport_detail_has_tache.type_tache_id
+                WHERE
+                    rapport_detail_has_tache.rapport_detail_id = :rapport_detail_id
+                    GROUP BY rapport_detail_has_tache.tache_id
+                    ORDER BY rapport_detail_has_tache.tache_id
+                ';
 
             $stmt=Config::getInstance()->getPDO()->prepare($sql);
             $stmt->bindValue(':rapport_detail_id', $rapport_detail_id, \PDO::PARAM_INT);
@@ -1327,7 +1333,176 @@ WHERE
             return $taskList;
     }
 
-    public static function getWorkerHorsNoyauTask(){}
+    // Récupération des volumes horaires cumulées par taches
 
-    public static function getWorkerAbsentTask(){}
+    public static function getWorkerTaskDetail($rapport_detail_id){
+
+        //  var_dump($rapport['id']);
+
+        $sql='
+                SELECT
+                    rapport_detail_has_tache.id,
+                    rapport_detail_has_tache.heures,
+                    tache.code,
+                    tache.nom,
+                    type_tache.nom_type_tache,
+                    type_tache.code_type_tache
+                FROM
+                    rapport_detail_has_tache
+                    INNER JOIN
+                    tache ON tache.id= rapport_detail_has_tache.tache_id
+                    INNER JOIN
+                    type_tache ON type_tache.id = rapport_detail_has_tache.type_tache_id
+                WHERE
+                    rapport_detail_has_tache.rapport_detail_id = :rapport_detail_id
+                    AND type_tache.id = tache.type_tache_id
+                ORDER BY tache_id
+                ';
+
+        $stmt=Config::getInstance()->getPDO()->prepare($sql);
+        $stmt->bindValue(':rapport_detail_id', $rapport_detail_id, \PDO::PARAM_INT);
+        if($stmt->execute()===false){
+            print_r($stmt->errorInfo());
+        }else{
+            $detailTaskList = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        }
+
+        return $detailTaskList;
+    }
+
+    public static function getRapportNoyauHeader($rapport_id, $equipeId, $date, $chantier){
+
+        $sql = 'SELECT
+                    rapport_detail_has_tache.id,
+                    tache.code,
+                    tache.nom,
+                    SUM(rapport_detail_has_tache.heures) AS vht,
+                    rapport_detail_has_tache.tache_id
+                FROM
+                    rapport_detail_has_tache,
+                    tache
+                WHERE
+                    tache.id = rapport_detail_has_tache.tache_id
+                    AND rapport_detail_id IN (SELECT
+                            rapport_detail.id
+                        FROM
+                            rapport_detail,
+                            rapport
+                        WHERE
+                            rapport_detail.rapport_id = :rapport_id
+                                AND rapport.id = rapport_detail.rapport_id
+                                AND rapport_detail.rapport_id IN (SELECT
+                                    id
+                                FROM
+                                    rapport
+                                WHERE
+                                    equipe = :equipeId AND rapport_type = :rapport_type
+                                        AND date = :date
+                                        AND chantier = :chantier))
+
+                GROUP BY tache_id
+                ORDER BY tache_id';
+        $stmt = Config::getInstance()->getPDO()->prepare($sql);
+        $stmt->bindValue(':rapport_id', $rapport_id, \PDO::PARAM_INT);
+        $stmt->bindValue(':equipeId',$equipeId,\PDO::PARAM_INT);
+        $stmt->bindValue(':rapport_type','NOYAU',\PDO::PARAM_STR);
+        $stmt->bindValue(':date',$date,\PDO::PARAM_INT);
+        $stmt->bindValue(':chantier',$chantier,\PDO::PARAM_INT);
+        if($stmt->execute()===false){
+            print_r($stmt->errorInfo());
+        }else{
+            $noyauHeader= $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        }
+        return $noyauHeader;
+    }
+
+    public static function getRapportAbsentNoyauHeader($rapport_id, $equipeId, $date, $chantier){
+
+        $sql = 'SELECT
+                    rapport_detail_has_tache.id,
+                    tache.code,
+                    tache.nom,
+                    SUM(rapport_detail_has_tache.heures) AS vht,
+                    rapport_detail_has_tache.tache_id
+                FROM
+                    rapport_detail_has_tache, tache
+                WHERE
+                    tache.id=rapport_detail_has_tache.tache_id
+                    AND rapport_detail_id IN (SELECT
+                            rapport_detail.id
+                        FROM
+                            rapport_detail,
+                            rapport
+                        WHERE
+                            rapport_detail.rapport_id = :rapport_id
+                                AND rapport.id = rapport_detail.rapport_id
+                                AND rapport_detail.rapport_id IN (SELECT
+                                    id
+                                FROM
+                                    rapport
+                                WHERE
+                                    equipe = :equipe_id AND rapport_type = :rapport_type
+                                        AND date = :date
+                                        AND chantier = :chantier))
+
+                GROUP BY tache_id
+                ORDER BY tache_id';
+        $stmt = Config::getInstance()->getPDO()->prepare($sql);
+        $stmt->bindValue(':rapport_id', $rapport_id,\PDO::PARAM_INT);
+        $stmt->bindValue(':equipe_id',$equipeId,\PDO::PARAM_INT);
+        $stmt->bindValue(':rapport_type','ABSENT',\PDO::PARAM_STR);
+        $stmt->bindValue(':date',$date,\PDO::PARAM_INT);
+        $stmt->bindValue(':chantier',$chantier,\PDO::PARAM_INT);
+        if($stmt->execute()===false){
+            print_r($stmt->errorInfo());
+        }else{
+            $noyauHeaderAbsent= $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        }
+        return $noyauHeaderAbsent;
+    }
+
+    public static function getRapportHorsNoyauHeader($rapport_id, $date, $chantier){
+
+        $sql = 'SELECT
+                    rapport_detail_has_tache.id,
+                    tache.code,
+                    tache.nom,
+                    SUM(rapport_detail_has_tache.heures) AS vht,
+                    rapport_detail_has_tache.tache_id
+                FROM
+                    rapport_detail_has_tache,
+                    tache
+                WHERE
+                    tache.id = rapport_detail_has_tache.tache_id
+                        AND rapport_detail_id IN (SELECT
+                            rapport_detail.id
+                        FROM
+                            rapport_detail,
+                            rapport
+                        WHERE
+                            rapport_detail.rapport_id = :rapport_id
+                                AND rapport.id = rapport_detail.rapport_id
+                                AND rapport_detail.rapport_id IN (SELECT
+                                    id
+                                FROM
+                                    rapport
+                                WHERE
+                                    rapport_type = :rapport_type
+                                        AND date = :date
+                                        AND chantier =:chantier ))
+                GROUP BY tache_id
+                ORDER BY tache_id';
+        $stmt = Config::getInstance()->getPDO()->prepare($sql);
+        $stmt->bindValue(':rapport_id', $rapport_id, \PDO::PARAM_INT);
+        $stmt->bindValue(':rapport_type','HORSNOYAU',\PDO::PARAM_STR);
+        $stmt->bindValue(':date',$date,\PDO::PARAM_INT);
+        $stmt->bindValue(':chantier',$chantier, \PDO::PARAM_INT);
+        if($stmt->execute()===false){
+            print_r($stmt->errorInfo());
+        }else{
+            $noyauHeaderHorsNoyau= $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        }
+        return $noyauHeaderHorsNoyau;
+    }
+
 }

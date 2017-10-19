@@ -136,9 +136,9 @@ if(!empty($_SESSION)){
     //var_dump($matriculeList);
     if($_POST['majForm']){
 
-        //var_dump($_POST ['abs']);
+    //    var_dump($_POST['dpl_pers']);
 
-        //exit;
+    //    exit;
 
         $form = true;
 
@@ -239,6 +239,7 @@ if(!empty($_SESSION)){
 
         $dpl_pers = ($_POST['dpl_pers']=== 'on')? 1 : 0;
         if($form){
+
             Rapport::updateRapportDetail($_POST['rapport_detail_id'], $_POST['htot'], $_POST['hins'], $_POST['abs'],
                 $_POST['habs'], $dpl_pers,$_POST['km'], $_POST['remarque'], $_POST['chef_dequipe_updated'],
                 $_POST['type_task'], $_POST['tasks'], $_POST['bat'], $_POST['axe'], $_POST['et'], $_POST['ht'],
@@ -247,7 +248,7 @@ if(!empty($_SESSION)){
                 $_POST['type_task4'], $_POST['tasks4'], $_POST['bat4'], $_POST['axe4'], $_POST['et4'], $_POST['ht4'],
                 $_POST['type_task5'], $_POST['tasks5'], $_POST['bat5'], $_POST['axe5'], $_POST['et5'], $_POST['ht5'],
                 $_POST['type_task6'], $_POST['tasks6'], $_POST['bat6'], $_POST['axe6'], $_POST['et6'], $_POST['ht6']);
-
+        //    exit;
             header('Location: erapportShow.php?rapport_id='.$_POST['rapport_id'].'&rapport_type='.$_POST['rapport_type'].'&chef_dequipe_id='.$_POST['chef_dequipe_id'].'&chef_dequipe_matricule='.$_POST['chef_dequipe_matricule'].'&date_generation='.$_POST['date_generation'].'&chantier_id='.$_POST['chantier_id'].'&chantier_code='.$_POST['chantier_code'].'&majForm=true');
             exit;
         }else{
@@ -400,6 +401,7 @@ if(!empty($_SESSION)){
                 $rapportNoyauAbsent = Rapport::getRapportAbsentNoyau($_POST["chef_dequipe_id"], $_POST["date_generation"], $_POST["chantier_id"]);
                 foreach($rapportNoyauAbsent as $rapport){
                     if(in_array($rapport['ouvrier_id'], $matriculeList)){
+                        $workerToUpdate[$rapport['id']]['rapport_detail_id']= $rapport['id'];
                         $workerToUpdate[$rapport['id']]['rapport_id']= $rapport['rapport_id'];
                         $workerToUpdate[$rapport['id']]['equipe']= $rapport['equipe'];
                         $workerToUpdate[$rapport['id']]['fullname']= $rapport['fullname'];
@@ -463,6 +465,7 @@ if(!empty($_SESSION)){
                         $workerToUpdate[$rapport['id']]['ht6']= $rapport['ht6'];
                     }
                     if(in_array($rapport['interimaire_id'], $matriculeList)){
+                        $workerToUpdate[$rapport['id']]['rapport_detail_id']= $rapport['id'];
                         $workerToUpdate[$rapport['id']]['rapport_id']= $rapport['rapport_id'];
                         $workerToUpdate[$rapport['id']]['equipe']= $rapport['equipe'];
                         $workerToUpdate[$rapport['id']]['fullname']= $rapport['fullname'];
@@ -533,6 +536,7 @@ if(!empty($_SESSION)){
                 $rapportHorsNoyau = Rapport::getRapportHorsNoyau($_POST["date_generation"], $_POST["chantier_id"]);
                 foreach($rapportHorsNoyau as $rapport){
                     if(in_array($rapport['ouvrier_id'], $matriculeList)){
+                        $workerToUpdate[$rapport['id']]['rapport_detail_id']= $rapport['id'];
                         $workerToUpdate[$rapport['id']]['rapport_id']= $rapport['rapport_id'];
                         $workerToUpdate[$rapport['id']]['equipe']= $rapport['equipe'];
                         $workerToUpdate[$rapport['id']]['fullname']= $rapport['fullname'];
@@ -596,6 +600,7 @@ if(!empty($_SESSION)){
                         $workerToUpdate[$rapport['id']]['ht6']= $rapport['ht6'];
                     }
                     if(in_array($rapport['interimaire_id'], $matriculeList)){
+                        $workerToUpdate[$rapport['id']]['rapport_detail_id']= $rapport['id'];
                         $workerToUpdate[$rapport['id']]['rapport_id']= $rapport['rapport_id'];
                         $workerToUpdate[$rapport['id']]['equipe']= $rapport['equipe'];
                         $workerToUpdate[$rapport['id']]['fullname']= $rapport['fullname'];
@@ -705,6 +710,9 @@ if(!empty($_SESSION)){
 
     if(!empty($matriculeList)){
 
+    //    var_dump($_POST);
+
+    //    exit;
     //    $date = "2017-10-16" ;
 
     //    $chantier = 156100;
@@ -856,6 +864,7 @@ if(!empty($_SESSION)){
             $rapportNoyauAbsent = Rapport::getRapportAbsentNoyau($_POST["chef_dequipe_id"], $_POST["date_generation"], $_POST["chantier_id"]);
             foreach($rapportNoyauAbsent as $rapport){
                 if(in_array($rapport['ouvrier_id'], $matriculeList)){
+                    $workerToUpdate[$rapport['id']]['rapport_detail_id']= $rapport['id'];
                     $workerToUpdate[$rapport['id']]['rapport_id']= $rapport['rapport_id'];
                     $workerToUpdate[$rapport['id']]['equipe']= $rapport['equipe'];
                     $workerToUpdate[$rapport['id']]['fullname']= $rapport['fullname'];
@@ -919,6 +928,7 @@ if(!empty($_SESSION)){
                     $workerToUpdate[$rapport['id']]['ht6']= $rapport['ht6'];
                 }
                 if(in_array($rapport['interimaire_id'], $matriculeList)){
+                    $workerToUpdate[$rapport['id']]['rapport_detail_id']= $rapport['id'];
                     $workerToUpdate[$rapport['id']]['rapport_id']= $rapport['rapport_id'];
                     $workerToUpdate[$rapport['id']]['equipe']= $rapport['equipe'];
                     $workerToUpdate[$rapport['id']]['fullname']= $rapport['fullname'];
@@ -992,6 +1002,7 @@ if(!empty($_SESSION)){
             $rapportHorsNoyau = Rapport::getRapportHorsNoyau($_POST["date_generation"], $_POST["chantier_id"]);
             foreach($rapportHorsNoyau as $rapport){
                 if(in_array($rapport['ouvrier_id'], $matriculeList)){
+                    $workerToUpdate[$rapport['id']]['rapport_detail_id']= $rapport['id'];
                     $workerToUpdate[$rapport['id']]['rapport_id']= $rapport['rapport_id'];
                     $workerToUpdate[$rapport['id']]['equipe']= $rapport['equipe'];
                     $workerToUpdate[$rapport['id']]['fullname']= $rapport['fullname'];
@@ -1055,6 +1066,7 @@ if(!empty($_SESSION)){
                     $workerToUpdate[$rapport['id']]['ht6']= $rapport['ht6'];
                 }
                 if(in_array($rapport['interimaire_id'], $matriculeList)){
+                    $workerToUpdate[$rapport['id']]['rapport_detail_id']= $rapport['id'];
                     $workerToUpdate[$rapport['id']]['rapport_id']= $rapport['rapport_id'];
                     $workerToUpdate[$rapport['id']]['equipe']= $rapport['equipe'];
                     $workerToUpdate[$rapport['id']]['fullname']= $rapport['fullname'];

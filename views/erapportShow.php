@@ -29,6 +29,11 @@
                                             <th><input type="checkbox" name="check_all" id="check_all" value=""/></th>
                                             <th>Nom Complet</th>
                                             <th>Heures</th>
+                                                <?php if(!empty($noyauHeader)) :?>
+                                                    <?php foreach($noyauHeader as $noyauHeaderdetail) : ?>
+                                                        <th><?= $noyauHeaderdetail['code']?></th>
+                                                    <?php endforeach ; ?>
+                                                <?php endif; ?>
                                             <th>Abs</th>
                                             <th>T. Pénibles</th>
                                             <th>T. (Km)</th>
@@ -38,13 +43,68 @@
                                         <?php foreach ($rapportNoyau as $rapport ) : ?>
                                             <tr>
                                                 <td><input type="checkbox" name="selected_matricule[]" class="checkbox checkbox_noyau" value="<?= isset($rapport['ouvrier_id'])? $rapport['ouvrier_id'] : (isset($rapport['interimaire_id'])? $rapport['interimaire_id'] : '')?>" /></td>
-                                                <td><?= isset($rapport['ouvrier_id'])? $rapport['ouvrier_id'] : (isset($rapport['interimaire_id'])? $rapport['interimaire_id'] : '')?> - <?=$rapport['fullname']?></td>
+                                                <td><?= isset($rapport['ouvrier_id'])? $rapport['ouvrier_id'] : (isset($rapport['interimaire_id'])? $rapport['interimaire_id'] : '')?> - <?=$rapport['fullname']?><?= ($rapport['dpl_pers']=== '1')? ' (T)' : '' ?></td>
                                                 <td><?= $rapport['htot'] ?></td>
+                                                <?php if(!empty($noyauHeader)) :?>
+                                                    <?php foreach($noyauHeader as $noyauHeaderdetail) : ?>
+                                                            <?php if($rapport['task_id_1'] === $noyauHeaderdetail['tache_id']) : ?>
+                                                                <?php foreach($noyauWorkerTask[$rapport['id']] as $task) : ?>
+                                                                    <?php if($task['tache_id']=== $rapport['task_id_1']) : ?>
+                                                                        <td><?= $task['vhr'] ?></td>
+                                                                    <?php endif; ?>
+                                                                <?php endforeach ; ?>
+                                                            <?php elseif ($rapport['task_id_2'] === $noyauHeaderdetail['tache_id']) : ?>
+                                                                <?php foreach($noyauWorkerTask[$rapport['id']] as $task) : ?>
+                                                                    <?php if($task['tache_id']=== $rapport['task_id_2']) : ?>
+                                                                        <td><?= $task['vhr'] ?></td>
+                                                                    <?php endif; ?>
+                                                                <?php endforeach ; ?>
+                                                            <?php elseif ($rapport['task_id_3'] === $noyauHeaderdetail['tache_id']) : ?>
+                                                                <?php foreach($noyauWorkerTask[$rapport['id']] as $task) : ?>
+                                                                    <?php if($task['tache_id']=== $rapport['task_id_3']) : ?>
+                                                                        <td><?= $task['vhr'] ?></td>
+                                                                    <?php endif; ?>
+                                                                <?php endforeach ; ?>
+                                                            <?php elseif ($rapport['task_id_4'] === $noyauHeaderdetail['tache_id']) : ?>
+                                                                <?php foreach($noyauWorkerTask[$rapport['id']] as $task) : ?>
+                                                                    <?php if($task['tache_id']=== $rapport['task_id_4']) : ?>
+                                                                        <td><?= $task['vhr'] ?></td>
+                                                                    <?php endif; ?>
+                                                                <?php endforeach ; ?>
+                                                            <?php elseif ($rapport['task_id_5'] === $noyauHeaderdetail['tache_id']) : ?>
+                                                                <?php foreach($noyauWorkerTask[$rapport['id']] as $task) : ?>
+                                                                    <?php if($task['tache_id']=== $rapport['task_id_5']) : ?>
+                                                                        <td><?= $task['vhr'] ?></td>
+                                                                    <?php endif; ?>
+                                                                <?php endforeach ; ?>
+                                                            <?php elseif ($rapport['task_id_6'] === $noyauHeaderdetail['tache_id']) : ?>
+                                                                <?php foreach($noyauWorkerTask[$rapport['id']] as $task) : ?>
+                                                                    <?php if($task['tache_id']=== $rapport['task_id_6']) : ?>
+                                                                        <td><?= $task['vhr'] ?></td>
+                                                                    <?php endif; ?>
+                                                                <?php endforeach ; ?>
+                                                            <?php else : ?>
+                                                                <td></td>
+                                                            <?php endif ; ?>
+                                                    <?php endforeach ; ?>
+                                                <?php endif ; ?>
                                                 <td ><?= $rapport['habs'] ?></td>
                                                 <td ><?= $rapport['hins'] ?></td>
                                                 <td ><?= $rapport['km'] ?></td>
                                             </tr>
                                         <?php  endforeach;  ?>
+                                        <tr>
+                                            <td colspan="2">Totaux</td>
+                                            <td><?= $noyauHourGlobal; ?></td>
+                                            <?php if(!empty($noyauHeader)) :?>
+                                                <?php foreach($noyauHeader as $noyauHeaderdetail) : ?>
+                                                    <td><?= $noyauHeaderdetail['vht'] ?></td>
+                                                <?php endforeach ; ?>
+                                            <?php endif ; ?>
+                                            <td><?= $noyauHourAbsencesGlobal; ?></td>
+                                            <td><?= $noyauHourPenibleGlobal; ?></td>
+                                            <td><?= $noyauKmGlobal; ?></td>
+                                        </tr>
                                     </tbody>
                                 </table>
                                 <hr>
@@ -79,6 +139,11 @@
                                                 <th><input type="checkbox" name="check_all_abs" id="check_all_abs" value=""/></th>
                                                 <th>Nom Complet</th>
                                                 <th>Heures</th>
+                                                    <?php if(!empty($noyauAbsentHeader)) :?>
+                                                        <?php foreach($noyauAbsentHeader as $noyauHeaderdetail) : ?>
+                                                            <th><?= $noyauHeaderdetail['code']?></th>
+                                                        <?php endforeach ; ?>
+                                                    <?php endif; ?>
                                                 <th>Abs</th>
                                                 <th>T. Pénibles</th>
                                                 <th>T. (Km)</th>
@@ -90,11 +155,66 @@
                                                     <td><input type="checkbox" name="selected_matricule[]" class="checkbox checkbox_abs" value="<?= isset($rapport['ouvrier_id'])? $rapport['ouvrier_id'] : (isset($rapport['interimaire_id'])? $rapport['interimaire_id'] : '')?>" /></td>
                                                     <td><?= isset($rapport['ouvrier_id'])? $rapport['ouvrier_id'] : (isset($rapport['interimaire_id'])? $rapport['interimaire_id'] : '')?> - <?=$rapport['fullname']?></td>
                                                     <td ><?= $rapport['htot'] ?></td>
+                                                    <?php if (!empty($noyauAbsentHeader)) : ?>
+                                                        <?php foreach($noyauAbsentHeader as $noyauHeaderdetail) : ?>
+                                                            <?php if($rapport['task_id_1'] === $noyauHeaderdetail['tache_id']) : ?>
+                                                                <?php foreach($noyauAbsentTask[$rapport['id']] as $task) : ?>
+                                                                    <?php if($task['tache_id']=== $rapport['task_id_1']) : ?>
+                                                                        <td><?= $task['vhr'] ?></td>
+                                                                    <?php endif; ?>
+                                                                <?php endforeach ; ?>
+                                                            <?php elseif ($rapport['task_id_2'] === $noyauHeaderdetail['tache_id']) : ?>
+                                                                <?php foreach($noyauAbsentTask[$rapport['id']] as $task) : ?>
+                                                                    <?php if($task['tache_id']=== $rapport['task_id_2']) : ?>
+                                                                        <td><?= $task['vhr'] ?></td>
+                                                                    <?php endif; ?>
+                                                                <?php endforeach ; ?>
+                                                            <?php elseif ($rapport['task_id_3'] === $noyauHeaderdetail['tache_id']) : ?>
+                                                                <?php foreach($noyauAbsentTask[$rapport['id']] as $task) : ?>
+                                                                    <?php if($task['tache_id']=== $rapport['task_id_3']) : ?>
+                                                                        <td><?= $task['vhr'] ?></td>
+                                                                    <?php endif; ?>
+                                                                <?php endforeach ; ?>
+                                                            <?php elseif ($rapport['task_id_4'] === $noyauHeaderdetail['tache_id']) : ?>
+                                                                <?php foreach($noyauAbsentTask[$rapport['id']] as $task) : ?>
+                                                                    <?php if($task['tache_id']=== $rapport['task_id_4']) : ?>
+                                                                        <td><?= $task['vhr'] ?></td>
+                                                                    <?php endif; ?>
+                                                                <?php endforeach ; ?>
+                                                            <?php elseif ($rapport['task_id_5'] === $noyauHeaderdetail['tache_id']) : ?>
+                                                                <?php foreach($noyauAbsentTask[$rapport['id']] as $task) : ?>
+                                                                    <?php if($task['tache_id']=== $rapport['task_id_5']) : ?>
+                                                                        <td><?= $task['vhr'] ?></td>
+                                                                    <?php endif; ?>
+                                                                <?php endforeach ; ?>
+                                                            <?php elseif ($rapport['task_id_6'] === $noyauHeaderdetail['tache_id']) : ?>
+                                                                <?php foreach($noyauAbsentTask[$rapport['id']] as $task) : ?>
+                                                                    <?php if($task['tache_id']=== $rapport['task_id_6']) : ?>
+                                                                        <td><?= $task['vhr'] ?></td>
+                                                                    <?php endif; ?>
+                                                                <?php endforeach ; ?>
+                                                            <?php else : ?>
+                                                                <td></td>
+                                                            <?php endif ; ?>
+                                                        <?php endforeach ; ?>
+                                                    <?php endif ;?>
                                                     <td ><?= $rapport['habs'] ?></td>
                                                     <td ><?= $rapport['hins'] ?></td>
                                                     <td ><?= $rapport['km'] ?></td>
                                                 </tr>
                                             <?php  endforeach;  ?>
+                                            <tr>
+                                                <td colspan="2">Totaux</td>
+                                                <td><?= $absentHourGlobal; ?></td>
+                                                <?php if(!empty($noyauAbsentHeader)) :?>
+                                                    <?php foreach($noyauAbsentHeader as $noyauHeaderdetail) : ?>
+                                                        <td><?= $noyauHeaderdetail['vht'] ?></td>
+                                                    <?php endforeach ; ?>
+                                                <?php endif ; ?>
+                                                <td><?= $absentHourAbsencesGlobal; ?></td>
+                                                <td><?= $absentHourPenibleGlobal; ?></td>
+                                                <td><?= $absentKmGlobal; ?></td>
+                                            </tr>
                                         </tbody>
                                     </table>
                                     <hr>
@@ -129,6 +249,11 @@
                                             <th><input type="checkbox" name="check_hn" id="check_hn" value=""/></th>
                                             <th>Nom Complet</th>
                                             <th>Heures</th>
+                                                <?php if(!empty($horsNoyauHeader)) :?>
+                                                    <?php foreach($horsNoyauHeader as $noyauHeaderdetail) : ?>
+                                                        <th><?= $noyauHeaderdetail['code']?></th>
+                                                    <?php endforeach ; ?>
+                                                <?php endif; ?>
                                             <th>Abs</th>
                                             <th>T. Pénibles</th>
                                             <th>T. (Km)</th>
@@ -136,15 +261,70 @@
                                     </thead>
                                     <tbody>
                                         <?php foreach ($rapportHorsNoyau as $rapport ) : ?>
-                        <tr>
-                            <td><input type="checkbox" name="selected_matricule[]" class="checkbox checkbox_hn" value="<?= isset($rapport['ouvrier_id'])? $rapport['ouvrier_id'] : (isset($rapport['interimaire_id'])? $rapport['interimaire_id'] : '')?>" /></td>
-                            <td ><?= isset($rapport['ouvrier_id'])? $rapport['ouvrier_id'] : (isset($rapport['interimaire_id'])? $rapport['interimaire_id'] : '')?> - <?=$rapport['fullname']?></td>
-                            <td ><?= $rapport['htot'] ?></td>
-                            <td ><?= $rapport['habs'] ?></td>
-                            <td ><?= $rapport['hins'] ?></td>
-                            <td ><?= $rapport['km'] ?></td>
-                        </tr>
-                    <?php  endforeach;  ?>
+                                            <tr>
+                                                <td><input type="checkbox" name="selected_matricule[]" class="checkbox checkbox_hn" value="<?= isset($rapport['ouvrier_id'])? $rapport['ouvrier_id'] : (isset($rapport['interimaire_id'])? $rapport['interimaire_id'] : '')?>" /></td>
+                                                <td ><?= isset($rapport['ouvrier_id'])? $rapport['ouvrier_id'] : (isset($rapport['interimaire_id'])? $rapport['interimaire_id'] : '')?> - <?=$rapport['fullname']?></td>
+                                                <td ><?= $rapport['htot'] ?></td>
+                                                <?php if (!empty($horsNoyauHeader)) : ?>
+                                                    <?php foreach($horsNoyauHeader as $noyauHeaderdetail) : ?>
+                                                        <?php if($rapport['task_id_1'] === $noyauHeaderdetail['tache_id']) : ?>
+                                                            <?php foreach($horsNoyauTask[$rapport['id']] as $task) : ?>
+                                                                <?php if($task['tache_id']=== $rapport['task_id_1']) : ?>
+                                                                    <td><?= $task['vhr'] ?></td>
+                                                                <?php endif; ?>
+                                                            <?php endforeach ; ?>
+                                                        <?php elseif ($rapport['task_id_2'] === $noyauHeaderdetail['tache_id']) : ?>
+                                                            <?php foreach($horsNoyauTask[$rapport['id']] as $task) : ?>
+                                                                <?php if($task['tache_id']=== $rapport['task_id_2']) : ?>
+                                                                    <td><?= $task['vhr'] ?></td>
+                                                                <?php endif; ?>
+                                                            <?php endforeach ; ?>
+                                                        <?php elseif ($rapport['task_id_3'] === $noyauHeaderdetail['tache_id']) : ?>
+                                                            <?php foreach($horsNoyauTask[$rapport['id']] as $task) : ?>
+                                                                <?php if($task['tache_id']=== $rapport['task_id_3']) : ?>
+                                                                    <td><?= $task['vhr'] ?></td>
+                                                                <?php endif; ?>
+                                                            <?php endforeach ; ?>
+                                                        <?php elseif ($rapport['task_id_4'] === $noyauHeaderdetail['tache_id']) : ?>
+                                                            <?php foreach($horsNoyauTask[$rapport['id']] as $task) : ?>
+                                                                <?php if($task['tache_id']=== $rapport['task_id_4']) : ?>
+                                                                    <td><?= $task['vhr'] ?></td>
+                                                                <?php endif; ?>
+                                                            <?php endforeach ; ?>
+                                                        <?php elseif ($rapport['task_id_5'] === $noyauHeaderdetail['tache_id']) : ?>
+                                                            <?php foreach($horsNoyauTask[$rapport['id']] as $task) : ?>
+                                                                <?php if($task['tache_id']=== $rapport['task_id_5']) : ?>
+                                                                    <td><?= $task['vhr'] ?></td>
+                                                                <?php endif; ?>
+                                                            <?php endforeach ; ?>
+                                                        <?php elseif ($rapport['task_id_6'] === $noyauHeaderdetail['tache_id']) : ?>
+                                                            <?php foreach($horsNoyauTask[$rapport['id']] as $task) : ?>
+                                                                <?php if($task['tache_id']=== $rapport['task_id_6']) : ?>
+                                                                    <td><?= $task['vhr'] ?></td>
+                                                                <?php endif; ?>
+                                                            <?php endforeach ; ?>
+                                                        <?php else : ?>
+                                                            <td></td>
+                                                        <?php endif ; ?>
+                                                    <?php endforeach ; ?>
+                                                <?php endif ;?>
+                                                <td ><?= $rapport['habs'] ?></td>
+                                                <td ><?= $rapport['hins'] ?></td>
+                                                <td ><?= $rapport['km'] ?></td>
+                                            </tr>
+                                        <?php  endforeach;  ?>
+                                        <tr>
+                                            <td colspan="2">Totaux</td>
+                                            <td><?= $horsNoyauHourGlobal; ?></td>
+                                            <?php if(!empty($horsNoyauHeader)) :?>
+                                                <?php foreach($horsNoyauHeader as $noyauHeaderdetail) : ?>
+                                                    <td><?= $noyauHeaderdetail['vht'] ?></td>
+                                                <?php endforeach ; ?>
+                                            <?php endif ; ?>
+                                            <td><?= $horsNoyauHourAbsencesGlobal; ?></td>
+                                            <td><?= $horsNoyauHourPenibleGlobal; ?></td>
+                                            <td><?= $horsNoyauKmGlobal; ?></td>
+                                        </tr>
                                     </tbody>
                                 </table>
                                 <hr>
