@@ -117,6 +117,14 @@
                                 </table>
                                 <hr>
                                 <input class="span4 btn btn-success" type="submit" value="Renseigner les tâches">
+                                <hr>
+                                <div class="controls">
+                                    <?php if(!empty($noyauHeader)) : ?>
+                                        <?php foreach($noyauHeader as $noyauHeaderdetail) : ?>
+                                            <input type="text" class="span4" value="<?= $noyauHeaderdetail['code'].': '.$noyauHeaderdetail['nom']?>" disabled/>
+                                        <?php endforeach; ?>
+                                    <?php endif ; ?>
+                                </div>
                             </form>
                             </div>
                         </div>
@@ -235,6 +243,14 @@
                                     </table>
                                     <hr>
                                     <input class="span4 btn btn-success" type="submit" value="Renseigner les tâches">
+                                    <hr>
+                                    <div class="controls">
+                                        <?php if(!empty($noyauAbsentHeader)) : ?>
+                                            <?php foreach($noyauAbsentHeader as $noyauHeaderdetail) : ?>
+                                                <input type="text" class="span4" value="<?= $noyauHeaderdetail['code'].': '.$noyauHeaderdetail['nom']?>" disabled/>
+                                            <?php endforeach; ?>
+                                        <?php endif ; ?>
+                                    </div>
                                 </form>
                             </div>
                         </div>
@@ -353,6 +369,12 @@
                                 </table>
                                 <hr>
                                 <input class="span4 btn btn-success" type="submit" value="Renseigner les tâches">
+                                <hr>
+                                <?php if(!empty($horsNoyauHeader)) : ?>
+                                    <?php foreach($horsNoyauHeader as $noyauHeaderdetail) : ?>
+                                        <input type="text" class="span4" value="<?= $noyauHeaderdetail['code'].': '.$noyauHeaderdetail['nom']?>" disabled/>
+                                    <?php endforeach ; ?>
+                                <?php endif ; ?>
                             </form>
                             </div>
                         </div>
@@ -361,13 +383,23 @@
             </div>
         </div>
         <hr>
-        <div class="row-fluid">
-                <div class="span12">
-                    <a class="span4 btn btn-warning">Valider le rapport</a>
-                    <a class="span4 btn btn-info">Regénérer le rapport</a>
-                    <a class="span4 btn btn-danger">Supprimer le rapport</a>
+        <!--form-->
+            <div class="row-fluid span12 selfInline" >
+
+                <div class="control-group">
+                Je confirme que les informations saisies sont correcte
+
+                        <input type="checkbox" name="isValid">
                 </div>
-            </fieldset>
-        </div>
+            </div>
+            <div class="row-fluid"
+                    <div class="span12">
+                        <a href="erapport.php?rapport_id=<?= $_GET['rapport_id']?>&rapport_type=<?=$_GET['rapport_type']?>&chef_dequipe_id=<?=$_GET['chef_dequipe_id']?>&chef_dequipe_matricule=<?= $_GET['chef_dequipe_matricule']?>&date_generation=<?= $_GET['date_generation'] ?>&chantier_id=<?= $_GET['chantier_id']?>&chantier_code=<?= $_GET['chantier_code']?>&val=true" class="span3 btn btn-warning">Valider le rapport</a>
+                        <a href="erapport.php?rapport_id=<?= $_GET['rapport_id']?>&rapport_type=<?=$_GET['rapport_type']?>&chef_dequipe_id=<?=$_GET['chef_dequipe_id']?>&chef_dequipe_matricule=<?= $_GET['chef_dequipe_matricule']?>&date_generation=<?= $_GET['date_generation'] ?>&chantier_id=<?= $_GET['chantier_id']?>&chantier_code=<?= $_GET['chantier_code']?>&inval=true" class="span3 btn btn-primary">Invalider le rapport</a>
+                        <a href="?rapport_id=<?= $_GET['rapport_id']?>&rapport_type=<?=$_GET['rapport_type']?>&chef_dequipe_id=<?=$_GET['chef_dequipe_id']?>&chef_dequipe_matricule=<?= $_GET['chef_dequipe_matricule']?>&date_generation=<?= $_GET['date_generation'] ?>&chantier_id=<?= $_GET['chantier_id']?>&chantier_code=<?= $_GET['chantier_code']?>&reg=true" class="span3 btn btn-info">Regénérer le rapport</a>
+                        <a href="erapport.php?rapport_id=<?= $_GET['rapport_id']?>&rapport_type=<?=$_GET['rapport_type']?>&chef_dequipe_id=<?=$_GET['chef_dequipe_id']?>&chef_dequipe_matricule=<?= $_GET['chef_dequipe_matricule']?>&date_generation=<?= $_GET['date_generation'] ?>&chantier_id=<?= $_GET['chantier_id']?>&chantier_code=<?= $_GET['chantier_code']?>&sup=true" class="span3 btn btn-danger">Supprimer le rapport</a>
+                    </div>
+            </div>
+    <!--/form-->
     </div>
 </div>

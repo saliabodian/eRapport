@@ -35,6 +35,7 @@ $conf = Config::getInstance();
        // $_GET["chantier_id"]=> string(6) "205"
        // $_GET["chantier_code"]=> string(6) "156100"
        // }
+
         $allPointage = Dsk::getCalculTotalHoraire($_GET["date_generation"], $_GET["chantier_code"]);
 
         //var_dump($pointage);
@@ -46,21 +47,179 @@ $conf = Config::getInstance();
         $chefDequipeMatricule = $rapportJournalier->getChefDEquipeMatricule();
         $rapportJournalierDate = $rapportJournalier->getDate();
 
+
+
+        // Gestion de la regénération
+
+        if($_GET['reg'] === "true"){
+
+        //     var_dump($_GET);
+
+        //    echo "je suis là";
+            // Je récupére tous les éléments de manière rammassée pour refaire par la suite un check de ceux qui n'ont pas de détails
+
+            $noyauDetails = Rapport::getRapportNoyau($_GET['chef_dequipe_id'], $_GET['date_generation'], $_GET['chantier_id']);
+            $noyauAbsentDetails = Rapport::getRapportAbsentNoyau($_GET['chef_dequipe_id'], $_GET['date_generation'], $_GET['chantier_id']);
+            $horsNoyauDetails = Rapport::getRapportHorsNoyau($_GET['date_generation'], $_GET['chantier_id']);
+
+            $noyauList = Dsk::getTeamPointing($_GET["chef_dequipe_matricule"], $_GET["chantier_code"], $_GET["date_generation"]);
+            $interimaireList = Rapport::getInterimaireByTeamSiteAndDate($_GET["date_generation"], $_GET["chef_dequipe_id"], $_GET["chantier_id"]);
+            $horsNoyauList = Dsk::getTeamLess($_GET["date_generation"], $_GET["chantier_code"]);
+            $absentList = Dsk::getAllNoyauAbsence($_GET["chef_dequipe_matricule"], $_GET["date_generation"]);
+
+            // Créer un tableau à une dimension avec les matricules des ouvriers et interimaires
+            // comparer les valeurs et voir si elles existent dans la liste détails ou l'inverse
+            // cf. rapportDetail
+
+             //var_dump($noyauDetails);
+            //var_dump($noyauAbsentDetails);
+            //var_dump($horsNoyauDetails);
+            // var_dump($noyauList);
+             //var_dump($interimaireList);
+            //var_dump($horsNoyauList);
+            //var_dump($absentList);
+            $newNoyauList = array();
+            $oldNoyauList = array();
+            $newInterimaireList = array();
+            $oldInterimaireList = array();
+            $newAbsentList = array();
+            $oldAbsentList = array();
+            $newHorsNoyauList = array();
+            $oldHorsNoyauList = array();
+
+            foreach($noyauList as $list){
+                $newNoyauList[] = $list["matricule"];
+            }
+
+            foreach($noyauDetails as $details){
+                if(!empty($details['ouvrier_id'])){
+                    $oldNoyauList[]=$details['ouvrier_id'];
+                }
+            }
+
+            $newNoyauList = array_diff($newNoyauList, $oldNoyauList);
+
+            foreach($noyauList as $noyau){
+                if(in_array($noyau['matricule'], $newNoyauList)){
+                    $newNoyauListToAdd[$noyau['id']]['id']= $noyau['id'];
+                    $newNoyauListToAdd[$noyau['id']]['matricule']= $noyau['matricule'];
+                    $newNoyauListToAdd[$noyau['id']]['fullname']= $noyau['fullname'];
+                    $newNoyauListToAdd[$noyau['id']]['']= $noyau['chantier'];
+                    $newNoyauListToAdd[$noyau['id']]['noyau']= $noyau['noyau'];
+                }
+            }
+
+            foreach($interimaireList as $list){
+                $newInterimaireList[] = $list["matricule"];
+            }
+
+            foreach($noyauDetails as $details){
+                if(!empty($details['interimaire_id'])){
+                    $oldInterimaireList[]=$details['interimaire_id'];
+                }
+            }
+
+
+            $newIntermaireList = array_diff($newInterimaireList, $oldInterimaireList);
+
+            //var_dump($noyauList);
+        //    var_dump($newIntermaireListToAdd);
+
+            foreach($interimaireList as $interimaire){
+                if(in_array($interimaire['matricule'], $newIntermaireList)){
+                    $newIntermaireListToAdd[$interimaire['id']]['id'] = $interimaire['id'];
+                    $newIntermaireListToAdd[$interimaire['id']]['interimaire_id'] = $interimaire['interimaire_id'];
+                    $newIntermaireListToAdd[$interimaire['id']]['chantier_id'] =$interimaire['chantier_id'] ;
+                    $newIntermaireListToAdd[$interimaire['id']]['user_id'] = $interimaire['user_id'];
+                    $newIntermaireListToAdd[$interimaire['id']]['doy'] = $interimaire['doy'];
+                    $newIntermaireListToAdd[$interimaire['id']]['woy'] = $interimaire['woy'];
+                    $newIntermaireListToAdd[$interimaire['id']]['matricule'] = $interimaire['matricule'];
+                    $newIntermaireListToAdd[$interimaire['id']]['lastname'] = $interimaire['lastname'];
+                    $newIntermaireListToAdd[$interimaire['id']]['firstname'] = $interimaire['firstname'];
+                }
+            }
+
+        //    var_dump($newIntermaireListToAdd);
+
+        //  var_dump($newNoyauList);
+        //    var_dump($oldNoyauList);
+
+            foreach($absentList as $list){
+                $newAbsentList[] = $list["matricule"];
+            }
+
+            foreach($noyauAbsentDetails as $details){
+                $oldAbsentList[]=$details['ouvrier_id'];
+            }
+
+            $newAbsentList = array_diff($newAbsentList, $oldAbsentList);
+
+            foreach($newAbsentList as $absent){
+                if(in_array($absent['matricule'], $newNoyauList)){
+                    $newAbsentListToAdd[$absent['matricule']]['matricule']= $absent['matricule'];
+                    $newAbsentListToAdd[$absent['matricule']]['fullname']= $absent['fullname'];
+                    $newAbsentListToAdd[$absent['matricule']]['date']= $absent['date'];
+                    $newAbsentListToAdd[$absent['matricule']]['timemin']= $absent['timemin'];
+                    $newAbsentListToAdd[$absent['matricule']]['motif']= $absent['motif'];
+                }
+            }
+
+
+            //var_dump($newAbsentListToAdd);
+
+            foreach($horsNoyauList as $list){
+                $newHorsNoyauList[] = $list["matricule"];
+            }
+
+            foreach($horsNoyauDetails as $details){
+                $oldHorsNoyauList[]=$details['ouvrier_id'];
+            }
+
+            $newHorsNoyauList = array_diff($newHorsNoyauList, $oldHorsNoyauList);
+
+            foreach($horsNoyauList as $horsNoyau){
+                if(in_array($horsNoyau['matricule'], $newNoyauList)){
+                    $newHorsNoyauListToAdd[$horsNoyau['id']]['id']= $horsNoyau['id'];
+                    $newHorsNoyauListToAdd[$horsNoyau['id']]['matricule']= $horsNoyau['matricule'];
+                    $newHorsNoyauListToAdd[$horsNoyau['id']]['fullname']= $horsNoyau['fullname'];
+                    $newHorsNoyauListToAdd[$horsNoyau['id']]['']= $horsNoyau['chantier'];
+                    $newHorsNoyauListToAdd[$horsNoyau['id']]['noyau']= $horsNoyau['noyau'];
+                }
+            }
+
+
+            //    var_dump($newNoyauListToAdd);
+            //    var_dump($newIntermaireListToAdd);
+            //    var_dump($newAbsentListToAdd);
+            //    var_dump($newHorsNoyauListToAdd);
+
+            if(!empty($newNoyauListToAdd)){
+                Rapport::saveRapportDetail($_GET['date_generation'], $_GET['chantier_id'], $_GET['chef_dequipe_matricule'], $newNoyauListToAdd);
+            }
+
+            if(!empty($newIntermaireListToAdd)){
+                Rapport::saveRapportDetailInterimaire($_GET['date_generation'], $_GET['chantier_id'], $_GET['chef_dequipe_matricule'], $newIntermaireListToAdd);
+            }
+            if(!empty($newAbsentListToAdd)){
+                Rapport::saveRapportDetailAbsent($_GET['date_generation'], $_GET['chantier_id'], $_GET['chef_dequipe_matricule'], $newAbsentListToAdd);
+            }
+
+            if(!empty($newHorsNoyauListToAdd)){
+                Rapport::saveRapportDetailHorsNoyau($_GET['date_generation'], $_GET['chantier_id'], $newHorsNoyauListToAdd);
+            }
+        }
+
+
+    //    exit;
+
+
         $noyau = Rapport::getRapportNoyau($_GET['chef_dequipe_id'], $_GET['date_generation'], $_GET['chantier_id']);
         $noyauAbsent = Rapport::getRapportAbsentNoyau($_GET['chef_dequipe_id'], $_GET['date_generation'], $_GET['chantier_id']);
         $horsNoyau = Rapport::getRapportHorsNoyau($_GET['date_generation'], $_GET['chantier_id']);
-
         //var_dump($horsNoyau);
-
         //exit;
 
 
-
-        //var_dump($idRapportNoyau);
-        //var_dump($idRapportAbsentNoyau);
-        //var_dump($idRapportHorsNoyau);
-
-        //exit;
 
         if(!empty($allPointage)){
             foreach($allPointage as $pointage){
@@ -101,6 +260,13 @@ $conf = Config::getInstance();
             $idRapportAbsentNoyau = $noyauAbsent[$i]['rapport_id'];
             $idRapportHorsNoyau = $horsNoyau[$i]['rapport_id'];
         }
+
+        //var_dump($idRapportNoyau);
+        //var_dump($idRapportAbsentNoyau);
+        //var_dump($idRapportHorsNoyau);
+
+        //exit;
+
         if(!empty($idRapportNoyau)){
             $noyauHeader = Rapport::getRapportNoyauHeader($idRapportNoyau, $_GET['chef_dequipe_id'], $_GET['date_generation'], $_GET['chantier_id']);
         }

@@ -23,8 +23,22 @@ use Classes\Cdcl\Db\Rapport;
 $conf = Config::getInstance();
 
 if(!empty($_SESSION)){
+    //Gestion de la validation d'un rapport
+    if($_GET['val']=== 'true'){
+    //    var_dump($_GET);
+        Rapport::validateRapport($_GET['chef_dequipe_id'], $_GET['date_generation'], $_GET['chantier_id']);
+    //    exit;
+    }
 
-   // var_dump($_SESSION);
+    //Gestion de l'invalidation d'un rapport
+    if($_GET['inval']=== 'true'){
+        //    var_dump($_GET);
+        Rapport::inValidateRapport($_GET['chef_dequipe_id'], $_GET['date_generation'], $_GET['chantier_id']);
+        //    exit;
+    }
+
+
+    // var_dump($_SESSION);
    // Pourra servir pour repérer le rôle de l'utilisateur connecté
     $chantierId = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
