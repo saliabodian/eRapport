@@ -1726,4 +1726,164 @@ class Rapport extends DbObject{
         }
     }
 
+    public static function deleteRapport($equipeId, $date, $chantier)
+    {
+        $sql='DELETE FROM rapport_detail_has_tache WHERE rapport_detail_id IN
+              (SELECT rapport_detail.id
+                    FROM rapport_detail, rapport
+                    WHERE rapport.id = rapport_detail.rapport_id
+                    AND rapport_id IN
+                        (SELECT id FROM rapport
+                            WHERE equipe=:equipeId
+                            AND rapport_type=:rapport_type
+                            AND date=:date
+                            AND chantier=:chantier
+                        )
+                )';
+
+        $stmt = Config::getInstance()->getPDO()->prepare($sql);
+        $stmt->bindValue(':equipeId', $equipeId, \PDO::PARAM_INT);
+        $stmt->bindValue(':rapport_type', 'NOYAU', \PDO::PARAM_STR);
+        $stmt->bindValue(':date', $date, \PDO::PARAM_INT);
+        $stmt->bindValue(':chantier', $chantier, \PDO::PARAM_INT);
+        if ($stmt->execute() === false) {
+            print_r($stmt->errorInfo());
+        }
+
+        $sql='DELETE FROM rapport_detail
+                WHERE rapport_detail.rapport_id IN
+                        (SELECT id FROM rapport
+                            WHERE equipe=:equipeId
+                            AND rapport_type=:rapport_type
+                            AND date=:date
+                            AND chantier=:chantier)';
+
+        $stmt = Config::getInstance()->getPDO()->prepare($sql);
+        $stmt->bindValue(':equipeId', $equipeId, \PDO::PARAM_INT);
+        $stmt->bindValue(':rapport_type', 'NOYAU', \PDO::PARAM_STR);
+        $stmt->bindValue(':date', $date, \PDO::PARAM_INT);
+        $stmt->bindValue(':chantier', $chantier, \PDO::PARAM_INT);
+        if ($stmt->execute() === false) {
+            print_r($stmt->errorInfo());
+        }
+
+        $sql='DELETE FROM rapport
+                            WHERE equipe=:equipeId
+                            AND rapport_type=:rapport_type
+                            AND date=:date
+                            AND chantier=:chantier ';
+
+        $stmt = Config::getInstance()->getPDO()->prepare($sql);
+        $stmt->bindValue(':equipeId', $equipeId, \PDO::PARAM_INT);
+        $stmt->bindValue(':rapport_type', 'NOYAU', \PDO::PARAM_STR);
+        $stmt->bindValue(':date', $date, \PDO::PARAM_INT);
+        $stmt->bindValue(':chantier', $chantier, \PDO::PARAM_INT);
+        if ($stmt->execute() === false) {
+            print_r($stmt->errorInfo());
+        }
+
+        $sql='DELETE FROM rapport_detail_has_tache WHERE rapport_detail_id IN
+              (SELECT rapport_detail.id
+                    FROM rapport_detail, rapport
+                    WHERE rapport.id = rapport_detail.rapport_id
+                    AND rapport_id IN
+                        (SELECT id FROM rapport
+                            WHERE equipe=:equipeId
+                            AND rapport_type=:rapport_type
+                            AND date=:date
+                            AND chantier=:chantier
+                        )
+                )';
+
+        $stmt = Config::getInstance()->getPDO()->prepare($sql);
+        $stmt->bindValue(':equipeId', $equipeId, \PDO::PARAM_INT);
+        $stmt->bindValue(':rapport_type', 'ABSENT', \PDO::PARAM_STR);
+        $stmt->bindValue(':date', $date, \PDO::PARAM_INT);
+        $stmt->bindValue(':chantier', $chantier, \PDO::PARAM_INT);
+        if ($stmt->execute() === false) {
+            print_r($stmt->errorInfo());
+        }
+
+        $sql='DELETE FROM rapport_detail
+                WHERE rapport_detail.rapport_id IN
+                        (SELECT id FROM rapport
+                            WHERE equipe=:equipeId
+                            AND rapport_type=:rapport_type
+                            AND date=:date
+                            AND chantier=:chantier)';
+
+        $stmt = Config::getInstance()->getPDO()->prepare($sql);
+        $stmt->bindValue(':equipeId', $equipeId, \PDO::PARAM_INT);
+        $stmt->bindValue(':rapport_type', 'ABSENT', \PDO::PARAM_STR);
+        $stmt->bindValue(':date', $date, \PDO::PARAM_INT);
+        $stmt->bindValue(':chantier', $chantier, \PDO::PARAM_INT);
+        if ($stmt->execute() === false) {
+            print_r($stmt->errorInfo());
+        }
+
+        $sql='DELETE FROM rapport
+                            WHERE equipe=:equipeId
+                            AND rapport_type=:rapport_type
+                            AND date=:date
+                            AND chantier=:chantier ';
+
+        $stmt = Config::getInstance()->getPDO()->prepare($sql);
+        $stmt->bindValue(':equipeId', $equipeId, \PDO::PARAM_INT);
+        $stmt->bindValue(':rapport_type', 'ABSENT', \PDO::PARAM_STR);
+        $stmt->bindValue(':date', $date, \PDO::PARAM_INT);
+        $stmt->bindValue(':chantier', $chantier, \PDO::PARAM_INT);
+        if ($stmt->execute() === false) {
+            print_r($stmt->errorInfo());
+        }
+
+        $sql='DELETE FROM rapport_detail_has_tache WHERE rapport_detail_id IN
+              (SELECT rapport_detail.id
+                    FROM rapport_detail, rapport
+                    WHERE rapport.id = rapport_detail.rapport_id
+                    AND rapport_id IN
+                        (SELECT id FROM rapport
+                            WHERE  rapport_type=:rapport_type
+                            AND date=:date
+                            AND chantier=:chantier
+                        )
+                )';
+
+        $stmt = Config::getInstance()->getPDO()->prepare($sql);
+        $stmt->bindValue(':rapport_type', 'HORSNOYAU', \PDO::PARAM_STR);
+        $stmt->bindValue(':date', $date, \PDO::PARAM_INT);
+        $stmt->bindValue(':chantier', $chantier, \PDO::PARAM_INT);
+        if ($stmt->execute() === false) {
+            print_r($stmt->errorInfo());
+        }
+
+        $sql='DELETE FROM rapport_detail
+                WHERE rapport_detail.rapport_id IN
+                        (SELECT id FROM rapport
+                            WHERE rapport_type=:rapport_type
+                            AND date=:date
+                            AND chantier=:chantier)';
+
+        $stmt = Config::getInstance()->getPDO()->prepare($sql);
+        $stmt->bindValue(':rapport_type', 'HORSNOYAU', \PDO::PARAM_STR);
+        $stmt->bindValue(':date', $date, \PDO::PARAM_INT);
+        $stmt->bindValue(':chantier', $chantier, \PDO::PARAM_INT);
+        if ($stmt->execute() === false) {
+            print_r($stmt->errorInfo());
+        }
+
+        $sql='DELETE FROM rapport
+                            WHERE rapport_type=:rapport_type
+                            AND date=:date
+                            AND chantier=:chantier ';
+
+        $stmt = Config::getInstance()->getPDO()->prepare($sql);
+        $stmt->bindValue(':rapport_type', 'HORSNOYAU', \PDO::PARAM_STR);
+        $stmt->bindValue(':date', $date, \PDO::PARAM_INT);
+        $stmt->bindValue(':chantier', $chantier, \PDO::PARAM_INT);
+        if ($stmt->execute() === false) {
+            print_r($stmt->errorInfo());
+        }
+
+    }
+
 }

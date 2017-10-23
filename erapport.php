@@ -37,6 +37,13 @@ if(!empty($_SESSION)){
         //    exit;
     }
 
+    //Gestion de la suppression d'un rapport
+    if($_GET['sup']=== 'true'){
+        //    var_dump($_GET);
+        Rapport::deleteRapport($_GET['chef_dequipe_id'], $_GET['date_generation'], $_GET['chantier_id']);
+        //    exit;
+    }
+
 
     // var_dump($_SESSION);
    // Pourra servir pour repérer le rôle de l'utilisateur connecté

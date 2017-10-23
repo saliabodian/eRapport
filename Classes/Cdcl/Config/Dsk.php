@@ -20,6 +20,7 @@ class Dsk {
 
     public static function allChefDEquipeForDay($date){
         $dbh = ibase_connect("31.204.90.68:C:\DSK\Data\dsk2.fdb","SYSDBA","masterkey");
+    //    $dbh = ibase_connect("10.10.110.30:C:\DSK\Data\dsk2.fdb","SYSDBA","masterkey");
 
         $sql = "
         SELECT Booking.NoPers,Pers.CODEPERS, Pers.FULLNAME, ACCOUNT.CUSTOM  FROM BOOKING
@@ -119,6 +120,8 @@ class Dsk {
     public static function getChefDEquipeOnsiteByDay($chantier, $date){
 
         $dbh = ibase_connect("31.204.90.68:C:\DSK\Data\dsk2.fdb","SYSDBA","masterkey");
+    //    $dbh = ibase_connect("10.10.110.30:C:\DSK\Data\dsk2.fdb","SYSDBA","masterkey");
+
         $sql = "
         SELECT Booking.NoPers, PERS.CODEPERS, Pers.FULLNAME, ACCOUNT.CUSTOM,PERSHISTORY.CUSTOM3 FROM BOOKING
         INNER JOIN Pers on (Pers.NoPers=Booking.NoPers)
@@ -216,6 +219,7 @@ class Dsk {
     public static function getTeamPointing($noyau, $chantier, $date){
 
         $dbh = ibase_connect("31.204.90.68:C:\DSK\Data\dsk2.fdb","SYSDBA","masterkey");
+    //    $dbh = ibase_connect("10.10.110.30:C:\DSK\Data\dsk2.fdb","SYSDBA","masterkey");
 
         $sql = " SELECT Booking.NoPers, Pers.CODEPERS, Pers.FULLNAME, ACCOUNT.CUSTOM, PERSHISTORY.CUSTOM3  FROM BOOKING
         INNER JOIN Pers on (Pers.NoPers=Booking.NoPers)
@@ -318,6 +322,7 @@ class Dsk {
     public static function getAbsence($date, $worker){
 
         $dbh = ibase_connect("31.204.90.68:C:\DSK\Data\dsk2.fdb","SYSDBA","masterkey");
+    //    $dbh = ibase_connect("10.10.110.30:C:\DSK\Data\dsk2.fdb","SYSDBA","masterkey");
 
         $sql = "
             SELECT PERS.NOPERS, PERS.CODEPERS, PERS.FULLNAME, ABSENCE.THEDATE, ABSENCE.TIMEMIN, ACCOUNT.CAPTION1 FROM ABSENCE
@@ -349,6 +354,7 @@ class Dsk {
     public static function getAllAbsence($date){
 
         $dbh = ibase_connect("31.204.90.68:C:\DSK\Data\dsk2.fdb","SYSDBA","masterkey");
+    //    $dbh = ibase_connect("10.10.110.30:C:\DSK\Data\dsk2.fdb","SYSDBA","masterkey");
 
         $sql = "
             SELECT PERS.NOPERS,PERS.CODEPERS, PERS.FULLNAME, ABSENCE.THEDATE, ABSENCE.TIMEMIN, ACCOUNT.CAPTION1 FROM ABSENCE
@@ -379,6 +385,7 @@ class Dsk {
     public static function getTeamLess($date, $chantier){
 
         $dbh = ibase_connect("31.204.90.68:C:\DSK\Data\dsk2.fdb","SYSDBA","masterkey");
+    //    $dbh = ibase_connect("10.10.110.30:C:\DSK\Data\dsk2.fdb","SYSDBA","masterkey");
 
         $sql= "SELECT PERSHISTORY.CUSTOM3, Booking.NoPers, Pers.FULLNAME,PERS.CODEPERS, ACCOUNT.CUSTOM  FROM BOOKING
                 INNER JOIN Pers on (Pers.NoPers=Booking.NoPers)
@@ -616,6 +623,7 @@ class Dsk {
 
     public static function getCalculTotalHoraire($date, $chantier){
         $dbh = ibase_connect("31.204.90.68:C:\DSK\Data\dsk2.fdb","SYSDBA","masterkey");
+    //    $dbh = ibase_connect("10.10.110.30:C:\DSK\Data\dsk2.fdb","SYSDBA","masterkey");
 
 
         $stmt = "select noaccount, caption1, custom, giddid
@@ -655,6 +663,7 @@ class Dsk {
     public static function getWorkerByDepartments(){
 
         $dbh = ibase_connect("31.204.90.68:C:\DSK\Data\dsk2.fdb","SYSDBA","masterkey");
+    //    $dbh = ibase_connect("10.10.110.30:C:\DSK\Data\dsk2.fdb","SYSDBA","masterkey");
 
         $sql="SELECT PERS.FULLNAME, PERS.NOPERS, PERSHISTORY.CUSTOM1, PERSHISTORY.CODEDEPT FROM PERS
                 JOIN PERSHISTORY ON PERS.NOPERS = PERSHISTORY.NOPERS
@@ -682,6 +691,7 @@ class Dsk {
     public static function departments(){
 
         $dbh = ibase_connect("31.204.90.68:C:\DSK\Data\dsk2.fdb","SYSDBA","masterkey");
+    //    $dbh = ibase_connect("10.10.110.30:C:\DSK\Data\dsk2.fdb","SYSDBA","masterkey");
 
         $sql="SELECT DISTINCT PERSHISTORY.CODEDEPT FROM PERS
                 JOIN PERSHISTORY ON PERS.NOPERS = PERSHISTORY.NOPERS
@@ -702,6 +712,7 @@ class Dsk {
 
     public static function metier(){
         $dbh = ibase_connect("31.204.90.68:C:\DSK\Data\dsk2.fdb","SYSDBA","masterkey");
+    //    $dbh = ibase_connect("10.10.110.30:C:\DSK\Data\dsk2.fdb","SYSDBA","masterkey");
 
         $sql="SELECT DISTINCT PERSHISTORY.CUSTOM1 FROM PERS
                 JOIN PERSHISTORY ON PERS.NOPERS = PERSHISTORY.NOPERS
@@ -725,6 +736,7 @@ class Dsk {
     public static function getAllNoyauAbsence($noyau, $date){
 
         $dbh = ibase_connect("31.204.90.68:C:\DSK\Data\dsk2.fdb","SYSDBA","masterkey");
+    //    $dbh = ibase_connect("10.10.110.30:C:\DSK\Data\dsk2.fdb","SYSDBA","masterkey");
 
         $sql="SELECT PERS.FULLNAME, PERS.CODEPERS, ABSENCE.THEDATE, ABSENCE.TIMEMIN, ACCOUNT.CAPTION1 , PERSHISTORY.CUSTOM3 FROM ABSENCE
                 INNER JOIN PERS ON PERS.NOPERS = ABSENCE.NOPERS
