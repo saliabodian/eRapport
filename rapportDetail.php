@@ -25,95 +25,13 @@ if(!empty($_SESSION)){
     //exit;
 
     /**array(37) {
-    ["matriculeList"]=>
-    string(5) "Array"
-    ["htot"]=>
-    string(1) "8"
-    ["abs"]=>
-    string(10) "Congé (C)"
-    ["habs"]=>
-    string(1) "8"
-    ["type_task"]=>
-    array(1) {
-    [0]=>
-    string(22) "Choisir une catégorie"
-    }
-    ["tasks"]=>
-    array(1) {
-    [0]=>
-    string(18) "Choisir une tâche"
-    }
-    ["batiment"]=>
-    array(1) {
-    [0]=>
-    string(0) ""
-    }
-    ["axe"]=>
-    array(1) {
-    [0]=>
-    string(0) ""
-    }
-    ["etage"]=>
-    array(1) {
-    [0]=>
-    string(0) ""
-    }
-    ["type_task2"]=>
-    string(1) "4"
-    ["tasks2"]=>
-    string(2) "17"
-    ["batiment2"]=>
-    string(1) "A"
-    ["axe2"]=>
-    string(1) "2"
-    ["etage2"]=>
-    string(1) "1"
-    ["type_task3"]=>
-    string(2) "10"
-    ["tasks3"]=>
-    string(1) "9"
-    ["batiment3"]=>
-    string(1) "B"
-    ["axe3"]=>
-    string(1) "1"
-    ["etage3"]=>
-    string(1) "1"
-    ["type_task4"]=>
-    string(2) "10"
-    ["tasks4"]=>
-    string(2) "74"
-    ["batiment4"]=>
-    string(1) "C"
-    ["axe4"]=>
-    string(1) "1"
-    ["etage4"]=>
-    string(1) "1"
-    ["type_task5"]=>
-    string(1) "4"
-    ["tasks5"]=>
-    string(2) "17"
-    ["batiment5"]=>
-    string(1) "D"
-    ["axe5"]=>
-    string(1) "1"
-    ["etage5"]=>
-    string(1) "1"
-    ["type_task6"]=>
-    string(1) "4"
-    ["tasks6"]=>
-    string(2) "17"
-    ["batiment6"]=>
-    string(1) "E"
-    ["axe6"]=>
-    string(1) "1"
-    ["etage6"]=>
-    string(1) "1"
-    ["hins"]=>
-    string(1) "2"
-    ["dpl_pers"]=>
-    string(0) ""
-    ["km"]=>
-    string(1) "5"
+    ["matriculeList"]=>string(5) "Array"["htot"]=>string(1) "8"["abs"]=>string(10) "Congé (C)"["habs"]=>string(1) "8"["type_task"]=>array(1) {[0]=>string(22) "Choisir une catégorie"
+    }["tasks"]=>array(1) {[0]=>string(18) "Choisir une tâche"}["batiment"]=>array(1) {[0]=>string(0) ""}["axe"]=>array(1) {[0]=>string(0) ""}["etage"]=>array(1) {[0]=>string(0) ""}["type_task2"]=>string(1) "4"["tasks2"]=>string(2) "17"["batiment2"]=>string(1) "A"["axe2"]=>
+    string(1) "2"["etage2"]=>string(1) "1"["type_task3"]=>string(2) "10"["tasks3"]=>string(1) "9"["batiment3"]=>string(1) "B"["axe3"]=>string(1) "1"["etage3"]=>string(1) "1"["type_task4"]=>string(2) "10"
+    ["tasks4"]=>string(2) "74"["batiment4"]=>string(1) "C"["axe4"]=>string(1) "1"["etage4"]=>string(1) "1"["type_task5"]=>string(1) "4"["tasks5"]=>string(2) "17"
+    ["batiment5"]=>string(1) "D"["axe5"]=>string(1) "1"["etage5"]=>string(1) "1"["type_task6"]=>string(1) "4"["tasks6"]=>string(2) "17"["batiment6"]=>string(1) "E"
+    ["axe6"]=>string(1) "1"["etage6"]=>string(1) "1"["hins"]=>string(1) "2"["dpl_pers"]=>
+    string(0) ""["km"]=>string(1) "5"
     }*/
     // exit;
 
@@ -138,6 +56,7 @@ if(!empty($_SESSION)){
 
     //    var_dump($_POST['dpl_pers']);
 
+    //    var_dump($_POST);
     //    exit;
 
         $form = true;
@@ -238,10 +157,19 @@ if(!empty($_SESSION)){
         }
 
         $dpl_pers = ($_POST['dpl_pers']=== 'on')? 1 : 0;
+
+        if($_SESSION['post_id'] === '1'){
+            $chef_dequipe_updated = $_SESSION['username'];
+        }else{
+            if(($_SESSION['post_id'] != '1') && isset($_POST['chef_dequipe_updated'])){
+                $chef_dequipe_updated = $_POST['chef_dequipe_updated'];
+            }
+        }
+
         if($form){
 
             Rapport::updateRapportDetail($_POST['rapport_detail_id'], $_POST['htot'], $_POST['hins'], $_POST['abs'],
-                $_POST['habs'], $dpl_pers,$_POST['km'], $_POST['remarque'], $_POST['chef_dequipe_updated'],
+                $_POST['habs'], $dpl_pers,$_POST['km'], $_POST['remarque'], $chef_dequipe_updated,
                 $_POST['type_task'], $_POST['tasks'], $_POST['bat'], $_POST['axe'], $_POST['et'], $_POST['ht'],
                 $_POST['type_task2'], $_POST['tasks2'], $_POST['bat2'], $_POST['axe2'], $_POST['et2'], $_POST['ht2'],
                 $_POST['type_task3'], $_POST['tasks3'], $_POST['bat3'], $_POST['axe3'], $_POST['et3'], $_POST['ht3'],
@@ -1139,6 +1067,8 @@ if(!empty($_SESSION)){
 
         $listTache= Tache::getAll();
 
+        //var_dump($workerToUpdate);
+        //exit;
 
         // Gestion de la composition de la matrice si ce sont uniquement des ouvriers
         // ou si ce sont uniquement des intérimaires ou si c'est un mix

@@ -23,6 +23,8 @@ use Classes\Cdcl\Db\Rapport;
 $conf = Config::getInstance();
 
 if(!empty($_SESSION)){
+
+    //var_dump($_SESSION);
     //Gestion de la validation d'un rapport
     if($_GET['val']=== 'true'){
     //    var_dump($_GET);
@@ -55,7 +57,12 @@ if(!empty($_SESSION)){
 
     $chantierList = Chantier::getAllForSelect();
 
-    $chefDEquipeList = User::getAllForSelectChefDEquipebyChantier($chantierId);
+    if($_SESSION['post_id'] === '1'){
+        $chefDEquipeList[] =  $_SESSION['username'].' '.$_SESSION['firstname'].' '.$_SESSION['lastname'];
+    }else{
+        $chefDEquipeList = User::getAllForSelectChefDEquipebyChantier($chantierId);
+    }
+
 
 
     if ($chantierId > 0) {
@@ -70,8 +77,23 @@ if(!empty($_SESSION)){
     $chefDEquipeObject = new User();
 
 
-    //var_dump($chefDEquipeList);
 
+//
+//    var_dump($res);
+
+//    var_dump(Rapport::getRapportGeneratedForConducteur($chant));
+
+//    exit;
+
+ //   $chantierGen = Rapport::getRapportGeneratedForConducteur($chantierListId);
+    /*var_dump($chantierListId);
+    //var_dump($chantierGen);
+        foreach($chantierListId as $chantier) {
+            $chantierGenerated[] = Rapport::getRapportGeneratedForConducteur($chantier['chantier_id']);
+        }
+    var_dump($chantierGenerated);
+    exit;
+*/
     if(!empty($_POST)){
         //var_dump($_POST);
 
@@ -216,9 +238,23 @@ if(!empty($_SESSION)){
         }
     }
 
-    $rapportGeneratedList = Rapport::getRapportGenerated();
-    $rapportSubmittedList = Rapport::getRapportSubmitted();
-    $rapportValidatedList = Rapport::getRapportValidated();
+
+
+    if($_SESSION['post_id'] === "5"){
+
+        $rapportGeneratedList = Rapport::getRapportGeneratedForConducteur($_SESSION['id']);
+        $rapportSubmittedList = Rapport::getRapportSubmittedForConducteur($_SESSION['id']);
+        $rapportValidatedList = Rapport::getRapportValidatedForConducteur($_SESSION['id']);
+    }else if($_SESSION['post_id']=== "1"){
+        $rapportGeneratedList = Rapport::getRapportGeneratedForChefDEquipe($_SESSION['id'], $_SESSION['username']);
+        $rapportSubmittedList = Rapport::getRapportSubmittedForChefDEquipe($_SESSION['id'], $_SESSION['username']);
+        $rapportValidatedList = Rapport::getRapportValidatedForChefDEquipe($_SESSION['id'], $_SESSION['username']);
+    }else{
+        $rapportGeneratedList = Rapport::getRapportGenerated();
+        $rapportSubmittedList = Rapport::getRapportSubmitted();
+        $rapportValidatedList = Rapport::getRapportValidated();
+    }
+
     $chefDequipe = new User();
     $chantierSelected = $chantierObject->get($chantierId);
     $chefDequipeSelected = $chefDequipe->get($chefDEquipeId);

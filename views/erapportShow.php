@@ -289,6 +289,7 @@
                                             <th>Abs</th>
                                             <th>T. Pénibles</th>
                                             <th>T. (Km)</th>
+                                            <th>MAJ. Par</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -351,6 +352,7 @@
                                                 <td ><?= $rapport['habs'] ?></td>
                                                 <td ><?= $rapport['hins'] ?></td>
                                                 <td ><?= $rapport['km'] ?></td>
+                                                <td ><?= isset($rapport['chef_dequipe_updated']) ? $rapport['chef_dequipe_updated'] : '' ?></td>
                                             </tr>
                                         <?php  endforeach;  ?>
                                         <tr>
@@ -364,6 +366,7 @@
                                             <td><?= $horsNoyauHourAbsencesGlobal; ?></td>
                                             <td><?= $horsNoyauHourPenibleGlobal; ?></td>
                                             <td><?= $horsNoyauKmGlobal; ?></td>
+                                            <td></td>
                                         </tr>
                                     </tbody>
                                 </table>

@@ -841,6 +841,165 @@ class Rapport extends DbObject{
         return $rapportValidatedList;
     }
 
+
+    public static function getRapportGeneratedForConducteur($userId){
+
+        $sql='SELECT
+                rapport.id as id_rapport, rapport.rapport_type, rapport.date, user.id as user_id, user.username, user.firstname, user.lastname, chantier.id as chantier_id, chantier.code, chantier.nom, rapport.submitted, rapport.validated
+            FROM
+                rapport
+            INNER JOIN
+                user on user.id = rapport.equipe
+            INNER JOIN
+                chantier ON chantier.id = rapport.chantier
+            WHERE
+                rapport.submitted = 0
+                    AND rapport.validated = 0
+                    AND rapport.chantier IN (SELECT chantier_id FROM chantier_has_user WHERE user_id=:user_id)
+            GROUP BY rapport.equipe , rapport.chantier , rapport.date
+            ORDER BY rapport.date, user.lastname';
+        $stmt = Config::getInstance()->getPDO()->prepare($sql);
+        $stmt->bindValue(':user_id', $userId, \PDO::PARAM_INT);
+        if($stmt->execute() === false){
+            print_r($stmt->errorInfo());
+        }else{
+            $rapportGeneratedList = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        }
+        return $rapportGeneratedList;
+    }
+
+    public static function getRapportSubmittedForConducteur($userId){
+        $sql='SELECT
+                rapport.date, rapport.rapport_type, user.id as user_id, user.username, user.firstname, user.lastname, chantier.id as chantier_id, chantier.code, chantier.nom, rapport.submitted, rapport.validated
+            FROM
+                rapport
+            INNER JOIN
+                user on user.id = rapport.equipe
+            INNER JOIN
+                chantier ON chantier.id = rapport.chantier
+            WHERE
+                rapport.submitted = 1
+                    AND rapport.validated = 0
+                    AND rapport.chantier IN (SELECT chantier_id FROM chantier_has_user WHERE user_id=:user_id)
+            GROUP BY rapport.equipe , rapport.chantier , rapport.date
+            ORDER BY rapport.date, user.lastname';
+        $stmt = Config::getInstance()->getPDO()->prepare($sql);
+        $stmt->bindValue(':user_id', $userId, \PDO::PARAM_INT);
+        if($stmt->execute() === false){
+            print_r($stmt->errorInfo());
+        }else{
+            $rapportSubmittedList = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        }
+        return $rapportSubmittedList;
+    }
+
+    public static function getRapportValidatedForConducteur($userId){
+        $sql='SELECT
+                rapport.date, rapport.rapport_type, user.id as user_id, user.username, user.firstname, user.lastname, chantier.id as chantier_id, chantier.code, chantier.nom, rapport.submitted, rapport.validated
+            FROM
+                rapport
+            INNER JOIN
+                user on user.id = rapport.equipe
+            INNER JOIN
+                chantier ON chantier.id = rapport.chantier
+            WHERE
+              rapport.validated = 1
+                 AND rapport.submitted = 1
+                 AND rapport.chantier IN (SELECT chantier_id FROM chantier_has_user WHERE user_id=:user_id)
+            GROUP BY rapport.equipe , rapport.chantier , rapport.date
+            ORDER BY rapport.date, user.lastname';
+        $stmt = Config::getInstance()->getPDO()->prepare($sql);
+        $stmt->bindValue(':user_id', $userId, \PDO::PARAM_INT);
+        if($stmt->execute() === false){
+            print_r($stmt->errorInfo());
+        }else{
+            $rapportValidatedList = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        }
+        return $rapportValidatedList;
+    }
+
+    public static function getRapportGeneratedForChefDEquipe($userId, $userMatricule){
+        $sql='SELECT
+                rapport.id as id_rapport, rapport.rapport_type, rapport.date, user.id as user_id, user.username, user.firstname, user.lastname, chantier.id as chantier_id, chantier.code, chantier.nom, rapport.submitted, rapport.validated
+            FROM
+                rapport
+            INNER JOIN
+                user on user.id = rapport.equipe
+            INNER JOIN
+                chantier ON chantier.id = rapport.chantier
+            WHERE
+                rapport.submitted = 0
+                    AND rapport.validated = 0
+                    AND user.username =:matricule
+                    AND rapport.chantier IN (SELECT chantier_id FROM chantier_has_user WHERE user_id=:user_id)
+            GROUP BY rapport.equipe , rapport.chantier , rapport.date
+            ORDER BY rapport.date, user.lastname';
+        $stmt = Config::getInstance()->getPDO()->prepare($sql);
+        $stmt->bindValue(':user_id', $userId, \PDO::PARAM_INT);
+        $stmt->bindValue(':matricule', $userMatricule, \PDO::PARAM_INT);
+        if($stmt->execute() === false){
+            print_r($stmt->errorInfo());
+        }else{
+            $rapportGeneratedList = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        }
+        return $rapportGeneratedList;
+    }
+
+    public static function getRapportSubmittedForChefDEquipe($userId, $userMatricule){
+        $sql='SELECT
+                rapport.date, rapport.rapport_type, user.id as user_id, user.username, user.firstname, user.lastname, chantier.id as chantier_id, chantier.code, chantier.nom, rapport.submitted, rapport.validated
+            FROM
+                rapport
+            INNER JOIN
+                user on user.id = rapport.equipe
+            INNER JOIN
+                chantier ON chantier.id = rapport.chantier
+            WHERE
+                rapport.submitted = 1
+                    AND rapport.validated = 0
+                    AND user.username =:matricule
+                    AND rapport.chantier IN (SELECT chantier_id FROM chantier_has_user WHERE user_id =:user_id)
+            GROUP BY rapport.equipe , rapport.chantier , rapport.date
+            ORDER BY rapport.date, user.lastname';
+        $stmt = Config::getInstance()->getPDO()->prepare($sql);
+        $stmt->bindValue(':user_id', $userId, \PDO::PARAM_INT);
+        $stmt->bindValue(':matricule', $userMatricule, \PDO::PARAM_INT);
+        if($stmt->execute() === false){
+            print_r($stmt->errorInfo());
+        }else{
+            $rapportSubmittedList = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        }
+        return $rapportSubmittedList;
+    }
+
+    public static function getRapportValidatedForChefDEquipe($userId, $userMatricule){
+        $sql='SELECT
+                rapport.date, rapport.rapport_type, user.id as user_id, user.username, user.firstname, user.lastname, chantier.id as chantier_id, chantier.code, chantier.nom, rapport.submitted, rapport.validated
+            FROM
+                rapport
+            INNER JOIN
+                user on user.id = rapport.equipe
+            INNER JOIN
+                chantier ON chantier.id = rapport.chantier
+            WHERE
+              rapport.validated = 1
+                 AND rapport.submitted = 1
+                 AND user.username =:matricule
+                 AND rapport.chantier IN (SELECT chantier_id FROM chantier_has_user WHERE user_id=:user_id)
+            GROUP BY rapport.equipe , rapport.chantier , rapport.date
+            ORDER BY rapport.date, user.lastname';
+        $stmt = Config::getInstance()->getPDO()->prepare($sql);
+        $stmt->bindValue(':user_id', $userId, \PDO::PARAM_INT);
+        $stmt->bindValue(':matricule', $userMatricule, \PDO::PARAM_INT);
+        if($stmt->execute() === false){
+            print_r($stmt->errorInfo());
+        }else{
+            $rapportValidatedList = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        }
+        return $rapportValidatedList;
+    }
+
+
     public static function getRapportNoyau($equipeId, $date, $chantier){
         $sql = 'SELECT * FROM rapport WHERE equipe=:equipeId AND rapport_type=:rapport_type AND date=:date AND chantier=:chantier';
         $stmt=Config::getInstance()->getPDO()->prepare($sql);

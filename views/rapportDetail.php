@@ -22,6 +22,11 @@
                                 <input type="hidden" name="chantier_code" value="<?= $_POST['chantier_code']?>">
                                 <input type="hidden" name="chantier_id" value="<?= $_POST['chantier_id']?>">
                                 <input type="hidden" value="true" name="majForm"/>
+                                <?php if(sizeof($workerToUpdate) === 1) : ?>
+                                    <?php foreach ($workerToUpdate as $worker) : ?>
+                                        <input type="hidden" value="<?= $worker["chef_dequipe_updated"] ?>" name="chef_dequipe_updated"/>
+                                    <?php endforeach ; ?>
+                                <?php endif ; ?>
                                 <?php foreach($workerToUpdate as $worker) : ?>
                                     <input type="hidden" name="matriculeList[]" class="span4" value="<?= isset($worker['ouvrier_id'])? $worker['ouvrier_id'] : (isset($worker['interimaire_id'])? $worker['interimaire_id'] : '')?>" />
                                 <?php endforeach; ?>
