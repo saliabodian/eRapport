@@ -48,10 +48,24 @@ if(!empty($_SESSION)){
      * $_POST["selected_matricule"]
      *
      * */
-
+    /*if($_SESSION['post_id'] === 1){
+        $matriculeList = isset($_POST['selected_matricule'])? $_POST['selected_matricule'] : '';
+    }*/
     $matriculeList = isset($_POST['selected_matricule'])? $_POST['selected_matricule'] : '';
+    /*var_dump($matriculeList);
 
-    //var_dump($matriculeList);
+    foreach( $matriculeList as $matricule){
+        var_dump($matricule);
+        var_dump($_SESSION['username']);
+        if($matricule === $_SESSION['username'] || $matricule === '') {
+            $newArray[] = $matricule;
+        }
+    }
+
+    var_dump($newArray);
+
+    exit;
+    */
     if($_POST['majForm']){
 
     //    var_dump($_POST['dpl_pers']);

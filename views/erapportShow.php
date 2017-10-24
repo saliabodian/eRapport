@@ -303,7 +303,17 @@
                                             <?php else : ?>
                                                 <tr>
                                             <?php endif ; ?>
-                                                <td><input type="checkbox" name="selected_matricule[]" class="checkbox checkbox_hn" value="<?= isset($rapport['ouvrier_id'])? $rapport['ouvrier_id'] : (isset($rapport['interimaire_id'])? $rapport['interimaire_id'] : '')?>" /></td>
+                                            <?php if($_SESSION['post_id'] === '1') : ?>
+                                                <?php if($rapport['chef_dequipe_updated'] === $_SESSION['username']): ?>
+                                                    <td><input type="checkbox" name="selected_matricule[]" class="checkbox checkbox_hn" value="<?= isset($rapport['ouvrier_id'])? $rapport['ouvrier_id'] : (isset($rapport['interimaire_id'])? $rapport['interimaire_id'] : '')?>"/></td>
+                                                <?php elseif(empty($rapport['chef_dequipe_updated'])) : ?>
+                                                    <td><input type="checkbox" name="selected_matricule[]" class="checkbox checkbox_hn" value="<?= isset($rapport['ouvrier_id'])? $rapport['ouvrier_id'] : (isset($rapport['interimaire_id'])? $rapport['interimaire_id'] : '')?>" /></td>
+                                                <?php else : ?>
+                                                    <td><input type="checkbox" name="selected_matricule[]" class="checkbox checkbox_hn" value="<?= isset($rapport['ouvrier_id'])? $rapport['ouvrier_id'] : (isset($rapport['interimaire_id'])? $rapport['interimaire_id'] : '')?>" disabled/></td>
+                                                <?php endif ; ?>
+                                            <?php else : ?>
+                                                <td><input type="checkbox" name="selected_matricule[]" class="checkbox checkbox_hn" value="<?= isset($rapport['ouvrier_id'])? $rapport['ouvrier_id'] : (isset($rapport['interimaire_id'])? $rapport['interimaire_id'] : '')?>"/></td>
+                                            <?php endif ; ?>
                                                 <td ><?= isset($rapport['ouvrier_id'])? $rapport['ouvrier_id'] : (isset($rapport['interimaire_id'])? $rapport['interimaire_id'] : '')?> - <?=$rapport['fullname']?></td>
                                                 <td ><?= $rapport['htot'] ?></td>
                                                 <?php if (!empty($horsNoyauHeader)) : ?>
