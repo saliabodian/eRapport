@@ -2247,4 +2247,74 @@ class Rapport extends DbObject{
 
     }
 
+    public static function getRapportDetailWithHourAnomaly(){
+        $sql = 'SELECT
+                  rapport_detail.*,
+                  rapport.date,
+                  rapport.chef_dequipe_matricule,
+                    rapport.chantier,
+                    rapport.rapport_type,
+                    rapport.equipe,
+                    chantier.code
+                FROM
+                    rapport_detail
+                        INNER JOIN
+                    rapport ON rapport.id = rapport_detail.rapport_id
+                        INNER JOIN
+                    chantier ON chantier.id = rapport.chantier
+                WHERE
+                    htot <> (ht1 + ht2 + ht3 + ht4 + ht5 + ht6)
+                        AND rapport_detail.validated = 1
+                        AND rapport_detail.submitted = 1
+                GROUP BY rapport_detail.id';
+        $stmt = Config::getInstance()->getPDO()->prepare($sql);
+
+        if($stmt->execute()=== false){
+            print_r($stmt->errorInfo());
+        }else{
+            $hourAnomalxList = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        }
+
+        return $hourAnomalxList;
+    }
+
+    public static function getRapportDetailWithAbsenceAnomaly(){
+        $sql = "SELECT
+                  rapport_detail.*,
+                  rapport.date,
+                  rapport.chef_dequipe_matricule,
+                    rapport.chantier,
+                    rapport.rapport_type,
+                    rapport.equipe,
+                    chantier.code
+                FROM
+                    rapport_detail
+                        INNER JOIN
+                    rapport ON rapport.id = rapport_detail.rapport_id
+                        INNER JOIN
+                    chantier ON chantier.id = rapport.chantier
+                WHERE
+                    (abs = 'Accident (A)'
+                    OR abs = 'Congé (C)'
+                    OR abs = 'Absence  Excusée (EX)'
+                    OR abs = 'Intempéries (INT)'
+                    OR abs = 'Absence non Excusée (ABS)'
+                    OR abs = 'Congé Extraordinaire (CE)'
+                    OR abs = 'Absence non Excusée (ABS)'
+                    OR abs = 'Congé Syndical (CS)'
+                    OR abs = 'Visite Médicale STI (STI)'
+                    OR abs = 'Travaux Autre Chantier (TAC)'
+                    OR abs = 'Maladie (M)')
+                    AND rapport_detail.validated = '1'
+                    AND rapport_detail.submitted = '1'";
+        $stmt = Config::getInstance()->getPDO()->prepare($sql);
+
+        if($stmt->execute()=== false){
+            print_r($stmt->errorInfo());
+        }else{
+            $absenceList = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        }
+
+        return $absenceList;
+    }
 }

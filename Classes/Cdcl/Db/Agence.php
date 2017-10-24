@@ -418,7 +418,7 @@ class Agence extends DbObject{
 
     /* return DbObject[]*/
     public static function getAll(){
-        $sql=' SELECT * FROM agence
+        $sql=' SELECT * FROM agence ORDER BY nom
         ';
         $pdoStmt = Config::getInstance()->getPDO()->prepare($sql);
         if ($pdoStmt->execute() === false) {
@@ -458,6 +458,7 @@ class Agence extends DbObject{
                 `agence`.`first_matricule`,
                 `agence`.`last_matricule`
             FROM `agence`
+            ORDER BY `agence`.`nom`
             ';
         $stmt = Config::getInstance()->getPDO()->prepare($sql);
         if ($stmt->execute() === false) {

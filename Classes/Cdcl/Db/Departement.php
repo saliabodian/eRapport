@@ -101,7 +101,7 @@ class Departement extends DbObject{
      */
     public static function getAllForSelect()
     {
-        $sql='SELECT id, code_dpt, nom_dpt, created FROM departement';
+        $sql='SELECT id, code_dpt, nom_dpt, created FROM departement ORDER BY nom_dpt';
         $stmt= Config::getInstance()->getPDO()->prepare($sql);
         if ($stmt->execute() === false) {
             print_r($stmt->errorInfo());

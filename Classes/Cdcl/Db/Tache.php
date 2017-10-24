@@ -132,6 +132,7 @@ class Tache extends DbObject{
                 `nom`,
                 `type_tache_id`
             FROM `tache`
+            ORDER BY `nom`
             ';
         $stmt = Config::getInstance()->getPDO()->prepare($sql);
         if ($stmt->execute() === false) {

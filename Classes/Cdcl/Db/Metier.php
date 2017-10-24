@@ -117,6 +117,7 @@ class Metier extends DbObject{
                 `code_metier`,
                 `nom_metier`
             FROM `metier`
+            ORDER BY `nom_metier`
             ';
         $stmt = Config::getInstance()->getPDO()->prepare($sql);
         if ($stmt->execute() === false) {
@@ -137,8 +138,9 @@ class Metier extends DbObject{
             SELECT
                 `id`,
                 `code_metier`,
-                `code_metier`
+                `nom_metier`
             FROM `metier`
+            ORDER BY `nom_metier`
             ';
         $stmt = Config::getInstance()->getPDO()->prepare($sql);
         if ($stmt->execute() === false) {

@@ -921,6 +921,7 @@ class Interimaire extends DbObject{
           AND interimaire_has_chantier.chantier_id= :chantier_id
           AND interimaire.id= interimaire_has_chantier.interimaire_id
           AND chantier.id =interimaire_has_chantier.chantier_id
+          AND interimaire.actif = 1
           ORDER BY `interimaire`.`lastname`, interimaire_has_chantier.date_debut, interimaire_has_chantier.doy, interimaire_has_chantier.woy, interimaire_has_chantier.woy';
         $stmt=Config::getInstance()->getPDO()->prepare($sql);
         $stmt->bindValue(':woy', $woy, \PDO::PARAM_INT);
@@ -957,6 +958,7 @@ class Interimaire extends DbObject{
           AND interimaire_has_chantier.chantier_id= :chantier_id
           AND interimaire.id= interimaire_has_chantier.interimaire_id
           AND chantier.id =interimaire_has_chantier.chantier_id
+          AND interimaire.actif = 1
           ORDER BY `interimaire`.`lastname`, interimaire_has_chantier.date_debut, interimaire_has_chantier.doy, interimaire_has_chantier.woy, interimaire_has_chantier.woy';
         $stmt=Config::getInstance()->getPDO()->prepare($sql);
         $stmt->bindValue(':doy', $doy, \PDO::PARAM_INT);

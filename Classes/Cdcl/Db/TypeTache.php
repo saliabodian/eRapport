@@ -118,6 +118,7 @@ class TypeTache extends DbObject{
                 `nom_type_tache`,
                 `code_type_tache`
             FROM `type_tache`
+            ORDER BY `nom_type_tache`
             ';
         $stmt = Config::getInstance()->getPDO()->prepare($sql);
         if ($stmt->execute() === false) {
@@ -140,6 +141,7 @@ class TypeTache extends DbObject{
                 `code_type_tache`,
                 `nom_type_tache`
             FROM `type_tache`
+            ORDER BY `nom_type_tache`
             ';
         $stmt = Config::getInstance()->getPDO()->prepare($sql);
         if ($stmt->execute() === false) {

@@ -79,7 +79,7 @@ class Qualification extends DbObject{
      */
     public static function getAllForSelect()
     {
-        $sql = 'SELECT id, nom_qualif, created FROM qualification';
+        $sql = 'SELECT id, nom_qualif, created FROM qualification ORDER BY nom_qualif';
         $stmt = Config::getInstance()->getPDO()->prepare($sql);
         if($stmt->execute()===false){
             print_r($stmt->errorInfo());

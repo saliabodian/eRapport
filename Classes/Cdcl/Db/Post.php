@@ -88,7 +88,7 @@ class Post extends DbObject{
      */
     public static function getAll()
     {
-        $sql=' SELECT * FROM post
+        $sql=' SELECT * FROM post ORDER BY name
         ';
         $pdoStmt = Config::getInstance()->getPDO()->prepare($sql);
         if ($pdoStmt->execute() === false) {
@@ -117,6 +117,7 @@ class Post extends DbObject{
                 `code`,
                 `name`
             FROM `post`
+            ORDER BY `name`
             ';
         $stmt = Config::getInstance()->getPDO()->prepare($sql);
         if ($stmt->execute() === false) {
@@ -139,6 +140,7 @@ class Post extends DbObject{
                 `code`,
                 `name`
             FROM `post`
+            ORDER BY `name`
             ';
         $stmt = Config::getInstance()->getPDO()->prepare($sql);
         if ($stmt->execute() === false) {

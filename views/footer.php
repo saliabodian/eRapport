@@ -1,7 +1,7 @@
 <!--Footer-part-->
 
 <div class="row-fluid">
-    <div id="footer" class="span12"> 2013 &copy; Matrix Admin. Brought to you by <a href="http://themedesigner.in">Themedesigner.in</a> </div>
+    <div id="footer" class="span12"> 2017 &copy; eRapport By CDCL <a href="http://www.cdclux.com/en">www.cdclux.com</a> </div>
 </div>
 
 <!--end-Footer-part-->
