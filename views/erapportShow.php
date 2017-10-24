@@ -23,6 +23,8 @@
                                 <input type="hidden" name="date_generation" value="<?= $_GET['date_generation']?>"/>
                                 <input type="hidden" name="chantier_code" value="<?= $_GET['chantier_code']?>"/>
                                 <input type="hidden" name="chantier_id" value="<?= $_GET['chantier_id']?>"/>
+                                <input type="hidden" name="validated" value="<?= $_GET['validated']?>"/>
+                                <input type="hidden" name="submitted" value="<?= $_GET['submitted']?>"/>
                                 <table class="table table-bordered with-check">
                                     <thead>
                                         <tr>
@@ -116,7 +118,21 @@
                                     </tbody>
                                 </table>
                                 <hr>
-                                <input class="span4 btn btn-success" type="submit" value="Renseigner les tâches">
+                                <?php if($_SESSION['post_id']==='1') :?>
+                                    <?php if($_GET['submitted'] === '1') :?>
+                                        <input disabled class="span4 btn btn-success" type="submit" value="Renseigner les tâches">
+                                    <?php else : ?>
+                                        <input class="span4 btn btn-success" type="submit" value="Renseigner les tâches">
+                                    <?php endif ; ?>
+                                <?php elseif($_SESSION['post_id']==='5') : ?>
+                                    <?php if($_GET['validated'] === '1') :?>
+                                        <input disabled class="span4 btn btn-success" type="submit" value="Renseigner les tâches">
+                                    <?php else : ?>
+                                        <input class="span4 btn btn-success" type="submit" value="Renseigner les tâches">
+                                    <?php endif ; ?>
+                                <?php else : ?>
+                                    <input class="span4 btn btn-success" type="submit" value="Renseigner les tâches">
+                                <?php endif ; ?>
                                 <hr>
                                 <div class="controls">
                                     <?php if(!empty($noyauHeader)) : ?>
@@ -242,7 +258,21 @@
                                         </tbody>
                                     </table>
                                     <hr>
-                                    <input class="span4 btn btn-success" type="submit" value="Renseigner les tâches">
+                                    <?php if($_SESSION['post_id']==='1') :?>
+                                        <?php if($_GET['submitted'] === '1') :?>
+                                            <input disabled class="span4 btn btn-success" type="submit" value="Renseigner les tâches">
+                                        <?php else : ?>
+                                            <input class="span4 btn btn-success" type="submit" value="Renseigner les tâches">
+                                        <?php endif ; ?>
+                                    <?php elseif($_SESSION['post_id']==='5') : ?>
+                                        <?php if($_GET['validated'] === '1') :?>
+                                            <input disabled class="span4 btn btn-success" type="submit" value="Renseigner les tâches">
+                                        <?php else : ?>
+                                            <input class="span4 btn btn-success" type="submit" value="Renseigner les tâches">
+                                        <?php endif ; ?>
+                                    <?php else : ?>
+                                        <input class="span4 btn btn-success" type="submit" value="Renseigner les tâches">
+                                    <?php endif ; ?>
                                     <hr>
                                     <div class="controls">
                                         <?php if(!empty($noyauAbsentHeader)) : ?>
@@ -381,7 +411,21 @@
                                     </tbody>
                                 </table>
                                 <hr>
-                                <input class="span4 btn btn-success" type="submit" value="Renseigner les tâches">
+                                <?php if($_SESSION['post_id']==='1') :?>
+                                    <?php if($_GET['submitted'] === '1') :?>
+                                        <input disabled class="span4 btn btn-success" type="submit" value="Renseigner les tâches">
+                                    <?php else : ?>
+                                        <input class="span4 btn btn-success" type="submit" value="Renseigner les tâches">
+                                    <?php endif ; ?>
+                                <?php elseif($_SESSION['post_id']==='5') : ?>
+                                    <?php if($_GET['validated'] === '1') :?>
+                                        <input disabled class="span4 btn btn-success" type="submit" value="Renseigner les tâches">
+                                    <?php else : ?>
+                                        <input class="span4 btn btn-success" type="submit" value="Renseigner les tâches">
+                                    <?php endif ; ?>
+                                <?php else : ?>
+                                    <input class="span4 btn btn-success" type="submit" value="Renseigner les tâches">
+                                <?php endif ; ?>
                                 <hr>
                                 <?php if(!empty($horsNoyauHeader)) : ?>
                                     <?php foreach($horsNoyauHeader as $noyauHeaderdetail) : ?>
@@ -396,23 +440,54 @@
             </div>
         </div>
         <hr>
-        <!--form-->
+        <form method="get" action="erapport.php">
             <div class="row-fluid span12 selfInline" >
 
-                <div class="control-group">
-                Je confirme que les informations saisies sont correcte
+                <div class="control-group ">
+                Je confirme que les informations saisies sont correctes .
 
                         <input type="checkbox" name="isValid">
                 </div>
             </div>
-            <div class="row-fluid"
+            <div class="row-fluid" >
                     <div class="span12">
-                        <a href="erapport.php?rapport_id=<?= $_GET['rapport_id']?>&rapport_type=<?=$_GET['rapport_type']?>&chef_dequipe_id=<?=$_GET['chef_dequipe_id']?>&chef_dequipe_matricule=<?= $_GET['chef_dequipe_matricule']?>&date_generation=<?= $_GET['date_generation'] ?>&chantier_id=<?= $_GET['chantier_id']?>&chantier_code=<?= $_GET['chantier_code']?>&val=true" class="span3 btn btn-warning">Valider le rapport</a>
-                        <a href="erapport.php?rapport_id=<?= $_GET['rapport_id']?>&rapport_type=<?=$_GET['rapport_type']?>&chef_dequipe_id=<?=$_GET['chef_dequipe_id']?>&chef_dequipe_matricule=<?= $_GET['chef_dequipe_matricule']?>&date_generation=<?= $_GET['date_generation'] ?>&chantier_id=<?= $_GET['chantier_id']?>&chantier_code=<?= $_GET['chantier_code']?>&inval=true" class="span3 btn btn-primary">Invalider le rapport</a>
-                        <a href="?rapport_id=<?= $_GET['rapport_id']?>&rapport_type=<?=$_GET['rapport_type']?>&chef_dequipe_id=<?=$_GET['chef_dequipe_id']?>&chef_dequipe_matricule=<?= $_GET['chef_dequipe_matricule']?>&date_generation=<?= $_GET['date_generation'] ?>&chantier_id=<?= $_GET['chantier_id']?>&chantier_code=<?= $_GET['chantier_code']?>&reg=true" class="span3 btn btn-info">Regénérer le rapport</a>
-                        <a href="erapport.php?rapport_id=<?= $_GET['rapport_id']?>&rapport_type=<?=$_GET['rapport_type']?>&chef_dequipe_id=<?=$_GET['chef_dequipe_id']?>&chef_dequipe_matricule=<?= $_GET['chef_dequipe_matricule']?>&date_generation=<?= $_GET['date_generation'] ?>&chantier_id=<?= $_GET['chantier_id']?>&chantier_code=<?= $_GET['chantier_code']?>&sup=true" class="span3 btn btn-danger">Supprimer le rapport</a>
+                        <input type="hidden" name="rapport_id" value="<?= $_GET['rapport_id'] ?>">
+                        <input type="hidden" name="rapport_type" value="<?= $_GET['rapport_type'] ?>">
+                        <input type="hidden" name="chef_dequipe_id" value="<?= $_GET['chef_dequipe_id'] ?>">
+                        <input type="hidden" name="chef_dequipe_matricule" value="<?= $_GET['chef_dequipe_matricule'] ?>">
+                        <input type="hidden" name="date_generation" value="<?= $_GET['date_generation'] ?>">
+                        <input type="hidden" name="chantier_id" value="<?= $_GET['chantier_id'] ?>">
+                        <input type="hidden" name="chantier_code" value="<?= $_GET['chantier_code'] ?>">
+
+                        <?php if($_SESSION['post_id']==='1') :?>
+                            <?php if($_GET['submitted'] === '1') :?>
+                                <button disabled style="margin-right: 3px ; margin-left: 3px" type="submit" class="span3 btn btn-warning" name="val" value="true">Valider</button>
+                            <?php else : ?>
+                                <button style="margin-right: 3px ; margin-left: 3px" type="submit" class="span3 btn btn-warning" name="val" value="true">Valider</button>
+                            <?php endif ; ?>
+                        <?php elseif($_SESSION['post_id']==='5') : ?>
+                            <?php if($_GET['validated'] === '1') :?>
+                                <button disabled style="margin-right: 3px ; margin-left: 3px" type="submit" class="span3 btn btn-warning" name="val" value="true">Valider</button>
+                            <?php else : ?>
+                                <button style="margin-right: 3px ; margin-left: 3px" type="submit" class="span3 btn btn-warning" name="val" value="true">Valider</button>
+                            <?php endif ; ?>
+                        <?php else : ?>
+                            <button style="margin-right: 3px ; margin-left: 3px" type="submit" class="span3 btn btn-warning" name="val" value="true">Valider</button>
+                        <?php endif ; ?>
+
+                        <?php if($_SESSION['post_id']=== '1'): ?>
+                            <a style="margin-right: 3px ; margin-left: 3px" href="erapport.php?rapport_id=<?= $_GET['rapport_id']?>&rapport_type=<?=$_GET['rapport_type']?>&chef_dequipe_id=<?=$_GET['chef_dequipe_id']?>&chef_dequipe_matricule=<?= $_GET['chef_dequipe_matricule']?>&date_generation=<?= $_GET['date_generation'] ?>&chantier_id=<?= $_GET['chantier_id']?>&chantier_code=<?= $_GET['chantier_code']?>&inval=true" class="span3 btn btn-primary" disabled>Invalider le rapport</a>
+                        <?php else : ?>
+                            <a style="margin-right: 3px ; margin-left: 3px" href="erapport.php?rapport_id=<?= $_GET['rapport_id']?>&rapport_type=<?=$_GET['rapport_type']?>&chef_dequipe_id=<?=$_GET['chef_dequipe_id']?>&chef_dequipe_matricule=<?= $_GET['chef_dequipe_matricule']?>&date_generation=<?= $_GET['date_generation'] ?>&chantier_id=<?= $_GET['chantier_id']?>&chantier_code=<?= $_GET['chantier_code']?>&inval=true" class="span3 btn btn-primary">Invalider le rapport</a>
+                        <?php endif ; ?>
+                        <a style="margin-right: 3px ; margin-left: 3px" href="?rapport_id=<?= $_GET['rapport_id']?>&rapport_type=<?=$_GET['rapport_type']?>&chef_dequipe_id=<?=$_GET['chef_dequipe_id']?>&chef_dequipe_matricule=<?= $_GET['chef_dequipe_matricule']?>&date_generation=<?= $_GET['date_generation'] ?>&chantier_id=<?= $_GET['chantier_id']?>&chantier_code=<?= $_GET['chantier_code']?>&reg=true" class="span3 btn btn-info">Regénérer le rapport</a>
+                        <?php if($_SESSION['post_id']=== '1'): ?>
+                        <a style="margin-right: 3px ; margin-left: 3px" href="erapport.php?rapport_id=<?= $_GET['rapport_id']?>&rapport_type=<?=$_GET['rapport_type']?>&chef_dequipe_id=<?=$_GET['chef_dequipe_id']?>&chef_dequipe_matricule=<?= $_GET['chef_dequipe_matricule']?>&date_generation=<?= $_GET['date_generation'] ?>&chantier_id=<?= $_GET['chantier_id']?>&chantier_code=<?= $_GET['chantier_code']?>&sup=true" class="span3 btn btn-danger" disabled>Supprimer le rapport</a>
+                        <?php else : ?>
+                            <a style="margin-right: 3px ; margin-left: 3px" href="erapport.php?rapport_id=<?= $_GET['rapport_id']?>&rapport_type=<?=$_GET['rapport_type']?>&chef_dequipe_id=<?=$_GET['chef_dequipe_id']?>&chef_dequipe_matricule=<?= $_GET['chef_dequipe_matricule']?>&date_generation=<?= $_GET['date_generation'] ?>&chantier_id=<?= $_GET['chantier_id']?>&chantier_code=<?= $_GET['chantier_code']?>&sup=true" class="span3 btn btn-danger">Supprimer le rapport</a>
+                        <?php endif ; ?>
                     </div>
             </div>
-    <!--/form-->
+        </form>
     </div>
 </div>

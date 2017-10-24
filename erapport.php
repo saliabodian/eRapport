@@ -27,9 +27,20 @@ if(!empty($_SESSION)){
     //var_dump($_SESSION);
     //Gestion de la validation d'un rapport
     if($_GET['val']=== 'true'){
-    //    var_dump($_GET);
-        Rapport::validateRapport($_GET['chef_dequipe_id'], $_GET['date_generation'], $_GET['chantier_id']);
-    //    exit;
+      if(isset($_GET['isValid'])) {
+          if($_SESSION['post_id']=== '1'){
+              Rapport::submittRapport($_GET['chef_dequipe_id'], $_GET['date_generation'], $_GET['chantier_id']);
+          }else{
+              Rapport::submittRapport($_GET['chef_dequipe_id'], $_GET['date_generation'], $_GET['chantier_id']);
+              Rapport::validateRapport($_GET['chef_dequipe_id'], $_GET['date_generation'], $_GET['chantier_id']);
+          }
+
+      }else{
+          header('Location: erapportShow.php?rapport_id='.$_GET['rapport_id'].'&rapport_type='.$_GET['rapport_type'].'&chef_dequipe_id='.$_GET['chef_dequipe_id'].'&chef_dequipe_matricule='.$_GET['chef_dequipe_matricule'].'&date_generation='.$_GET['date_generation'].'&chantier_id='.$_GET['chantier_id'].'&chantier_code='.$_GET['chantier_code'].'&isValid=false');
+
+        //  var_dump($conf);
+          exit;
+      }
     }
 
     //Gestion de l'invalidation d'un rapport
@@ -58,7 +69,8 @@ if(!empty($_SESSION)){
     $chantierList = Chantier::getAllForSelect();
 
     if($_SESSION['post_id'] === '1'){
-        $chefDEquipeList[] =  $_SESSION['username'].' '.$_SESSION['firstname'].' '.$_SESSION['lastname'];
+
+        $chefDEquipeList[$_SESSION['id']] =  $_SESSION['username'].' '.$_SESSION['firstname'].' '.$_SESSION['lastname'];
     }else{
         $chefDEquipeList = User::getAllForSelectChefDEquipebyChantier($chantierId);
     }
@@ -96,6 +108,10 @@ if(!empty($_SESSION)){
 */
     if(!empty($_POST)){
         //var_dump($_POST);
+
+    //    var_dump($_POST);
+
+    //    exit;
 
         $chantierId = isset($_POST['chantier_id'])? $_POST['chantier_id']: 0;
         $chefDEquipeId = isset($_POST['user_id'])? $_POST['user_id'] : 0;
@@ -249,6 +265,8 @@ if(!empty($_SESSION)){
         $rapportGeneratedList = Rapport::getRapportGeneratedForChefDEquipe($_SESSION['id'], $_SESSION['username']);
         $rapportSubmittedList = Rapport::getRapportSubmittedForChefDEquipe($_SESSION['id'], $_SESSION['username']);
         $rapportValidatedList = Rapport::getRapportValidatedForChefDEquipe($_SESSION['id'], $_SESSION['username']);
+
+        //var_dump($rapportValidatedList);
     }else{
         $rapportGeneratedList = Rapport::getRapportGenerated();
         $rapportSubmittedList = Rapport::getRapportSubmitted();

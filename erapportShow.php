@@ -43,7 +43,9 @@ $conf = Config::getInstance();
         //exit;
 
         $rapportJournalier = Rapport::get($_GET["rapport_id"]);
-        // var_dump($rapportJournalier);
+        //var_dump($rapportJournalier);
+
+        // exit;
         $chefDequipeMatricule = $rapportJournalier->getChefDEquipeMatricule();
         $rapportJournalierDate = $rapportJournalier->getDate();
 
@@ -362,6 +364,10 @@ $conf = Config::getInstance();
          // exit;
         if($_GET['erreur']){
             $conf->addError('Veuillez sélectionner au moins un Ouvrier / Intérimaire avant de remplir les tâches');
+        }
+
+        if($_GET['isValid']==='false'){
+            $conf->addError('Merci de confirmer la validité des informations.');
         }
         include $conf->getViewsDir().'header.php';
         include $conf->getViewsDir().'sidebar.php';
