@@ -22,6 +22,9 @@ $conf = Config::getInstance();
 if(!empty($_SESSION)) {
     //var_dump (date('W',time()));
    //  exit;
+   // var_dump($_GET);
+
+  //  exit ;
     if($_GET['reaffect']== true){
         $weekToDuplicate =$_GET['weekToDuplicate'] ;
         $weekToAffect =$_GET['weekToAffect'] ;
@@ -150,12 +153,12 @@ if(!empty($_SESSION)) {
             $form=false;
         }
         if(empty($week)){
-            $conf->addError('Veulliez définir une date');
+            $conf->addError('Veuillez définir une date');
             $form=false;
         }
 
         if(empty($listInterimaires)){
-            $conf->addError('Veulliez choisir des intérimaires');
+            $conf->addError('Veuillez choisir des intérimaires');
             $form=false;
         }
 

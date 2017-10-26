@@ -201,7 +201,7 @@ class Chantier extends DbObject{
                 `actif`,
                 `asc_mtn`
             FROM `chantier`
-            ORDER BY `nom`
+            ORDER BY `code`
             ';
         $stmt = Config::getInstance()->getPDO()->prepare($sql);
         if ($stmt->execute() === false) {
@@ -231,7 +231,7 @@ class Chantier extends DbObject{
                 `asc_mtn`
             FROM `chantier`
             WHERE `actif`=1
-            ORDER BY `nom`
+            ORDER BY `code`
             ';
         $stmt = Config::getInstance()->getPDO()->prepare($sql);
         if ($stmt->execute() === false) {
@@ -259,7 +259,7 @@ class Chantier extends DbObject{
                 `actif`,
                 `asc_mtn`
             FROM `chantier`
-            ORDER BY `nom`
+            ORDER BY `code`
             ';
         $stmt = Config::getInstance()->getPDO()->prepare($sql);
         if ($stmt->execute() === false) {

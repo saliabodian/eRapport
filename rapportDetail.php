@@ -95,6 +95,10 @@ if(!empty($_SESSION)){
         }
 
 
+        //var_dump($_POST);
+
+        //exit;
+
 
         if(($_POST['type_task'])!= 'Catégorie'){
             // var_dump('type task non vide');

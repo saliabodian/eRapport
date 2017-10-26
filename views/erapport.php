@@ -122,7 +122,7 @@
                                         <tr class="odd gradeX">
                                             <td><?= $rapportSubmitted['date'] ?></td>
                                             <td style="text-align: center"><?= $rapportSubmitted['username'].' - '.$rapportSubmitted['lastname'].' '.$rapportSubmitted['firstname'] ?></td>
-                                            <td style="text-align: center"><?= $rapportSubmitted['code'].''.$rapportSubmitted['nom'] ?></td>
+                                            <td style="text-align: center"><?= $rapportSubmitted['code'].' - '.$rapportSubmitted['nom'] ?></td>
                                             <td>
                                                 <a href="erapportShow.php?rapport_id=<?=$rapportSubmitted['id_rapport']?>&rapport_type=<?=$rapportSubmitted['rapport_type']?>&chef_dequipe_id=<?= $rapportSubmitted['user_id']?>&chef_dequipe_matricule=<?= $rapportSubmitted['username']?>&date_generation=<?= $rapportSubmitted['date']?>&chantier_id=<?= $rapportSubmitted['chantier_id']?>&chantier_code=<?= $rapportSubmitted['code']?>&validated=<?= $rapportSubmitted['validated']?>&submitted=<?= $rapportSubmitted['submitted']?>"  class="btn btn-warning  btn-block">Consulter</a>
                                             </td>
@@ -159,7 +159,7 @@
                                         <tr class="odd gradeX">
                                             <td><?= $rapportValidated['date'] ?></td>
                                             <td style="text-align: center"><?= $rapportValidated['username'].' - '.$rapportValidated['lastname'].' '.$rapportValidated['firstname'] ?></td>
-                                            <td style="text-align: center"><?= $rapportValidated['code'].''.$rapportValidated['nom'] ?></td>
+                                            <td style="text-align: center"><?= $rapportValidated['code'].' - '.$rapportValidated['nom'] ?></td>
                                             <td>
                                                 <a href="erapportShow.php?rapport_id=<?=$rapportValidated['id_rapport']?>&rapport_type=<?=$rapportValidated['rapport_type']?>&chef_dequipe_id=<?= $rapportValidated['user_id']?>&chef_dequipe_matricule=<?= $rapportValidated['username']?>&date_generation=<?= $rapportValidated['date']?>&chantier_id=<?= $rapportValidated['chantier_id']?>&chantier_code=<?= $rapportValidated['code']?>&validated=<?= $rapportValidated['validated']?>&submitted=<?= $rapportValidated['submitted']?>"  class="btn btn-warning  btn-block">Consulter</a>
                                             </td>

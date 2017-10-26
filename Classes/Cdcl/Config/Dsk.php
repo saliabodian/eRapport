@@ -19,8 +19,8 @@ class Dsk {
     /** Ce sont tous les chantiers sur lesquels les chefs d’équipe ont fait au moins 1 pointage :*/
 
     public static function allChefDEquipeForDay($date){
-        $dbh = ibase_connect("31.204.90.68:C:\DSK\Data\dsk2.fdb","SYSDBA","masterkey");
-    //    $dbh = ibase_connect("10.10.110.30:C:\DSK\Data\dsk2.fdb","SYSDBA","masterkey");
+    //    $dbh = ibase_connect("31.204.90.68:C:\DSK\Data\dsk2.fdb","SYSDBA","masterkey");
+        $dbh = ibase_connect("10.10.110.30:C:\DSK\Data\dsk2.fdb","SYSDBA","masterkey");
 
         $sql = "
         SELECT Booking.NoPers,Pers.CODEPERS, Pers.FULLNAME, ACCOUNT.CUSTOM  FROM BOOKING
@@ -568,6 +568,7 @@ class Dsk {
     public static function allCumulatedAbsence($date, $worker){
 
         $dbh = ibase_connect("31.204.90.68:C:\DSK\Data\dsk2.fdb","SYSDBA","masterkey");
+    //    $dbh = ibase_connect("10.10.110.30:C:\DSK\Data\dsk2.fdb","SYSDBA","masterkey");
 
         $sql = "SELECT PERS.NOPERS, PERS.CODEPERS,PERS.FULLNAME, ABSENCE.THEDATE, SUM(ABSENCE.TIMEMIN) FROM ABSENCE
         INNER JOIN PERS ON PERS.NOPERS = ABSENCE.NOPERS
@@ -600,6 +601,7 @@ class Dsk {
     public static function allNoyau(){
 
         $dbh = ibase_connect("31.204.90.68:C:\DSK\Data\dsk2.fdb","SYSDBA","masterkey");
+    //    $dbh = ibase_connect("10.10.110.30:C:\DSK\Data\dsk2.fdb","SYSDBA","masterkey");
 
         $sql="
                 SELECT trim(PERS.CODEPERS) AS CODEPERS FROM PERS

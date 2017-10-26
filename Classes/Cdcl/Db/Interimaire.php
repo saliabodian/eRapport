@@ -1197,7 +1197,7 @@ class Interimaire extends DbObject{
     }
     public static function duplicateAffectation($weekToDuplicate, $weekToAffect){
         /* Récupération des éléments de la semaine que l'on veut dupliquer*/
-        $sql = 'SELECT * FROM interimaire_has_chantier WHERE woy= :week';
+        $sql = 'SELECT * FROM interimaire_has_chantier WHERE woy= :week AND interimaire_id IN (SELECT id FROM interimaire WHERE actif = 1)';
         $stmt = Config::getInstance()->getPDO()->prepare($sql);
         $stmt->bindValue(':week', $weekToDuplicate, \PDO::PARAM_INT);
         if($stmt->execute()=== false){
@@ -1218,7 +1218,7 @@ class Interimaire extends DbObject{
         //    var_dump($affectationEnCours[$i]['interimaire_id']);
         //    var_dump($weekToAffect);
 
-            $sql = 'SELECT interimaire_id as int_id FROM interimaire_has_chantier WHERE interimaire_id= :interimaire_id AND woy= :weekToAffect';
+            $sql = 'SELECT interimaire_id as int_id FROM interimaire_has_chantier WHERE interimaire_id= :interimaire_id AND woy= :weekToAffect AND interimaire_id IN (SELECT id FROM interimaire WHERE actif = 1)';
             $stmt = Config::getInstance()->getPDO()->prepare($sql);
             $stmt->bindValue(':weekToAffect', $weekToAffect, \PDO::PARAM_INT);
             $stmt->bindValue(':interimaire_id', $affectationEnCours[$i]['interimaire_id'], \PDO::PARAM_INT);
@@ -1269,7 +1269,7 @@ class Interimaire extends DbObject{
 
     public static function updateDateDebutDateFinInterimaire($week){
 
-        $sql = 'SElECT date_debut, date_fin FROM interimaire_has_chantier WHERE woy=:woy limit 1';
+        $sql = 'SElECT date_debut, date_fin FROM interimaire_has_chantier WHERE woy=:woy AND interimaire_id IN (SELECT id FROM interimaire WHERE actif = 1) limit 1';
         $stmt = Config::getInstance()->getPDO()->prepare($sql);
         $stmt->bindValue(':woy', $week, \PDO::PARAM_INT);
         if($stmt->execute()===false){
@@ -1278,7 +1278,7 @@ class Interimaire extends DbObject{
             $dates = $stmt->fetch();
         }
 
-        $sql = 'SElECT DISTINCT interimaire_id FROM interimaire_has_chantier WHERE woy=:woy';
+        $sql = 'SElECT DISTINCT interimaire_id FROM interimaire_has_chantier WHERE woy=:woy AND interimaire_id IN (SELECT id FROM interimaire WHERE actif = 1)';
         $stmt = Config::getInstance()->getPDO()->prepare($sql);
         $stmt->bindValue(':woy', $week, \PDO::PARAM_INT);
         if($stmt->execute()===false){
