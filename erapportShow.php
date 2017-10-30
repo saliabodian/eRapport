@@ -89,105 +89,128 @@ $conf = Config::getInstance();
             $newHorsNoyauList = array();
             $oldHorsNoyauList = array();
 
-            foreach($noyauList as $list){
-                $newNoyauList[] = $list["matricule"];
-            }
-
-            foreach($noyauDetails as $details){
-                if(!empty($details['ouvrier_id'])){
-                    $oldNoyauList[]=$details['ouvrier_id'];
+            if(!empty($noyauList)){
+                foreach($noyauList as $list){
+                    $newNoyauList[] = $list["matricule"];
                 }
             }
+
+            if(!empty($noyauDetails)){
+                foreach($noyauDetails as $details){
+                    if(!empty($details['ouvrier_id'])){
+                        $oldNoyauList[]=$details['ouvrier_id'];
+                    }
+                }
+            }
+
 
             $newNoyauList = array_diff($newNoyauList, $oldNoyauList);
 
-            foreach($noyauList as $noyau){
-                if(in_array($noyau['matricule'], $newNoyauList)){
-                    $newNoyauListToAdd[$noyau['id']]['id']= $noyau['id'];
-                    $newNoyauListToAdd[$noyau['id']]['matricule']= $noyau['matricule'];
-                    $newNoyauListToAdd[$noyau['id']]['fullname']= $noyau['fullname'];
-                    $newNoyauListToAdd[$noyau['id']]['']= $noyau['chantier'];
-                    $newNoyauListToAdd[$noyau['id']]['noyau']= $noyau['noyau'];
+            if(!empty($noyauList)){
+                foreach($noyauList as $noyau){
+                    if(in_array($noyau['matricule'], $newNoyauList)){
+                        $newNoyauListToAdd[$noyau['id']]['id']= $noyau['id'];
+                        $newNoyauListToAdd[$noyau['id']]['matricule']= $noyau['matricule'];
+                        $newNoyauListToAdd[$noyau['id']]['fullname']= $noyau['fullname'];
+                        $newNoyauListToAdd[$noyau['id']]['']= $noyau['chantier'];
+                        $newNoyauListToAdd[$noyau['id']]['noyau']= $noyau['noyau'];
+                    }
                 }
             }
 
-            foreach($interimaireList as $list){
-                $newInterimaireList[] = $list["matricule"];
-            }
-
-            foreach($noyauDetails as $details){
-                if(!empty($details['interimaire_id'])){
-                    $oldInterimaireList[]=$details['interimaire_id'];
+            if(!empty($interimaireList)){
+                foreach($interimaireList as $list){
+                    $newInterimaireList[] = $list["matricule"];
                 }
             }
 
+            if(!empty($noyauDetails)){
+                foreach($noyauDetails as $details){
+                    if(!empty($details['interimaire_id'])){
+                        $oldInterimaireList[]=$details['interimaire_id'];
+                    }
+                }
+            }
 
             $newIntermaireList = array_diff($newInterimaireList, $oldInterimaireList);
 
             //var_dump($noyauList);
         //    var_dump($newIntermaireListToAdd);
-
-            foreach($interimaireList as $interimaire){
-                if(in_array($interimaire['matricule'], $newIntermaireList)){
-                    $newIntermaireListToAdd[$interimaire['id']]['id'] = $interimaire['id'];
-                    $newIntermaireListToAdd[$interimaire['id']]['interimaire_id'] = $interimaire['interimaire_id'];
-                    $newIntermaireListToAdd[$interimaire['id']]['chantier_id'] =$interimaire['chantier_id'] ;
-                    $newIntermaireListToAdd[$interimaire['id']]['user_id'] = $interimaire['user_id'];
-                    $newIntermaireListToAdd[$interimaire['id']]['doy'] = $interimaire['doy'];
-                    $newIntermaireListToAdd[$interimaire['id']]['woy'] = $interimaire['woy'];
-                    $newIntermaireListToAdd[$interimaire['id']]['matricule'] = $interimaire['matricule'];
-                    $newIntermaireListToAdd[$interimaire['id']]['lastname'] = $interimaire['lastname'];
-                    $newIntermaireListToAdd[$interimaire['id']]['firstname'] = $interimaire['firstname'];
+            if(!empty($interimaireList)){
+                foreach($interimaireList as $interimaire){
+                    if(in_array($interimaire['matricule'], $newIntermaireList)){
+                        $newIntermaireListToAdd[$interimaire['id']]['id'] = $interimaire['id'];
+                        $newIntermaireListToAdd[$interimaire['id']]['interimaire_id'] = $interimaire['interimaire_id'];
+                        $newIntermaireListToAdd[$interimaire['id']]['chantier_id'] =$interimaire['chantier_id'] ;
+                        $newIntermaireListToAdd[$interimaire['id']]['user_id'] = $interimaire['user_id'];
+                        $newIntermaireListToAdd[$interimaire['id']]['doy'] = $interimaire['doy'];
+                        $newIntermaireListToAdd[$interimaire['id']]['woy'] = $interimaire['woy'];
+                        $newIntermaireListToAdd[$interimaire['id']]['matricule'] = $interimaire['matricule'];
+                        $newIntermaireListToAdd[$interimaire['id']]['lastname'] = $interimaire['lastname'];
+                        $newIntermaireListToAdd[$interimaire['id']]['firstname'] = $interimaire['firstname'];
+                    }
                 }
             }
+
 
         //    var_dump($newIntermaireListToAdd);
 
         //  var_dump($newNoyauList);
         //    var_dump($oldNoyauList);
-
-            foreach($absentList as $list){
-                $newAbsentList[] = $list["matricule"];
+            if(!empty($absentList)){
+                foreach($absentList as $list){
+                    $newAbsentList[] = $list["matricule"];
+                }
             }
 
-            foreach($noyauAbsentDetails as $details){
-                $oldAbsentList[]=$details['ouvrier_id'];
+            if(!empty($noyauAbsentDetails)){
+                foreach($noyauAbsentDetails as $details){
+                    $oldAbsentList[]=$details['ouvrier_id'];
+                }
             }
+
 
             $newAbsentList = array_diff($newAbsentList, $oldAbsentList);
 
-            foreach($newAbsentList as $absent){
-                if(in_array($absent['matricule'], $newNoyauList)){
-                    $newAbsentListToAdd[$absent['matricule']]['matricule']= $absent['matricule'];
-                    $newAbsentListToAdd[$absent['matricule']]['fullname']= $absent['fullname'];
-                    $newAbsentListToAdd[$absent['matricule']]['date']= $absent['date'];
-                    $newAbsentListToAdd[$absent['matricule']]['timemin']= $absent['timemin'];
-                    $newAbsentListToAdd[$absent['matricule']]['motif']= $absent['motif'];
+            if(!empty($newAbsentList)){
+                foreach($newAbsentList as $absent){
+                    if(in_array($absent['matricule'], $newNoyauList)){
+                        $newAbsentListToAdd[$absent['matricule']]['matricule']= $absent['matricule'];
+                        $newAbsentListToAdd[$absent['matricule']]['fullname']= $absent['fullname'];
+                        $newAbsentListToAdd[$absent['matricule']]['date']= $absent['date'];
+                        $newAbsentListToAdd[$absent['matricule']]['timemin']= $absent['timemin'];
+                        $newAbsentListToAdd[$absent['matricule']]['motif']= $absent['motif'];
+                    }
                 }
             }
-
 
             //var_dump($newAbsentListToAdd);
-
-            foreach($horsNoyauList as $list){
-                $newHorsNoyauList[] = $list["matricule"];
-            }
-
-            foreach($horsNoyauDetails as $details){
-                $oldHorsNoyauList[]=$details['ouvrier_id'];
-            }
-
-            $newHorsNoyauList = array_diff($newHorsNoyauList, $oldHorsNoyauList);
-
-            foreach($horsNoyauList as $horsNoyau){
-                if(in_array($horsNoyau['matricule'], $newNoyauList)){
-                    $newHorsNoyauListToAdd[$horsNoyau['id']]['id']= $horsNoyau['id'];
-                    $newHorsNoyauListToAdd[$horsNoyau['id']]['matricule']= $horsNoyau['matricule'];
-                    $newHorsNoyauListToAdd[$horsNoyau['id']]['fullname']= $horsNoyau['fullname'];
-                    $newHorsNoyauListToAdd[$horsNoyau['id']]['']= $horsNoyau['chantier'];
-                    $newHorsNoyauListToAdd[$horsNoyau['id']]['noyau']= $horsNoyau['noyau'];
+            if(!empty($horsNoyauList)){
+                foreach($horsNoyauList as $list){
+                    $newHorsNoyauList[] = $list["matricule"];
                 }
             }
+
+            if(!empty($horsNoyauDetails)){
+                foreach($horsNoyauDetails as $details){
+                    $oldHorsNoyauList[]=$details['ouvrier_id'];
+                }
+            }
+
+
+            $newHorsNoyauList = array_diff($newHorsNoyauList, $oldHorsNoyauList);
+            if(!empty($horsNoyauList)){
+                foreach($horsNoyauList as $horsNoyau){
+                    if(in_array($horsNoyau['matricule'], $newNoyauList)){
+                        $newHorsNoyauListToAdd[$horsNoyau['id']]['id']= $horsNoyau['id'];
+                        $newHorsNoyauListToAdd[$horsNoyau['id']]['matricule']= $horsNoyau['matricule'];
+                        $newHorsNoyauListToAdd[$horsNoyau['id']]['fullname']= $horsNoyau['fullname'];
+                        $newHorsNoyauListToAdd[$horsNoyau['id']]['']= $horsNoyau['chantier'];
+                        $newHorsNoyauListToAdd[$horsNoyau['id']]['noyau']= $horsNoyau['noyau'];
+                    }
+                }
+            }
+
 
 
             //    var_dump($newNoyauListToAdd);

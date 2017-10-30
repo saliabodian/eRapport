@@ -1020,7 +1020,7 @@ class Rapport extends DbObject{
                 FROM rapport_detail, rapport
                 WHERE rapport_detail.rapport_id=:rapport_id
                 AND rapport.id = rapport_detail.rapport_id
-                ORDER BY rapport_detail.is_chef_dequipe DESC , rapport_detail.ouvrier_id, rapport_detail.interimaire_id';
+                ORDER BY rapport_detail.is_chef_dequipe DESC , rapport_detail.interimaire_id , rapport_detail.ouvrier_id  ';
         $stmt = Config::getInstance()->getPDO()->prepare($sql);
         $stmt->bindValue(':rapport_id', $rapport['id'], \PDO::PARAM_INT);
         if($stmt->execute()===false){
@@ -1051,7 +1051,7 @@ class Rapport extends DbObject{
                 FROM rapport_detail, rapport
               WHERE rapport_detail.rapport_id=:rapport_id
               AND rapport.id =rapport_detail.rapport_id
-              ORDER BY rapport_detail.is_chef_dequipe DESC, rapport_detail.ouvrier_id, rapport_detail.interimaire_id';
+              ORDER BY rapport_detail.is_chef_dequipe DESC, rapport_detail.interimaire_id, rapport_detail.ouvrier_id ';
         $stmt = Config::getInstance()->getPDO()->prepare($sql);
         $stmt->bindValue(':rapport_id', $rapport['id'],\PDO::PARAM_INT);
         if($stmt->execute()===false){
@@ -1081,7 +1081,7 @@ class Rapport extends DbObject{
                 FROM rapport_detail, rapport
                 WHERE rapport_detail.rapport_id=:rapport_id
                 AND rapport.id = rapport_detail.rapport_id
-                ORDER BY rapport_detail.is_chef_dequipe DESC, rapport_detail.ouvrier_id, rapport_detail.interimaire_id';
+                ORDER BY rapport_detail.is_chef_dequipe DESC, rapport_detail.interimaire_id, rapport_detail.ouvrier_id ';
         $stmt = Config::getInstance()->getPDO()->prepare($sql);
         $stmt->bindValue(':rapport_id', $rapport['id'], \PDO::PARAM_INT);
         if($stmt->execute()===false){
