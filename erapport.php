@@ -24,6 +24,7 @@ $conf = Config::getInstance();
 
 if(!empty($_SESSION)){
 
+
     //var_dump($_SESSION);
     //Gestion de la validation d'un rapport
     if($_GET['val']=== 'true'){
@@ -207,6 +208,8 @@ if(!empty($_SESSION)){
             $noyauList = Dsk::getTeamPointing($matricule, $chantierCode, $dateRapport);
             $interimaireList = Rapport::getInterimaireByTeamSiteAndDate($dateRapport, $chefDEquipeId, $chantierId);
 
+            $absentHorsNoyauList = Dsk::getAllHorsNoyauAbsence($matricule,$dateRapport, $chantierCode);
+
             // var_dump($interimaireList);
 
             // exit;
@@ -246,6 +249,12 @@ if(!empty($_SESSION)){
             // Génération d'un rapport pour les ouvriers absents appartenant au chef d'équipe connecté
 
             $absentList = Dsk::getAllNoyauAbsence($matricule, $dateRapport);
+           //  var_dump($absentHorsNoyauList);
+
+            // var_dump($absentList);
+
+            // exit;
+
             if(!empty($absentList)){
                 $noyauObject->saveDBAbsentDuNoyau();
                 $rapportJournalierAbsent = Rapport::saveRapportDetailAbsent($dateRapport, $chantierId, $matricule, $absentList);

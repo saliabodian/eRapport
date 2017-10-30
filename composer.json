@@ -1,0 +1,14 @@
+{
+    "name": "cdcl/ereport",
+    "description": "Gestion des pointages des ouvriers sur chantier",
+    "type": "project",
+    "authors": [
+        {
+            "name": "Salia Bodian",
+            "email": "s.bodian@cdclux.com"
+        }
+    ],
+    "require": {
+        "mpdf/mpdf": "^7.0"
+    }
+}

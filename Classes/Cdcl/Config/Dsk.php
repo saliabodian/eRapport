@@ -770,4 +770,113 @@ class Dsk {
         return $membreNoyauAbsence;
     }
 
+    public static function getAllHorsNoyauAbsence($noyau, $date, $chantier_code){
+
+        $dbh = ibase_connect("31.204.90.68:C:\DSK\Data\dsk2.fdb","SYSDBA","masterkey");
+        //    $dbh = ibase_connect("10.10.110.30:C:\DSK\Data\dsk2.fdb","SYSDBA","masterkey");
+
+        $sql = "
+        SELECT Absence.NoPers,Absence.Thedate, Pers.FULLNAME, ACCOUNT.CUSTOM, TERMS.GIDDID  FROM Absence
+            INNER JOIN Pers on (Pers.NoPers=ABSENCE.NoPers)
+            INNER JOIN PERSHISTORY ON
+             ((PERSHISTORY.NOPERS=ABSENCE.NOPERS)
+             AND (PERSHISTORY.STARTDATE<= ABSENCE.THEDATE)
+             AND ((PERSHISTORY.ENDDATE IS NULL) OR (PERSHISTORY.ENDDATE>= ABSENCE.THEDATE))
+            )
+            INNER JOIN Booking ON
+             ((Booking.NOPERS=Absence.NOPERS)
+             AND (Booking.THEDATE=(SELECT MAX(THEDATE) from booking where (booking.NoPers = Pers.NoPers and (booking.BK1<>0 or booking.BK2<>0) and booking.THEDATE<='".$date."')))
+            )
+
+            LEFT JOIN TERMS ON (
+              (
+              TERMS.GIDDID = BOOKING.BKT1
+              ) OR
+              (
+              TERMS.GIDDID = BOOKING.BKT2
+              ) OR
+              (
+              TERMS.GIDDID = BOOKING.BKT3
+              ) OR
+              (
+              TERMS.GIDDID = BOOKING.BKT4
+              ) OR
+              (
+              TERMS.GIDDID = BOOKING.BKT5
+              ) OR
+              (
+              TERMS.GIDDID = BOOKING.BKT6
+              ) OR
+              (
+              TERMS.GIDDID = BOOKING.BKT7
+              ) OR
+              (
+              TERMS.GIDDID = BOOKING.BKT8
+              ) OR
+              (
+              TERMS.GIDDID = BOOKING.BKT9
+              ) OR
+              (
+              TERMS.GIDDID = BOOKING.BKT10
+              ) OR
+              (
+              TERMS.GIDDID = BOOKING.BKT11
+              ) OR
+              (
+              TERMS.GIDDID = BOOKING.BKT12
+              ) OR
+              (
+              TERMS.GIDDID = BOOKING.BKT13
+              ) OR
+              (
+              TERMS.GIDDID = BOOKING.BKT14
+              ) OR
+              (
+              TERMS.GIDDID = BOOKING.BKT15
+              ) OR
+              (
+              TERMS.GIDDID = BOOKING.BKT16
+              ) OR
+              (
+              TERMS.GIDDID = BOOKING.BKT17
+              ) OR
+              (
+              TERMS.GIDDID = BOOKING.BKT18
+              ) OR
+              (
+              TERMS.GIDDID = BOOKING.BKT19
+              ) OR
+              (
+              TERMS.GIDDID = BOOKING.BKT20
+              )
+              )
+              INNER JOIN
+              TERMSHISTORY
+              ON ((TERMSHISTORY.NOTERM = TERMS.NOTERM)
+              AND (TERMSHISTORY.STARTDATE<=BOOKING.THEDATE)
+              AND ((TERMSHISTORY.ENDDATE>=BOOKING.THEDATE) OR TERMSHISTORY.ENDDATE IS NULL))
+
+            INNER JOIN account on ((Account.NoAccount=TERMSHISTORY.SIte) AND (ACCOUNT.CUSTOM = ".$chantier_code.") )
+
+            WHERE Absence.THEDATE='".$date."'
+            AND  PERSHISTORY.CUSTOM3 <> '".$noyau."'
+            ";
+
+        $sth = ibase_query($dbh, $sql);
+
+        $i = 0;
+
+        while ($row = ibase_fetch_object($sth))
+        {
+            $absenceHorsNoyau[$i]["NOPERS"] = trim($row->NOPERS);
+            $absenceHorsNoyau[$i]["THEDATE"] = $row->THEDATE;
+            $absenceHorsNoyau[$i]["FULLNAME"] = $row->FULLNAME;
+            $absenceHorsNoyau[$i]["CUSTOM"] = $row->CUSTOM;
+            $absenceHorsNoyau[$i]["GIDDID"] = $row->GIDDID;
+
+            $i++;
+        }
+        return $absenceHorsNoyau;
+    }
+
 }

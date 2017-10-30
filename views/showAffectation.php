@@ -86,7 +86,7 @@
                                             <td style="text-align: center"><?= $interimaireAffectes['woy'] ?></td>
                                             <td style="text-align: center"><?= $interimaireAffectes['doy'].' - '.date('l', strtotime($interimaireAffectes['doy'])) ?></td>
                                             <td>
-                                                <a href="changeAffectation.php?row_id=<?= $interimaireAffectes['int_has_cht_id']?>&date_debut=<?= $interimaireAffectes['date_debut'] ?>&date_fin=<?= $interimaireAffectes['date_fin'] ?>&maj=true"  class="btn btn-warning  btn-block">Modifier</a>
+                                                <a href="changeAffectation.php?row_id=<?= $interimaireAffectes['int_has_cht_id']?>&date_debut=<?= $interimaireAffectes['date_debut'] ?>&date_fin=<?= $interimaireAffectes['date_fin'] ?>&weekly_search=<?= isset($interimaireAffectes['weekly_search'])? $interimaireAffectes['weekly_search'] : '' ?>&dayly_search=<?= isset($interimaireAffectes['dayly_search'])? $interimaireAffectes['dayly_search'] : '' ?>&chantier_id=<?= $interimaireAffectes['chantier_id']?>&maj=true"  class="btn btn-warning  btn-block">Modifier</a>
                                             </td>
                                         </tr>
                                     <?php  endforeach;  ?>

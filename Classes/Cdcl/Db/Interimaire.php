@@ -915,7 +915,8 @@ class Interimaire extends DbObject{
               interimaire.firstname,
               interimaire.lastname,
               chantier.nom,
-              chantier.code
+              chantier.code,
+              interimaire_has_chantier.woy as weekly_search
               FROM interimaire_has_chantier, chantier,interimaire
           where woy= :woy
           AND interimaire_has_chantier.chantier_id= :chantier_id
@@ -952,7 +953,8 @@ class Interimaire extends DbObject{
               interimaire.firstname,
               interimaire.lastname,
               chantier.nom,
-              chantier.code
+              chantier.code,
+              interimaire_has_chantier.doy as dayly_search
               FROM interimaire_has_chantier, chantier,interimaire
           where doy= :doy
           AND interimaire_has_chantier.chantier_id= :chantier_id
@@ -1296,6 +1298,17 @@ class Interimaire extends DbObject{
             if($stmt->execute()===false){
                 print_r($stmt->errorInfo());
             }
+        }
+    }
+
+    public static function deleteInterimaireAffectation($intHasChtId){
+        $sql = 'DELETE FROM interimaire_has_chantier WHERE id=:intHasChtId';
+        $stmt = Config::getInstance()->getPDO()->prepare($sql);
+        $stmt->bindValue(':intHasChtId', $intHasChtId, \PDO::PARAM_INT);
+        if($stmt->execute()===false){
+            print_r($stmt->errorInfo());
+        }else{
+            return true;
         }
     }
 

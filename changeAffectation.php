@@ -59,7 +59,17 @@ if(!empty($_SESSION)) {
     $interimaireSelected = Interimaire::interimaireSelected($_GET['row_id']);
     //var_dump($_GET);
     //var_dump('<br>');
-    // var_dump($interimaireSelected);
+    //var_dump($interimaireSelected);
+
+    //exit;
+
+    // Suppression d'une affectation
+    if (isset($_GET['delete']) && intval($_GET['delete']) > 0) {
+        if (Interimaire::deleteInterimaireAffectation(intval($_GET['delete']))) {
+            header('Location: showAffectation.php?success=' .urlencode('Suppression effectuée').'&date_deb='.$_GET['date_deb'].'&chantier_id='.$_GET['chantier_id']);
+            exit;
+        }
+    }
 
 
 
@@ -101,7 +111,8 @@ if(!empty($_SESSION)) {
 
            // exit;
             Interimaire::changeChantierAffectation($newDate, $newChantierId, $row_id);
-            header('Location: changeAffectation.php?success='.urlencode('Ajout/Modification effectuée').'&row_id='.$row_id.'&date_debut='.$date_debut.'&date_fin='.$date_fin.'&new_date='.$newDate);
+            header('Location: showAffectation.php?success=' .urlencode('Ajout/Modification effectuée').'&date_deb='.$date_debut.'&chantier_id='.$_GET['chantier_id']);
+        //    header('Location: changeAffectation.php?success='.urlencode('Ajout/Modification effectuée').'&row_id='.$row_id.'&date_debut='.$date_debut.'&date_fin='.$date_fin.'&new_date='.$newDate);
             exit;
         }else{
             $conf->addError("La modification ne s'est pas bien déroulée");

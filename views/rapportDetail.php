@@ -22,6 +22,7 @@
                                 <input type="hidden" name="chantier_code" value="<?= $_POST['chantier_code']?>">
                                 <input type="hidden" name="chantier_id" value="<?= $_POST['chantier_id']?>">
                                 <input type="hidden" value="true" name="majForm"/>
+                                <input type="hidden" name="anomaly" value="<?= $_POST['anomaly']?>"/>
                                 <?php if(sizeof($workerToUpdate) === 1) : ?>
                                     <?php foreach ($workerToUpdate as $worker) : ?>
                                         <input type="hidden" value="<?= $worker["chef_dequipe_updated"] ?>" name="chef_dequipe_updated"/>
@@ -85,13 +86,13 @@
                                                         <?php elseif  (($worker['abs'] === 'Accident (A)')) : ?>
                                                         <?php elseif  (($worker['abs'] === 'Congé (C)')) : ?>
                                                         <?php elseif  (($worker['abs'] === 'Absence  Excusée (EX)')) : ?>
+                                                        <?php elseif  (($worker['abs'] === 'Formation (FOR)')) : ?>
                                                         <?php elseif  (($worker['abs'] === 'Intempéries (INT)')) : ?>
                                                         <?php elseif  (($worker['abs'] === 'Congé Extraordinaire (CE)')) : ?>
                                                         <?php elseif  (($worker['abs'] === 'Absence non Excusée (ABS)')) : ?>
                                                         <?php elseif  (($worker['abs'] === 'Congé Syndical (CS)')) : ?>
                                                         <?php elseif  (($worker['abs'] === 'Visite Médicale STI (STI)')) : ?>
                                                         <?php elseif  (($worker['abs'] === 'Travaux Autre Chantier (TAC)')) : ?>
-                                                        <?php elseif  (($worker['abs'] === 'Maladie (M)')) : ?>
                                                         selected = "selected" <?php endif; ?> ><?= $worker['abs'] ?></option>
                                                         <option></option>
                                                         <option value="Maladie (M)">Maladie (M)</option>

@@ -4,3 +4,4 @@ template
 inc/config.php
 src
 js_sources
+/vendor/

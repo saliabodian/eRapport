@@ -19,6 +19,10 @@
                                     <thead>
                                     <tr>
                                         <th>Nom Complet</th>
+                                        <th>Heures badgées</th>
+                                        <th>Tot. Rép. Heures/th>
+                                        <th>Chantier</th>
+                                        <th>Date</th>
                                         <th></th>
                                     </tr>
                                     </thead>
@@ -31,10 +35,15 @@
                                             <input type="hidden" name="date_generation" value="<?= $anomaly['date']?>"/>
                                             <input type="hidden" name="chantier_id" value="<?= $anomaly['chantier']?>"/>
                                             <input type="hidden" name="chantier_code" value="<?= $anomaly['code']?>"/>
+                                            <input type="hidden" name="anomaly" value="true"/>
                                             <input type="hidden" name="selected_matricule[]" value="<?= isset($anomaly['ouvrier_id'])? $anomaly['ouvrier_id'] : (isset($anomaly['interimaire_id'])? $anomaly['interimaire_id'] : '')?>"/>
                                             <tbody>
                                             <tr>
                                                 <td><?= isset($anomaly['ouvrier_id'])? $anomaly['ouvrier_id'] : (isset($anomaly['interimaire_id'])? $anomaly['interimaire_id'] : '')?> - <?=$anomaly['fullname']?></td>
+                                                <td><?= $anomaly['htot']?></td>
+                                                <td><?= $anomaly['ht1']+$anomaly['ht2']+$anomaly['ht3']+$anomaly['ht4']+$anomaly['ht5']+$anomaly['ht6']?></td>
+                                                <td><?= $anomaly['code'].' - '.$anomaly['nom'] ?></td>
+                                                <td><?= $anomaly['date']?></td>
                                                 <td><input type="submit" value="Modifier"></td>
                                             </tr>
                                             </tbody>
@@ -62,6 +71,9 @@
                                     <thead>
                                     <tr>
                                         <th>Nom Complet</th>
+                                        <th>Anomalie(s)</th>
+                                        <th>Chantier</th>
+                                        <th>Date</th>
                                         <th></th>
                                     </tr>
                                     </thead>
@@ -74,10 +86,14 @@
                                             <input type="hidden" name="date_generation" value="<?= $anomaly['date']?>"/>
                                             <input type="hidden" name="chantier_id" value="<?= $anomaly['chantier']?>"/>
                                             <input type="hidden" name="chantier_code" value="<?= $anomaly['code']?>"/>
+                                            <input type="hidden" name="anomaly" value="true"/>
                                             <input type="hidden" name="selected_matricule[]" value="<?= isset($anomaly['ouvrier_id'])? $anomaly['ouvrier_id'] : (isset($anomaly['interimaire_id'])? $anomaly['interimaire_id'] : '')?>"/>
                                             <tbody>
                                             <tr>
                                                 <td><?= isset($anomaly['ouvrier_id'])? $anomaly['ouvrier_id'] : (isset($anomaly['interimaire_id'])? $anomaly['interimaire_id'] : '')?> - <?=$anomaly['fullname']?></td>
+                                                <td><?= $anomaly['abs'].' - '.$anomaly['habs'].'H' ?></td>
+                                                <td><?= $anomaly['code'].' - '.$anomaly['nom']?></td>
+                                                <td><?= $anomaly['date'] ?></td>
                                                 <td><input type="submit" value="Modifier"></td>
                                             </tr>
                                             </tbody>

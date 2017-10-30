@@ -21,6 +21,7 @@ $conf = Config::getInstance();
 
 if(!empty($_SESSION)){
 
+
    //var_dump($_POST['matriculeList']);
     //exit;
 
@@ -186,17 +187,32 @@ if(!empty($_SESSION)){
 
         if($form){
 
-            Rapport::updateRapportDetail($_POST['rapport_detail_id'], $_POST['htot'], $_POST['hins'], $_POST['abs'],
-                $_POST['habs'], $dpl_pers,$_POST['km'], $_POST['remarque'], $chef_dequipe_updated,
-                $_POST['type_task'], $_POST['tasks'], $_POST['bat'], $_POST['axe'], $_POST['et'], $_POST['ht'],
-                $_POST['type_task2'], $_POST['tasks2'], $_POST['bat2'], $_POST['axe2'], $_POST['et2'], $_POST['ht2'],
-                $_POST['type_task3'], $_POST['tasks3'], $_POST['bat3'], $_POST['axe3'], $_POST['et3'], $_POST['ht3'],
-                $_POST['type_task4'], $_POST['tasks4'], $_POST['bat4'], $_POST['axe4'], $_POST['et4'], $_POST['ht4'],
-                $_POST['type_task5'], $_POST['tasks5'], $_POST['bat5'], $_POST['axe5'], $_POST['et5'], $_POST['ht5'],
-                $_POST['type_task6'], $_POST['tasks6'], $_POST['bat6'], $_POST['axe6'], $_POST['et6'], $_POST['ht6']);
-        //    exit;
-            header('Location: erapportShow.php?rapport_id='.$_POST['rapport_id'].'&rapport_type='.$_POST['rapport_type'].'&chef_dequipe_id='.$_POST['chef_dequipe_id'].'&chef_dequipe_matricule='.$_POST['chef_dequipe_matricule'].'&date_generation='.$_POST['date_generation'].'&chantier_id='.$_POST['chantier_id'].'&chantier_code='.$_POST['chantier_code'].'&majForm=true');
-            exit;
+            if ($_POST['anomaly']==='true'){
+                Rapport::updateRapportDetail($_POST['rapport_detail_id'], $_POST['htot'], $_POST['hins'], $_POST['abs'],
+                    $_POST['habs'], $dpl_pers,$_POST['km'], $_POST['remarque'], $chef_dequipe_updated,
+                    $_POST['type_task'], $_POST['tasks'], $_POST['bat'], $_POST['axe'], $_POST['et'], $_POST['ht'],
+                    $_POST['type_task2'], $_POST['tasks2'], $_POST['bat2'], $_POST['axe2'], $_POST['et2'], $_POST['ht2'],
+                    $_POST['type_task3'], $_POST['tasks3'], $_POST['bat3'], $_POST['axe3'], $_POST['et3'], $_POST['ht3'],
+                    $_POST['type_task4'], $_POST['tasks4'], $_POST['bat4'], $_POST['axe4'], $_POST['et4'], $_POST['ht4'],
+                    $_POST['type_task5'], $_POST['tasks5'], $_POST['bat5'], $_POST['axe5'], $_POST['et5'], $_POST['ht5'],
+                    $_POST['type_task6'], $_POST['tasks6'], $_POST['bat6'], $_POST['axe6'], $_POST['et6'], $_POST['ht6']);
+                //    exit;
+                header('Location: anomalieRh.php?success=' . urlencode('Modification effectuée avec succés'));
+                exit;
+            }else{
+                Rapport::updateRapportDetail($_POST['rapport_detail_id'], $_POST['htot'], $_POST['hins'], $_POST['abs'],
+                    $_POST['habs'], $dpl_pers,$_POST['km'], $_POST['remarque'], $chef_dequipe_updated,
+                    $_POST['type_task'], $_POST['tasks'], $_POST['bat'], $_POST['axe'], $_POST['et'], $_POST['ht'],
+                    $_POST['type_task2'], $_POST['tasks2'], $_POST['bat2'], $_POST['axe2'], $_POST['et2'], $_POST['ht2'],
+                    $_POST['type_task3'], $_POST['tasks3'], $_POST['bat3'], $_POST['axe3'], $_POST['et3'], $_POST['ht3'],
+                    $_POST['type_task4'], $_POST['tasks4'], $_POST['bat4'], $_POST['axe4'], $_POST['et4'], $_POST['ht4'],
+                    $_POST['type_task5'], $_POST['tasks5'], $_POST['bat5'], $_POST['axe5'], $_POST['et5'], $_POST['ht5'],
+                    $_POST['type_task6'], $_POST['tasks6'], $_POST['bat6'], $_POST['axe6'], $_POST['et6'], $_POST['ht6']);
+                //    exit;
+                header('Location: erapportShow.php?rapport_id='.$_POST['rapport_id'].'&rapport_type='.$_POST['rapport_type'].'&chef_dequipe_id='.$_POST['chef_dequipe_id'].'&chef_dequipe_matricule='.$_POST['chef_dequipe_matricule'].'&date_generation='.$_POST['date_generation'].'&chantier_id='.$_POST['chantier_id'].'&chantier_code='.$_POST['chantier_code'].'&majForm=true');
+                exit;
+            }
+
         }else{
             $conf->addError('La mise à jour ne s\'est pas effectuée correctement');
 

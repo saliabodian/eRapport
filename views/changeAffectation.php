@@ -56,7 +56,7 @@
                                     <button type="submit" class="btn btn-success btn-block" >Enregistrer</button>
                                 </div>
                                 <div class="span4">
-                                    <a href="?delete=<?= $interimaireSelected['int_has_cht_id'] ?>" class="btn btn-warning  btn-block<?php if ($interimaireSelected['int_has_cht_id'] <= 0) : ?> disabled<?php endif; ?>" role="button" aria-disabled="true">Supprimer</a>
+                                    <a href="?delete=<?= $interimaireSelected['int_has_cht_id'] ?>&date_deb=<?= $_GET['date_debut'] ?>&chantier_id=<?=  $_GET['chantier_id'] ?>" class="btn btn-warning  btn-block<?php if ($interimaireSelected['int_has_cht_id'] <= 0) : ?> disabled<?php endif; ?>" role="button" aria-disabled="true">Supprimer</a>
                                 </div>
                                 <div class=" span2 btn-block"></div>
                             </div>

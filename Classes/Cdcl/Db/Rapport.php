@@ -2255,7 +2255,8 @@ class Rapport extends DbObject{
                     rapport.chantier,
                     rapport.rapport_type,
                     rapport.equipe,
-                    chantier.code
+                    chantier.code,
+                    chantier.nom
                 FROM
                     rapport_detail
                         INNER JOIN
@@ -2286,7 +2287,8 @@ class Rapport extends DbObject{
                     rapport.chantier,
                     rapport.rapport_type,
                     rapport.equipe,
-                    chantier.code
+                    chantier.code,
+                    chantier.nom
                 FROM
                     rapport_detail
                         INNER JOIN
@@ -2298,7 +2300,7 @@ class Rapport extends DbObject{
                     OR abs = 'Congé (C)'
                     OR abs = 'Absence  Excusée (EX)'
                     OR abs = 'Intempéries (INT)'
-                    OR abs = 'Absence non Excusée (ABS)'
+                    OR abs = 'Formation (FOR)'
                     OR abs = 'Congé Extraordinaire (CE)'
                     OR abs = 'Absence non Excusée (ABS)'
                     OR abs = 'Congé Syndical (CS)'
