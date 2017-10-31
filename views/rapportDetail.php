@@ -53,13 +53,13 @@
                                         <?php endif; ?>
                                         <?php if(!(in_array('Ouvrier', $workerType)) && in_array('Interimaire',$workerType ) && sizeof($workerToUpdate) > 1 ):?>
                                             <?php foreach($workerToUpdate as $worker) : ?>
-                                                <input type="hidden" class="span2" name="htot" value="<?= $worker['htot']?>"/>
+                                                <input type="hidden" class="span2" name="htot" value="<?= ($worker['htot'] != 0 )? $worker['htot']: 8 ?>"/>
                                             <?php endforeach ; ?>
-                                            <input type="number" class="span2" name="" value="" disabled/>
+                                            <input type="number" class="span2" name="htot" value="<?= ($worker['htot'] != 0 )? $worker['htot']: 8 ?>"/>
                                         <?php endif; ?>
                                         <?php if(!(in_array('Ouvrier', $workerType)) && in_array('Interimaire',$workerType ) && sizeof($workerToUpdate) === 1 ):?>
                                             <?php foreach($workerToUpdate as $worker) : ?>
-                                                <input type="number" class="span2" name="htot" value="<?= $worker['htot']  ?>"/>
+                                                <input type="number" class="span2" name="htot" value="<?= ($worker['htot'] != 0 )? $worker['htot']: 8 ?>"/>
                                             <?php endforeach ; ?>
                                         <?php endif; ?>
                                         <?php if((in_array('Ouvrier', $workerType)) && !(in_array('Interimaire',$workerType )) && sizeof($workerToUpdate) === 1 ):?>
@@ -239,11 +239,11 @@
                                 </div>
                                 <div class="controls controls-row">
                                     <!--button id="addButton" type="button">Plus de tâches</button-->
-                                    <div class=" span2 btn-block"></div>
-                                    <a id="addButton" class="sAdd btn btn-success span2" title="" href="#"><i class="icon-plus"></i> Plus de tâches</a>
+                                    <div class=" span1 btn-block"></div>
+                                    <a id="addButton" class="sAdd btn btn-success span3" title="" href="#"><i class="icon-plus"></i> Plus de tâches</a>
                                     <!--button  type="button">Moins de tâches</button-->
                                     <div class=" span2 btn-block"></div>
-                                    <a id="minusButton" class="sAdd btn btn-danger danger span2" title="" href="#"><i class="icon-minus"></i> Moins de tâches</a>
+                                    <a id="minusButton" class="sAdd btn btn-danger danger span3" title="" href="#"><i class="icon-minus"></i> Moins de tâches</a>
                                     <div class=" span2 btn-block"></div>
                                 </div>
                                 <fieldset class="moreActions">
@@ -457,10 +457,10 @@
                                     <div class="controls">
                                         <?php if(sizeof($workerToUpdate)===1) : ?>
                                             <?php foreach($workerToUpdate as $worker) :?>
-                                                <input type="number" value="<?= $worker['hins'] ?>" name="hins" class="span1">
+                                                <input type="text" value="<?= $worker['hins'] ?>" name="hins" class="span1">
                                             <?php endforeach;?>
                                         <?php else : ?>
-                                            <input type="number" value="" name="hins" class="span1">
+                                            <input type="text" value="" name="hins" class="span1">
                                         <?php endif ; ?>
                                     </div>
                                 </div>
@@ -469,7 +469,7 @@
                                     <div class="controls">
                                         <?php if(sizeof($workerToUpdate)===1) : ?>
                                             <?php foreach($workerToUpdate as $worker) :?>
-                                                <input  type="checkbox"  name="dpl_pers"<?php if($worker['dpl_pers'] === 1) : ?> checked <?php endif ; ?>>
+                                                <input  type="checkbox"  name="dpl_pers"<?php if($worker['dpl_pers'] === "1") : ?> checked <?php endif ; ?> >
                                             <?php endforeach;?>
                                         <?php else : ?>
                                             <input name="dpl_pers" type="checkbox" >

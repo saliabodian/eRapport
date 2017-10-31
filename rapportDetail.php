@@ -200,6 +200,8 @@ if(!empty($_SESSION)){
                 header('Location: anomalieRh.php?success=' . urlencode('Modification effectuée avec succés'));
                 exit;
             }else{
+            //    var_dump($_POST['rapport_detail_id']);
+            //    exit;
                 Rapport::updateRapportDetail($_POST['rapport_detail_id'], $_POST['htot'], $_POST['hins'], $_POST['abs'],
                     $_POST['habs'], $dpl_pers,$_POST['km'], $_POST['remarque'], $chef_dequipe_updated,
                     $_POST['type_task'], $_POST['tasks'], $_POST['bat'], $_POST['axe'], $_POST['et'], $_POST['ht'],
@@ -292,6 +294,7 @@ if(!empty($_SESSION)){
                         $workerToUpdate[$rapport['id']]['ht6']= $rapport['ht6'];
                     }
                     if(in_array($rapport['interimaire_id'], $matriculeList)){
+                        $workerToUpdate[$rapport['id']]['rapport_detail_id']= $rapport['id'];
                         $workerToUpdate[$rapport['id']]['rapport_id']= $rapport['rapport_id'];
                         $workerToUpdate[$rapport['id']]['equipe']= $rapport['equipe'];
                         $workerToUpdate[$rapport['id']]['fullname']= $rapport['fullname'];
@@ -645,6 +648,8 @@ if(!empty($_SESSION)){
                     $workerType[] = 'Interimaire';
                 }
             }
+
+
 
             /*
              * Test de vérification du txpe de matrice Mix, Ouvrier uniquement ou Interimaire uniquement
@@ -1101,8 +1106,8 @@ if(!empty($_SESSION)){
 
         $listTache= Tache::getAll();
 
-        //var_dump($workerToUpdate);
-        //exit;
+        // var_dump($workerToUpdate);
+        // exit;
 
         // Gestion de la composition de la matrice si ce sont uniquement des ouvriers
         // ou si ce sont uniquement des intérimaires ou si c'est un mix

@@ -1121,10 +1121,12 @@ class Rapport extends DbObject{
                     WHERE rapport_detail_id = :rapportDetailId';
             $stmt = Config::getInstance()->getPDO()->prepare($sql);
             $stmt->bindValue(':rapportDetailId', $rapportDetail, \PDO::PARAM_INT );
+
+            // var_dump($stmt);
+
+            // exit;
             if($stmt->execute()=== false){
                 print_r($stmt->errorInfo());
-            }else{
-                $deleteStatus = true;
             }
 
 

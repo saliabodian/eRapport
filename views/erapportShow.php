@@ -442,11 +442,9 @@
         <hr>
         <form method="get" action="erapport.php">
             <div class="row-fluid span12 selfInline" >
-
                 <div class="control-group ">
-                Je confirme que les informations saisies sont correctes .
-
-                        <input type="checkbox" name="isValid">
+                    Je confirme que les informations saisies sont correctes .
+                    <input type="checkbox" name="isValid">
                 </div>
             </div>
             <div class="row-fluid" >
@@ -458,34 +456,37 @@
                         <input type="hidden" name="date_generation" value="<?= $_GET['date_generation'] ?>">
                         <input type="hidden" name="chantier_id" value="<?= $_GET['chantier_id'] ?>">
                         <input type="hidden" name="chantier_code" value="<?= $_GET['chantier_code'] ?>">
-
+                        <div class=" span4 btn-block"></div>
                         <?php if($_SESSION['post_id']==='1') :?>
                             <?php if($_GET['submitted'] === '1') :?>
-                                <button disabled style="margin-right: 3px ; margin-left: 3px" type="submit" class="span3 btn btn-warning" name="val" value="true">Valider</button>
+                                <button disabled style="margin-right: 3px ; margin-left: 3px" type="submit" class="span4 btn btn-warning" name="val" value="true">Valider</button>
                             <?php else : ?>
-                                <button style="margin-right: 3px ; margin-left: 3px" type="submit" class="span3 btn btn-warning" name="val" value="true">Valider</button>
+                                <button style="margin-right: 3px ; margin-left: 3px" type="submit" class="span4 btn btn-warning" name="val" value="true">Valider</button>
                             <?php endif ; ?>
                         <?php elseif($_SESSION['post_id']==='5') : ?>
                             <?php if($_GET['validated'] === '1') :?>
-                                <button disabled style="margin-right: 3px ; margin-left: 3px" type="submit" class="span3 btn btn-warning" name="val" value="true">Valider</button>
+                                <button disabled style="margin-right: 3px ; margin-left: 3px" type="submit" class="span4 btn btn-warning" name="val" value="true">Valider</button>
                             <?php else : ?>
-                                <button style="margin-right: 3px ; margin-left: 3px" type="submit" class="span3 btn btn-warning" name="val" value="true">Valider</button>
+                                <button style="margin-right: 3px ; margin-left: 3px" type="submit" class="span4 btn btn-warning" name="val" value="true">Valider</button>
                             <?php endif ; ?>
                         <?php else : ?>
-                            <button style="margin-right: 3px ; margin-left: 3px" type="submit" class="span3 btn btn-warning" name="val" value="true">Valider</button>
+                            <button style="margin-right: 3px ; margin-left: 3px" type="submit" class="span4 btn btn-warning" name="val" value="true">Valider</button>
                         <?php endif ; ?>
-
+                        <div class=" span4 btn-block"></div>
+                    </div>
+                    <div class="span12">
                         <?php if($_SESSION['post_id']=== '1'): ?>
-                            <a style="margin-right: 3px ; margin-left: 3px" href="erapport.php?rapport_id=<?= $_GET['rapport_id']?>&rapport_type=<?=$_GET['rapport_type']?>&chef_dequipe_id=<?=$_GET['chef_dequipe_id']?>&chef_dequipe_matricule=<?= $_GET['chef_dequipe_matricule']?>&date_generation=<?= $_GET['date_generation'] ?>&chantier_id=<?= $_GET['chantier_id']?>&chantier_code=<?= $_GET['chantier_code']?>&inval=true" class="span3 btn btn-primary" disabled>Invalider le rapport</a>
+                            <a style="margin-top: 5px ; margin-right: 3px ; margin-left: 3px" href="erapport.php?rapport_id=<?= $_GET['rapport_id']?>&rapport_type=<?=$_GET['rapport_type']?>&chef_dequipe_id=<?=$_GET['chef_dequipe_id']?>&chef_dequipe_matricule=<?= $_GET['chef_dequipe_matricule']?>&date_generation=<?= $_GET['date_generation'] ?>&chantier_id=<?= $_GET['chantier_id']?>&chantier_code=<?= $_GET['chantier_code']?>&inval=true" class="span3 btn btn-primary" disabled>Invalider le rapport</a>
                         <?php else : ?>
-                            <a style="margin-right: 3px ; margin-left: 3px" href="erapport.php?rapport_id=<?= $_GET['rapport_id']?>&rapport_type=<?=$_GET['rapport_type']?>&chef_dequipe_id=<?=$_GET['chef_dequipe_id']?>&chef_dequipe_matricule=<?= $_GET['chef_dequipe_matricule']?>&date_generation=<?= $_GET['date_generation'] ?>&chantier_id=<?= $_GET['chantier_id']?>&chantier_code=<?= $_GET['chantier_code']?>&inval=true" class="span3 btn btn-primary">Invalider le rapport</a>
+                            <a style="margin-top: 5px ; margin-right: 3px ; margin-left: 3px" href="erapport.php?rapport_id=<?= $_GET['rapport_id']?>&rapport_type=<?=$_GET['rapport_type']?>&chef_dequipe_id=<?=$_GET['chef_dequipe_id']?>&chef_dequipe_matricule=<?= $_GET['chef_dequipe_matricule']?>&date_generation=<?= $_GET['date_generation'] ?>&chantier_id=<?= $_GET['chantier_id']?>&chantier_code=<?= $_GET['chantier_code']?>&inval=true" class="span3 btn btn-primary">Invalider le rapport</a>
                         <?php endif ; ?>
-                        <a style="margin-right: 3px ; margin-left: 3px" href="?rapport_id=<?= $_GET['rapport_id']?>&rapport_type=<?=$_GET['rapport_type']?>&chef_dequipe_id=<?=$_GET['chef_dequipe_id']?>&chef_dequipe_matricule=<?= $_GET['chef_dequipe_matricule']?>&date_generation=<?= $_GET['date_generation'] ?>&chantier_id=<?= $_GET['chantier_id']?>&chantier_code=<?= $_GET['chantier_code']?>&reg=true" class="span3 btn btn-info">Regénérer le rapport</a>
+                        <a style="margin-top: 5px ; margin-right: 3px ; margin-left: 3px" href="?rapport_id=<?= $_GET['rapport_id']?>&rapport_type=<?=$_GET['rapport_type']?>&chef_dequipe_id=<?=$_GET['chef_dequipe_id']?>&chef_dequipe_matricule=<?= $_GET['chef_dequipe_matricule']?>&date_generation=<?= $_GET['date_generation'] ?>&chantier_id=<?= $_GET['chantier_id']?>&chantier_code=<?= $_GET['chantier_code']?>&reg=true" class="span3 btn btn-info">Regénérer le rapport</a>
                         <?php if($_SESSION['post_id']=== '1'): ?>
-                        <a style="margin-right: 3px ; margin-left: 3px" href="erapport.php?rapport_id=<?= $_GET['rapport_id']?>&rapport_type=<?=$_GET['rapport_type']?>&chef_dequipe_id=<?=$_GET['chef_dequipe_id']?>&chef_dequipe_matricule=<?= $_GET['chef_dequipe_matricule']?>&date_generation=<?= $_GET['date_generation'] ?>&chantier_id=<?= $_GET['chantier_id']?>&chantier_code=<?= $_GET['chantier_code']?>&sup=true" class="span3 btn btn-danger" disabled>Supprimer le rapport</a>
+                            <a style="margin-top: 5px ; margin-right: 3px ; margin-left: 3px" href="erapport.php?rapport_id=<?= $_GET['rapport_id']?>&rapport_type=<?=$_GET['rapport_type']?>&chef_dequipe_id=<?=$_GET['chef_dequipe_id']?>&chef_dequipe_matricule=<?= $_GET['chef_dequipe_matricule']?>&date_generation=<?= $_GET['date_generation'] ?>&chantier_id=<?= $_GET['chantier_id']?>&chantier_code=<?= $_GET['chantier_code']?>&sup=true" class="span3 btn btn-danger" disabled>Supprimer le rapport</a>
                         <?php else : ?>
-                            <a style="margin-right: 3px ; margin-left: 3px" href="erapport.php?rapport_id=<?= $_GET['rapport_id']?>&rapport_type=<?=$_GET['rapport_type']?>&chef_dequipe_id=<?=$_GET['chef_dequipe_id']?>&chef_dequipe_matricule=<?= $_GET['chef_dequipe_matricule']?>&date_generation=<?= $_GET['date_generation'] ?>&chantier_id=<?= $_GET['chantier_id']?>&chantier_code=<?= $_GET['chantier_code']?>&sup=true" class="span3 btn btn-danger">Supprimer le rapport</a>
+                            <a style="margin-top: 5px ;margin-right: 3px ; margin-left: 3px" href="erapport.php?rapport_id=<?= $_GET['rapport_id']?>&rapport_type=<?=$_GET['rapport_type']?>&chef_dequipe_id=<?=$_GET['chef_dequipe_id']?>&chef_dequipe_matricule=<?= $_GET['chef_dequipe_matricule']?>&date_generation=<?= $_GET['date_generation'] ?>&chantier_id=<?= $_GET['chantier_id']?>&chantier_code=<?= $_GET['chantier_code']?>&sup=true" class="span3 btn btn-danger">Supprimer le rapport</a>
                         <?php endif ; ?>
+                        <a style="margin-top: 5px ; margin-right: 3px ; margin-left: 3px" href="erapport.php?" class="span3 btn btn-inverse">Retour</a>
                     </div>
             </div>
         </form>
