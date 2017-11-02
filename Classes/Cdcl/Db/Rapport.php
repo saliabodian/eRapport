@@ -754,16 +754,19 @@ class Rapport extends DbObject{
                             `rapport_id`,
                             `equipe`,
                             `interimaire_id`,
+                            `htot`,
                             `fullname`)
                             VALUES(
                             :rapport_id,
                             :equipe,
                             :interimaire_id,
+                            :htot,
                             :fullname)';
             $stmt=Config::getInstance()->getPDO()->prepare($sql);
             $stmt->bindValue(':rapport_id',$rapport['id'], \PDO::PARAM_INT);
             $stmt->bindValue(':equipe',$rapport['equipe'], \PDO::PARAM_INT);
             $stmt->bindValue(':interimaire_id',$interimaire['matricule'], \PDO::PARAM_INT);
+            $stmt->bindValue(':htot',8, \PDO::PARAM_INT);
             $stmt->bindValue(':fullname',$interimaire['lastname'].' '.$interimaire['firstname'], \PDO::PARAM_STR);
             if($stmt->execute()===false){
                 print_r($stmt->errorInfo());
@@ -2320,5 +2323,47 @@ class Rapport extends DbObject{
         }
 
         return $absenceList;
+    }
+
+    public static function updateHtotInterimaire($interimaire)
+    {
+        $sql='UPDATE rapport_detail set htot = (ht1+ht2+ht3+ht4+ht5+ht6) WHERE interimaire_id=:interimaire_id';
+        $stmt=Config::getInstance()->getPDO()->prepare($sql);
+        $stmt->bindValue(':interimaire_id', $interimaire, \PDO::PARAM_INT);
+        if ($stmt->execute() === false) {
+            print_r($stmt->errorInfo());
+        }
+
+    }
+
+    public static function getRapportInterimaire($equipeId, $date, $chantier){
+        $sql = 'SELECT * FROM rapport WHERE equipe=:equipeId AND rapport_type=:rapport_type AND date=:date AND chantier=:chantier';
+        $stmt=Config::getInstance()->getPDO()->prepare($sql);
+        $stmt->bindValue(':equipeId',$equipeId,\PDO::PARAM_INT);
+        $stmt->bindValue(':rapport_type','NOYAU',\PDO::PARAM_STR);
+        $stmt->bindValue(':date',$date,\PDO::PARAM_INT);
+        $stmt->bindValue(':chantier',$chantier,\PDO::PARAM_INT);
+        if($stmt->execute() === false){
+            print_r($stmt->errorInfo());
+        }else{
+            $rapport = $stmt->fetch();
+        }
+
+
+        $sql = 'SELECT rapport_detail.*,rapport.date,
+                    rapport.chef_dequipe_matricule,
+                    rapport.chantier
+                FROM rapport_detail, rapport
+                WHERE rapport_detail.rapport_id=:rapport_id
+                AND rapport.id = rapport_detail.rapport_id
+                AND rapport_detail.interimaire_id is not null';
+        $stmt = Config::getInstance()->getPDO()->prepare($sql);
+        $stmt->bindValue(':rapport_id', $rapport['id'], \PDO::PARAM_INT);
+        if($stmt->execute()===false){
+            print_r($stmt->errorInfo());
+        }else{
+            $rapportDetail= $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        }
+        return $rapportDetail;
     }
 }
