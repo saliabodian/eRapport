@@ -177,7 +177,13 @@ if(!empty($_SESSION)){
 
         $rjHorsNoyauExist = Rapport::checkChefDEquipeRapportHorsNoyauExist($dateRapport, $chantierId);
 
+        $rjAbsentHorsNoyauExist = Rapport::checkrapportAbsentHorsNoyauExist($dateRapport, $chantierId);
+
         $rjAbsentNoyauExist = Rapport::checkRapportAbsentExist($dateRapport, $chantierId, $noyau);
+
+     //   var_dump($rjAbsentHorsNoyauExist);
+
+     //   exit;
 
         if($rjAbsentNoyauExist===true || $rjNoyauExist === true){
             $conf->addError('Le rapport a déjà été généré.');
@@ -186,6 +192,11 @@ if(!empty($_SESSION)){
 
 
         if($form){
+
+        //    echo "je suis la";
+
+        //    exit;
+
             // var_dump(new User($chefDEquipeId));
             // exit;
             $noyauObject = new Rapport(
@@ -208,11 +219,9 @@ if(!empty($_SESSION)){
             $noyauList = Dsk::getTeamPointing($matricule, $chantierCode, $dateRapport);
             $interimaireList = Rapport::getInterimaireByTeamSiteAndDate($dateRapport, $chefDEquipeId, $chantierId);
 
-            $absentHorsNoyauList = Dsk::getAllHorsNoyauAbsence($matricule,$dateRapport, $chantierCode);
+        //    var_dump($interimaireList);
 
-            // var_dump($interimaireList);
-
-            // exit;
+        //    exit;
 
             // Même si le chef d'équipe il n'existe pas de membre de son équipe (ouvrier + interimaire)
             // Je génére une ligne pour le chef d'équipe connecté ou celui pour lequel on veut générer le rapport
@@ -226,12 +235,11 @@ if(!empty($_SESSION)){
                 $rapportJournalierNoyau = Rapport::saveRapportDetail($dateRapport, $chantierId, $matricule, $noyauList);
             }
 
-
             if(!empty($interimaireList)){
                 $rapportJournalierInterimaire = Rapport::saveRapportDetailInterimaire($dateRapport, $chantierId, $matricule, $interimaireList);
             }
 
-            // Génération du rapport HORS NOYAU pour tous les chefs d'équipe.
+            // Génération des rapports HORSNOYAU et ABSENTHORSNOYAU pour tous les chefs d'équipe.
             // NB : ce rapport n'est généré qu'une seule fois quelque soit le chef d'équipe
             // C'est le premier chef d'équipe ou celui pour lequel on génére un rapport
             // Qui entraine la génération du HORS NOYAU
@@ -246,14 +254,20 @@ if(!empty($_SESSION)){
             }
 
 
+            if($rjAbsentHorsNoyauExist === false){
+                $absentHorsNoyauList = Dsk::getAllHorsNoyauAbsence($matricule,$dateRapport, $chantierCode);
+            //    var_dump($absentHorsNoyauList);
+            //    exit;
+                if(!empty($absentHorsNoyauList)){
+                    $noyauObject->saveDBAbsentHorsNoyau();
+                    $rapportJournalierAbsentHorsNoyau = Rapport::saveRapportDetailAbsentHorsNoyau($dateRapport, $chantierId, $absentHorsNoyauList);
+                }
+            }
+
             // Génération d'un rapport pour les ouvriers absents appartenant au chef d'équipe connecté
 
             $absentList = Dsk::getAllNoyauAbsence($matricule, $dateRapport);
-           //  var_dump($absentHorsNoyauList);
-
             // var_dump($absentList);
-
-            // exit;
 
             if(!empty($absentList)){
                 $noyauObject->saveDBAbsentDuNoyau();

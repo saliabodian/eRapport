@@ -631,6 +631,140 @@ if(!empty($_SESSION)){
                 }
             }
 
+            if($_POST["rapport_type"]==='ABSENTHORSNOYAU'){
+                $rapportAbsentHorsNoyau = Rapport::getRapportAbsentHorsNoyau($_POST["date_generation"], $_POST["chantier_id"]);
+                foreach($rapportAbsentHorsNoyau as $rapport){
+                    if(in_array($rapport['ouvrier_id'], $matriculeList)){
+                        $workerToUpdate[$rapport['id']]['rapport_detail_id']= $rapport['id'];
+                        $workerToUpdate[$rapport['id']]['rapport_id']= $rapport['rapport_id'];
+                        $workerToUpdate[$rapport['id']]['equipe']= $rapport['equipe'];
+                        $workerToUpdate[$rapport['id']]['fullname']= $rapport['fullname'];
+                        $workerToUpdate[$rapport['id']]['is_chef_dequipe']= $rapport['is_chef_dequipe'];
+                        $workerToUpdate[$rapport['id']]['ouvrier_id']= $rapport['ouvrier_id'];
+                        $workerToUpdate[$rapport['id']]['interimaire_id']= $rapport['interimaire_id'];
+                        $workerToUpdate[$rapport['id']]['htot']= $rapport['htot'];
+                        $workerToUpdate[$rapport['id']]['hins']= $rapport['hins'];
+                        $workerToUpdate[$rapport['id']]['abs']= $rapport['abs'];
+                        $workerToUpdate[$rapport['id']]['habs']= $rapport['habs'];
+                        $workerToUpdate[$rapport['id']]['dpl_pers']= $rapport['dpl_pers'];
+                        $workerToUpdate[$rapport['id']]['km']= $rapport['km'];
+                        $workerToUpdate[$rapport['id']]['htot_calc']= $rapport['htot_calc'];
+                        $workerToUpdate[$rapport['id']]['remarque']= $rapport['remarque'];
+                        $workerToUpdate[$rapport['id']]['filled']= $rapport['filled'];
+                        $workerToUpdate[$rapport['id']]['submitted']= $rapport['submitted'];
+                        $workerToUpdate[$rapport['id']]['validated']= $rapport['validated'];
+                        $workerToUpdate[$rapport['id']]['pointed']= $rapport['pointed'];
+                        $workerToUpdate[$rapport['id']]['created']= $rapport['created'];
+                        $workerToUpdate[$rapport['id']]['deleted']= $rapport['deleted'];
+                        $workerToUpdate[$rapport['id']]['chef_dequipe_updated']= $rapport['chef_dequipe_updated'];
+                        $workerToUpdate[$rapport['id']]['motif_abs']= $rapport['motif_abs'];
+                        $workerToUpdate[$rapport['id']]['date']= $rapport['date'];
+                        $workerToUpdate[$rapport['id']]['chef_dequipe_matricule']= $rapport['chef_dequipe_matricule'];
+                        $workerToUpdate[$rapport['id']]['chantier']= $rapport['chantier'];
+                        $workerToUpdate[$rapport['id']]['type_task_id_1']= $rapport['type_task_id_1'];
+                        $workerToUpdate[$rapport['id']]['task_id_1']= $rapport['task_id_1'];
+                        $workerToUpdate[$rapport['id']]['bat_1']= $rapport['bat_1'];
+                        $workerToUpdate[$rapport['id']]['axe_1']= $rapport['axe_1'];
+                        $workerToUpdate[$rapport['id']]['et_1']= $rapport['et_1'];
+                        $workerToUpdate[$rapport['id']]['ht1']= $rapport['ht1'];
+                        $workerToUpdate[$rapport['id']]['type_task_id_2']= $rapport['type_task_id_2'];
+                        $workerToUpdate[$rapport['id']]['task_id_2']= $rapport['task_id_2'];
+                        $workerToUpdate[$rapport['id']]['bat_2']= $rapport['bat_2'];
+                        $workerToUpdate[$rapport['id']]['axe_2']= $rapport['axe_2'];
+                        $workerToUpdate[$rapport['id']]['et_2']= $rapport['et_2'];
+                        $workerToUpdate[$rapport['id']]['ht2']= $rapport['ht2'];
+                        $workerToUpdate[$rapport['id']]['type_task_id_3']= $rapport['type_task_id_3'];
+                        $workerToUpdate[$rapport['id']]['task_id_3']= $rapport['task_id_3'];
+                        $workerToUpdate[$rapport['id']]['bat_3']= $rapport['bat_3'];
+                        $workerToUpdate[$rapport['id']]['axe_3']= $rapport['axe_3'];
+                        $workerToUpdate[$rapport['id']]['et_3']= $rapport['et_3'];
+                        $workerToUpdate[$rapport['id']]['ht3']= $rapport['ht3'];
+                        $workerToUpdate[$rapport['id']]['type_task_id_4']= $rapport['type_task_id_4'];
+                        $workerToUpdate[$rapport['id']]['task_id_4']= $rapport['task_id_4'];
+                        $workerToUpdate[$rapport['id']]['bat_4']= $rapport['bat_4'];
+                        $workerToUpdate[$rapport['id']]['axe_4']= $rapport['axe_4'];
+                        $workerToUpdate[$rapport['id']]['et_4']= $rapport['et_4'];
+                        $workerToUpdate[$rapport['id']]['ht4']= $rapport['ht4'];
+                        $workerToUpdate[$rapport['id']]['type_task_id_5']= $rapport['type_task_id_5'];
+                        $workerToUpdate[$rapport['id']]['task_id_5']= $rapport['task_id_5'];
+                        $workerToUpdate[$rapport['id']]['bat_5']= $rapport['bat_5'];
+                        $workerToUpdate[$rapport['id']]['axe_5']= $rapport['axe_5'];
+                        $workerToUpdate[$rapport['id']]['et_5']= $rapport['et_5'];
+                        $workerToUpdate[$rapport['id']]['ht5']= $rapport['ht5'];
+                        $workerToUpdate[$rapport['id']]['type_task_id_6']= $rapport['type_task_id_6'];
+                        $workerToUpdate[$rapport['id']]['task_id_6']= $rapport['task_id_6'];
+                        $workerToUpdate[$rapport['id']]['bat_6']= $rapport['bat_6'];
+                        $workerToUpdate[$rapport['id']]['axe_6']= $rapport['axe_6'];
+                        $workerToUpdate[$rapport['id']]['et_6']= $rapport['et_6'];
+                        $workerToUpdate[$rapport['id']]['ht6']= $rapport['ht6'];
+                    }
+                    if(in_array($rapport['interimaire_id'], $matriculeList)){
+                        $workerToUpdate[$rapport['id']]['rapport_detail_id']= $rapport['id'];
+                        $workerToUpdate[$rapport['id']]['rapport_id']= $rapport['rapport_id'];
+                        $workerToUpdate[$rapport['id']]['equipe']= $rapport['equipe'];
+                        $workerToUpdate[$rapport['id']]['fullname']= $rapport['fullname'];
+                        $workerToUpdate[$rapport['id']]['is_chef_dequipe']= $rapport['is_chef_dequipe'];
+                        $workerToUpdate[$rapport['id']]['ouvrier_id']= $rapport['ouvrier_id'];
+                        $workerToUpdate[$rapport['id']]['interimaire_id']= $rapport['interimaire_id'];
+                        $workerToUpdate[$rapport['id']]['htot']= $rapport['htot'];
+                        $workerToUpdate[$rapport['id']]['hins']= $rapport['hins'];
+                        $workerToUpdate[$rapport['id']]['abs']= $rapport['abs'];
+                        $workerToUpdate[$rapport['id']]['habs']= $rapport['habs'];
+                        $workerToUpdate[$rapport['id']]['dpl_pers']= $rapport['dpl_pers'];
+                        $workerToUpdate[$rapport['id']]['km']= $rapport['km'];
+                        $workerToUpdate[$rapport['id']]['htot_calc']= $rapport['htot_calc'];
+                        $workerToUpdate[$rapport['id']]['remarque']= $rapport['remarque'];
+                        $workerToUpdate[$rapport['id']]['filled']= $rapport['filled'];
+                        $workerToUpdate[$rapport['id']]['submitted']= $rapport['submitted'];
+                        $workerToUpdate[$rapport['id']]['validated']= $rapport['validated'];
+                        $workerToUpdate[$rapport['id']]['pointed']= $rapport['pointed'];
+                        $workerToUpdate[$rapport['id']]['created']= $rapport['created'];
+                        $workerToUpdate[$rapport['id']]['deleted']= $rapport['deleted'];
+                        $workerToUpdate[$rapport['id']]['chef_dequipe_updated']= $rapport['chef_dequipe_updated'];
+                        $workerToUpdate[$rapport['id']]['motif_abs']= $rapport['motif_abs'];
+                        $workerToUpdate[$rapport['id']]['date']= $rapport['date'];
+                        $workerToUpdate[$rapport['id']]['chef_dequipe_matricule']= $rapport['chef_dequipe_matricule'];
+                        $workerToUpdate[$rapport['id']]['chantier']= $rapport['chantier'];
+                        $workerToUpdate[$rapport['id']]['type_task_id_1']= $rapport['type_task_id_1'];
+                        $workerToUpdate[$rapport['id']]['task_id_1']= $rapport['task_id_1'];
+                        $workerToUpdate[$rapport['id']]['bat_1']= $rapport['bat_1'];
+                        $workerToUpdate[$rapport['id']]['axe_1']= $rapport['axe_1'];
+                        $workerToUpdate[$rapport['id']]['et_1']= $rapport['et_1'];
+                        $workerToUpdate[$rapport['id']]['ht1']= $rapport['ht1'];
+                        $workerToUpdate[$rapport['id']]['type_task_id_2']= $rapport['type_task_id_2'];
+                        $workerToUpdate[$rapport['id']]['task_id_2']= $rapport['task_id_2'];
+                        $workerToUpdate[$rapport['id']]['bat_2']= $rapport['bat_2'];
+                        $workerToUpdate[$rapport['id']]['axe_2']= $rapport['axe_2'];
+                        $workerToUpdate[$rapport['id']]['et_2']= $rapport['et_2'];
+                        $workerToUpdate[$rapport['id']]['ht2']= $rapport['ht2'];
+                        $workerToUpdate[$rapport['id']]['type_task_id_3']= $rapport['type_task_id_3'];
+                        $workerToUpdate[$rapport['id']]['task_id_3']= $rapport['task_id_3'];
+                        $workerToUpdate[$rapport['id']]['bat_3']= $rapport['bat_3'];
+                        $workerToUpdate[$rapport['id']]['axe_3']= $rapport['axe_3'];
+                        $workerToUpdate[$rapport['id']]['et_3']= $rapport['et_3'];
+                        $workerToUpdate[$rapport['id']]['ht3']= $rapport['ht3'];
+                        $workerToUpdate[$rapport['id']]['type_task_id_4']= $rapport['type_task_id_4'];
+                        $workerToUpdate[$rapport['id']]['task_id_4']= $rapport['task_id_4'];
+                        $workerToUpdate[$rapport['id']]['bat_4']= $rapport['bat_4'];
+                        $workerToUpdate[$rapport['id']]['axe_4']= $rapport['axe_4'];
+                        $workerToUpdate[$rapport['id']]['et_4']= $rapport['et_4'];
+                        $workerToUpdate[$rapport['id']]['ht4']= $rapport['ht4'];
+                        $workerToUpdate[$rapport['id']]['type_task_id_5']= $rapport['type_task_id_5'];
+                        $workerToUpdate[$rapport['id']]['task_id_5']= $rapport['task_id_5'];
+                        $workerToUpdate[$rapport['id']]['bat_5']= $rapport['bat_5'];
+                        $workerToUpdate[$rapport['id']]['axe_5']= $rapport['axe_5'];
+                        $workerToUpdate[$rapport['id']]['et_5']= $rapport['et_5'];
+                        $workerToUpdate[$rapport['id']]['ht5']= $rapport['ht5'];
+                        $workerToUpdate[$rapport['id']]['type_task_id_6']= $rapport['type_task_id_6'];
+                        $workerToUpdate[$rapport['id']]['task_id_6']= $rapport['task_id_6'];
+                        $workerToUpdate[$rapport['id']]['bat_6']= $rapport['bat_6'];
+                        $workerToUpdate[$rapport['id']]['axe_6']= $rapport['axe_6'];
+                        $workerToUpdate[$rapport['id']]['et_6']= $rapport['et_6'];
+                        $workerToUpdate[$rapport['id']]['ht6']= $rapport['ht6'];
+                    }
+                }
+            }
+
 
         /*    foreach($workerToUpdate as $worker){
                 $workerTaskList = Rapport::getWorkerNoyauTask($worker['rapport_detail_id']);
@@ -968,6 +1102,140 @@ if(!empty($_SESSION)){
         if($_POST["rapport_type"]==='HORSNOYAU'){
             $rapportHorsNoyau = Rapport::getRapportHorsNoyau($_POST["date_generation"], $_POST["chantier_id"]);
             foreach($rapportHorsNoyau as $rapport){
+                if(in_array($rapport['ouvrier_id'], $matriculeList)){
+                    $workerToUpdate[$rapport['id']]['rapport_detail_id']= $rapport['id'];
+                    $workerToUpdate[$rapport['id']]['rapport_id']= $rapport['rapport_id'];
+                    $workerToUpdate[$rapport['id']]['equipe']= $rapport['equipe'];
+                    $workerToUpdate[$rapport['id']]['fullname']= $rapport['fullname'];
+                    $workerToUpdate[$rapport['id']]['is_chef_dequipe']= $rapport['is_chef_dequipe'];
+                    $workerToUpdate[$rapport['id']]['ouvrier_id']= $rapport['ouvrier_id'];
+                    $workerToUpdate[$rapport['id']]['interimaire_id']= $rapport['interimaire_id'];
+                    $workerToUpdate[$rapport['id']]['htot']= $rapport['htot'];
+                    $workerToUpdate[$rapport['id']]['hins']= $rapport['hins'];
+                    $workerToUpdate[$rapport['id']]['abs']= $rapport['abs'];
+                    $workerToUpdate[$rapport['id']]['habs']= $rapport['habs'];
+                    $workerToUpdate[$rapport['id']]['dpl_pers']= $rapport['dpl_pers'];
+                    $workerToUpdate[$rapport['id']]['km']= $rapport['km'];
+                    $workerToUpdate[$rapport['id']]['htot_calc']= $rapport['htot_calc'];
+                    $workerToUpdate[$rapport['id']]['remarque']= $rapport['remarque'];
+                    $workerToUpdate[$rapport['id']]['filled']= $rapport['filled'];
+                    $workerToUpdate[$rapport['id']]['submitted']= $rapport['submitted'];
+                    $workerToUpdate[$rapport['id']]['validated']= $rapport['validated'];
+                    $workerToUpdate[$rapport['id']]['pointed']= $rapport['pointed'];
+                    $workerToUpdate[$rapport['id']]['created']= $rapport['created'];
+                    $workerToUpdate[$rapport['id']]['deleted']= $rapport['deleted'];
+                    $workerToUpdate[$rapport['id']]['chef_dequipe_updated']= $rapport['chef_dequipe_updated'];
+                    $workerToUpdate[$rapport['id']]['motif_abs']= $rapport['motif_abs'];
+                    $workerToUpdate[$rapport['id']]['date']= $rapport['date'];
+                    $workerToUpdate[$rapport['id']]['chef_dequipe_matricule']= $rapport['chef_dequipe_matricule'];
+                    $workerToUpdate[$rapport['id']]['chantier']= $rapport['chantier'];
+                    $workerToUpdate[$rapport['id']]['type_task_id_1']= $rapport['type_task_id_1'];
+                    $workerToUpdate[$rapport['id']]['task_id_1']= $rapport['task_id_1'];
+                    $workerToUpdate[$rapport['id']]['bat_1']= $rapport['bat_1'];
+                    $workerToUpdate[$rapport['id']]['axe_1']= $rapport['axe_1'];
+                    $workerToUpdate[$rapport['id']]['et_1']= $rapport['et_1'];
+                    $workerToUpdate[$rapport['id']]['ht1']= $rapport['ht1'];
+                    $workerToUpdate[$rapport['id']]['type_task_id_2']= $rapport['type_task_id_2'];
+                    $workerToUpdate[$rapport['id']]['task_id_2']= $rapport['task_id_2'];
+                    $workerToUpdate[$rapport['id']]['bat_2']= $rapport['bat_2'];
+                    $workerToUpdate[$rapport['id']]['axe_2']= $rapport['axe_2'];
+                    $workerToUpdate[$rapport['id']]['et_2']= $rapport['et_2'];
+                    $workerToUpdate[$rapport['id']]['ht2']= $rapport['ht2'];
+                    $workerToUpdate[$rapport['id']]['type_task_id_3']= $rapport['type_task_id_3'];
+                    $workerToUpdate[$rapport['id']]['task_id_3']= $rapport['task_id_3'];
+                    $workerToUpdate[$rapport['id']]['bat_3']= $rapport['bat_3'];
+                    $workerToUpdate[$rapport['id']]['axe_3']= $rapport['axe_3'];
+                    $workerToUpdate[$rapport['id']]['et_3']= $rapport['et_3'];
+                    $workerToUpdate[$rapport['id']]['ht3']= $rapport['ht3'];
+                    $workerToUpdate[$rapport['id']]['type_task_id_4']= $rapport['type_task_id_4'];
+                    $workerToUpdate[$rapport['id']]['task_id_4']= $rapport['task_id_4'];
+                    $workerToUpdate[$rapport['id']]['bat_4']= $rapport['bat_4'];
+                    $workerToUpdate[$rapport['id']]['axe_4']= $rapport['axe_4'];
+                    $workerToUpdate[$rapport['id']]['et_4']= $rapport['et_4'];
+                    $workerToUpdate[$rapport['id']]['ht4']= $rapport['ht4'];
+                    $workerToUpdate[$rapport['id']]['type_task_id_5']= $rapport['type_task_id_5'];
+                    $workerToUpdate[$rapport['id']]['task_id_5']= $rapport['task_id_5'];
+                    $workerToUpdate[$rapport['id']]['bat_5']= $rapport['bat_5'];
+                    $workerToUpdate[$rapport['id']]['axe_5']= $rapport['axe_5'];
+                    $workerToUpdate[$rapport['id']]['et_5']= $rapport['et_5'];
+                    $workerToUpdate[$rapport['id']]['ht5']= $rapport['ht5'];
+                    $workerToUpdate[$rapport['id']]['type_task_id_6']= $rapport['type_task_id_6'];
+                    $workerToUpdate[$rapport['id']]['task_id_6']= $rapport['task_id_6'];
+                    $workerToUpdate[$rapport['id']]['bat_6']= $rapport['bat_6'];
+                    $workerToUpdate[$rapport['id']]['axe_6']= $rapport['axe_6'];
+                    $workerToUpdate[$rapport['id']]['et_6']= $rapport['et_6'];
+                    $workerToUpdate[$rapport['id']]['ht6']= $rapport['ht6'];
+                }
+                if(in_array($rapport['interimaire_id'], $matriculeList)){
+                    $workerToUpdate[$rapport['id']]['rapport_detail_id']= $rapport['id'];
+                    $workerToUpdate[$rapport['id']]['rapport_id']= $rapport['rapport_id'];
+                    $workerToUpdate[$rapport['id']]['equipe']= $rapport['equipe'];
+                    $workerToUpdate[$rapport['id']]['fullname']= $rapport['fullname'];
+                    $workerToUpdate[$rapport['id']]['is_chef_dequipe']= $rapport['is_chef_dequipe'];
+                    $workerToUpdate[$rapport['id']]['ouvrier_id']= $rapport['ouvrier_id'];
+                    $workerToUpdate[$rapport['id']]['interimaire_id']= $rapport['interimaire_id'];
+                    $workerToUpdate[$rapport['id']]['htot']= $rapport['htot'];
+                    $workerToUpdate[$rapport['id']]['hins']= $rapport['hins'];
+                    $workerToUpdate[$rapport['id']]['abs']= $rapport['abs'];
+                    $workerToUpdate[$rapport['id']]['habs']= $rapport['habs'];
+                    $workerToUpdate[$rapport['id']]['dpl_pers']= $rapport['dpl_pers'];
+                    $workerToUpdate[$rapport['id']]['km']= $rapport['km'];
+                    $workerToUpdate[$rapport['id']]['htot_calc']= $rapport['htot_calc'];
+                    $workerToUpdate[$rapport['id']]['remarque']= $rapport['remarque'];
+                    $workerToUpdate[$rapport['id']]['filled']= $rapport['filled'];
+                    $workerToUpdate[$rapport['id']]['submitted']= $rapport['submitted'];
+                    $workerToUpdate[$rapport['id']]['validated']= $rapport['validated'];
+                    $workerToUpdate[$rapport['id']]['pointed']= $rapport['pointed'];
+                    $workerToUpdate[$rapport['id']]['created']= $rapport['created'];
+                    $workerToUpdate[$rapport['id']]['deleted']= $rapport['deleted'];
+                    $workerToUpdate[$rapport['id']]['chef_dequipe_updated']= $rapport['chef_dequipe_updated'];
+                    $workerToUpdate[$rapport['id']]['motif_abs']= $rapport['motif_abs'];
+                    $workerToUpdate[$rapport['id']]['date']= $rapport['date'];
+                    $workerToUpdate[$rapport['id']]['chef_dequipe_matricule']= $rapport['chef_dequipe_matricule'];
+                    $workerToUpdate[$rapport['id']]['chantier']= $rapport['chantier'];
+                    $workerToUpdate[$rapport['id']]['type_task_id_1']= $rapport['type_task_id_1'];
+                    $workerToUpdate[$rapport['id']]['task_id_1']= $rapport['task_id_1'];
+                    $workerToUpdate[$rapport['id']]['bat_1']= $rapport['bat_1'];
+                    $workerToUpdate[$rapport['id']]['axe_1']= $rapport['axe_1'];
+                    $workerToUpdate[$rapport['id']]['et_1']= $rapport['et_1'];
+                    $workerToUpdate[$rapport['id']]['ht1']= $rapport['ht1'];
+                    $workerToUpdate[$rapport['id']]['type_task_id_2']= $rapport['type_task_id_2'];
+                    $workerToUpdate[$rapport['id']]['task_id_2']= $rapport['task_id_2'];
+                    $workerToUpdate[$rapport['id']]['bat_2']= $rapport['bat_2'];
+                    $workerToUpdate[$rapport['id']]['axe_2']= $rapport['axe_2'];
+                    $workerToUpdate[$rapport['id']]['et_2']= $rapport['et_2'];
+                    $workerToUpdate[$rapport['id']]['ht2']= $rapport['ht2'];
+                    $workerToUpdate[$rapport['id']]['type_task_id_3']= $rapport['type_task_id_3'];
+                    $workerToUpdate[$rapport['id']]['task_id_3']= $rapport['task_id_3'];
+                    $workerToUpdate[$rapport['id']]['bat_3']= $rapport['bat_3'];
+                    $workerToUpdate[$rapport['id']]['axe_3']= $rapport['axe_3'];
+                    $workerToUpdate[$rapport['id']]['et_3']= $rapport['et_3'];
+                    $workerToUpdate[$rapport['id']]['ht3']= $rapport['ht3'];
+                    $workerToUpdate[$rapport['id']]['type_task_id_4']= $rapport['type_task_id_4'];
+                    $workerToUpdate[$rapport['id']]['task_id_4']= $rapport['task_id_4'];
+                    $workerToUpdate[$rapport['id']]['bat_4']= $rapport['bat_4'];
+                    $workerToUpdate[$rapport['id']]['axe_4']= $rapport['axe_4'];
+                    $workerToUpdate[$rapport['id']]['et_4']= $rapport['et_4'];
+                    $workerToUpdate[$rapport['id']]['ht4']= $rapport['ht4'];
+                    $workerToUpdate[$rapport['id']]['type_task_id_5']= $rapport['type_task_id_5'];
+                    $workerToUpdate[$rapport['id']]['task_id_5']= $rapport['task_id_5'];
+                    $workerToUpdate[$rapport['id']]['bat_5']= $rapport['bat_5'];
+                    $workerToUpdate[$rapport['id']]['axe_5']= $rapport['axe_5'];
+                    $workerToUpdate[$rapport['id']]['et_5']= $rapport['et_5'];
+                    $workerToUpdate[$rapport['id']]['ht5']= $rapport['ht5'];
+                    $workerToUpdate[$rapport['id']]['type_task_id_6']= $rapport['type_task_id_6'];
+                    $workerToUpdate[$rapport['id']]['task_id_6']= $rapport['task_id_6'];
+                    $workerToUpdate[$rapport['id']]['bat_6']= $rapport['bat_6'];
+                    $workerToUpdate[$rapport['id']]['axe_6']= $rapport['axe_6'];
+                    $workerToUpdate[$rapport['id']]['et_6']= $rapport['et_6'];
+                    $workerToUpdate[$rapport['id']]['ht6']= $rapport['ht6'];
+                }
+            }
+        }
+
+        if($_POST["rapport_type"]==='ABSENTHORSNOYAU'){
+            $rapportAbsentHorsNoyau = Rapport::getRapportAbsentHorsNoyau($_POST["date_generation"], $_POST["chantier_id"]);
+            foreach($rapportAbsentHorsNoyau as $rapport){
                 if(in_array($rapport['ouvrier_id'], $matriculeList)){
                     $workerToUpdate[$rapport['id']]['rapport_detail_id']= $rapport['id'];
                     $workerToUpdate[$rapport['id']]['rapport_id']= $rapport['rapport_id'];

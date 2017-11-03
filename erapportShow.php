@@ -86,10 +86,12 @@ $conf = Config::getInstance();
             $noyauDetails = Rapport::getRapportNoyau($_GET['chef_dequipe_id'], $_GET['date_generation'], $_GET['chantier_id']);
             $noyauAbsentDetails = Rapport::getRapportAbsentNoyau($_GET['chef_dequipe_id'], $_GET['date_generation'], $_GET['chantier_id']);
             $horsNoyauDetails = Rapport::getRapportHorsNoyau($_GET['date_generation'], $_GET['chantier_id']);
+            $absentHorsNoyauDetails = Rapport::getRapportAbsentHorsNoyau($_GET['date_generation'], $_GET['chantier_id']);
 
             $noyauList = Dsk::getTeamPointing($_GET["chef_dequipe_matricule"], $_GET["chantier_code"], $_GET["date_generation"]);
             $interimaireList = Rapport::getInterimaireByTeamSiteAndDate($_GET["date_generation"], $_GET["chef_dequipe_id"], $_GET["chantier_id"]);
             $horsNoyauList = Dsk::getTeamLess($_GET["date_generation"], $_GET["chantier_code"]);
+            $absentHorsNoyauList = Dsk::getAllHorsNoyauAbsence($_GET["chef_dequipe_matricule"], $_GET["date_generation"], $_GET["chantier_code"]);
             $absentList = Dsk::getAllNoyauAbsence($_GET["chef_dequipe_matricule"], $_GET["date_generation"]);
 
             // Créer un tableau à une dimension avec les matricules des ouvriers et interimaires
@@ -111,6 +113,8 @@ $conf = Config::getInstance();
             $oldAbsentList = array();
             $newHorsNoyauList = array();
             $oldHorsNoyauList = array();
+            $newAbsentHorsNoyauList = array();
+            $oldAbsentHorsNoyauList = array();
 
             if(!empty($noyauList)){
                 foreach($noyauList as $list){
@@ -224,7 +228,7 @@ $conf = Config::getInstance();
             $newHorsNoyauList = array_diff($newHorsNoyauList, $oldHorsNoyauList);
             if(!empty($horsNoyauList)){
                 foreach($horsNoyauList as $horsNoyau){
-                    if(in_array($horsNoyau['matricule'], $newNoyauList)){
+                    if(in_array($horsNoyau['matricule'], $newHorsNoyauList)){
                         $newHorsNoyauListToAdd[$horsNoyau['id']]['id']= $horsNoyau['id'];
                         $newHorsNoyauListToAdd[$horsNoyau['id']]['matricule']= $horsNoyau['matricule'];
                         $newHorsNoyauListToAdd[$horsNoyau['id']]['fullname']= $horsNoyau['fullname'];
@@ -234,7 +238,36 @@ $conf = Config::getInstance();
                 }
             }
 
+            // $newAbsentHorsNoyauList
+            // $oldAbsentHorsNoyauList
+            //$absentHorsNoyauDetails
+            //$absentHorsNoyauList
 
+            if(!empty($absentHorsNoyauList)){
+                foreach($absentHorsNoyauList as $list){
+                    $newAbsentHorsNoyauList[] = $list["matricule"];
+                }
+            }
+
+            if(!empty($absentHorsNoyauDetails)){
+                foreach($absentHorsNoyauDetails as $details){
+                    $oldAbsentHorsNoyauList[]=$details['ouvrier_id'];
+                }
+            }
+
+
+            $newAbsentHorsNoyauList = array_diff($newAbsentHorsNoyauList, $oldAbsentHorsNoyauList);
+            if(!empty($absentHorsNoyauList)){
+                foreach($absentHorsNoyauList as $horsNoyau){
+                    if(in_array($horsNoyau['matricule'], $newAbsentHorsNoyauList)){
+                        $newAbsentHorsNoyauListToAdd[$horsNoyau['id']]['id']= $horsNoyau['id'];
+                        $newAbsentHorsNoyauListToAdd[$horsNoyau['id']]['matricule']= $horsNoyau['matricule'];
+                        $newAbsentHorsNoyauListToAdd[$horsNoyau['id']]['fullname']= $horsNoyau['fullname'];
+                        $newAbsentHorsNoyauListToAdd[$horsNoyau['id']]['']= $horsNoyau['chantier'];
+                        $newAbsentHorsNoyauListToAdd[$horsNoyau['id']]['noyau']= $horsNoyau['noyau'];
+                    }
+                }
+            }
 
             //    var_dump($newNoyauListToAdd);
             //    var_dump($newIntermaireListToAdd);
@@ -255,6 +288,10 @@ $conf = Config::getInstance();
             if(!empty($newHorsNoyauListToAdd)){
                 Rapport::saveRapportDetailHorsNoyau($_GET['date_generation'], $_GET['chantier_id'], $newHorsNoyauListToAdd);
             }
+
+            if(!empty($newAbsentHorsNoyauListToAdd)){
+                Rapport::saveRapportDetailAbsentHorsNoyau($_GET['date_generation'], $_GET['chantier_id'], $newAbsentHorsNoyauListToAdd);
+            }
         }
 
 
@@ -264,11 +301,12 @@ $conf = Config::getInstance();
         $noyau = Rapport::getRapportNoyau($_GET['chef_dequipe_id'], $_GET['date_generation'], $_GET['chantier_id']);
         $noyauAbsent = Rapport::getRapportAbsentNoyau($_GET['chef_dequipe_id'], $_GET['date_generation'], $_GET['chantier_id']);
         $horsNoyau = Rapport::getRapportHorsNoyau($_GET['date_generation'], $_GET['chantier_id']);
+        $absentHorsNoyau = Rapport::getRapportAbsentHorsNoyau($_GET['date_generation'], $_GET['chantier_id']);
         //var_dump($horsNoyau);
         //exit;
 
 
-
+        // Mise à jour des heures pointées au niveau des différentes matrices générées
         if(!empty($allPointage)){
             foreach($allPointage as $pointage){
                 foreach($noyau as $rapport){
@@ -297,6 +335,14 @@ $conf = Config::getInstance();
                     }
                 }
             }
+
+            foreach($allPointage as $pointage){
+                foreach($absentHorsNoyau as $rapport){
+                    if($rapport['ouvrier_id']=== $pointage['matricule']){
+                        Rapport::setWorkerHourCalculated($pointage['hpoint'], $rapport['id']);
+                    }
+                }
+            }
         }
 
         // Récupération des ids des différents rapports générés absents à savoir ceux du noyau, les absents et les hors noyaux
@@ -307,6 +353,7 @@ $conf = Config::getInstance();
             $idRapportNoyau = $noyau[$i]['rapport_id'];
             $idRapportAbsentNoyau = $noyauAbsent[$i]['rapport_id'];
             $idRapportHorsNoyau = $horsNoyau[$i]['rapport_id'];
+            $idRapportAbsentHorsNoyau = $absentHorsNoyau[$i]['rapport_id'];
         }
 
         //var_dump($idRapportNoyau);
@@ -327,10 +374,13 @@ $conf = Config::getInstance();
             $horsNoyauHeader = Rapport::getRapportHorsNoyauHeader($idRapportHorsNoyau, $_GET['date_generation'], $_GET['chantier_id']);
         }
 
+        if(!empty($idRapportAbsentHorsNoyau)){
+            $absentHorsNoyauHeader = Rapport::getRapportAbsentHorsNoyauHeader($idRapportAbsentHorsNoyau, $_GET['date_generation'], $_GET['chantier_id']);
+        }
+        
+
         foreach($noyau as $noyauDetail){
-
             $noyauWorkerTask[$noyauDetail['id']]  = Rapport::getWorkerTask($noyauDetail['id']);
-
             $noyauWorkerTaskDetail[$noyauDetail['id']] = Rapport::getWorkerTaskDetail($noyauDetail['id']);
         }
 
@@ -339,15 +389,18 @@ $conf = Config::getInstance();
         }
         */
         foreach($noyauAbsent as $noyauAbsentDetail){
-
             $noyauAbsentTask[$noyauAbsentDetail['id']] = Rapport::getWorkerTask($noyauAbsentDetail['id']);
             $noyauAbsentTaskDetail[$noyauAbsentDetail['id']] = Rapport::getWorkerTaskDetail($noyauAbsentDetail['id']);
         }
 
         foreach($horsNoyau as $horsNoyauDetail){
-
             $horsNoyauTask[$horsNoyauDetail['id']] = Rapport::getWorkerTask($horsNoyauDetail['id']);
             $horsNoyauTaskDetail[$horsNoyauDetail['id']] = Rapport::getWorkerTaskDetail($horsNoyauDetail['id']);
+        }
+
+        foreach($absentHorsNoyau as $horsNoyauDetail){
+            $absentHorsNoyauTask[$horsNoyauDetail['id']] = Rapport::getWorkerTask($horsNoyauDetail['id']);
+            $absentHorsNoyauTaskDetail[$horsNoyauDetail['id']] = Rapport::getWorkerTaskDetail($horsNoyauDetail['id']);
         }
 
         // var_dump($idRapportNoyau);
@@ -365,23 +418,28 @@ $conf = Config::getInstance();
         $rapportNoyau = Rapport::getRapportNoyau($_GET['chef_dequipe_id'], $_GET['date_generation'], $_GET['chantier_id']);
         $rapportNoyauAbsent = Rapport::getRapportAbsentNoyau($_GET['chef_dequipe_id'], $_GET['date_generation'], $_GET['chantier_id']);
         $rapportHorsNoyau = Rapport::getRapportHorsNoyau($_GET['date_generation'], $_GET['chantier_id']);
+        $rapportAbsentHorsNoyau = Rapport::getRapportAbsentHorsNoyau($_GET['date_generation'], $_GET['chantier_id']);
 
         $noyauHourGlobal = 0;
         $horsNoyauHourGlobal = 0;
         $absentHourGlobal = 0;
+        $absentHorsNoyauHourGlobal = 0;
 
 
         $noyauHourAbsencesGlobal = 0;
         $horsNoyauHourAbsencesGlobal = 0;
         $absentHourAbsencesGlobal = 0;
+        $absentHorsNoyauHourAbsencesGlobal = 0;
 
         $noyauHourPenibleGlobal = 0;
         $horsNoyauHourPenibleGlobal = 0;
         $absentHourPenibleGlobal = 0;
+        $absentHorsNoyauHourPenibleGlobal = 0;
 
         $noyauKmGlobal = 0;
         $horsNoyauKmGlobal = 0;
         $absentKmGlobal = 0;
+        $absentHorsNoyauKmGlobal = 0;
 
         foreach($rapportNoyau as $noyau){
             $noyauHourGlobal = $noyauHourGlobal + $noyau['htot'];
@@ -402,6 +460,13 @@ $conf = Config::getInstance();
             $horsNoyauHourAbsencesGlobal = $horsNoyauHourAbsencesGlobal + $noyau['habs'];
             $horsNoyauHourPenibleGlobal = $horsNoyauHourPenibleGlobal + $noyau['hins'];
             $horsNoyauKmGlobal = $horsNoyauKmGlobal + $noyau['km'];
+        }
+
+        foreach($rapportAbsentHorsNoyau as $noyau){
+            $absentHorsNoyauHourGlobal = $absentHorsNoyauHourGlobal + $noyau['htot'];
+            $absentHorsNoyauHourAbsencesGlobal = $absentHorsNoyauHourAbsencesGlobal + $noyau['habs'];
+            $absentHorsNoyauHourPenibleGlobal = $absentHorsNoyauHourPenibleGlobal + $noyau['hins'];
+            $absentHorsNoyauKmGlobal = $absentHorsNoyauKmGlobal + $noyau['km'];
         }
 
          // var_dump($rapportHorsNoyau);

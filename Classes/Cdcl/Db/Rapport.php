@@ -622,6 +622,117 @@ class Rapport extends DbObject{
 
     }
 
+    public function saveDBAbsentHorsNoyau()
+    {
+        if ($this->id > 0){
+            $sql = '
+                UPDATE rapport
+                SET
+                  date=:date,
+                  terminal=:terminal,
+                  chantier=:chantier,
+                  rapport_type=:rapport_type,
+                  preremp=:preremp,
+                  submitted=:submitted,
+                  validated=:validated,
+                  deleted=:deleted
+                WHERE `id` = :id
+                ';
+            $stmt = Config::getInstance()->getPDO()->prepare($sql);
+            $stmt->bindValue(':id', $this->id, \PDO::PARAM_INT);
+            $stmt->bindValue(':date', $this->date, \PDO::PARAM_INT);
+            $stmt->bindValue(':terminal', $this->matricule_cns, \PDO::PARAM_INT);
+            $stmt->bindValue(':chantier', $this->chantier->getId(), \PDO::PARAM_INT);
+            $stmt->bindValue(':rapport_type', 'ABSENTHORSNOYAU');
+            $stmt->bindValue(':preremp', $this->preremp, \PDO::PARAM_INT);
+            $stmt->bindValue(':submitted', $this->submitted, \PDO::PARAM_INT);
+            $stmt->bindValue(':validated', $this->validated, \PDO::PARAM_INT);
+            $stmt->bindValue(':deleted', $this->deleted, \PDO::PARAM_INT);
+            // print_r($this->chantier_id->getId());
+
+            // exit;
+            if ($stmt->execute() === false) {
+                print_r($stmt->errorInfo());
+                return false ;
+            }
+            else {
+                return true ;
+            }
+        }else{
+            $sql='INSERT INTO rapport(
+                              date,
+                              terminal,
+                              chantier,
+                              rapport_type,
+                              preremp,
+                              submitted,
+                              validated,
+                              deleted
+                              )VALUES(
+                                :date,
+                                :terminal,
+                                :chantier,
+                                :rapport_type,
+                                :preremp,
+                                :submitted,
+                                :validated,
+                                :deleted
+                                )';
+            $stmt = Config::getInstance()->getPDO()->prepare($sql);
+            $stmt->bindValue(':date', $this->date, \PDO::PARAM_INT);
+            $stmt->bindValue(':terminal', $this->matricule_cns, \PDO::PARAM_INT);
+            $stmt->bindValue(':chantier', $this->chantier->getId(), \PDO::PARAM_INT);
+            $stmt->bindValue(':rapport_type', 'ABSENTHORSNOYAU');
+            $stmt->bindValue(':preremp', 0, \PDO::PARAM_INT);
+            $stmt->bindValue(':submitted', 0, \PDO::PARAM_INT);
+            $stmt->bindValue(':validated', 0, \PDO::PARAM_INT);
+            $stmt->bindValue(':deleted', 0, \PDO::PARAM_INT);
+            // print_r($this->chantier_id->getId());
+
+            // exit;
+            if ($stmt->execute() === false) {
+                print_r($stmt->errorInfo());
+                return false ;
+            }
+            else {
+                return true ;
+            }
+        }
+    }
+
+    public static  function saveRapportDetailAbsentHorsNoyau($date, $chantier, $absentHorsNoyauList){
+
+        $sql='SELECT * FROM rapport WHERE date=:date AND chantier=:chantier AND rapport_type=:rapport_type';
+        $stmt = Config::getInstance()->getPDO()->prepare($sql);
+        $stmt->bindValue(':date', $date, \PDO::PARAM_INT);
+        $stmt->bindValue(':chantier', $chantier, \PDO::PARAM_INT);
+        $stmt->bindValue(':rapport_type', 'ABSENTHORSNOYAU');
+        if($stmt->execute()===false){
+            print_r($stmt->errorInfo());
+        }else{
+            $rapport = $stmt->fetch();
+        }
+        foreach($absentHorsNoyauList as $team){
+            $sql='INSERT INTO `rapport_detail`
+                            (
+                            `rapport_id`,
+                            `ouvrier_id`,
+                            `fullname`)
+                            VALUES(
+                            :rapport_id,
+                            :ouvrier_id,
+                            :fullname)';
+            $stmt=Config::getInstance()->getPDO()->prepare($sql);
+            $stmt->bindValue(':rapport_id',$rapport['id'], \PDO::PARAM_INT);
+            $stmt->bindValue(':ouvrier_id',$team['matricule'], \PDO::PARAM_INT);
+            $stmt->bindValue(':fullname',$team['fullname'], \PDO::PARAM_STR);
+            if($stmt->execute()===false){
+                print_r($stmt->errorInfo());
+            }
+        }
+
+    }
+
     /**
      * @param int $id
      * @return bool
@@ -697,6 +808,25 @@ class Rapport extends DbObject{
             }
         }
         return $rapportHorsNoyauExist;
+    }
+
+    public static function checkrapportAbsentHorsNoyauExist($date, $chantier){
+        $sql='SELECT * FROM rapport WHERE date=:date AND chantier=:chantier AND chef_dequipe_matricule IS NULL AND rapport_type=:rapport_type';
+        $stmt = Config::getInstance()->getPDO()->prepare($sql);
+        $stmt->bindValue(':date', $date, \PDO::PARAM_INT);
+        $stmt->bindValue(':chantier', $chantier, \PDO::PARAM_INT);
+        $stmt->bindValue(':rapport_type', 'ABSENTHORSNOYAU');
+        if($stmt->execute()===false){
+            print_r($stmt->errorInfo());
+        }else{
+            $nbRows = $stmt->rowCount();
+            if($nbRows>=1){
+                $rapportAbsentHorsNoyauExist = true;
+            }else{
+                $rapportAbsentHorsNoyauExist = false;
+            }
+        }
+        return $rapportAbsentHorsNoyauExist;
     }
 
     public static function getInterimaireByTeamSiteAndDate($date, $chefDequipeid, $chantierId){
@@ -1093,6 +1223,36 @@ class Rapport extends DbObject{
             $rapportDetailHorsNoyau= $stmt->fetchAll(\PDO::FETCH_ASSOC);
         }
         return $rapportDetailHorsNoyau;
+    }
+
+    public static function getRapportAbsentHorsNoyau($date, $chantier){
+        $sql = 'SELECT * FROM rapport WHERE rapport_type=:rapport_type AND date=:date AND chantier=:chantier';
+        $stmt=Config::getInstance()->getPDO()->prepare($sql);
+        $stmt->bindValue(':rapport_type','ABSENTHORSNOYAU',\PDO::PARAM_STR);
+        $stmt->bindValue(':date',$date,\PDO::PARAM_INT);
+        $stmt->bindValue(':chantier',$chantier, \PDO::PARAM_INT);
+        if($stmt->execute() === false){
+            print_r($stmt->errorInfo());
+        }else{
+            $rapport = $stmt->fetch();
+        }
+
+        $sql = 'SELECT rapport_detail.*,
+                    rapport.date,
+                    rapport.chef_dequipe_matricule,
+                    rapport.chantier
+                FROM rapport_detail, rapport
+                WHERE rapport_detail.rapport_id=:rapport_id
+                AND rapport.id = rapport_detail.rapport_id
+                ORDER BY rapport_detail.is_chef_dequipe DESC, rapport_detail.interimaire_id, rapport_detail.ouvrier_id ';
+        $stmt = Config::getInstance()->getPDO()->prepare($sql);
+        $stmt->bindValue(':rapport_id', $rapport['id'], \PDO::PARAM_INT);
+        if($stmt->execute()===false){
+            print_r($stmt->errorInfo());
+        }else{
+            $rapportDetailAbsentHorsNoyau= $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        }
+        return $rapportDetailAbsentHorsNoyau;
     }
 
     public static function setWorkerHourCalculated($htot, $id){
@@ -1669,6 +1829,50 @@ class Rapport extends DbObject{
         return $noyauHeaderHorsNoyau;
     }
 
+    public static function getRapportAbsentHorsNoyauHeader($rapport_id, $date, $chantier){
+
+        $sql = 'SELECT
+                    rapport_detail_has_tache.id,
+                    tache.code,
+                    tache.nom,
+                    SUM(rapport_detail_has_tache.heures) AS vht,
+                    rapport_detail_has_tache.tache_id
+                FROM
+                    rapport_detail_has_tache,
+                    tache
+                WHERE
+                    tache.id = rapport_detail_has_tache.tache_id
+                        AND rapport_detail_id IN (SELECT
+                            rapport_detail.id
+                        FROM
+                            rapport_detail,
+                            rapport
+                        WHERE
+                            rapport_detail.rapport_id = :rapport_id
+                                AND rapport.id = rapport_detail.rapport_id
+                                AND rapport_detail.rapport_id IN (SELECT
+                                    id
+                                FROM
+                                    rapport
+                                WHERE
+                                    rapport_type = :rapport_type
+                                        AND date = :date
+                                        AND chantier =:chantier ))
+                GROUP BY tache_id
+                ORDER BY tache_id';
+        $stmt = Config::getInstance()->getPDO()->prepare($sql);
+        $stmt->bindValue(':rapport_id', $rapport_id, \PDO::PARAM_INT);
+        $stmt->bindValue(':rapport_type','ABSENTHORSNOYAU',\PDO::PARAM_STR);
+        $stmt->bindValue(':date',$date,\PDO::PARAM_INT);
+        $stmt->bindValue(':chantier',$chantier, \PDO::PARAM_INT);
+        if($stmt->execute()===false){
+            print_r($stmt->errorInfo());
+        }else{
+            $noyauHeaderAbsentHorsNoyau= $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        }
+        return $noyauHeaderAbsentHorsNoyau;
+    }
+
     public static function validateRapport($equipeId, $date, $chantier){
         $sql = 'UPDATE rapport set validated=:validated
                 WHERE rapport_type=:rapport_type
@@ -1762,6 +1966,36 @@ class Rapport extends DbObject{
         $stmt = Config::getInstance()->getPDO()->prepare($sql);
         $stmt->bindValue(':validated', 1);
         $stmt->bindValue(':rapport_type', 'HORSNOYAU' );
+        $stmt->bindValue(':date', $date, \PDO::PARAM_INT);
+        $stmt->bindValue(':chantier',$chantier, \PDO::PARAM_INT );
+
+        if($stmt->execute()===false){
+            print_r($stmt->errorInfo());
+        }
+
+        $sql = 'UPDATE rapport set validated=:validated
+                WHERE rapport_type=:rapport_type
+                AND date=:date
+                AND chantier=:chantier';
+
+        $stmt = Config::getInstance()->getPDO()->prepare($sql);
+        $stmt->bindValue(':validated', 1);
+        $stmt->bindValue(':rapport_type', 'ABSENTHORSNOYAU' );
+        $stmt->bindValue(':date', $date, \PDO::PARAM_INT);
+        $stmt->bindValue(':chantier',$chantier, \PDO::PARAM_INT );
+
+        if($stmt->execute()===false){
+            print_r($stmt->errorInfo());
+        }
+
+        $sql='UPDATE rapport_detail set validated=:validated WHERE rapport_id IN
+                ( SELECT id FROM rapport WHERE rapport_type=:rapport_type
+                AND date=:date
+                AND chantier=:chantier)';
+
+        $stmt = Config::getInstance()->getPDO()->prepare($sql);
+        $stmt->bindValue(':validated', 1);
+        $stmt->bindValue(':rapport_type', 'ABSENTHORSNOYAU' );
         $stmt->bindValue(':date', $date, \PDO::PARAM_INT);
         $stmt->bindValue(':chantier',$chantier, \PDO::PARAM_INT );
 
@@ -1888,9 +2122,39 @@ class Rapport extends DbObject{
             print_r($stmt->errorInfo());
         }
 
+        $sql = 'UPDATE rapport set validated=:validated,
+                submitted=:submitted
+                WHERE rapport_type=:rapport_type
+                AND date=:date
+                AND chantier=:chantier';
+
+        $stmt = Config::getInstance()->getPDO()->prepare($sql);
+        $stmt->bindValue(':validated', 0);
+        $stmt->bindValue(':submitted', 0);
+        $stmt->bindValue(':rapport_type', 'ABSENTHORSNOYAU' );
+        $stmt->bindValue(':date', $date, \PDO::PARAM_INT);
+        $stmt->bindValue(':chantier',$chantier, \PDO::PARAM_INT );
+
+        if($stmt->execute()===false){
+            print_r($stmt->errorInfo());
+        }
+
+        $sql='UPDATE rapport_detail set validated=:validated,submitted=:submitted  WHERE rapport_id IN
+                ( SELECT id FROM rapport WHERE rapport_type=:rapport_type
+                AND date=:date
+                AND chantier=:chantier )';
+
+        $stmt = Config::getInstance()->getPDO()->prepare($sql);
+        $stmt->bindValue(':validated', 0);
+        $stmt->bindValue(':submitted', 0);
+        $stmt->bindValue(':rapport_type', 'ABSENTHORSNOYAU' );
+        $stmt->bindValue(':date', $date, \PDO::PARAM_INT);
+        $stmt->bindValue(':chantier',$chantier, \PDO::PARAM_INT );
+
+        if($stmt->execute()===false){
+            print_r($stmt->errorInfo());
+        }
     }
-
-
 
     public static function submittRapport($equipeId, $date, $chantier){
         $sql = 'UPDATE rapport set submitted=:submitted
@@ -1984,6 +2248,36 @@ class Rapport extends DbObject{
         $stmt = Config::getInstance()->getPDO()->prepare($sql);
         $stmt->bindValue(':submitted', 1);
         $stmt->bindValue(':rapport_type', 'HORSNOYAU' );
+        $stmt->bindValue(':date', $date, \PDO::PARAM_INT);
+        $stmt->bindValue(':chantier',$chantier, \PDO::PARAM_INT );
+
+        if($stmt->execute()===false){
+            print_r($stmt->errorInfo());
+        }
+
+        $sql = 'UPDATE rapport set submitted=:submitted
+                WHERE rapport_type=:rapport_type
+                AND date=:date
+                AND chantier=:chantier';
+
+        $stmt = Config::getInstance()->getPDO()->prepare($sql);
+        $stmt->bindValue(':submitted', 1);
+        $stmt->bindValue(':rapport_type', 'ABSENTHORSNOYAU' );
+        $stmt->bindValue(':date', $date, \PDO::PARAM_INT);
+        $stmt->bindValue(':chantier',$chantier, \PDO::PARAM_INT );
+
+        if($stmt->execute()===false){
+            print_r($stmt->errorInfo());
+        }
+
+        $sql='UPDATE rapport_detail set submitted=:submitted  WHERE rapport_id IN
+                ( SELECT id FROM rapport WHERE rapport_type=:rapport_type
+                AND date=:date
+                AND chantier=:chantier )';
+
+        $stmt = Config::getInstance()->getPDO()->prepare($sql);
+        $stmt->bindValue(':submitted', 1);
+        $stmt->bindValue(':rapport_type', 'ABSENTHORSNOYAU' );
         $stmt->bindValue(':date', $date, \PDO::PARAM_INT);
         $stmt->bindValue(':chantier',$chantier, \PDO::PARAM_INT );
 
@@ -2084,6 +2378,36 @@ class Rapport extends DbObject{
         $stmt = Config::getInstance()->getPDO()->prepare($sql);
         $stmt->bindValue(':submitted', 0);
         $stmt->bindValue(':rapport_type', 'HORSNOYAU' );
+        $stmt->bindValue(':date', $date, \PDO::PARAM_INT);
+        $stmt->bindValue(':chantier',$chantier, \PDO::PARAM_INT );
+
+        if($stmt->execute()===false){
+            print_r($stmt->errorInfo());
+        }
+
+        $sql = 'UPDATE rapport set submitted=:submitted
+                WHERE rapport_type=:rapport_type
+                AND date=:date
+                AND chantier=:chantier';
+
+        $stmt = Config::getInstance()->getPDO()->prepare($sql);
+        $stmt->bindValue(':submitted', 0);
+        $stmt->bindValue(':rapport_type', 'ABSENTHORSNOYAU' );
+        $stmt->bindValue(':date', $date, \PDO::PARAM_INT);
+        $stmt->bindValue(':chantier',$chantier, \PDO::PARAM_INT );
+
+        if($stmt->execute()===false){
+            print_r($stmt->errorInfo());
+        }
+
+        $sql='UPDATE rapport_detail set submitted=:submitted  WHERE rapport_id IN
+                ( SELECT id FROM rapport WHERE rapport_type=:rapport_type
+                AND date=:date
+                AND chantier=:chantier )';
+
+        $stmt = Config::getInstance()->getPDO()->prepare($sql);
+        $stmt->bindValue(':submitted', 0);
+        $stmt->bindValue(':rapport_type', 'ABSENTHORSNOYAU' );
         $stmt->bindValue(':date', $date, \PDO::PARAM_INT);
         $stmt->bindValue(':chantier',$chantier, \PDO::PARAM_INT );
 
@@ -2250,6 +2574,53 @@ class Rapport extends DbObject{
             print_r($stmt->errorInfo());
         }
 
+        $sql='DELETE FROM rapport_detail_has_tache WHERE rapport_detail_id IN
+              (SELECT rapport_detail.id
+                    FROM rapport_detail, rapport
+                    WHERE rapport.id = rapport_detail.rapport_id
+                    AND rapport_id IN
+                        (SELECT id FROM rapport
+                            WHERE  rapport_type=:rapport_type
+                            AND date=:date
+                            AND chantier=:chantier
+                        )
+                )';
+
+        $stmt = Config::getInstance()->getPDO()->prepare($sql);
+        $stmt->bindValue(':rapport_type', 'ABSENTHORSNOYAU', \PDO::PARAM_STR);
+        $stmt->bindValue(':date', $date, \PDO::PARAM_INT);
+        $stmt->bindValue(':chantier', $chantier, \PDO::PARAM_INT);
+        if ($stmt->execute() === false) {
+            print_r($stmt->errorInfo());
+        }
+
+        $sql='DELETE FROM rapport_detail
+                WHERE rapport_detail.rapport_id IN
+                        (SELECT id FROM rapport
+                            WHERE rapport_type=:rapport_type
+                            AND date=:date
+                            AND chantier=:chantier)';
+
+        $stmt = Config::getInstance()->getPDO()->prepare($sql);
+        $stmt->bindValue(':rapport_type', 'ABSENTHORSNOYAU', \PDO::PARAM_STR);
+        $stmt->bindValue(':date', $date, \PDO::PARAM_INT);
+        $stmt->bindValue(':chantier', $chantier, \PDO::PARAM_INT);
+        if ($stmt->execute() === false) {
+            print_r($stmt->errorInfo());
+        }
+
+        $sql='DELETE FROM rapport
+                            WHERE rapport_type=:rapport_type
+                            AND date=:date
+                            AND chantier=:chantier ';
+
+        $stmt = Config::getInstance()->getPDO()->prepare($sql);
+        $stmt->bindValue(':rapport_type', 'ABSENTHORSNOYAU', \PDO::PARAM_STR);
+        $stmt->bindValue(':date', $date, \PDO::PARAM_INT);
+        $stmt->bindValue(':chantier', $chantier, \PDO::PARAM_INT);
+        if ($stmt->execute() === false) {
+            print_r($stmt->errorInfo());
+        }
     }
 
     public static function getRapportDetailWithHourAnomaly(){

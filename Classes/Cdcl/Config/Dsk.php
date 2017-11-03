@@ -776,7 +776,7 @@ class Dsk {
         //    $dbh = ibase_connect("10.10.110.30:C:\DSK\Data\dsk2.fdb","SYSDBA","masterkey");
 
         $sql = "
-        SELECT Absence.NoPers,Absence.Thedate, Pers.FULLNAME, ACCOUNT.CUSTOM, TERMS.GIDDID  FROM Absence
+        SELECT PERS.CODEPERS, Absence.NoPers,Absence.Thedate, Pers.FULLNAME, ACCOUNT.CUSTOM, TERMS.GIDDID, ABSENCE.TIMEMIN, ACCOUNT.CAPTION1 FROM Absence
             INNER JOIN Pers on (Pers.NoPers=ABSENCE.NoPers)
             INNER JOIN PERSHISTORY ON
              ((PERSHISTORY.NOPERS=ABSENCE.NOPERS)
@@ -868,11 +868,11 @@ class Dsk {
 
         while ($row = ibase_fetch_object($sth))
         {
-            $absenceHorsNoyau[$i]["NOPERS"] = trim($row->NOPERS);
-            $absenceHorsNoyau[$i]["THEDATE"] = $row->THEDATE;
-            $absenceHorsNoyau[$i]["FULLNAME"] = $row->FULLNAME;
-            $absenceHorsNoyau[$i]["CUSTOM"] = $row->CUSTOM;
-            $absenceHorsNoyau[$i]["GIDDID"] = $row->GIDDID;
+            $absenceHorsNoyau[$i]["matricule"] = trim($row->CODEPERS);
+            $absenceHorsNoyau[$i]["fullname"] = $row->FULLNAME;
+            $absenceHorsNoyau[$i]["date"] = $row->THEDATE;
+            $absenceHorsNoyau[$i]["timemin"] = $row->TIMEMIN;
+            $absenceHorsNoyau[$i]["motif"] = $row->CAPTION1;
 
             $i++;
         }

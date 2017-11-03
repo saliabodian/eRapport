@@ -115,6 +115,29 @@
             }
         });
     });
+
+    $(document).ready(function(){
+        $('#check_all_abs_hn').click(function(){
+            if(this.checked){
+                $('.checkbox_abs_hn').each(function(){
+                    this.checked = true;
+                });
+            }else{
+                $('.checkbox_abs_hn').each(function(){
+                    this.checked = false;
+                });
+            }
+        });
+
+        $('.checkbox_abs_hn').click(function(){
+            if($('.checkbox_abs:checked').length == $('.checkbox_abs_hn').length){
+                $('#check_all_abs_hn').prop('checked',true);
+            }else{
+                $('#check_all_abs_hn').prop('checked',false);
+            }
+        });
+    });
+
     $(document).ready(function(){
         $('#check_hn').click(function(){
             if(this.checked){
