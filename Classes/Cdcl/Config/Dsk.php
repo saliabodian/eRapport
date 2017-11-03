@@ -393,6 +393,7 @@ class Dsk {
                 ((PERSHISTORY.NOPERS=BOOKING.NOPERS)
                     AND (PERSHISTORY.STARTDATE<= BOOKING.THEDATE)
                     AND ((PERSHISTORY.ENDDATE IS NULL) OR (PERSHISTORY.ENDDATE>= Booking.THEDATE)))
+                    AND (PERSHISTORY.CODECOSTCENTER <> '5470' OR PERSHISTORY.CODECOSTCENTER <> '5420')
                 LEFT JOIN TERMS ON (
                     (
                     TERMS.GIDDID = BOOKING.BKT1

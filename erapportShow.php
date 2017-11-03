@@ -377,7 +377,7 @@ $conf = Config::getInstance();
         if(!empty($idRapportAbsentHorsNoyau)){
             $absentHorsNoyauHeader = Rapport::getRapportAbsentHorsNoyauHeader($idRapportAbsentHorsNoyau, $_GET['date_generation'], $_GET['chantier_id']);
         }
-        
+
 
         foreach($noyau as $noyauDetail){
             $noyauWorkerTask[$noyauDetail['id']]  = Rapport::getWorkerTask($noyauDetail['id']);
