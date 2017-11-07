@@ -19,8 +19,8 @@ class Dsk {
     /** Ce sont tous les chantiers sur lesquels les chefs d’équipe ont fait au moins 1 pointage :*/
 
     public static function allChefDEquipeForDay($date){
-    //    $dbh = ibase_connect("31.204.90.68:C:\DSK\Data\dsk2.fdb","SYSDBA","masterkey");
-        $dbh = ibase_connect("10.10.110.30:C:\DSK\Data\dsk2.fdb","SYSDBA","masterkey");
+        $dbh = ibase_connect("31.204.90.68:C:\DSK\Data\dsk2.fdb","SYSDBA","masterkey");
+    //    $dbh = ibase_connect("10.10.110.30:C:\DSK\Data\dsk2.fdb","SYSDBA","masterkey");
 
         $sql = "
         SELECT Booking.NoPers,Pers.CODEPERS, Pers.FULLNAME, ACCOUNT.CUSTOM  FROM BOOKING
