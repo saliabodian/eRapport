@@ -508,7 +508,7 @@ if(!empty($_SESSION)){
 // $html = file_get_contents($conf->getViewsDir().'eRapportShowPrint.php');
 
     $mpdf->WriteHTML($html);
-    $mpdf->Output();
+    $mpdf->Output('E-Rapport_du_'.$rapportJournalierDate.'_noyau_'.$chefDequipeMatricule.'_chantier_'.$_GET['chantier_code'].'.pdf',\Mpdf\Output\Destination::DOWNLOAD);
 
 }else{
     header('Location: index.php');

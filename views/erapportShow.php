@@ -43,17 +43,17 @@
                                     </thead>
                                     <tbody>
                                         <?php foreach ($rapportNoyau as $rapport ) : ?>
-                                            <?php if (($rapport['htot'] != ($rapport['ht1'] + $rapport['ht2'] +$rapport['ht3'] +$rapport['ht4'] +$rapport['ht5'] + $rapport['ht6'])) && empty($rapport['abs'])) : ?>
-                                                <tr class="anomalieVH">
-                                            <?php elseif(!empty($rapport['abs']) && ($rapport['htot'] === ($rapport['ht1'] + $rapport['ht2'] +$rapport['ht3'] +$rapport['ht4'] +$rapport['ht5'] + $rapport['ht6']))) : ?>
-                                                <tr class="absence">
-                                            <?php elseif(($rapport['htot'] != ($rapport['ht1'] + $rapport['ht2'] +$rapport['ht3'] +$rapport['ht4'] +$rapport['ht5'] + $rapport['ht6'])) && !(empty($rapport['abs']))) : ?>
-                                                <tr class="absenceHeure">
-                                            <?php else : ?>
-                                                <tr>
-                                            <?php endif ; ?>
+                                            <tr>
                                                 <td><input type="checkbox" name="selected_matricule[]" class="checkbox checkbox_noyau" value="<?= isset($rapport['ouvrier_id'])? $rapport['ouvrier_id'] : (isset($rapport['interimaire_id'])? $rapport['interimaire_id'] : '')?>" /></td>
-                                                <td><?= isset($rapport['ouvrier_id'])? $rapport['ouvrier_id'] : (isset($rapport['interimaire_id'])? $rapport['interimaire_id'] : '')?> - <?=$rapport['fullname']?><?= ($rapport['dpl_pers']=== '1')? ' (T)' : '' ?></td>
+                                                <td>
+                                                    <?php if ($rapport['htot'] != ($rapport['ht1'] + $rapport['ht2'] +$rapport['ht3'] +$rapport['ht4'] +$rapport['ht5'] + $rapport['ht6'])) : ?>
+                                                        <img src="img/warning-yellow-black.png" alt="erreur volume horaire">
+                                                    <?php endif ?>
+                                                    <?php if (!empty($rapport['habs']) || !empty($rapport['abs'])) : ?>
+                                                        <img src="img/dialog-stop-2.png" alt="absence saisie">
+                                                    <?php endif ?>
+                                                    <?= isset($rapport['ouvrier_id'])? $rapport['ouvrier_id'] : (isset($rapport['interimaire_id'])? $rapport['interimaire_id'] : '')?> - <?=$rapport['fullname']?><?= ($rapport['dpl_pers']=== '1')? ' (T)' : '' ?>
+                                                </td>
                                                 <td><?= $rapport['htot'] ?></td>
                                                 <?php if(!empty($noyauHeader)) :?>
                                                     <?php foreach($noyauHeader as $noyauHeaderdetail) : ?>
@@ -103,7 +103,7 @@
                                                 <td ><?= $rapport['km'] ?></td>
                                             </tr>
                                         <?php  endforeach;  ?>
-                                        <tr>
+                                            <tr>
                                             <td colspan="2">Totaux</td>
                                             <td><?= $noyauHourGlobal; ?></td>
                                             <?php if(!empty($noyauHeader)) :?>
@@ -183,17 +183,16 @@
                                         </thead>
                                         <tbody>
                                         <?php foreach ($rapportNoyauAbsent as $rapport ) : ?>
-                                            <?php if (($rapport['htot'] != ($rapport['ht1'] + $rapport['ht2'] +$rapport['ht3'] +$rapport['ht4'] +$rapport['ht5'] + $rapport['ht6'])) && empty($rapport['abs'])) : ?>
-                                                <tr class="anomalieVH">
-                                            <?php elseif(!empty($rapport['abs']) && ($rapport['htot'] === ($rapport['ht1'] + $rapport['ht2'] +$rapport['ht3'] +$rapport['ht4'] +$rapport['ht5'] + $rapport['ht6']))) : ?>
-                                                <tr class="absence">
-                                            <?php elseif(($rapport['htot'] != ($rapport['ht1'] + $rapport['ht2'] +$rapport['ht3'] +$rapport['ht4'] +$rapport['ht5'] + $rapport['ht6'])) && !(empty($rapport['abs']))) : ?>
-                                                <tr class="absenceHeure">
-                                            <?php else : ?>
-                                                <tr>
-                                            <?php endif ; ?>
+                                            <tr>
                                             <td><input type="checkbox" name="selected_matricule[]" class="checkbox checkbox_abs" value="<?= isset($rapport['ouvrier_id'])? $rapport['ouvrier_id'] : (isset($rapport['interimaire_id'])? $rapport['interimaire_id'] : '')?>" /></td>
-                                            <td><?= isset($rapport['ouvrier_id'])? $rapport['ouvrier_id'] : (isset($rapport['interimaire_id'])? $rapport['interimaire_id'] : '')?> - <?=$rapport['fullname']?></td>
+                                            <td>
+                                                <?php if ($rapport['htot'] != ($rapport['ht1'] + $rapport['ht2'] +$rapport['ht3'] +$rapport['ht4'] +$rapport['ht5'] + $rapport['ht6'])) : ?>
+                                                    <img src="img/warning-yellow-black.png" alt="erreur volume horaire">
+                                                <?php endif ?>
+                                                <?php if (!empty($rapport['habs']) || !empty($rapport['abs'])) : ?>
+                                                    <img src="img/dialog-stop-2.png" alt="absence saisie">
+                                                <?php endif ?><?= isset($rapport['ouvrier_id'])? $rapport['ouvrier_id'] : (isset($rapport['interimaire_id'])? $rapport['interimaire_id'] : '')?> - <?=$rapport['fullname']?>
+                                            </td>
                                             <td ><?= $rapport['htot'] ?></td>
                                             <?php if (!empty($noyauAbsentHeader)) : ?>
                                                 <?php foreach($noyauAbsentHeader as $noyauHeaderdetail) : ?>
@@ -243,7 +242,7 @@
                                             <td ><?= $rapport['km'] ?></td>
                                             </tr>
                                         <?php  endforeach;  ?>
-                                        <tr>
+                                            <tr>
                                             <td colspan="2">Totaux</td>
                                             <td><?= $absentHourGlobal; ?></td>
                                             <?php if(!empty($noyauAbsentHeader)) :?>
@@ -323,17 +322,17 @@
                                         </thead>
                                         <tbody>
                                             <?php foreach ($rapportAbsentHorsNoyau as $rapport ) : ?>
-                                                <?php if (($rapport['htot'] != ($rapport['ht1'] + $rapport['ht2'] +$rapport['ht3'] +$rapport['ht4'] +$rapport['ht5'] + $rapport['ht6'])) && empty($rapport['abs'])) : ?>
-                                                    <tr class="anomalieVH">
-                                                <?php elseif(!empty($rapport['abs']) && ($rapport['htot'] === ($rapport['ht1'] + $rapport['ht2'] +$rapport['ht3'] +$rapport['ht4'] +$rapport['ht5'] + $rapport['ht6']))) : ?>
-                                                    <tr class="absence">
-                                                <?php elseif(($rapport['htot'] != ($rapport['ht1'] + $rapport['ht2'] +$rapport['ht3'] +$rapport['ht4'] +$rapport['ht5'] + $rapport['ht6'])) && !(empty($rapport['abs']))) : ?>
-                                                    <tr class="absenceHeure">
-                                                <?php else : ?>
-                                                    <tr>
-                                                <?php endif ; ?>
+                                                <tr>
                                                     <td><input type="checkbox" name="selected_matricule[]" class="checkbox checkbox_abs_hn" value="<?= isset($rapport['ouvrier_id'])? $rapport['ouvrier_id'] : (isset($rapport['interimaire_id'])? $rapport['interimaire_id'] : '')?>" /></td>
-                                                    <td><?= isset($rapport['ouvrier_id'])? $rapport['ouvrier_id'] : (isset($rapport['interimaire_id'])? $rapport['interimaire_id'] : '')?> - <?=$rapport['fullname']?></td>
+                                                    <td>
+                                                        <?php if ($rapport['htot'] != ($rapport['ht1'] + $rapport['ht2'] +$rapport['ht3'] +$rapport['ht4'] +$rapport['ht5'] + $rapport['ht6'])) : ?>
+                                                            <img src="img/warning-yellow-black.png" alt="erreur volume horaire">
+                                                        <?php endif ?>
+                                                        <?php if (!empty($rapport['habs']) || !empty($rapport['abs'])) : ?>
+                                                            <img src="img/dialog-stop-2.png" alt="absence saisie">
+                                                        <?php endif ?>
+                                                        <?= isset($rapport['ouvrier_id'])? $rapport['ouvrier_id'] : (isset($rapport['interimaire_id'])? $rapport['interimaire_id'] : '')?> - <?=$rapport['fullname']?>
+                                                    </td>
                                                     <td ><?= $rapport['htot'] ?></td>
                                                     <?php if (!empty($absentHorsNoyauHeader)) : ?>
                                                         <?php foreach($absentHorsNoyauHeader as $noyauHeaderdetail) : ?>
@@ -383,7 +382,7 @@
                                                     <td ><?= $rapport['km'] ?></td>
                                                 </tr>
                                             <?php  endforeach;  ?>
-                                            <tr>
+                                                <tr>
                                                 <td colspan="2">Totaux</td>
                                                 <td><?= $absentHorsNoyauHourGlobal; ?></td>
                                                 <?php if(!empty($absentHorsNoyauHeader)) :?>
@@ -464,15 +463,7 @@
                                     </thead>
                                     <tbody>
                                         <?php foreach ($rapportHorsNoyau as $rapport ) : ?>
-                                            <?php if (($rapport['htot'] != ($rapport['ht1'] + $rapport['ht2'] +$rapport['ht3'] +$rapport['ht4'] +$rapport['ht5'] + $rapport['ht6'])) && empty($rapport['abs'])) : ?>
-                                                <tr class="anomalieVH">
-                                            <?php elseif(!empty($rapport['abs']) && ($rapport['htot'] === ($rapport['ht1'] + $rapport['ht2'] +$rapport['ht3'] +$rapport['ht4'] +$rapport['ht5'] + $rapport['ht6']))) : ?>
-                                                <tr class="absence">
-                                            <?php elseif(($rapport['htot'] != ($rapport['ht1'] + $rapport['ht2'] +$rapport['ht3'] +$rapport['ht4'] +$rapport['ht5'] + $rapport['ht6'])) && !(empty($rapport['abs']))) : ?>
-                                                <tr class="absenceHeure">
-                                            <?php else : ?>
-                                                <tr>
-                                            <?php endif ; ?>
+                                            <tr>
                                             <?php if($_SESSION['post_id'] === '1') : ?>
                                                 <?php if($rapport['chef_dequipe_updated'] === $_SESSION['username']): ?>
                                                     <td><input type="checkbox" name="selected_matricule[]" class="checkbox checkbox_hn" value="<?= isset($rapport['ouvrier_id'])? $rapport['ouvrier_id'] : (isset($rapport['interimaire_id'])? $rapport['interimaire_id'] : '')?>"/></td>
@@ -484,7 +475,15 @@
                                             <?php else : ?>
                                                 <td><input type="checkbox" name="selected_matricule[]" class="checkbox checkbox_hn" value="<?= isset($rapport['ouvrier_id'])? $rapport['ouvrier_id'] : (isset($rapport['interimaire_id'])? $rapport['interimaire_id'] : '')?>"/></td>
                                             <?php endif ; ?>
-                                                <td ><?= isset($rapport['ouvrier_id'])? $rapport['ouvrier_id'] : (isset($rapport['interimaire_id'])? $rapport['interimaire_id'] : '')?> - <?=$rapport['fullname']?></td>
+                                                <td >
+                                                    <?php if ($rapport['htot'] != ($rapport['ht1'] + $rapport['ht2'] +$rapport['ht3'] +$rapport['ht4'] +$rapport['ht5'] + $rapport['ht6'])) : ?>
+                                                        <img src="img/warning-yellow-black.png" alt="erreur volume horaire">
+                                                    <?php endif ?>
+                                                    <?php if (!empty($rapport['habs']) || !empty($rapport['abs'])) : ?>
+                                                        <img src="img/dialog-stop-2.png" alt="absence saisie">
+                                                    <?php endif ?>
+                                                    <?= isset($rapport['ouvrier_id'])? $rapport['ouvrier_id'] : (isset($rapport['interimaire_id'])? $rapport['interimaire_id'] : '')?> - <?=$rapport['fullname']?>
+                                                </td>
                                                 <td ><?= $rapport['htot'] ?></td>
                                                 <?php if (!empty($horsNoyauHeader)) : ?>
                                                     <?php foreach($horsNoyauHeader as $noyauHeaderdetail) : ?>
@@ -535,7 +534,7 @@
                                                 <td ><?= isset($rapport['chef_dequipe_updated']) ? $rapport['chef_dequipe_updated'] : '' ?></td>
                                             </tr>
                                         <?php  endforeach;  ?>
-                                        <tr>
+                                            <tr>
                                             <td colspan="2">Totaux</td>
                                             <td><?= $horsNoyauHourGlobal; ?></td>
                                             <?php if(!empty($horsNoyauHeader)) :?>
@@ -622,7 +621,7 @@
                             <a style="margin-top: 5px ; margin-right: 3px ; margin-left: 3px" href="erapport.php?rapport_id=<?= $_GET['rapport_id']?>&rapport_type=<?=$_GET['rapport_type']?>&chef_dequipe_id=<?=$_GET['chef_dequipe_id']?>&chef_dequipe_matricule=<?= $_GET['chef_dequipe_matricule']?>&date_generation=<?= $_GET['date_generation'] ?>&chantier_id=<?= $_GET['chantier_id']?>&chantier_code=<?= $_GET['chantier_code']?>&inval=true" class="span2 btn btn-primary">Invalider le rapport</a>
                         <?php endif ; ?>
                         <a style="margin-top: 5px ; margin-right: 3px ; margin-left: 3px" href="?rapport_id=<?= $_GET['rapport_id']?>&rapport_type=<?=$_GET['rapport_type']?>&chef_dequipe_id=<?=$_GET['chef_dequipe_id']?>&chef_dequipe_matricule=<?= $_GET['chef_dequipe_matricule']?>&date_generation=<?= $_GET['date_generation'] ?>&chantier_id=<?= $_GET['chantier_id']?>&chantier_code=<?= $_GET['chantier_code']?>&reg=true" class="span2 btn btn-info">Regénérer le rapport</a>
-                        <a style="margin-top: 5px ; margin-right: 3px ; margin-left: 3px" target="_blank" href="eRapportShowPrint.php?rapport_id=<?= $_GET['rapport_id']?>&rapport_type=<?=$_GET['rapport_type']?>&chef_dequipe_id=<?=$_GET['chef_dequipe_id']?>&chef_dequipe_matricule=<?= $_GET['chef_dequipe_matricule']?>&date_generation=<?= $_GET['date_generation'] ?>&chantier_id=<?= $_GET['chantier_id']?>&chantier_code=<?= $_GET['chantier_code']?>&validated=<?= $_GET['validated']?>&submitted=<?= $_GET['submitted']?>" class="span2 btn btn-block">Imprimer</a>
+                        <a style="margin-top: 5px ; margin-right: 3px ; margin-left: 3px" href="eRapportShowPrint.php?rapport_id=<?= $_GET['rapport_id']?>&rapport_type=<?=$_GET['rapport_type']?>&chef_dequipe_id=<?=$_GET['chef_dequipe_id']?>&chef_dequipe_matricule=<?= $_GET['chef_dequipe_matricule']?>&date_generation=<?= $_GET['date_generation'] ?>&chantier_id=<?= $_GET['chantier_id']?>&chantier_code=<?= $_GET['chantier_code']?>&validated=<?= $_GET['validated']?>&submitted=<?= $_GET['submitted']?>" class="span2 btn btn-block">Imprimer</a>
                         <?php if($_SESSION['post_id']=== '1'): ?>
                             <a style="margin-top: 5px ; margin-right: 3px ; margin-left: 3px" href="erapport.php?rapport_id=<?= $_GET['rapport_id']?>&rapport_type=<?=$_GET['rapport_type']?>&chef_dequipe_id=<?=$_GET['chef_dequipe_id']?>&chef_dequipe_matricule=<?= $_GET['chef_dequipe_matricule']?>&date_generation=<?= $_GET['date_generation'] ?>&chantier_id=<?= $_GET['chantier_id']?>&chantier_code=<?= $_GET['chantier_code']?>&sup=true" class="span2 btn btn-danger" disabled>Supprimer le rapport</a>
                         <?php else : ?>
