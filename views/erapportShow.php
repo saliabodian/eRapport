@@ -598,18 +598,18 @@
                         <div class=" span4 btn-block"></div>
                         <?php if($_SESSION['post_id']==='1') :?>
                             <?php if($_GET['submitted'] === '1') :?>
-                                <button disabled style="margin-right: 3px ; margin-left: 3px" type="submit" class="span4 btn btn-warning" name="val" value="true">Valider</button>
+                                <button disabled style="margin: auto" type="submit" class="span4 btn btn-warning" name="val" value="true">Valider</button>
                             <?php else : ?>
-                                <button style="margin-right: 3px ; margin-left: 3px" type="submit" class="span4 btn btn-warning" name="val" value="true">Valider</button>
+                                <button style="margin: auto" type="submit" class="span4 btn btn-warning" name="val" value="true">Valider</button>
                             <?php endif ; ?>
                         <?php elseif($_SESSION['post_id']==='5') : ?>
                             <?php if($_GET['validated'] === '1') :?>
-                                <button disabled style="margin-right: 3px ; margin-left: 3px" type="submit" class="span4 btn btn-warning" name="val" value="true">Valider</button>
+                                <button disabled style="margin: auto" type="submit" class="span4 btn btn-warning" name="val" value="true">Valider</button>
                             <?php else : ?>
-                                <button style="margin-right: 3px ; margin-left: 3px" type="submit" class="span4 btn btn-warning" name="val" value="true">Valider</button>
+                                <button style="margin: auto" type="submit" class="span4 btn btn-warning" name="val" value="true">Valider</button>
                             <?php endif ; ?>
                         <?php else : ?>
-                            <button style="margin-right: 3px ; margin-left: 3px" type="submit" class="span4 btn btn-warning" name="val" value="true">Valider</button>
+                            <button style="margin: auto" type="submit" class="span4 btn btn-warning" name="val" value="true">Valider</button>
                         <?php endif ; ?>
                         <div class=" span4 btn-block"></div>
                     </div>

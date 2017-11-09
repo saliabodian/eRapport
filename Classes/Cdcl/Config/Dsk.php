@@ -387,13 +387,16 @@ class Dsk {
         $dbh = ibase_connect("31.204.90.68:C:\DSK\Data\dsk2.fdb","SYSDBA","masterkey");
     //    $dbh = ibase_connect("10.10.110.30:C:\DSK\Data\dsk2.fdb","SYSDBA","masterkey");
 
+
+
         $sql= "SELECT PERSHISTORY.CUSTOM3, Booking.NoPers, Pers.FULLNAME,PERS.CODEPERS, ACCOUNT.CUSTOM  FROM BOOKING
                 INNER JOIN Pers on (Pers.NoPers=Booking.NoPers)
                 INNER JOIN PERSHISTORY ON
                 ((PERSHISTORY.NOPERS=BOOKING.NOPERS)
                     AND (PERSHISTORY.STARTDATE<= BOOKING.THEDATE)
-                    AND ((PERSHISTORY.ENDDATE IS NULL) OR (PERSHISTORY.ENDDATE>= Booking.THEDATE)))
-                    AND (PERSHISTORY.CODECOSTCENTER <> '5470' OR PERSHISTORY.CODECOSTCENTER <> '5420')
+                    AND (PERS.CODECOSTCENTERREF NOT IN ('5470', '5420'))
+                    AND ((PERSHISTORY.ENDDATE IS NULL) OR (PERSHISTORY.ENDDATE>= Booking.THEDATE))
+                )
                 LEFT JOIN TERMS ON (
                     (
                     TERMS.GIDDID = BOOKING.BKT1
@@ -471,84 +474,88 @@ class Dsk {
                 INNER JOIN PERSHISTORY ON
                 ((PERSHISTORY.NOPERS=BOOKING.NOPERS)
                     AND (PERSHISTORY.STARTDATE<= BOOKING.THEDATE)
+                    AND (PERS.CODECOSTCENTERREF NOT IN ('5470', '5420'))
                     AND ((PERSHISTORY.ENDDATE IS NULL) OR (PERSHISTORY.ENDDATE>= Booking.THEDATE)))
-                LEFT JOIN TERMS ON (
-                    (
-                    TERMS.GIDDID = BOOKING.BKT1
-                    ) OR
-                    (
-                    TERMS.GIDDID = BOOKING.BKT2
-                    ) OR
-                    (
-                    TERMS.GIDDID = BOOKING.BKT3
-                    ) OR
-                    (
-                    TERMS.GIDDID = BOOKING.BKT4
-                    ) OR
-                    (
-                    TERMS.GIDDID = BOOKING.BKT5
-                    ) OR
-                    (
-                    TERMS.GIDDID = BOOKING.BKT6
-                    ) OR
-                    (
-                    TERMS.GIDDID = BOOKING.BKT7
-                    ) OR
-                    (
-                    TERMS.GIDDID = BOOKING.BKT8
-                    ) OR
-                    (
-                    TERMS.GIDDID = BOOKING.BKT9
-                    ) OR
-                    (
-                    TERMS.GIDDID = BOOKING.BKT10
-                    ) OR
-                    (
-                    TERMS.GIDDID = BOOKING.BKT11
-                    ) OR
-                    (
-                    TERMS.GIDDID = BOOKING.BKT12
-                    ) OR
-                    (
-                    TERMS.GIDDID = BOOKING.BKT13
-                    ) OR
-                    (
-                    TERMS.GIDDID = BOOKING.BKT14
-                    ) OR
-                    (
-                    TERMS.GIDDID = BOOKING.BKT15
-                    ) OR
-                    (
-                    TERMS.GIDDID = BOOKING.BKT16
-                    ) OR
-                    (
-                    TERMS.GIDDID = BOOKING.BKT17
-                    ) OR
-                    (
-                    TERMS.GIDDID = BOOKING.BKT18
-                    ) OR
-                    (
-                    TERMS.GIDDID = BOOKING.BKT19
-                    ) OR
-                    (
-                    TERMS.GIDDID = BOOKING.BKT20
+                    LEFT JOIN TERMS ON (
+                        (
+                        TERMS.GIDDID = BOOKING.BKT1
+                        ) OR
+                        (
+                        TERMS.GIDDID = BOOKING.BKT2
+                        ) OR
+                        (
+                        TERMS.GIDDID = BOOKING.BKT3
+                        ) OR
+                        (
+                        TERMS.GIDDID = BOOKING.BKT4
+                        ) OR
+                        (
+                        TERMS.GIDDID = BOOKING.BKT5
+                        ) OR
+                        (
+                        TERMS.GIDDID = BOOKING.BKT6
+                        ) OR
+                        (
+                        TERMS.GIDDID = BOOKING.BKT7
+                        ) OR
+                        (
+                        TERMS.GIDDID = BOOKING.BKT8
+                        ) OR
+                        (
+                        TERMS.GIDDID = BOOKING.BKT9
+                        ) OR
+                        (
+                        TERMS.GIDDID = BOOKING.BKT10
+                        ) OR
+                        (
+                        TERMS.GIDDID = BOOKING.BKT11
+                        ) OR
+                        (
+                        TERMS.GIDDID = BOOKING.BKT12
+                        ) OR
+                        (
+                        TERMS.GIDDID = BOOKING.BKT13
+                        ) OR
+                        (
+                        TERMS.GIDDID = BOOKING.BKT14
+                        ) OR
+                        (
+                        TERMS.GIDDID = BOOKING.BKT15
+                        ) OR
+                        (
+                        TERMS.GIDDID = BOOKING.BKT16
+                        ) OR
+                        (
+                        TERMS.GIDDID = BOOKING.BKT17
+                        ) OR
+                        (
+                        TERMS.GIDDID = BOOKING.BKT18
+                        ) OR
+                        (
+                        TERMS.GIDDID = BOOKING.BKT19
+                        ) OR
+                        (
+                        TERMS.GIDDID = BOOKING.BKT20
+                        )
                     )
-                )
-                  INNER JOIN
-                  TERMSHISTORY
-                  ON ((TERMSHISTORY.NOTERM = TERMS.NOTERM)
-                      AND (TERMSHISTORY.STARTDATE<=BOOKING.THEDATE)
-                      AND ((TERMSHISTORY.ENDDATE>=BOOKING.THEDATE) OR TERMSHISTORY.ENDDATE IS NULL))
+                    INNER JOIN
+                        TERMSHISTORY
+                    ON ((TERMSHISTORY.NOTERM = TERMS.NOTERM)
+                    AND (TERMSHISTORY.STARTDATE<=BOOKING.THEDATE)
+                    AND ((TERMSHISTORY.ENDDATE>=BOOKING.THEDATE) OR TERMSHISTORY.ENDDATE IS NULL))
 
-                 INNER JOIN account on (Account.NoAccount=TERMSHISTORY.SITE and ACCOUNT.CUSTOM=".$chantier.")
+                    INNER JOIN account on (Account.NoAccount=TERMSHISTORY.SITE and ACCOUNT.CUSTOM=".$chantier.")
 
-                 WHERE THEDATE='".$date."'
+                    WHERE THEDATE='".$date."'
 
-                AND PERSHISTORY.CUSTOM3 = PERS.CODEPERS
+                    AND PERSHISTORY.CUSTOM3 = PERS.CODEPERS
                 )";
-
+        // AND ((PERSHISTORY.CODECOSTCENTER <> '5470') OR (PERSHISTORY.CODECOSTCENTER <> '5420'))
         $sth = ibase_query($dbh, $sql);
 
+    //    var_dump($sql);
+
+    //    exit;
         $i=0;
 
         while($row = ibase_fetch_object($sth)) {

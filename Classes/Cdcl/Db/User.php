@@ -203,7 +203,7 @@ Class User extends DbObject{
         else {
             $allDatas = $stmt->fetchAll(\PDO::FETCH_ASSOC);
             foreach ($allDatas as $row) {
-                $returnList[$row['id']] = $row['firstname'].' '.$row['lastname'];
+                $returnList[$row['id']] = $row['lastname'].' '.$row['firstname'];
             }
         }
         return $returnList;

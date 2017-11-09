@@ -67,13 +67,13 @@
                             <div class="control-group">
                                 <label class="control-label">Mot de passe <span>*</span></label>
                                 <div class="controls">
-                                    <input type="password"  class="span11" placeholder="Mot de passe" name="password1" value="<?= $userObject->getPassword() ?>"/>
+                                    <input type="password"  class="span11" placeholder="Mot de passe" name="password1" value="<?= md5($userObject->getPassword()) ?>"/>
                                 </div>
                             </div>
                             <div class="control-group">
                                 <label class="control-label">Confirmer mot de passe <span>*</span></label>
                                 <div class="controls">
-                                    <input type="password"  class="span11" placeholder="Confirmer votre mot de passe" name="password2" value="<?= $userObject->getPassword() ?>"/>
+                                    <input type="password"  class="span11" placeholder="Confirmer votre mot de passe" name="password2" value="<?= md5($userObject->getPassword()) ?>"/>
                                 </div>
                             </div>
                             <div class="control-group">
