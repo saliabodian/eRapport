@@ -129,65 +129,65 @@
                                     <div class="controls">
                                         <?php if(sizeof($workerToUpdate) === 1) : ?>
                                             <?php foreach ($workerToUpdate as $worker) : ?>
-                                                <input type="number" class="span2" name="habs" value="<?= $worker['habs'] ?>"/>
+                                                <input type="text" class="span2" name="habs" value="<?= $worker['habs'] ?>"/>
                                             <?php endforeach; ?>
                                         <?php else : ?>
-                                            <input type="number" class="span2" name="habs" value=""/>
+                                            <input type="text" class="span2" name="habs" value=""/>
                                         <?php endif ?>
                                     </div>
                                 </div>
                                 <!-- Ajout des tâches de manières dynamiques avec jQuery-->
                                 <div class="control-group">
-                                    <label class="control-label">Tâche(s) effectuée(s) :</label>
-                                    <div class="controls controls-row tasks">
-                                        <?php if(sizeof($workerToUpdate)=== 1) : ?>
-                                            <select class="span2 typeTask mySelect" name="type_task" onchange="getId(this.value)">
-                                                <option>Catégorie</option>
-                                                    <?php foreach($listTypeTache as $typeTache) :?>
-                                                        <?php foreach($workerToUpdate as $worker) :?>
-                                                            <option value="<?= $typeTache['id']?>" <?php if($worker['type_task_id_1']=== $typeTache['id']) : ?> selected="selected" <?php endif; ?>><?= $typeTache['nom_type_tache']?></option>
+                                            <label class="control-label">Tâche(s) effectuée(s) :</label>
+                                            <div class="controls controls-row tasks">
+                                                <?php if(sizeof($workerToUpdate)=== 1) : ?>
+                                                    <select class="span2 typeTask mySelect" name="type_task" onchange="getId(this.value)">
+                                                        <option>Catégorie</option>
+                                                        <?php foreach($listTypeTache as $typeTache) :?>
+                                                            <?php foreach($workerToUpdate as $worker) :?>
+                                                                <option value="<?= $typeTache['id']?>" <?php if($worker['type_task_id_1']=== $typeTache['id']) : ?> selected="selected" <?php endif; ?>><?= $typeTache['nom_type_tache']?></option>
+                                                            <?php endforeach;?>
                                                         <?php endforeach;?>
-                                                    <?php endforeach;?>
-                                            </select>
-                                        <?php else : ?>
-                                            <select class="span2 typeTask mySelect" name="type_task" onchange="getId(this.value)">
-                                                <option>Catégorie</option>
-                                                <?php foreach($listTypeTache as $typeTache) :?>
-                                                    <option value="<?= $typeTache['id']?>"><?= $typeTache['nom_type_tache']?></option>
-                                                <?php endforeach;?>
-                                            </select>
-                                        <?php endif; ?>
-                                        <?php if(sizeof($workerToUpdate)=== 1) : ?>
-                                            <select class="span2 mySelect task" name="tasks">
-                                                <option>Tâche</option>
-                                                <?php foreach($listTache as $tache) : ?>
-                                                    <?php foreach($workerToUpdate as $worker) : ?>
-                                                        <option value="<?= $tache['id']?>" <?php if($worker['task_id_1']=== $tache['id']) : ?> selected="selected" <?php endif; ?>><?= $tache['nom']?></option>
-                                                    <?php endforeach ;?>
-                                                <?php endforeach ;?>
-                                            </select>
-                                        <?php else : ?>
-                                            <select class="span2 mySelect task" name="tasks">
-                                                <option>Tâche</option>
-                                            </select>
-                                        <?php endif; ?>
-                                        <?php if(sizeof($workerToUpdate)=== 1) : ?>
-                                            <?php foreach($workerToUpdate as $worker): ?>
-                                                <input type="text" class="span2" id="bat" name="bat" value="<?=$worker['bat_1']?>" placeholder="Batiment">
-                                                <input type="text" class="span2" id="axe" name="axe" value="<?=$worker['axe_1']?>" placeholder="Axe">
-                                                <input type="text" class="span1" id="et" name="et" value="<?=$worker['et_1']?>" placeholder="Etage">
-                                                <input type="text" class="span1" id="ht" name="ht" value="<?=$worker['ht1']?>" placeholder="Hre">
-                                            <?php endforeach ; ?>
-                                        <?php else : ?>
-                                            <input type="text" class="span2" id="bat" name="bat" value="" placeholder="Batiment">
-                                            <input type="text" class="span2" id="axe" name="axe" value="" placeholder="Axe">
-                                            <input type="text" class="span1" id="et" name="et" value="" placeholder="Etage">
-                                            <input type="text" class="span1" id="ht" name="ht" value="" placeholder="Hre">
-                                        <?php endif ; ?>
-                                        <!--a Gestion dynamique de l'ajout d'une tache mis en suspend</a-->
-                                        <!--a class="sAdd btn btn-success add-more" title="" href="#"><i class="icon-plus"></i></a-->
-                                    </div>
-                                </div>
+                                                    </select>
+                                                <?php else : ?>
+                                                    <select class="span2 typeTask mySelect" name="type_task" onchange="getId(this.value)">
+                                                        <option>Catégorie</option>
+                                                        <?php foreach($listTypeTache as $typeTache) :?>
+                                                            <option value="<?= $typeTache['id']?>"><?= $typeTache['nom_type_tache']?></option>
+                                                        <?php endforeach;?>
+                                                    </select>
+                                                <?php endif; ?>
+                                                <?php if(sizeof($workerToUpdate)=== 1) : ?>
+                                                    <select class="span2 mySelect task" name="tasks">
+                                                        <option>Tâche</option>
+                                                        <?php foreach($listTache as $tache) : ?>
+                                                            <?php foreach($workerToUpdate as $worker) : ?>
+                                                                <option value="<?= $tache['id']?>" <?php if($worker['task_id_1']=== $tache['id']) : ?> selected="selected" <?php endif; ?>><?= $tache['nom']?></option>
+                                                            <?php endforeach ;?>
+                                                        <?php endforeach ;?>
+                                                    </select>
+                                                <?php else : ?>
+                                                    <select class="span2 mySelect task" name="tasks">
+                                                        <option>Tâche</option>
+                                                    </select>
+                                                <?php endif; ?>
+                                                <?php if(sizeof($workerToUpdate)=== 1) : ?>
+                                                    <?php foreach($workerToUpdate as $worker): ?>
+                                                        <input type="text" class="span2" id="bat" name="bat" value="<?=$worker['bat_1']?>" placeholder="Batiment">
+                                                        <input type="text" class="span2" id="axe" name="axe" value="<?=$worker['axe_1']?>" placeholder="Axe">
+                                                        <input type="text" class="span1" id="et" name="et" value="<?=$worker['et_1']?>" placeholder="Etage">
+                                                        <input type="text" class="span1" id="ht" name="ht" value="<?=$worker['ht1']?>" placeholder="Hre">
+                                                    <?php endforeach ; ?>
+                                                <?php else : ?>
+                                                    <input type="text" class="span2" id="bat" name="bat" value="" placeholder="Batiment">
+                                                    <input type="text" class="span2" id="axe" name="axe" value="" placeholder="Axe">
+                                                    <input type="text" class="span1" id="et" name="et" value="" placeholder="Etage">
+                                                    <input type="text" class="span1" id="ht" name="ht" value="" placeholder="Hre">
+                                                <?php endif ; ?>
+                                                <!--a Gestion dynamique de l'ajout d'une tache mis en suspend</a-->
+                                                <!--a class="sAdd btn btn-success add-more" title="" href="#"><i class="icon-plus"></i></a-->
+                                            </div>
+                                        </div>
                                 <div class="control-group">
                                     <div class="controls controls-row tasks">
                                         <?php if(sizeof($workerToUpdate)=== 1 ) : ?>

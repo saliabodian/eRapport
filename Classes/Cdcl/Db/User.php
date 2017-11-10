@@ -378,64 +378,55 @@ Class User extends DbObject{
     }
 
     // Fonction de connexion et de gestion des sessions
-    public function loginPost(){
+    public static function loginPost(){
         // Get the config object
+
         $conf = Config::getInstance();
+
         if(!empty($_POST)){
             //var_dump($_POST);
             $login = isset($_POST['login']) ? $_POST['login'] : '';
             //var_dump($_POST['login']);
             $password = isset($_POST['password']) ? $_POST['password'] : '';
-            //var_dump($_POST['password']);
-            $ok = true;
+            //
+            $formOk = true;
+
             if(empty($login)){
                 $conf->addError('Veuillez renseigner le login');
-                $ok = false;
+                $formOk = false;
             }else{
+                if(empty($password)){
+                    $conf->addError('Veuillez renseigner le mot de passe');
+                    $formOk = false;
+                }else{
+                    $sql='SELECT * FROM user WHERE username= :username AND password= :password';
 
-                $sql='SELECT * FROM user WHERE username= :username';
+                    $pdoStmt = Config::getInstance()->getPDO()->prepare($sql);
+                    $pdoStmt->bindValue(':password', md5($password));
+                    $pdoStmt->bindValue(':username', $login);
 
-                //var_dump($errorList);
-                //var_dump($ok);
-                $pdoStmt = Config::getInstance()->getPDO()->prepare($sql);
-                $pdoStmt->bindValue(':username', $login);
-
-                if ($pdoStmt->execute() === false) {
-                    print_r($pdoStmt->errorInfo());
-                }
-                else {
-                    $loginExist = $pdoStmt->rowCount();
+                    if ($pdoStmt->execute() === false) {
+                        print_r($pdoStmt->errorInfo());
+                    }
+                    else {
+                        $passwordExist = $pdoStmt->rowCount();
+                    }
                 }
             }
 
-            if(empty($password)){
-                $conf->addError('Veuillez renseigner le mot de passe');
-                $ok = false;
-            }else{
-                $sql='SELECT * FROM user WHERE password= :password';
 
-                $pdoStmt = Config::getInstance()->getPDO()->prepare($sql);
-                $pdoStmt->bindValue(':password', md5($password));
-
-                if ($pdoStmt->execute() === false) {
-                    print_r($pdoStmt->errorInfo());
-                }
-                else {
-                    $passwordExist = $pdoStmt->rowCount();
-                }
-            }
 
             //var_dump($loginExist);
 
            // var_dump($passwordExist);
-            if($loginExist>0 && $passwordExist>0){
-                $ok = true;
+            if($passwordExist>0){
+                $formOk = true;
             }else{
-                $ok = false;
+                $formOk = false;
                 $conf->addError('Login ou mot de passe invalide !');
             }
-           // var_dump($ok);
-            if($ok==true){
+           // var_dump($formOk);
+            if($formOk===true){
             //    session_start();
                 $user = new User();
                 $userSessionValues = $user->getByUsername($login);
@@ -454,7 +445,7 @@ Class User extends DbObject{
                 header('Location:home.php');
             }
         }
-        return $conf;
+        return $formOk;
     }
 
     function userHasChantierSaveDb($user_id, $chantiers){
