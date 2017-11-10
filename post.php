@@ -95,7 +95,7 @@ if(!empty($_SESSION)){
     $selectPost = new SelectHelper($postList, $postId, array(
         'name' => 'id',
         'id' => 'id',
-        'class' => 'form-control',
+        'class' => 'select2-container',
     ));
 
 

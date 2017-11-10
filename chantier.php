@@ -105,7 +105,7 @@ if(!empty($_SESSION)){
     $selectChantier = new SelectHelper($chantierList, $chantierId, array(
         'name' => 'id',
         'id' => 'id',
-        'class' => 'form-control',
+        'class' => 'select2-container',
     ));
 
 

@@ -95,7 +95,7 @@ if(!empty($_SESSION)){
     $selectTypeTache = new SelectHelper($typeTacheList, $typeTacheId, array(
         'name' => 'id',
         'id' => 'id',
-        'class' => 'form-control',
+        'class' => 'select2-container',
     ));
 
 

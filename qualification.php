@@ -78,7 +78,7 @@ if(!empty($_SESSION)){
     $selectQualif = new SelectHelper($qualifList, $qualifId, array(
         'name' => 'id',
         'id' => 'id',
-        'class' => 'form-control',
+        'class' => 'select2-container',
     ));
 
     include $conf->getViewsDir().'header.php';

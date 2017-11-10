@@ -97,7 +97,7 @@ if(!empty($_SESSION)){
     $selectMetier = new SelectHelper($metierList, $metierId, array(
         'name' => 'id',
         'id' => 'id',
-        'class' => 'form-control',
+        'class' => 'select2-container',
     ));
 
 

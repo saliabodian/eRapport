@@ -289,43 +289,43 @@ if(!empty($_SESSION)){
     $selectInterimaire = new SelectHelper($interimaireList, $interimaireId, array(
         'name' => 'id',
         'id' => 'id',
-        'class' => 'form-control',
+        'class' => 'select2-container',
     ));
 
     $selectMetier = new SelectHelper($metierList, $interimaireObject->getMetierId()->getId(), array(
         'name' => 'metier_id',
         'id' => 'id',
-        'class' => 'form-control',
+        'class' => 'select2-container',
     ));
 
     $selectChantier = new SelectHelper($chantierList, $interimaireObject->getChantierId()->getId(), array(
         'name' => 'chantier_id',
         'id' => 'id',
-        'class' => 'form-control',
+        'class' => 'select2-container',
     ));
 
     $selectAgence = new SelectHelper($agenceList, $interimaireObject->getAgenceId()->getId(), array(
         'name' => 'agence_id',
         'id' => 'id',
-        'class' => 'form-control',
+        'class' => 'select2-container',
     ));
 
     $selectQualif = new SelectHelper($qualifList, $interimaireObject->getQualifId()->getId(), array(
         'name' => 'qualif_id',
         'id' => 'id',
-        'class' => 'form-control',
+        'class' => 'select2-container',
     ));
 
     $selectDpt = new SelectHelper($dptList, $interimaireObject->getDptId()->getId(), array(
         'name' => 'dpt_id',
         'id' => 'id',
-        'class' => 'form-control',
+        'class' => 'select2-container',
     ));
 
     $selectUser = new SelectHelper($userList, $interimaireObject->getUserId()->getId(), array(
         'name' => 'user_id',
         'id' => 'id',
-        'class' => 'form-control',
+        'class' => 'select2-container',
     ));
 
 

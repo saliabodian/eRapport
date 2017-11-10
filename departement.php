@@ -86,7 +86,7 @@ if(!empty($_SESSION)){
     $selectDpt = new SelectHelper($dptList, $dptId, array(
         'name' => 'id',
         'id' => 'id',
-        'class' => 'form-control',
+        'class' => 'select2-container',
     ));
 
     include $conf->getViewsDir().'header.php';

@@ -18,10 +18,10 @@
                                 <div class="controls span3 m-wrap">
                                     <?php $selectUser->displayHTML(); ?>
                                 </div>
-                                <div class="controls span3 m-wrap">
+                                <div class="controls span2">
                                     <input type="submit" class="btn btn-success btn-block" value="Sélectionner" />
                                 </div>
-                                <div class="controls span3 m-wrap">
+                                <div class="controls span2">
                                     <a href="?" class="btn btn-info btn-block">Ajouter</a>
                                 </div>
                             </div>
@@ -59,7 +59,7 @@
                                 </div>
                             </div>
                             <div class="control-group">
-                                <label class="control-label">Email <span>*</span>:</label>
+                                <label class="control-label">Email <span></span>:</label>
                                 <div class="controls">
                                     <input type="email" class="span11" placeholder="m.mariano@cdclux.com" name="email" value="<?= $userObject->getEmail() ?>"/>
                                 </div>

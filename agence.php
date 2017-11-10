@@ -162,7 +162,7 @@ if(!empty($_SESSION)) {
     $selectAgence = new SelectHelper($agenceList, $agenceId, array(
         'name' => 'id',
         'id' => 'id',
-        'class' => 'form-control',
+        'class' => 'select2-container',
     ));
 
 

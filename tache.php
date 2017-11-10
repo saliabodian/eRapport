@@ -110,13 +110,13 @@ if(!empty($_SESSION)){
     $selectTache = new SelectHelper($tacheList, $tacheId, array(
         'name' => 'id',
         'id' => 'id',
-        'class' => 'form-control',
+        'class' => 'select2-container',
     ));
 
     $selectTypeTache = new SelectHelper($typeTacheList, $tacheObject->getTypeTache()->getId(), array(
         'name' => 'type_tache_id',
         'id' => 'id',
-        'class' => 'form-control',
+        'class' => 'select2-container',
     ));
 
 

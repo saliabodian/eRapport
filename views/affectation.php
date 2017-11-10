@@ -16,9 +16,9 @@
                         <form action="" method="get"  class="form-horizontal">
                             <input type="hidden" name="reaffect" value="true"/>
                             <div class="control-group">
-                                <label class="control-label span3 m-wrap">Semaine à dupliquer :</label>
-                                <div class="controls span3 m-wrap">
-                                    <select class="form-control" name="weekToDuplicate" id="">
+                                <label class="control-label">Semaine à dupliquer :</label>
+                                <div class="controls mySelect">
+                                    <select class="select2-container" name="weekToDuplicate" id="">
                                         <?php for($i=1; $i<=52; $i++): ?>
                                             <option value="<?= $i ?>" <?php if($i== (date('W',time())-1)) : ?> selected="selected" <?php endif; ?>><?= 'Semaine '.$i ?> </option>
                                         <?php endfor; ?>
@@ -26,9 +26,9 @@
                                 </div>
                             </div>
                             <div class="control-group">
-                                <label class="control-label span4 m-wrap">Nouvelle semaine d'affectation :</label>
-                                <div class="controls span3 m-wrap">
-                                    <select class="form-control" name="weekToAffect" id="">
+                                <label class="control-label">Nouvelle semaine d'affectation :</label>
+                                <div class="controls mySelect">
+                                    <select class="select2-container" name="weekToAffect" id="">
                                         <?php for($i=1; $i<=52; $i++): ?>
                                             <option value="<?= $i ?>" <?php if($i== (date('W',time()))) : ?> selected="selected" <?php endif; ?>><?= 'Semaine '.$i ?> </option>
                                         <?php endfor; ?>
@@ -53,15 +53,15 @@
                     <div class="widget-content nopadding">
                         <form action="" method="get" class="form-horizontal">
                             <div class="control-group">
-                                <label class="control-label span3 m-wrap">Liste des chantiers</label>
-                                <div class="controls span3 m-wrap">
+                                <label class="control-label">Liste des chantiers</label>
+                                <div class="controls mySelect">
                                     <?php $selectChantier->displayHTML(); ?>
                                 </div>
                             </div>
                             <div class="control-group">
-                                <label class="control-label span3 m-wrap">Semaine du</label>
-                                <div class="controls span3 m-wrap">
-                                    <input type="text" name="date_deb" class="btn datepicker btn-block" value=""/>
+                                <label class="control-label">Semaine du</label>
+                                <div class="controls">
+                                    <input type="text" name="date_deb" class="span3 btn datepicker btn-block" value=""/>
                                 </div>
                             </div>
                             <div class="form-actions">
