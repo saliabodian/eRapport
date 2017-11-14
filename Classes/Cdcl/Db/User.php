@@ -427,7 +427,7 @@ Class User extends DbObject{
             }
            // var_dump($formOk);
             if($formOk===true){
-            //    session_start();
+                session_start();
                 $user = new User();
                 $userSessionValues = $user->getByUsername($login);
 

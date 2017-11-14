@@ -18,6 +18,8 @@ $res = $user->loginPost();
 //Gestion de la déconnexion
 if($_GET['logout']){
     unset($_SESSION);
+    session_destroy();
+    header('Location: index.php');
 }
 
 //print_r($res);

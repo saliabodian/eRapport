@@ -69,10 +69,11 @@ if(!empty($_SESSION)){
     */
     if($_POST['majForm']){
 
-    //    var_dump($_POST['dpl_pers']);
+    //    var_dump($_POST['machine']);
 
-    //    var_dump($_POST);
-    //    exit;
+    //    var_dump($_POST['htot']);
+    //
+    // exit;
 
         $form = true;
 
@@ -188,7 +189,7 @@ if(!empty($_SESSION)){
         if($form){
 
             if ($_POST['anomaly']==='true'){
-                Rapport::updateRapportDetail($_POST['rapport_detail_id'], $_POST['htot'], $_POST['hins'], $_POST['abs'],
+                Rapport::updateRapportDetail($_POST['rapport_detail_id'], $_POST['htot'], $_POST['hins'],$_POST['machine'], $_POST['abs'],
                     $_POST['habs'], $dpl_pers,$_POST['km'], $_POST['remarque'], $chef_dequipe_updated,
                     $_POST['type_task'], $_POST['tasks'], $_POST['bat'], $_POST['axe'], $_POST['et'], $_POST['ht'],
                     $_POST['type_task2'], $_POST['tasks2'], $_POST['bat2'], $_POST['axe2'], $_POST['et2'], $_POST['ht2'],
@@ -200,9 +201,9 @@ if(!empty($_SESSION)){
                 header('Location: anomalieRh.php?success=' . urlencode('Modification effectuée avec succés'));
                 exit;
             }else{
-            //    var_dump($_POST['rapport_detail_id']);
-            //    exit;
-                Rapport::updateRapportDetail($_POST['rapport_detail_id'], $_POST['htot'], $_POST['hins'], $_POST['abs'],
+                // var_dump($_POST['machine']);
+                // exit;
+                Rapport::updateRapportDetail($_POST['rapport_detail_id'], $_POST['htot'], $_POST['hins'], $_POST['machine'], $_POST['abs'],
                     $_POST['habs'], $dpl_pers,$_POST['km'], $_POST['remarque'], $chef_dequipe_updated,
                     $_POST['type_task'], $_POST['tasks'], $_POST['bat'], $_POST['axe'], $_POST['et'], $_POST['ht'],
                     $_POST['type_task2'], $_POST['tasks2'], $_POST['bat2'], $_POST['axe2'], $_POST['et2'], $_POST['ht2'],
@@ -239,6 +240,7 @@ if(!empty($_SESSION)){
                         $workerToUpdate[$rapport['id']]['interimaire_id']= $rapport['interimaire_id'];
                         $workerToUpdate[$rapport['id']]['htot']= $rapport['htot'];
                         $workerToUpdate[$rapport['id']]['hins']= $rapport['hins'];
+                        $workerToUpdate[$rapport['id']]['machine']= $rapport['machine'];
                         $workerToUpdate[$rapport['id']]['abs']= $rapport['abs'];
                         $workerToUpdate[$rapport['id']]['habs']= $rapport['habs'];
                         $workerToUpdate[$rapport['id']]['dpl_pers']= $rapport['dpl_pers'];
@@ -303,6 +305,7 @@ if(!empty($_SESSION)){
                         $workerToUpdate[$rapport['id']]['interimaire_id']= $rapport['interimaire_id'];
                         $workerToUpdate[$rapport['id']]['htot']= $rapport['htot'];
                         $workerToUpdate[$rapport['id']]['hins']= $rapport['hins'];
+                        $workerToUpdate[$rapport['id']]['machine']= $rapport['machine'];
                         $workerToUpdate[$rapport['id']]['abs']= $rapport['abs'];
                         $workerToUpdate[$rapport['id']]['habs']= $rapport['habs'];
                         $workerToUpdate[$rapport['id']]['dpl_pers']= $rapport['dpl_pers'];
@@ -375,6 +378,7 @@ if(!empty($_SESSION)){
                         $workerToUpdate[$rapport['id']]['interimaire_id']= $rapport['interimaire_id'];
                         $workerToUpdate[$rapport['id']]['htot']= $rapport['htot'];
                         $workerToUpdate[$rapport['id']]['hins']= $rapport['hins'];
+                        $workerToUpdate[$rapport['id']]['machine']= $rapport['machine'];
                         $workerToUpdate[$rapport['id']]['abs']= $rapport['abs'];
                         $workerToUpdate[$rapport['id']]['habs']= $rapport['habs'];
                         $workerToUpdate[$rapport['id']]['dpl_pers']= $rapport['dpl_pers'];
@@ -439,6 +443,7 @@ if(!empty($_SESSION)){
                         $workerToUpdate[$rapport['id']]['interimaire_id']= $rapport['interimaire_id'];
                         $workerToUpdate[$rapport['id']]['htot']= $rapport['htot'];
                         $workerToUpdate[$rapport['id']]['hins']= $rapport['hins'];
+                        $workerToUpdate[$rapport['id']]['machine']= $rapport['machine'];
                         $workerToUpdate[$rapport['id']]['abs']= $rapport['abs'];
                         $workerToUpdate[$rapport['id']]['habs']= $rapport['habs'];
                         $workerToUpdate[$rapport['id']]['dpl_pers']= $rapport['dpl_pers'];
@@ -510,6 +515,7 @@ if(!empty($_SESSION)){
                         $workerToUpdate[$rapport['id']]['interimaire_id']= $rapport['interimaire_id'];
                         $workerToUpdate[$rapport['id']]['htot']= $rapport['htot'];
                         $workerToUpdate[$rapport['id']]['hins']= $rapport['hins'];
+                        $workerToUpdate[$rapport['id']]['machine']= $rapport['machine'];
                         $workerToUpdate[$rapport['id']]['abs']= $rapport['abs'];
                         $workerToUpdate[$rapport['id']]['habs']= $rapport['habs'];
                         $workerToUpdate[$rapport['id']]['dpl_pers']= $rapport['dpl_pers'];
@@ -574,6 +580,7 @@ if(!empty($_SESSION)){
                         $workerToUpdate[$rapport['id']]['interimaire_id']= $rapport['interimaire_id'];
                         $workerToUpdate[$rapport['id']]['htot']= $rapport['htot'];
                         $workerToUpdate[$rapport['id']]['hins']= $rapport['hins'];
+                        $workerToUpdate[$rapport['id']]['machine']= $rapport['machine'];
                         $workerToUpdate[$rapport['id']]['abs']= $rapport['abs'];
                         $workerToUpdate[$rapport['id']]['habs']= $rapport['habs'];
                         $workerToUpdate[$rapport['id']]['dpl_pers']= $rapport['dpl_pers'];
@@ -708,6 +715,7 @@ if(!empty($_SESSION)){
                         $workerToUpdate[$rapport['id']]['interimaire_id']= $rapport['interimaire_id'];
                         $workerToUpdate[$rapport['id']]['htot']= $rapport['htot'];
                         $workerToUpdate[$rapport['id']]['hins']= $rapport['hins'];
+                        $workerToUpdate[$rapport['id']]['machine']= $rapport['machine'];
                         $workerToUpdate[$rapport['id']]['abs']= $rapport['abs'];
                         $workerToUpdate[$rapport['id']]['habs']= $rapport['habs'];
                         $workerToUpdate[$rapport['id']]['dpl_pers']= $rapport['dpl_pers'];
@@ -838,6 +846,7 @@ if(!empty($_SESSION)){
                     $workerToUpdate[$rapport['id']]['interimaire_id']= $rapport['interimaire_id'];
                     $workerToUpdate[$rapport['id']]['htot']= $rapport['htot'];
                     $workerToUpdate[$rapport['id']]['hins']= $rapport['hins'];
+                    $workerToUpdate[$rapport['id']]['machine']= $rapport['machine'];
                     $workerToUpdate[$rapport['id']]['abs']= $rapport['abs'];
                     $workerToUpdate[$rapport['id']]['habs']= $rapport['habs'];
                     $workerToUpdate[$rapport['id']]['dpl_pers']= $rapport['dpl_pers'];
@@ -902,6 +911,7 @@ if(!empty($_SESSION)){
                     $workerToUpdate[$rapport['id']]['interimaire_id']= $rapport['interimaire_id'];
                     $workerToUpdate[$rapport['id']]['htot']= $rapport['htot'];
                     $workerToUpdate[$rapport['id']]['hins']= $rapport['hins'];
+                    $workerToUpdate[$rapport['id']]['machine']= $rapport['machine'];
                     $workerToUpdate[$rapport['id']]['abs']= $rapport['abs'];
                     $workerToUpdate[$rapport['id']]['habs']= $rapport['habs'];
                     $workerToUpdate[$rapport['id']]['dpl_pers']= $rapport['dpl_pers'];
@@ -974,6 +984,7 @@ if(!empty($_SESSION)){
                     $workerToUpdate[$rapport['id']]['interimaire_id']= $rapport['interimaire_id'];
                     $workerToUpdate[$rapport['id']]['htot']= $rapport['htot'];
                     $workerToUpdate[$rapport['id']]['hins']= $rapport['hins'];
+                    $workerToUpdate[$rapport['id']]['machine']= $rapport['machine'];
                     $workerToUpdate[$rapport['id']]['abs']= $rapport['abs'];
                     $workerToUpdate[$rapport['id']]['habs']= $rapport['habs'];
                     $workerToUpdate[$rapport['id']]['dpl_pers']= $rapport['dpl_pers'];
@@ -1038,6 +1049,7 @@ if(!empty($_SESSION)){
                     $workerToUpdate[$rapport['id']]['interimaire_id']= $rapport['interimaire_id'];
                     $workerToUpdate[$rapport['id']]['htot']= $rapport['htot'];
                     $workerToUpdate[$rapport['id']]['hins']= $rapport['hins'];
+                    $workerToUpdate[$rapport['id']]['machine']= $rapport['machine'];
                     $workerToUpdate[$rapport['id']]['abs']= $rapport['abs'];
                     $workerToUpdate[$rapport['id']]['habs']= $rapport['habs'];
                     $workerToUpdate[$rapport['id']]['dpl_pers']= $rapport['dpl_pers'];
@@ -1112,6 +1124,7 @@ if(!empty($_SESSION)){
                     $workerToUpdate[$rapport['id']]['interimaire_id']= $rapport['interimaire_id'];
                     $workerToUpdate[$rapport['id']]['htot']= $rapport['htot'];
                     $workerToUpdate[$rapport['id']]['hins']= $rapport['hins'];
+                    $workerToUpdate[$rapport['id']]['machine']= $rapport['machine'];
                     $workerToUpdate[$rapport['id']]['abs']= $rapport['abs'];
                     $workerToUpdate[$rapport['id']]['habs']= $rapport['habs'];
                     $workerToUpdate[$rapport['id']]['dpl_pers']= $rapport['dpl_pers'];
@@ -1176,6 +1189,7 @@ if(!empty($_SESSION)){
                     $workerToUpdate[$rapport['id']]['interimaire_id']= $rapport['interimaire_id'];
                     $workerToUpdate[$rapport['id']]['htot']= $rapport['htot'];
                     $workerToUpdate[$rapport['id']]['hins']= $rapport['hins'];
+                    $workerToUpdate[$rapport['id']]['machine']= $rapport['machine'];
                     $workerToUpdate[$rapport['id']]['abs']= $rapport['abs'];
                     $workerToUpdate[$rapport['id']]['habs']= $rapport['habs'];
                     $workerToUpdate[$rapport['id']]['dpl_pers']= $rapport['dpl_pers'];
@@ -1246,6 +1260,7 @@ if(!empty($_SESSION)){
                     $workerToUpdate[$rapport['id']]['interimaire_id']= $rapport['interimaire_id'];
                     $workerToUpdate[$rapport['id']]['htot']= $rapport['htot'];
                     $workerToUpdate[$rapport['id']]['hins']= $rapport['hins'];
+                    $workerToUpdate[$rapport['id']]['machine']= $rapport['machine'];
                     $workerToUpdate[$rapport['id']]['abs']= $rapport['abs'];
                     $workerToUpdate[$rapport['id']]['habs']= $rapport['habs'];
                     $workerToUpdate[$rapport['id']]['dpl_pers']= $rapport['dpl_pers'];
@@ -1310,6 +1325,7 @@ if(!empty($_SESSION)){
                     $workerToUpdate[$rapport['id']]['interimaire_id']= $rapport['interimaire_id'];
                     $workerToUpdate[$rapport['id']]['htot']= $rapport['htot'];
                     $workerToUpdate[$rapport['id']]['hins']= $rapport['hins'];
+                    $workerToUpdate[$rapport['id']]['machine']= $rapport['machine'];
                     $workerToUpdate[$rapport['id']]['abs']= $rapport['abs'];
                     $workerToUpdate[$rapport['id']]['habs']= $rapport['habs'];
                     $workerToUpdate[$rapport['id']]['dpl_pers']= $rapport['dpl_pers'];

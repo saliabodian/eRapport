@@ -1271,7 +1271,7 @@ class Rapport extends DbObject{
         }
     }
 
-    public static function updateRapportDetail($rapportDetailIdList, $htot, $hins, $abs, $habs, $dpl_pers,$km, $remarque, $chef_dequipe_updated,
+    public static function updateRapportDetail($rapportDetailIdList, $htot, $hins, $machine, $abs, $habs, $dpl_pers,$km, $remarque, $chef_dequipe_updated,
                                                 $type_task, $task, $bat, $axe, $et, $ht,
                                                 $type_task2, $task2, $bat2, $axe2, $et2, $ht2,
                                                 $type_task3, $task3, $bat3, $axe3, $et3, $ht3,
@@ -1297,6 +1297,7 @@ class Rapport extends DbObject{
                     SET
                         `htot` = :htot,
                         `hins` = :hins,
+                        `machine` = :machine,
                         `abs` = :abs,
                         `habs` = :habs,
                         `dpl_pers` = :dpl_pers,
@@ -1359,6 +1360,7 @@ class Rapport extends DbObject{
             $stmt->bindValue(':rapportDetailId', $rapportDetail, \PDO::PARAM_INT);
             $stmt->bindValue(':htot', $htot);
             $stmt->bindValue(':hins', $hins);
+            $stmt->bindValue(':machine', $machine);
             $stmt->bindValue(':abs', $abs);
             $stmt->bindValue(':habs', $habs);
             $stmt->bindValue(':dpl_pers', $dpl_pers, \PDO::PARAM_INT);
@@ -1410,9 +1412,8 @@ class Rapport extends DbObject{
 
             $stmt->bindValue(':chef_dequipe_updated', $chef_dequipe_updated, \PDO::PARAM_INT);
 
-        //    var_dump($stmt);
-
-        //    exit;
+            //var_dump($stmt);
+            //exit;
 
             if($stmt->execute()=== false){
                 print_r($stmt->errorInfo());

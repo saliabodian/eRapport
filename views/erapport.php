@@ -18,7 +18,8 @@
                                 <div class="controls span4 m-wrap">
                                     <?php $selectChantier->displayHTML(); ?>
                                 </div>
-                                <div class="controls span3 m-wrap">
+                                <div class="form-actions inlineMode">
+                                <!-- div class="controls span3 m-wrap" -->
                                     <input type="submit" class="btn btn-success btn-block" value="Sélectionner" />
                                 </div>
                             </div>

@@ -39,22 +39,25 @@ $conf = Config::getInstance();
         $interimaireList = Rapport::getInterimaireByTeamSiteAndDate($_GET["date_generation"], $_GET["chef_dequipe_id"], $_GET["chantier_id"]);
 
         $rapportInt = Rapport::getRapportInterimaire($_GET["chef_dequipe_id"],$_GET["date_generation"] , $_GET["chantier_id"]);
+
+
+    //    var_dump($interimaireList);
     //    var_dump($rapportInt);
 
-    //    exit;
-        // Mise à jour du champ htot pour les intérimaires
+        $newArray = array();
+            // Mise à jour du champ htot pour les intérimaires
            if(!empty($interimaireList)){
                foreach($interimaireList as $interimaire){
                    foreach($rapportInt as $rapportDetailInt){
                        if(($rapportDetailInt['interimaire_id']=== $interimaire['matricule']) && (($rapportDetailInt['ht1']+$rapportDetailInt['ht2']+$rapportDetailInt['ht3']+$rapportDetailInt['ht4']+$rapportDetailInt['ht5']+$rapportDetailInt['ht6']) != 0)){
-                           Rapport::updateHtotInterimaire($interimaire['matricule']);
+                       //    var_dump($interimaire['matricule']) ;
+                          Rapport::updateHtotInterimaire($interimaire['matricule']);
                        }
                    }
                }
            }
 
-
-
+    //    exit;
     //    var_dump($interimaireList);
 
     //    exit;
