@@ -792,7 +792,7 @@
                                     </div>
                                 </div>
                                 <div class="control-group">
-                                    <label  class="control-label" for="">Transport du personnel "T" :</label>
+                                    <label  class=" control-label" for="">Transport du personnel "T"</label>
                                     <div class="controls">
                                         <?php if(sizeof($workerToUpdate)===1) : ?>
                                             <?php foreach($workerToUpdate as $worker) :?>
