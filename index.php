@@ -14,9 +14,10 @@ $user = new User();
 
 $res = $user->loginPost();
 
+$logout = isset($_GET['logout'])? $_GET['logout']: '';
 
 //Gestion de la déconnexion
-if($_GET['logout']){
+if($logout){
     unset($_SESSION);
     session_destroy();
     header('Location: index.php');

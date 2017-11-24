@@ -67,6 +67,7 @@ if(!empty($_SESSION)){
 
     exit;
     */
+    $_POST['majForm'] = isset($_POST['majForm'])? $_POST['majForm'] : '';
     if($_POST['majForm']){
 
     //    var_dump($_POST['machine']);

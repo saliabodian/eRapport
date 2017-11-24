@@ -382,7 +382,7 @@ Class User extends DbObject{
         // Get the config object
 
         $conf = Config::getInstance();
-
+        $formOk = true;
         if(!empty($_POST)){
             //var_dump($_POST);
             $login = isset($_POST['login']) ? $_POST['login'] : '';

@@ -24,9 +24,9 @@ $conf = Config::getInstance();
 
 if(!empty($_SESSION)){
 
-
-    //var_dump($_SESSION);
+    //var_dump($_SESSION['post_id'] );
     //Gestion de la validation d'un rapport
+    $_GET['val'] = isset($_GET['val'])? $_GET['val'] : '';
     if($_GET['val']=== 'true'){
       if(isset($_GET['isValid'])) {
           if($_SESSION['post_id']=== '1'){
@@ -45,6 +45,7 @@ if(!empty($_SESSION)){
     }
 
     //Gestion de l'invalidation d'un rapport
+    $_GET['inval'] = isset($_GET['inval'])? $_GET['inval'] : '';
     if($_GET['inval']=== 'true'){
         //    var_dump($_GET);
         Rapport::inValidateRapport($_GET['chef_dequipe_id'], $_GET['date_generation'], $_GET['chantier_id']);
@@ -52,6 +53,7 @@ if(!empty($_SESSION)){
     }
 
     //Gestion de la suppression d'un rapport
+    $_GET['sup'] = isset($_GET['sup'])? $_GET['sup'] : '';
     if($_GET['sup']=== 'true'){
         //    var_dump($_GET);
         Rapport::deleteRapport($_GET['chef_dequipe_id'], $_GET['date_generation'], $_GET['chantier_id']);
@@ -62,6 +64,9 @@ if(!empty($_SESSION)){
     // var_dump($_SESSION);
    // Pourra servir pour repérer le rôle de l'utilisateur connecté
     $chantierId = isset($_GET['id']) ? intval($_GET['id']) : 0;
+    $chefDEquipeList[$_SESSION['id']] =  '';
+
+   // var_dump($chantierId);
 
     $chantierObject = new Chantier();
 
@@ -73,9 +78,10 @@ if(!empty($_SESSION)){
 
         $chefDEquipeList[$_SESSION['id']] =  $_SESSION['username'].' '.$_SESSION['firstname'].' '.$_SESSION['lastname'];
     }else{
-        $chefDEquipeList = User::getAllForSelectChefDEquipebyChantier($chantierId);
+        if(!empty($chantierId)){
+            $chefDEquipeList = User::getAllForSelectChefDEquipebyChantier($chantierId);
+        }
     }
-
 
 
     if ($chantierId > 0) {
@@ -298,13 +304,17 @@ if(!empty($_SESSION)){
 
     $chefDequipe = new User();
     $chantierSelected = $chantierObject->get($chantierId);
-    $chefDequipeSelected = $chefDequipe->get($chefDEquipeId);
+    if(!empty($chefDEquipeId)){
+        $chefDequipeSelected = $chefDequipe->get($chefDEquipeId);
+    }
+
 
     $selectChantier = new SelectHelper($chantierList, $chantierId, array(
         'name' => 'id',
         'id' => 'id',
         'class' => 'select2-container',
     ));
+
 
     $selectChefDEquipe = new SelectHelper($chefDEquipeList, $chefDEquipeObject->getUsername(), array(
         'name' => 'user_id',

@@ -25,7 +25,10 @@ if(!empty($_SESSION)) {
    // var_dump($_GET);
 
   //  exit ;
-    if($_GET['reaffect']== true){
+    $_GET['reaffect'] = isset($_GET['reaffect'])? $_GET['reaffect']:'';
+    $_GET['chantier_id'] = isset($_GET['chantier_id'])? $_GET['chantier_id']:'';
+    $_GET['date_deb'] = isset($_GET['date_deb'])? $_GET['date_deb']:'' ;
+    if($_GET['reaffect']=== true){
         $weekToDuplicate =$_GET['weekToDuplicate'] ;
         $weekToAffect =$_GET['weekToAffect'] ;
      //   var_dump($weekToDuplicate);

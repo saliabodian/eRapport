@@ -78,7 +78,7 @@ $conf = Config::getInstance();
 
 
         // Gestion de la regénération
-
+        $_GET['reg'] = isset($_GET['reg'])? $_GET['reg'] : '';
         if($_GET['reg'] === "true"){
 
         //     var_dump($_GET);
@@ -350,13 +350,21 @@ $conf = Config::getInstance();
 
         // Récupération des ids des différents rapports générés absents à savoir ceux du noyau, les absents et les hors noyaux
 
-        $i = 0;
+    //    $i = 0;
 
         for($i=0; $i<1; $i++){
-            $idRapportNoyau = $noyau[$i]['rapport_id'];
-            $idRapportAbsentNoyau = $noyauAbsent[$i]['rapport_id'];
-            $idRapportHorsNoyau = $horsNoyau[$i]['rapport_id'];
-            $idRapportAbsentHorsNoyau = $absentHorsNoyau[$i]['rapport_id'];
+            if(!empty($noyau)){
+                $idRapportNoyau = $noyau[$i]['rapport_id'];
+            }
+            if(!empty($noyauAbsent)){
+                $idRapportAbsentNoyau = $noyauAbsent[$i]['rapport_id'];
+            }
+            if(!empty($horsNoyau)){
+                $idRapportHorsNoyau = $horsNoyau[$i]['rapport_id'];
+            }
+            if(!empty($absentHorsNoyau)){
+                $idRapportAbsentHorsNoyau = $absentHorsNoyau[$i]['rapport_id'];
+            }
         }
 
         //var_dump($idRapportNoyau);
@@ -476,10 +484,12 @@ $conf = Config::getInstance();
         // var_dump($rapportNoyauAbsent);
         // var_dump($rapportHorsNoyau);
          // exit;
+        $_GET['erreur'] = isset($_GET['erreur'])? $_GET['erreur'] : '';
         if($_GET['erreur']){
             $conf->addError('Veuillez sélectionner au moins un Ouvrier / Intérimaire avant de remplir les tâches');
         }
 
+        $_GET['isValid'] = isset($_GET['isValid'])? $_GET['isValid'] : '';
         if($_GET['isValid']==='false'){
             $conf->addError('Merci de confirmer la validité des informations.');
         }
