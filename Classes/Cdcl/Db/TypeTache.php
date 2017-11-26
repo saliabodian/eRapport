@@ -60,7 +60,8 @@ class TypeTache extends DbObject{
                 SELECT
                     `id`,
                     `nom_type_tache`,
-                    `code_type_tache`
+                    `code_type_tache`,
+                    `created`
                 FROM `type_tache`
                 where id= :id
                 ';
