@@ -100,7 +100,7 @@ class TypeTache extends DbObject{
 
                 $returnList[$row['id']]['id'] = $row['id'];
                 $returnList[$row['id']]['nom_type_tache'] = $row['nom_type_tache'];
-                $returnList[$row['id']]['name'] = $row['code_type_tache'];
+                $returnList[$row['id']]['code_type_tache'] = $row['code_type_tache'];
             }
         }
         return $returnList;

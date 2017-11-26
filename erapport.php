@@ -198,6 +198,13 @@ if(!empty($_SESSION)){
 
 
         if($form){
+            $rapportId = isset($rapportId)? $rapportId : "";
+            $terminal = isset($terminal)? $terminal : "";
+            $rapportType = isset($rapportType)? $rapportType : "";
+            $preremp = isset($preremp)? $preremp : "";
+            $submitted = isset($submitted)? $submitted : "";
+            $validated = isset($validated)? $validated : "";
+            $deleted = isset($deleted)? $deleted : "";
 
         //    echo "je suis la";
 
@@ -273,6 +280,7 @@ if(!empty($_SESSION)){
             // Génération d'un rapport pour les ouvriers absents appartenant au chef d'équipe connecté
 
             $absentList = Dsk::getAllNoyauAbsence($matricule, $dateRapport);
+
             // var_dump($absentList);
 
             if(!empty($absentList)){

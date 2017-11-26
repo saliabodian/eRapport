@@ -265,7 +265,7 @@ class Rapport extends DbObject{
             $stmt = Config::getInstance()->getPDO()->prepare($sql);
             $stmt->bindValue(':id', $this->id, \PDO::PARAM_INT);
             $stmt->bindValue(':date', $this->date, \PDO::PARAM_INT);
-            $stmt->bindValue(':terminal', $this->matricule_cns, \PDO::PARAM_INT);
+            $stmt->bindValue(':terminal', $this->terminal, \PDO::PARAM_INT);
             $stmt->bindValue(':chantier', $this->chantier->getId(), \PDO::PARAM_INT);
             $stmt->bindValue(':equipe', $this->equipe->getId(), \PDO::PARAM_INT);
             $stmt->bindValue(':chef_dequipe_matricule', $this->chefDEquipeMatricule, \PDO::PARAM_INT);
@@ -310,7 +310,7 @@ class Rapport extends DbObject{
                                 )';
             $stmt = Config::getInstance()->getPDO()->prepare($sql);
             $stmt->bindValue(':date', $this->date, \PDO::PARAM_INT);
-            $stmt->bindValue(':terminal', $this->matricule_cns, \PDO::PARAM_INT);
+            $stmt->bindValue(':terminal', $this->terminal, \PDO::PARAM_INT);
             $stmt->bindValue(':chantier', $this->chantier->getId(), \PDO::PARAM_INT);
             $stmt->bindValue(':equipe', $this->equipe->getId(), \PDO::PARAM_INT);
             $stmt->bindValue(':chef_dequipe_matricule', $this->chefDEquipeMatricule, \PDO::PARAM_INT);
@@ -397,7 +397,7 @@ class Rapport extends DbObject{
             $stmt = Config::getInstance()->getPDO()->prepare($sql);
             $stmt->bindValue(':id', $this->id, \PDO::PARAM_INT);
             $stmt->bindValue(':date', $this->date, \PDO::PARAM_INT);
-            $stmt->bindValue(':terminal', $this->matricule_cns, \PDO::PARAM_INT);
+            $stmt->bindValue(':terminal', $this->terminal, \PDO::PARAM_INT);
             $stmt->bindValue(':chantier', $this->chantier->getId(), \PDO::PARAM_INT);
             $stmt->bindValue(':equipe', $this->equipe->getId(), \PDO::PARAM_INT);
             $stmt->bindValue(':chef_dequipe_matricule', $this->chefDEquipeMatricule, \PDO::PARAM_INT);
@@ -442,7 +442,7 @@ class Rapport extends DbObject{
                                 )';
             $stmt = Config::getInstance()->getPDO()->prepare($sql);
             $stmt->bindValue(':date', $this->date, \PDO::PARAM_INT);
-            $stmt->bindValue(':terminal', $this->matricule_cns, \PDO::PARAM_INT);
+            $stmt->bindValue(':terminal', $this->terminal, \PDO::PARAM_INT);
             $stmt->bindValue(':chantier', $this->chantier->getId(), \PDO::PARAM_INT);
             $stmt->bindValue(':equipe', $this->equipe->getId(), \PDO::PARAM_INT);
             $stmt->bindValue(':chef_dequipe_matricule', $this->chefDEquipeMatricule, \PDO::PARAM_INT);
@@ -477,30 +477,29 @@ class Rapport extends DbObject{
         }else{
             $rapport = $stmt->fetch();
         }
+        // N'insert pas dans le champ is_chef_dequipe pour éviter le bug notice undefined variable
         foreach($absentList as $team){
             $sql='INSERT INTO `rapport_detail`
                             (
                             `rapport_id`,
                             `equipe`,
-                            `is_chef_dequipe`,
                             `ouvrier_id`,
                             `fullname`,
                             `motif_abs`)
                             VALUES(
                             :rapport_id,
                             :equipe,
-                            :is_chef_dequipe,
                             :ouvrier_id,
                             :fullname,
                             :motif_abs)';
             $stmt=Config::getInstance()->getPDO()->prepare($sql);
             $stmt->bindValue(':rapport_id',$rapport['id'], \PDO::PARAM_INT);
             $stmt->bindValue(':equipe',$rapport['equipe'], \PDO::PARAM_INT);
-            if($team['matricule']===$team['noyau']){
+            /*if($team['matricule']===$team['noyau']){
                 $stmt->bindValue(':is_chef_dequipe', 1, \PDO::PARAM_INT);
             }else{
                 $stmt->bindValue(':is_chef_dequipe', 0, \PDO::PARAM_INT);
-            }
+            }*/
             $stmt->bindValue(':ouvrier_id',$team['matricule'], \PDO::PARAM_INT);
             $stmt->bindValue(':fullname',$team['fullname'], \PDO::PARAM_STR);
             $stmt->bindValue(':motif_abs',$team['motif'], \PDO::PARAM_STR);
@@ -530,7 +529,7 @@ class Rapport extends DbObject{
             $stmt = Config::getInstance()->getPDO()->prepare($sql);
             $stmt->bindValue(':id', $this->id, \PDO::PARAM_INT);
             $stmt->bindValue(':date', $this->date, \PDO::PARAM_INT);
-            $stmt->bindValue(':terminal', $this->matricule_cns, \PDO::PARAM_INT);
+            $stmt->bindValue(':terminal', $this->terminal, \PDO::PARAM_INT);
             $stmt->bindValue(':chantier', $this->chantier->getId(), \PDO::PARAM_INT);
             $stmt->bindValue(':rapport_type', 'HORSNOYAU');
             $stmt->bindValue(':preremp', $this->preremp, \PDO::PARAM_INT);
@@ -569,7 +568,7 @@ class Rapport extends DbObject{
                                 )';
             $stmt = Config::getInstance()->getPDO()->prepare($sql);
             $stmt->bindValue(':date', $this->date, \PDO::PARAM_INT);
-            $stmt->bindValue(':terminal', $this->matricule_cns, \PDO::PARAM_INT);
+            $stmt->bindValue(':terminal', $this->terminal, \PDO::PARAM_INT);
             $stmt->bindValue(':chantier', $this->chantier->getId(), \PDO::PARAM_INT);
             $stmt->bindValue(':rapport_type', 'HORSNOYAU');
             $stmt->bindValue(':preremp', 0, \PDO::PARAM_INT);
@@ -641,7 +640,7 @@ class Rapport extends DbObject{
             $stmt = Config::getInstance()->getPDO()->prepare($sql);
             $stmt->bindValue(':id', $this->id, \PDO::PARAM_INT);
             $stmt->bindValue(':date', $this->date, \PDO::PARAM_INT);
-            $stmt->bindValue(':terminal', $this->matricule_cns, \PDO::PARAM_INT);
+            $stmt->bindValue(':terminal', $this->terminal, \PDO::PARAM_INT);
             $stmt->bindValue(':chantier', $this->chantier->getId(), \PDO::PARAM_INT);
             $stmt->bindValue(':rapport_type', 'ABSENTHORSNOYAU');
             $stmt->bindValue(':preremp', $this->preremp, \PDO::PARAM_INT);
@@ -680,7 +679,7 @@ class Rapport extends DbObject{
                                 )';
             $stmt = Config::getInstance()->getPDO()->prepare($sql);
             $stmt->bindValue(':date', $this->date, \PDO::PARAM_INT);
-            $stmt->bindValue(':terminal', $this->matricule_cns, \PDO::PARAM_INT);
+            $stmt->bindValue(':terminal', $this->terminal, \PDO::PARAM_INT);
             $stmt->bindValue(':chantier', $this->chantier->getId(), \PDO::PARAM_INT);
             $stmt->bindValue(':rapport_type', 'ABSENTHORSNOYAU');
             $stmt->bindValue(':preremp', 0, \PDO::PARAM_INT);

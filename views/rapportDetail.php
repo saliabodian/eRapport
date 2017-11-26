@@ -147,7 +147,7 @@
                                                 <option>Catégorie</option>
                                                 <?php foreach($listTypeTache as $typeTache) :?>
                                                     <?php foreach($workerToUpdate as $worker) :?>
-                                                        <option value="<?= $typeTache['id']?>" <?php if($worker['type_task_id_1']=== $typeTache['id']) : ?> selected="selected" <?php endif; ?>><?= $typeTache['nom_type_tache']?></option>
+                                                        <option value="<?= $typeTache['id']?>" <?php if($worker['type_task_id_1']=== $typeTache['id']) : ?> selected="selected" <?php endif; ?>><?= $typeTache['code_type_tache'].' '.$typeTache['nom_type_tache']?></option>
                                                     <?php endforeach;?>
                                                 <?php endforeach;?>
                                             </select>
@@ -155,7 +155,7 @@
                                             <select class="span4 typeTask mySelect select2-container" name="type_task" onchange="getId(this.value)">
                                                 <option>Catégorie</option>
                                                 <?php foreach($listTypeTache as $typeTache) :?>
-                                                    <option value="<?= $typeTache['id']?>"><?= $typeTache['nom_type_tache']?></option>
+                                                    <option value="<?= $typeTache['id']?>"><?= $typeTache['code_type_tache'].' '.$typeTache['nom_type_tache']?></option>
                                                 <?php endforeach;?>
                                             </select>
                                         <?php endif; ?>
@@ -169,7 +169,7 @@
                                                 <option>Tâche</option>
                                                 <?php foreach($listTache as $tache) : ?>
                                                     <?php foreach($workerToUpdate as $worker) : ?>
-                                                        <option value="<?= $tache['id']?>" <?php if($worker['task_id_1']=== $tache['id']) : ?> selected="selected" <?php endif; ?>><?= $tache['nom']?></option>
+                                                        <option value="<?= $tache['id']?>" <?php if($worker['task_id_1']=== $tache['id']) : ?> selected="selected" <?php endif; ?>><?= $tache['code'].' '.$tache['nom']?></option>
                                                     <?php endforeach ;?>
                                                 <?php endforeach ;?>
                                             </select>
@@ -243,7 +243,7 @@
                                                 <option>Catégorie</option>
                                                 <?php foreach($listTypeTache as $typeTache) :?>
                                                     <?php foreach($workerToUpdate as $worker) :?>
-                                                        <option value="<?= $typeTache['id']?>" <?php if($worker['type_task_id_2']=== $typeTache['id']) : ?> selected="selected" <?php endif; ?>><?= $typeTache['nom_type_tache']?></option>
+                                                        <option value="<?= $typeTache['id']?>" <?php if($worker['type_task_id_2']=== $typeTache['id']) : ?> selected="selected" <?php endif; ?>><?= $typeTache['code_type_tache'].' '.$typeTache['nom_type_tache']?></option>
                                                     <?php endforeach;?>
                                                 <?php endforeach;?>
                                             </select>
@@ -251,7 +251,7 @@
                                             <select class="span4 typeTask2 mySelect select2-container" name="type_task2" onchange="getId2(this.value)">
                                                 <option>Catégorie</option>
                                                 <?php foreach($listTypeTache as $typeTache) :?>
-                                                    <option value="<?= $typeTache['id']?>"><?= $typeTache['nom_type_tache']?></option>
+                                                    <option value="<?= $typeTache['id']?>"><?= $typeTache['code_type_tache'].' '.$typeTache['nom_type_tache']?></option>
                                                 <?php endforeach;?>
                                             </select>
                                         <?php endif; ?>
@@ -265,7 +265,7 @@
                                                 <option>Tâche</option>
                                                 <?php foreach($listTache as $tache) : ?>
                                                     <?php foreach($workerToUpdate as $worker) : ?>
-                                                        <option value="<?= $worker['task_id_2'] ?>" <?php  if($worker['task_id_2'] === $tache['id']) : ?> selected="selected" <?php endif ; ?>><?= $tache['nom'] ?></option>
+                                                        <option value="<?= $worker['task_id_2'] ?>" <?php  if($worker['task_id_2'] === $tache['id']) : ?> selected="selected" <?php endif ; ?>><?= $tache['code'].' '.$tache['nom'] ?></option>
                                                     <?php endforeach ; ?>
                                                 <?php endforeach ; ?>
                                             </select>
@@ -352,7 +352,7 @@
                                                 <option>Catégorie</option>
                                                 <?php foreach($listTypeTache as $typeTache) :?>
                                                     <?php foreach($workerToUpdate as $worker) : ?>
-                                                        <option value="<?= $typeTache['id']?>" <?php if($worker['type_task_id_3']===$typeTache['id']) : ?> selected="selected" <?php endif ;?>><?= $typeTache['nom_type_tache']?></option>
+                                                        <option value="<?= $typeTache['id']?>" <?php if($worker['type_task_id_3']===$typeTache['id']) : ?> selected="selected" <?php endif ;?>><?= $typeTache['code_type_tache'].' '.$typeTache['nom_type_tache']?></option>
                                                     <?php endforeach ; ?>
                                                 <?php endforeach;?>
                                             </select>
@@ -360,7 +360,7 @@
                                                 <select class="span4 typeTask3 mySelect" name="type_task3" onchange="getId3(this.value)">
                                                     <option>Catégorie</option>
                                                     <?php foreach($listTypeTache as $typeTache) :?>
-                                                        <option value="<?= $typeTache['id']?>"><?= $typeTache['nom_type_tache']?></option>
+                                                        <option value="<?= $typeTache['id']?>"><?= $typeTache['code_type_tache'].' '.$typeTache['nom_type_tache']?></option>
                                                     <?php endforeach;?>
                                                 </select>
                                             <?php endif; ?>
@@ -374,7 +374,7 @@
                                                 <option>Tâche</option>
                                                 <?php foreach($listTache as $tache) :?>
                                                     <?php foreach($workerToUpdate as $worker) :?>
-                                                        <option value="<?= $tache['id']?>" <?php if($tache['id']=== $worker['task_id_3']) : ?> selected="selected" <?php endif; ?>><?= $tache['nom']?></option>
+                                                        <option value="<?= $tache['id']?>" <?php if($tache['id']=== $worker['task_id_3']) : ?> selected="selected" <?php endif; ?>><?= $tache['code'].' '.$tache['nom']?></option>
                                                     <?php endforeach; ?>
                                                 <?php endforeach; ?>
                                             </select>
@@ -454,7 +454,7 @@
                                                     <option>Catégorie</option>
                                                     <?php foreach($listTypeTache as $typeTache) :?>
                                                         <?php foreach($workerToUpdate as $worker) : ?>
-                                                            <option value="<?= $typeTache['id']?>" <?php if($typeTache['id']=== $worker['type_task_id_4']): ?> selected="selected" <?php endif;?>><?= $typeTache['nom_type_tache']?></option>
+                                                            <option value="<?= $typeTache['id']?>" <?php if($typeTache['id']=== $worker['type_task_id_4']): ?> selected="selected" <?php endif;?>><?= $typeTache['code_type_tache'].' '.$typeTache['nom_type_tache']?></option>
                                                         <?php endforeach;?>
                                                     <?php endforeach;?>
                                                 </select>
@@ -462,7 +462,7 @@
                                                 <select class="span4 typeTask4 mySelect" name="type_task4" onchange="getId4(this.value)">
                                                     <option>Catégorie</option>
                                                     <?php foreach($listTypeTache as $typeTache) :?>
-                                                        <option value="<?= $typeTache['id']?>"><?= $typeTache['nom_type_tache']?></option>
+                                                        <option value="<?= $typeTache['id']?>"><?= $typeTache['code_type_tache'].' '.$typeTache['nom_type_tache']?></option>
                                                     <?php endforeach;?>
                                                 </select>
                                             <?php endif; ?>
@@ -476,7 +476,7 @@
                                                     <option>Tâche</option>
                                                     <?php foreach($listTache as $tache) :?>
                                                         <?php foreach($workerToUpdate as $worker) : ?>
-                                                            <option value="<?= $tache['id']?>" <?php if($tache['id']===$worker['task_id_4']) :?> selected="selected" <?php endif ; ?>><?= $tache['nom']?></option>
+                                                            <option value="<?= $tache['id']?>" <?php if($tache['id']===$worker['task_id_4']) :?> selected="selected" <?php endif ; ?>><?= $tache['code'].' '.$tache['nom']?></option>
                                                         <?php endforeach ; ?>
                                                     <?php endforeach ; ?>
                                                 </select>
@@ -552,7 +552,7 @@
                                                 <option>Catégorie</option>
                                                 <?php foreach($listTypeTache as $typeTache) :?>
                                                     <?php foreach($workerToUpdate as $worker) : ?>
-                                                        <option value="<?= $typeTache['id']?>" <?php if($typeTache['id']=== $worker['type_task_id_5']): ?> selected="selected" <?php endif;?>><?= $typeTache['nom_type_tache']?></option>
+                                                        <option value="<?= $typeTache['id']?>" <?php if($typeTache['id']=== $worker['type_task_id_5']): ?> selected="selected" <?php endif;?>><?= $typeTache['code_type_tache'].' '.$typeTache['nom_type_tache']?></option>
                                                     <?php endforeach;?>
                                                 <?php endforeach;?>
                                             </select>
@@ -560,7 +560,7 @@
                                                 <select class="span4 typeTask5 mySelect" name="type_task5" onchange="getId5(this.value)">
                                                     <option>Catégorie</option>
                                                     <?php foreach($listTypeTache as $typeTache) :?>
-                                                        <option value="<?= $typeTache['id']?>"><?= $typeTache['nom_type_tache']?></option>
+                                                        <option value="<?= $typeTache['id']?>"><?= $typeTache['code_type_tache'].' '.$typeTache['nom_type_tache']?></option>
                                                     <?php endforeach;?>
                                                 </select>
                                             <?php endif; ?>
@@ -574,7 +574,7 @@
                                                 <option>Tâche</option>
                                                 <?php foreach($listTache as $tache) :?>
                                                     <?php foreach($workerToUpdate as $worker) : ?>
-                                                        <option value="<?= $tache['id']?>" <?php if($tache['id']===$worker['task_id_5']) :?> selected="selected" <?php endif ; ?>><?= $tache['nom']?></option>
+                                                        <option value="<?= $tache['id']?>" <?php if($tache['id']===$worker['task_id_5']) :?> selected="selected" <?php endif ; ?>><?= $tache['code'].' '.$tache['nom']?></option>
                                                     <?php endforeach ; ?>
                                                 <?php endforeach ; ?>
                                             </select>
@@ -650,7 +650,7 @@
                                                     <option>Catégorie</option>
                                                     <?php foreach($listTypeTache as $typeTache) :?>
                                                         <?php foreach($workerToUpdate as $worker) :?>
-                                                            <option value="<?= $typeTache['id']?>" <?php if($typeTache['id'] === $worker['type_task_id_6']) : ?> selected="selected" <?php endif;?>><?= $typeTache['nom_type_tache']?></option>
+                                                            <option value="<?= $typeTache['id']?>" <?php if($typeTache['id'] === $worker['type_task_id_6']) : ?> selected="selected" <?php endif;?>><?= $typeTache['code_type_tache'].' '.$typeTache['nom_type_tache']?></option>
                                                         <?php endforeach;?>
                                                     <?php endforeach;?>
                                                 </select>
@@ -658,7 +658,7 @@
                                                 <select class="span4 typeTask6 mySelect" name="type_task6" onchange="getId6(this.value)">
                                                     <option>Catégorie</option>
                                                     <?php foreach($listTypeTache as $typeTache) :?>
-                                                        <option value="<?= $typeTache['id']?>"><?= $typeTache['nom_type_tache']?></option>
+                                                        <option value="<?= $typeTache['id']?>"><?= $typeTache['code_type_tache'].' '.$typeTache['nom_type_tache']?></option>
                                                     <?php endforeach;?>
                                                 </select>
                                             <?php endif ; ?>
@@ -672,7 +672,7 @@
                                                     <option>Tâche</option>
                                                 <?php foreach($listTache as $tache) :?>
                                                     <?php foreach($workerToUpdate as $worker) :?>
-                                                        <option value="<?=$tache['id'] ?>"  <?php if($tache['id']=== $worker['task_id_6']) : ?> selected="selected" <?php endif ; ?>><?= $tache['nom'] ?></option>
+                                                        <option value="<?=$tache['id'] ?>"  <?php if($tache['id']=== $worker['task_id_6']) : ?> selected="selected" <?php endif ; ?>><?= $tache['code'].' '.$tache['nom'] ?></option>
                                                     <?php endforeach;?>
                                                 <?php endforeach;?>
                                                 </select>

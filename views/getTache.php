@@ -26,5 +26,5 @@ $conf = Config::getInstance();
 */?>
     <option selected="selected">Tâche</option>
 <?php foreach($listTasks as $task) :?>
-    <option value="<?= $task['id']?>"><?= $task['nom'] ?></option>
+    <option value="<?= $task['id']?>"><?= $task['code'].' '.$task['nom'] ?></option>
 <?php endforeach ; ?>

@@ -415,7 +415,8 @@ class Interimaire extends DbObject{
                 `agence_id`,
                 `qualif_id`,
                 `dpt_id`,
-                `user_id`
+                `user_id`,
+                `created`
                  FROM interimaire
                  WHERE id= :id' ;
         $stmt = Config::getInstance()->getPDO()->prepare($sql);
@@ -500,6 +501,7 @@ class Interimaire extends DbObject{
                 $returnList[$row['id']]['qualif_id'] = $row['qualif_id'];
                 $returnList[$row['id']]['dpt_id'] = $row['dpt_id'];
                 $returnList[$row['id']]['user_id'] = $row['user_id'];
+                $returnList[$row['id']]['created'] = $row['created'];
             }
         }
         return $returnList;

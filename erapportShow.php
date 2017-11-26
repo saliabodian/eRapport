@@ -62,7 +62,17 @@ $conf = Config::getInstance();
 
     //    exit;
 
-        $allPointage = Dsk::getCalculTotalHoraire($_GET["date_generation"], $_GET["chantier_code"]);
+
+    //    var_dump(strtotime($_GET["date_generation"]));
+
+    //    var_dump(strtotime(date('Y/m/d', time())));
+    //    exit;
+
+        if(strtotime($_GET["date_generation"]) != strtotime(date('Y/m/d', time()))){
+            $allPointage = Dsk::getCalculTotalHoraire($_GET["date_generation"], $_GET["chantier_code"]) ;
+        }
+
+        //$allPointage = Dsk::getCalculTotalHoraire($_GET["date_generation"], $_GET["chantier_code"]) ;
 
         //var_dump($pointage);
 
