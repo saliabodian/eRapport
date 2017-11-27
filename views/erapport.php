@@ -84,7 +84,7 @@
                                     <tbody>
                                     <?php foreach ($rapportGeneratedList as $rapportGenerated ) : ?>
                                         <tr class="odd gradeX">
-                                            <td><?= $rapportGenerated['date'] ?></td>
+                                            <td><?= date('d-m-Y',strtotime($rapportGenerated['date'])) ?></td>
                                             <td style="text-align: center"><?= $rapportGenerated['username'].' - '.$rapportGenerated['lastname'].' '.$rapportGenerated['firstname'] ?></td>
                                             <td style="text-align: center"><?= $rapportGenerated['code'].' - '.$rapportGenerated['nom'] ?></td>
                                             <td>
@@ -121,7 +121,7 @@
                                     <tbody>
                                     <?php foreach ($rapportSubmittedList as $rapportSubmitted ) : ?>
                                         <tr class="odd gradeX">
-                                            <td><?= $rapportSubmitted['date'] ?></td>
+                                            <td><?= date('d-m-Y',strtotime($rapportSubmitted['date'])) ?></td>
                                             <td style="text-align: center"><?= $rapportSubmitted['username'].' - '.$rapportSubmitted['lastname'].' '.$rapportSubmitted['firstname'] ?></td>
                                             <td style="text-align: center"><?= $rapportSubmitted['code'].' - '.$rapportSubmitted['nom'] ?></td>
                                             <td>
@@ -159,7 +159,7 @@
                                     <tbody>
                                     <?php foreach ($rapportValidatedList as $rapportValidated ) : ?>
                                         <tr class="odd gradeX">
-                                            <td><?= $rapportValidated['date'] ?></td>
+                                            <td><?= date('d-m-Y',strtotime($rapportValidated['date'])) ?></td>
                                             <td style="text-align: center"><?= $rapportValidated['username'].' - '.$rapportValidated['lastname'].' '.$rapportValidated['firstname'] ?></td>
                                             <td style="text-align: center"><?= $rapportValidated['code'].' - '.$rapportValidated['nom'] ?></td>
                                             <td>

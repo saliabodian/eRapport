@@ -442,7 +442,7 @@ Class User extends DbObject{
                 $_SESSION['email']=$userSessionValues['email'];
                 $_SESSION['post_id']=$userSessionValues['post_id'];
             //    var_dump($_SESSION);
-                header('Location:home.php');
+                header('Location:route.php');
             }
         }
         return $formOk;

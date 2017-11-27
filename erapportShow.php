@@ -83,7 +83,11 @@ $conf = Config::getInstance();
 
         // exit;
         $chefDequipeMatricule = $rapportJournalier->getChefDEquipeMatricule();
-        $rapportJournalierDate = $rapportJournalier->getDate();
+        $rapportJournalierDate = date('d-m-Y',strtotime($rapportJournalier->getDate()));
+
+        //var_dump(date('d-m-Y',strtotime($rapportJournalierDate)));
+
+        //exit;
 
 
 

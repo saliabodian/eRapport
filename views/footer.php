@@ -60,12 +60,16 @@
     }
     var demo1 = $('select[name="duallistbox_demo1[]"]').bootstrapDualListbox();
     $("#demoform").submit(function() {
-        a
+         a
         //    alert($('[name="duallistbox_demo1[]"]').val());
         return false;
     });
     $( function() {
         $( ".datepicker" ).datepicker({
+            // Affichage de la date au format voulu dans le datepicker
+            changeMonth: true,
+            changeYear: true,
+            dateFormat: 'dd-mm-yy',
             showWeek: true,
             firstDay: 1
         });

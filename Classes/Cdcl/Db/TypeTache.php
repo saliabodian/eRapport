@@ -119,7 +119,7 @@ class TypeTache extends DbObject{
                 `nom_type_tache`,
                 `code_type_tache`
             FROM `type_tache`
-            ORDER BY `nom_type_tache`
+            ORDER BY `code_type_tache`
             ';
         $stmt = Config::getInstance()->getPDO()->prepare($sql);
         if ($stmt->execute() === false) {
@@ -128,7 +128,7 @@ class TypeTache extends DbObject{
         else {
             $allDatas = $stmt->fetchAll(\PDO::FETCH_ASSOC);
             foreach ($allDatas as $row) {
-                $returnList[$row['id']] = $row['nom_type_tache'];
+                $returnList[$row['id']] = $row['code_type_tache'].' '.$row['nom_type_tache'];
             }
         }
 

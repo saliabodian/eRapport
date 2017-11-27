@@ -20,7 +20,7 @@
                                     <tr>
                                         <th>Nom Complet</th>
                                         <th>Heures badgées</th>
-                                        <th>Tot. Rép. Heures/th>
+                                        <th>Tot. Rép. Heures</th>
                                         <th>Chantier</th>
                                         <th>Date</th>
                                         <th></th>
@@ -43,7 +43,7 @@
                                                 <td><?= $anomaly['htot']?></td>
                                                 <td><?= $anomaly['ht1']+$anomaly['ht2']+$anomaly['ht3']+$anomaly['ht4']+$anomaly['ht5']+$anomaly['ht6']?></td>
                                                 <td><?= $anomaly['code'].' - '.$anomaly['nom'] ?></td>
-                                                <td><?= $anomaly['date']?></td>
+                                                <td><?= date('d-m-Y',strtotime($anomaly['date']))?></td>
                                                 <td><input type="submit" value="Modifier"></td>
                                             </tr>
                                             </tbody>
@@ -93,7 +93,7 @@
                                                 <td><?= isset($anomaly['ouvrier_id'])? $anomaly['ouvrier_id'] : (isset($anomaly['interimaire_id'])? $anomaly['interimaire_id'] : '')?> - <?=$anomaly['fullname']?></td>
                                                 <td><?= $anomaly['abs'].' - '.$anomaly['habs'].'H' ?></td>
                                                 <td><?= $anomaly['code'].' - '.$anomaly['nom']?></td>
-                                                <td><?= $anomaly['date'] ?></td>
+                                                <td><?= date('d-m-Y',strtotime($anomaly['date'])) ?></td>
                                                 <td><input type="submit" value="Modifier"></td>
                                             </tr>
                                             </tbody>

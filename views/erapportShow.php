@@ -124,7 +124,7 @@
                                     <?php else : ?>
                                         <input class="span4 btn btn-success" type="submit" value="Renseigner les tâches">
                                     <?php endif ; ?>
-                                <?php elseif($_SESSION['post_id']==='5') : ?>
+                                <?php elseif($_SESSION['post_id']==='5' || $_SESSION['post_id']==='3') : ?>
                                     <?php if($_GET['validated'] === '1') :?>
                                         <input disabled class="span4 btn btn-success" type="submit" value="Renseigner les tâches">
                                     <?php else : ?>
@@ -263,7 +263,7 @@
                                         <?php else : ?>
                                             <input class="span4 btn btn-success" type="submit" value="Renseigner les tâches">
                                         <?php endif ; ?>
-                                    <?php elseif($_SESSION['post_id']==='5') : ?>
+                                    <?php elseif($_SESSION['post_id']==='5' || $_SESSION['post_id']==='3') : ?>
                                         <?php if($_GET['validated'] === '1') :?>
                                             <input disabled class="span4 btn btn-success" type="submit" value="Renseigner les tâches">
                                         <?php else : ?>
@@ -403,7 +403,7 @@
                                         <?php else : ?>
                                             <input class="span4 btn btn-success" type="submit" value="Renseigner les tâches">
                                         <?php endif ; ?>
-                                    <?php elseif($_SESSION['post_id']==='5') : ?>
+                                    <?php elseif($_SESSION['post_id']==='5' || $_SESSION['post_id']==='3') : ?>
                                         <?php if($_GET['validated'] === '1') :?>
                                             <input disabled class="span4 btn btn-success" type="submit" value="Renseigner les tâches">
                                         <?php else : ?>
@@ -556,7 +556,7 @@
                                     <?php else : ?>
                                         <input class="span4 btn btn-success" type="submit" value="Renseigner les tâches">
                                     <?php endif ; ?>
-                                <?php elseif($_SESSION['post_id']==='5') : ?>
+                                <?php elseif($_SESSION['post_id']==='5' || $_SESSION['post_id']==='3') : ?>
                                     <?php if($_GET['validated'] === '1') :?>
                                         <input disabled class="span4 btn btn-success" type="submit" value="Renseigner les tâches">
                                     <?php else : ?>
@@ -602,7 +602,7 @@
                             <?php else : ?>
                                 <button style="margin: auto" type="submit" class="span4 btn btn-warning" name="val" value="true">Valider</button>
                             <?php endif ; ?>
-                        <?php elseif($_SESSION['post_id']==='5') : ?>
+                        <?php elseif($_SESSION['post_id']==='5' || $_SESSION['post_id']==='3') : ?>
                             <?php if($_GET['validated'] === '1') :?>
                                 <button disabled style="margin: auto" type="submit" class="span4 btn btn-warning" name="val" value="true">Valider</button>
                             <?php else : ?>
@@ -615,18 +615,32 @@
                     </div>
                     <div class="span12">
                         <div class=" span1 btn-block"></div>
-                        <?php if($_SESSION['post_id']=== '1'): ?>
+                        <?php if($_SESSION['post_id']=== '1' || $_SESSION['post_id']==='3' || $_SESSION['post_id']==='5'): ?>
                             <a style="margin-top: 5px ; margin-right: 3px ; margin-left: 3px" href="erapport.php?rapport_id=<?= $_GET['rapport_id']?>&rapport_type=<?=$_GET['rapport_type']?>&chef_dequipe_id=<?=$_GET['chef_dequipe_id']?>&chef_dequipe_matricule=<?= $_GET['chef_dequipe_matricule']?>&date_generation=<?= $_GET['date_generation'] ?>&chantier_id=<?= $_GET['chantier_id']?>&chantier_code=<?= $_GET['chantier_code']?>&inval=true" class="span2 btn btn-primary" disabled>Invalider le rapport</a>
                         <?php else : ?>
                             <a style="margin-top: 5px ; margin-right: 3px ; margin-left: 3px" href="erapport.php?rapport_id=<?= $_GET['rapport_id']?>&rapport_type=<?=$_GET['rapport_type']?>&chef_dequipe_id=<?=$_GET['chef_dequipe_id']?>&chef_dequipe_matricule=<?= $_GET['chef_dequipe_matricule']?>&date_generation=<?= $_GET['date_generation'] ?>&chantier_id=<?= $_GET['chantier_id']?>&chantier_code=<?= $_GET['chantier_code']?>&inval=true" class="span2 btn btn-primary">Invalider le rapport</a>
                         <?php endif ; ?>
-                        <a style="margin-top: 5px ; margin-right: 3px ; margin-left: 3px" href="?rapport_id=<?= $_GET['rapport_id']?>&rapport_type=<?=$_GET['rapport_type']?>&chef_dequipe_id=<?=$_GET['chef_dequipe_id']?>&chef_dequipe_matricule=<?= $_GET['chef_dequipe_matricule']?>&date_generation=<?= $_GET['date_generation'] ?>&chantier_id=<?= $_GET['chantier_id']?>&chantier_code=<?= $_GET['chantier_code']?>&reg=true" class="span2 btn btn-info">Regénérer le rapport</a>
-                        <?php if($_SESSION['post_id']=== '1'): ?>
-                            <a style="margin-top: 5px ; margin-right: 3px ; margin-left: 3px" href="eRapportShowPrint.php?rapport_id=<?= $_GET['rapport_id']?>&rapport_type=<?=$_GET['rapport_type']?>&chef_dequipe_id=<?=$_GET['chef_dequipe_id']?>&chef_dequipe_matricule=<?= $_GET['chef_dequipe_matricule']?>&date_generation=<?= $_GET['date_generation'] ?>&chantier_id=<?= $_GET['chantier_id']?>&chantier_code=<?= $_GET['chantier_code']?>&validated=<?= $_GET['validated']?>&submitted=<?= $_GET['submitted']?>" class="span2 btn btn-block" disabled>Imprimer</a>
+                        <?php if($_SESSION['post_id']==='1') :?>
+                            <?php if($_GET['submitted'] === '1') :?>
+                                <a disabled style="margin-top: 5px ; margin-right: 3px ; margin-left: 3px" href="?rapport_id=<?= $_GET['rapport_id']?>&rapport_type=<?=$_GET['rapport_type']?>&chef_dequipe_id=<?=$_GET['chef_dequipe_id']?>&chef_dequipe_matricule=<?= $_GET['chef_dequipe_matricule']?>&date_generation=<?= $_GET['date_generation'] ?>&chantier_id=<?= $_GET['chantier_id']?>&chantier_code=<?= $_GET['chantier_code']?>&reg=true" class="span2 btn btn-info">Regénérer le rapport</a>
+                            <?php else : ?>
+                                <a style="margin-top: 5px ; margin-right: 3px ; margin-left: 3px" href="?rapport_id=<?= $_GET['rapport_id']?>&rapport_type=<?=$_GET['rapport_type']?>&chef_dequipe_id=<?=$_GET['chef_dequipe_id']?>&chef_dequipe_matricule=<?= $_GET['chef_dequipe_matricule']?>&date_generation=<?= $_GET['date_generation'] ?>&chantier_id=<?= $_GET['chantier_id']?>&chantier_code=<?= $_GET['chantier_code']?>&reg=true" class="span2 btn btn-info">Regénérer le rapport</a>
+                            <?php endif ; ?>
+                        <?php elseif ($_SESSION['post_id']==='5' || $_SESSION['post_id']==='3') :?>
+                            <?php if($_GET['validated'] === '1') :?>
+                                <a disabled style="margin-top: 5px ; margin-right: 3px ; margin-left: 3px" href="?rapport_id=<?= $_GET['rapport_id']?>&rapport_type=<?=$_GET['rapport_type']?>&chef_dequipe_id=<?=$_GET['chef_dequipe_id']?>&chef_dequipe_matricule=<?= $_GET['chef_dequipe_matricule']?>&date_generation=<?= $_GET['date_generation'] ?>&chantier_id=<?= $_GET['chantier_id']?>&chantier_code=<?= $_GET['chantier_code']?>&reg=true" class="span2 btn btn-info">Regénérer le rapport</a>
+                            <?php else : ?>
+                                <a style="margin-top: 5px ; margin-right: 3px ; margin-left: 3px" href="?rapport_id=<?= $_GET['rapport_id']?>&rapport_type=<?=$_GET['rapport_type']?>&chef_dequipe_id=<?=$_GET['chef_dequipe_id']?>&chef_dequipe_matricule=<?= $_GET['chef_dequipe_matricule']?>&date_generation=<?= $_GET['date_generation'] ?>&chantier_id=<?= $_GET['chantier_id']?>&chantier_code=<?= $_GET['chantier_code']?>&reg=true" class="span2 btn btn-info">Regénérer le rapport</a>
+                            <?php endif ; ?>
                         <?php else : ?>
-                            <a style="margin-top: 5px ; margin-right: 3px ; margin-left: 3px" href="eRapportShowPrint.php?rapport_id=<?= $_GET['rapport_id']?>&rapport_type=<?=$_GET['rapport_type']?>&chef_dequipe_id=<?=$_GET['chef_dequipe_id']?>&chef_dequipe_matricule=<?= $_GET['chef_dequipe_matricule']?>&date_generation=<?= $_GET['date_generation'] ?>&chantier_id=<?= $_GET['chantier_id']?>&chantier_code=<?= $_GET['chantier_code']?>&validated=<?= $_GET['validated']?>&submitted=<?= $_GET['submitted']?>" class="span2 btn btn-block">Imprimer</a>
+                            <a style="margin-top: 5px ; margin-right: 3px ; margin-left: 3px" href="?rapport_id=<?= $_GET['rapport_id']?>&rapport_type=<?=$_GET['rapport_type']?>&chef_dequipe_id=<?=$_GET['chef_dequipe_id']?>&chef_dequipe_matricule=<?= $_GET['chef_dequipe_matricule']?>&date_generation=<?= $_GET['date_generation'] ?>&chantier_id=<?= $_GET['chantier_id']?>&chantier_code=<?= $_GET['chantier_code']?>&reg=true" class="span2 btn btn-info">Regénérer le rapport</a>
                         <?php endif ; ?>
-                        <?php if($_SESSION['post_id']=== '1'): ?>
+                        <?php if($_GET['validated'] === '1' && $_GET['submitted'] === '1'): ?>
+                            <a style="margin-top: 5px ; margin-right: 3px ; margin-left: 3px" href="eRapportShowPrint.php?rapport_id=<?= $_GET['rapport_id']?>&rapport_type=<?=$_GET['rapport_type']?>&chef_dequipe_id=<?=$_GET['chef_dequipe_id']?>&chef_dequipe_matricule=<?= $_GET['chef_dequipe_matricule']?>&date_generation=<?= $_GET['date_generation'] ?>&chantier_id=<?= $_GET['chantier_id']?>&chantier_code=<?= $_GET['chantier_code']?>&validated=<?= $_GET['validated']?>&submitted=<?= $_GET['submitted']?>" class="span2 btn btn-block" >Imprimer</a>
+                        <?php else : ?>
+                            <a style="margin-top: 5px ; margin-right: 3px ; margin-left: 3px" href="eRapportShowPrint.php?rapport_id=<?= $_GET['rapport_id']?>&rapport_type=<?=$_GET['rapport_type']?>&chef_dequipe_id=<?=$_GET['chef_dequipe_id']?>&chef_dequipe_matricule=<?= $_GET['chef_dequipe_matricule']?>&date_generation=<?= $_GET['date_generation'] ?>&chantier_id=<?= $_GET['chantier_id']?>&chantier_code=<?= $_GET['chantier_code']?>&validated=<?= $_GET['validated']?>&submitted=<?= $_GET['submitted']?>" class="span2 btn btn-block" disabled>Imprimer</a>
+                        <?php endif ; ?>
+                        <?php if($_SESSION['post_id']=== '1' || $_SESSION['post_id']==='3' || $_SESSION['post_id']==='5'): ?>
                             <a style="margin-top: 5px ; margin-right: 3px ; margin-left: 3px" href="erapport.php?rapport_id=<?= $_GET['rapport_id']?>&rapport_type=<?=$_GET['rapport_type']?>&chef_dequipe_id=<?=$_GET['chef_dequipe_id']?>&chef_dequipe_matricule=<?= $_GET['chef_dequipe_matricule']?>&date_generation=<?= $_GET['date_generation'] ?>&chantier_id=<?= $_GET['chantier_id']?>&chantier_code=<?= $_GET['chantier_code']?>&sup=true" class="span2 btn btn-danger" disabled>Supprimer le rapport</a>
                         <?php else : ?>
                             <a style="margin-top: 5px ;margin-right: 3px ; margin-left: 3px" href="erapport.php?rapport_id=<?= $_GET['rapport_id']?>&rapport_type=<?=$_GET['rapport_type']?>&chef_dequipe_id=<?=$_GET['chef_dequipe_id']?>&chef_dequipe_matricule=<?= $_GET['chef_dequipe_matricule']?>&date_generation=<?= $_GET['date_generation'] ?>&chantier_id=<?= $_GET['chantier_id']?>&chantier_code=<?= $_GET['chantier_code']?>&sup=true" class="span2 btn btn-danger">Supprimer le rapport</a>

@@ -132,7 +132,7 @@ class Tache extends DbObject{
                 `nom`,
                 `type_tache_id`
             FROM `tache`
-            ORDER BY `nom`
+            ORDER BY `code`
             ';
         $stmt = Config::getInstance()->getPDO()->prepare($sql);
         if ($stmt->execute() === false) {
@@ -141,7 +141,7 @@ class Tache extends DbObject{
         else {
             $allDatas = $stmt->fetchAll(\PDO::FETCH_ASSOC);
             foreach ($allDatas as $row) {
-                $returnList[$row['id']] = $row['nom'];
+                $returnList[$row['id']] = $row['code'].' '.$row['nom'];
             }
         }
 
@@ -229,7 +229,8 @@ class Tache extends DbObject{
     }
 
     public static function getTacheByTypeTache($typeTacheId){
-        $sql = "SELECT tache.* FROM tache, type_tache where tache.type_tache_id =:typeTacheId AND tache.type_tache_id=type_tache.id";
+        $sql = "SELECT tache.* FROM tache, type_tache where tache.type_tache_id =:typeTacheId AND tache.type_tache_id=type_tache.id
+                ORDER BY tache.code";
         $stmt = Config::getInstance()->getPDO()->prepare($sql);
         $stmt->bindValue(':typeTacheId', $typeTacheId, \PDO::PARAM_INT);
         if($stmt->execute()===false){
