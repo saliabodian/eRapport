@@ -266,7 +266,7 @@ if(!empty($_SESSION)){
                 }
             }
 
-
+            // problème
             if($rjAbsentHorsNoyauExist === false){
                 $absentHorsNoyauList = Dsk::getAllHorsNoyauAbsence($matricule,$dateRapport, $chantierCode);
             //    var_dump($absentHorsNoyauList);
@@ -281,7 +281,9 @@ if(!empty($_SESSION)){
 
             $absentList = Dsk::getAllNoyauAbsence($matricule, $dateRapport);
 
-            // var_dump($absentList);
+        //    var_dump($absentList);
+
+        //    exit;
 
             if(!empty($absentList)){
                 $noyauObject->saveDBAbsentDuNoyau();

@@ -170,15 +170,7 @@
                                         <tr>
                                             <th><input type="checkbox" name="check_all_abs" id="check_all_abs" value=""/></th>
                                             <th>Nom Complet</th>
-                                            <th>Heures</th>
-                                            <?php if(!empty($noyauAbsentHeader)) :?>
-                                                <?php foreach($noyauAbsentHeader as $noyauHeaderdetail) : ?>
-                                                    <th><?= $noyauHeaderdetail['code']?></th>
-                                                <?php endforeach ; ?>
-                                            <?php endif; ?>
                                             <th>Abs</th>
-                                            <th>T. Pénibles</th>
-                                            <th>T. (Km)</th>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -193,84 +185,30 @@
                                                     <img src="img/dialog-stop-2.png" alt="absence saisie">
                                                 <?php endif ?><?= isset($rapport['ouvrier_id'])? $rapport['ouvrier_id'] : (isset($rapport['interimaire_id'])? $rapport['interimaire_id'] : '')?> - <?=$rapport['fullname']?>
                                             </td>
-                                            <td ><?= $rapport['htot'] ?></td>
-                                            <?php if (!empty($noyauAbsentHeader)) : ?>
-                                                <?php foreach($noyauAbsentHeader as $noyauHeaderdetail) : ?>
-                                                    <?php if($rapport['task_id_1'] === $noyauHeaderdetail['tache_id']) : ?>
-                                                        <?php foreach($noyauAbsentTask[$rapport['id']] as $task) : ?>
-                                                            <?php if($task['tache_id']=== $rapport['task_id_1']) : ?>
-                                                                <td><?= $task['vhr'] ?></td>
-                                                            <?php endif; ?>
-                                                        <?php endforeach ; ?>
-                                                    <?php elseif ($rapport['task_id_2'] === $noyauHeaderdetail['tache_id']) : ?>
-                                                        <?php foreach($noyauAbsentTask[$rapport['id']] as $task) : ?>
-                                                            <?php if($task['tache_id']=== $rapport['task_id_2']) : ?>
-                                                                <td><?= $task['vhr'] ?></td>
-                                                            <?php endif; ?>
-                                                        <?php endforeach ; ?>
-                                                    <?php elseif ($rapport['task_id_3'] === $noyauHeaderdetail['tache_id']) : ?>
-                                                        <?php foreach($noyauAbsentTask[$rapport['id']] as $task) : ?>
-                                                            <?php if($task['tache_id']=== $rapport['task_id_3']) : ?>
-                                                                <td><?= $task['vhr'] ?></td>
-                                                            <?php endif; ?>
-                                                        <?php endforeach ; ?>
-                                                    <?php elseif ($rapport['task_id_4'] === $noyauHeaderdetail['tache_id']) : ?>
-                                                        <?php foreach($noyauAbsentTask[$rapport['id']] as $task) : ?>
-                                                            <?php if($task['tache_id']=== $rapport['task_id_4']) : ?>
-                                                                <td><?= $task['vhr'] ?></td>
-                                                            <?php endif; ?>
-                                                        <?php endforeach ; ?>
-                                                    <?php elseif ($rapport['task_id_5'] === $noyauHeaderdetail['tache_id']) : ?>
-                                                        <?php foreach($noyauAbsentTask[$rapport['id']] as $task) : ?>
-                                                            <?php if($task['tache_id']=== $rapport['task_id_5']) : ?>
-                                                                <td><?= $task['vhr'] ?></td>
-                                                            <?php endif; ?>
-                                                        <?php endforeach ; ?>
-                                                    <?php elseif ($rapport['task_id_6'] === $noyauHeaderdetail['tache_id']) : ?>
-                                                        <?php foreach($noyauAbsentTask[$rapport['id']] as $task) : ?>
-                                                            <?php if($task['tache_id']=== $rapport['task_id_6']) : ?>
-                                                                <td><?= $task['vhr'] ?></td>
-                                                            <?php endif; ?>
-                                                        <?php endforeach ; ?>
-                                                    <?php else : ?>
-                                                        <td></td>
-                                                    <?php endif ; ?>
-                                                <?php endforeach ; ?>
-                                            <?php endif ;?>
                                             <td ><?= $rapport['habs'] ?></td>
-                                            <td ><?= $rapport['hins'] ?></td>
-                                            <td ><?= $rapport['km'] ?></td>
                                             </tr>
                                         <?php  endforeach;  ?>
                                             <tr>
                                             <td colspan="2">Totaux</td>
-                                            <td><?= $absentHourGlobal; ?></td>
-                                            <?php if(!empty($noyauAbsentHeader)) :?>
-                                                <?php foreach($noyauAbsentHeader as $noyauHeaderdetail) : ?>
-                                                    <td><?= $noyauHeaderdetail['vht'] ?></td>
-                                                <?php endforeach ; ?>
-                                            <?php endif ; ?>
                                             <td><?= $absentHourAbsencesGlobal; ?></td>
-                                            <td><?= $absentHourPenibleGlobal; ?></td>
-                                            <td><?= $absentKmGlobal; ?></td>
                                         </tr>
                                         </tbody>
                                     </table>
                                     <hr>
                                     <?php if($_SESSION['post_id']==='1') :?>
                                         <?php if($_GET['submitted'] === '1') :?>
-                                            <input disabled class="span4 btn btn-success" type="submit" value="Renseigner les tâches">
+                                            <input disabled class="span4 btn btn-success" type="submit" value="Renseigner l'absence">
                                         <?php else : ?>
-                                            <input class="span4 btn btn-success" type="submit" value="Renseigner les tâches">
+                                            <input class="span4 btn btn-success" type="submit" value="Renseigner l'absence">
                                         <?php endif ; ?>
                                     <?php elseif($_SESSION['post_id']==='5' || $_SESSION['post_id']==='3') : ?>
                                         <?php if($_GET['validated'] === '1') :?>
-                                            <input disabled class="span4 btn btn-success" type="submit" value="Renseigner les tâches">
+                                            <input disabled class="span4 btn btn-success" type="submit" value="Renseigner l'absence">
                                         <?php else : ?>
-                                            <input class="span4 btn btn-success" type="submit" value="Renseigner les tâches">
+                                            <input class="span4 btn btn-success" type="submit" value="Renseigner l'absence">
                                         <?php endif ; ?>
                                     <?php else : ?>
-                                        <input class="span4 btn btn-success" type="submit" value="Renseigner les tâches">
+                                        <input class="span4 btn btn-success" type="submit" value="Renseigner l'absence">
                                     <?php endif ; ?>
                                     <hr>
                                     <div class="controls">
@@ -309,15 +247,7 @@
                                             <tr>
                                                 <th><input type="checkbox" name="check_all_abs_hn" id="check_all_abs_hn" value=""/></th>
                                                 <th>Nom Complet</th>
-                                                <th>Heures</th>
-                                                    <?php if(!empty($absentHorsNoyauHeader)) :?>
-                                                        <?php foreach($absentHorsNoyauHeader as $noyauHeaderdetail) : ?>
-                                                            <th><?= $noyauHeaderdetail['code']?></th>
-                                                        <?php endforeach ; ?>
-                                                    <?php endif; ?>
                                                 <th>Abs</th>
-                                                <th>T. Pénibles</th>
-                                                <th>T. (Km)</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -333,84 +263,30 @@
                                                         <?php endif ?>
                                                         <?= isset($rapport['ouvrier_id'])? $rapport['ouvrier_id'] : (isset($rapport['interimaire_id'])? $rapport['interimaire_id'] : '')?> - <?=$rapport['fullname']?>
                                                     </td>
-                                                    <td ><?= $rapport['htot'] ?></td>
-                                                    <?php if (!empty($absentHorsNoyauHeader)) : ?>
-                                                        <?php foreach($absentHorsNoyauHeader as $noyauHeaderdetail) : ?>
-                                                            <?php if($rapport['task_id_1'] === $noyauHeaderdetail['tache_id']) : ?>
-                                                                <?php foreach($absentHorsNoyauTask[$rapport['id']] as $task) : ?>
-                                                                    <?php if($task['tache_id']=== $rapport['task_id_1']) : ?>
-                                                                        <td><?= $task['vhr'] ?></td>
-                                                                    <?php endif; ?>
-                                                                <?php endforeach ; ?>
-                                                            <?php elseif ($rapport['task_id_2'] === $noyauHeaderdetail['tache_id']) : ?>
-                                                                <?php foreach($absentHorsNoyauTask[$rapport['id']] as $task) : ?>
-                                                                    <?php if($task['tache_id']=== $rapport['task_id_2']) : ?>
-                                                                        <td><?= $task['vhr'] ?></td>
-                                                                    <?php endif; ?>
-                                                                <?php endforeach ; ?>
-                                                            <?php elseif ($rapport['task_id_3'] === $noyauHeaderdetail['tache_id']) : ?>
-                                                                <?php foreach($absentHorsNoyauTask[$rapport['id']] as $task) : ?>
-                                                                    <?php if($task['tache_id']=== $rapport['task_id_3']) : ?>
-                                                                        <td><?= $task['vhr'] ?></td>
-                                                                    <?php endif; ?>
-                                                                <?php endforeach ; ?>
-                                                            <?php elseif ($rapport['task_id_4'] === $noyauHeaderdetail['tache_id']) : ?>
-                                                                <?php foreach($absentHorsNoyauTask[$rapport['id']] as $task) : ?>
-                                                                    <?php if($task['tache_id']=== $rapport['task_id_4']) : ?>
-                                                                        <td><?= $task['vhr'] ?></td>
-                                                                    <?php endif; ?>
-                                                                <?php endforeach ; ?>
-                                                            <?php elseif ($rapport['task_id_5'] === $noyauHeaderdetail['tache_id']) : ?>
-                                                                <?php foreach($absentHorsNoyauTask[$rapport['id']] as $task) : ?>
-                                                                    <?php if($task['tache_id']=== $rapport['task_id_5']) : ?>
-                                                                        <td><?= $task['vhr'] ?></td>
-                                                                    <?php endif; ?>
-                                                                <?php endforeach ; ?>
-                                                            <?php elseif ($rapport['task_id_6'] === $noyauHeaderdetail['tache_id']) : ?>
-                                                                <?php foreach($absentHorsNoyauTask[$rapport['id']] as $task) : ?>
-                                                                    <?php if($task['tache_id']=== $rapport['task_id_6']) : ?>
-                                                                        <td><?= $task['vhr'] ?></td>
-                                                                    <?php endif; ?>
-                                                                <?php endforeach ; ?>
-                                                            <?php else : ?>
-                                                                <td></td>
-                                                            <?php endif ; ?>
-                                                        <?php endforeach ; ?>
-                                                    <?php endif ;?>
                                                     <td ><?= $rapport['habs'] ?></td>
-                                                    <td ><?= $rapport['hins'] ?></td>
-                                                    <td ><?= $rapport['km'] ?></td>
                                                 </tr>
                                             <?php  endforeach;  ?>
-                                                <tr>
+                                            <tr>
                                                 <td colspan="2">Totaux</td>
-                                                <td><?= $absentHorsNoyauHourGlobal; ?></td>
-                                                <?php if(!empty($absentHorsNoyauHeader)) :?>
-                                                    <?php foreach($absentHorsNoyauHeader as $noyauHeaderdetail) : ?>
-                                                        <td><?= $noyauHeaderdetail['vht'] ?></td>
-                                                    <?php endforeach ; ?>
-                                                <?php endif ; ?>
                                                 <td><?= $absentHorsNoyauHourAbsencesGlobal; ?></td>
-                                                <td><?= $absentHorsNoyauHourPenibleGlobal; ?></td>
-                                                <td><?= $absentHorsNoyauKmGlobal; ?></td>
                                             </tr>
                                         </tbody>
                                     </table>
                                     <hr>
                                     <?php if($_SESSION['post_id']==='1') :?>
                                         <?php if($_GET['submitted'] === '1') :?>
-                                            <input disabled class="span4 btn btn-success" type="submit" value="Renseigner les tâches">
+                                            <input disabled class="span4 btn btn-success" type="submit" value="Renseigner l'absence">
                                         <?php else : ?>
-                                            <input class="span4 btn btn-success" type="submit" value="Renseigner les tâches">
+                                            <input class="span4 btn btn-success" type="submit" value="Renseigner l'absence">
                                         <?php endif ; ?>
                                     <?php elseif($_SESSION['post_id']==='5' || $_SESSION['post_id']==='3') : ?>
                                         <?php if($_GET['validated'] === '1') :?>
-                                            <input disabled class="span4 btn btn-success" type="submit" value="Renseigner les tâches">
+                                            <input disabled class="span4 btn btn-success" type="submit" value="Renseigner l'absence">
                                         <?php else : ?>
-                                            <input class="span4 btn btn-success" type="submit" value="Renseigner les tâches">
+                                            <input class="span4 btn btn-success" type="submit" value="Renseigner l'absence">
                                         <?php endif ; ?>
                                     <?php else : ?>
-                                        <input class="span4 btn btn-success" type="submit" value="Renseigner les tâches">
+                                        <input class="span4 btn btn-success" type="submit" value="Renseigner l'absence">
                                     <?php endif ; ?>
                                     <hr>
                                     <div class="controls">

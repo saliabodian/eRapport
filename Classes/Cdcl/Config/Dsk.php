@@ -314,6 +314,7 @@ class Dsk {
             $i++;
         }
 
+        $team = isset($team) ? $team : '';
         return $team;
     }
 
@@ -376,7 +377,7 @@ class Dsk {
             $allAbsence[$i]["motif"] = $row->CAPTION1;
             $i++;
         }
-
+        $allAbsence = isset($allAbsence)? $allAbsence : '';
         return $allAbsence;
     }
 
@@ -567,6 +568,7 @@ class Dsk {
             $i++;
         }
 
+        $horsNoyau = isset($horsNoyau) ? $horsNoyau : '';
         return $horsNoyau;
 
     }
@@ -600,6 +602,7 @@ class Dsk {
             $i++;
         }
 
+        $absence_cumulee = isset($absence_cumulee)? $absence_cumulee : '';
         return $absence_cumulee;
 
     }
@@ -665,6 +668,7 @@ class Dsk {
 
             $i++;
         }
+
         return $pointeuse;
     }
 
@@ -775,6 +779,7 @@ class Dsk {
             $i++;
         }
 
+        $membreNoyauAbsence = isset($membreNoyauAbsence)? $membreNoyauAbsence : '';
         return $membreNoyauAbsence;
     }
 
@@ -884,6 +889,8 @@ class Dsk {
 
             $i++;
         }
+        // ????
+        $absenceHorsNoyau = isset($absenceHorsNoyau)? $absenceHorsNoyau : '';
         return $absenceHorsNoyau;
     }
 

@@ -270,8 +270,9 @@
                                                 <?php endforeach ; ?>
                                             </select>
                                         <?php else : ?>
-                                        <select class="span4 mySelect task2 select2-container" name="tasks2">
-                                            <option>Tâche</option>
+                                            <select class="span4 mySelect task2 select2-container" name="tasks2">
+                                                <option>Tâche</option>
+                                            </select>
                                         <?php endif; ?>
                                     </div>
                                 </div>

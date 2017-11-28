@@ -36,13 +36,21 @@ $conf = Config::getInstance();
        // $_GET["chantier_code"]=> string(6) "156100"
        // }
 
+        $_GET['validated']=isset($_GET['validated'])? $_GET['validated'] : '';
+
         $interimaireList = Rapport::getInterimaireByTeamSiteAndDate($_GET["date_generation"], $_GET["chef_dequipe_id"], $_GET["chantier_id"]);
 
         $rapportInt = Rapport::getRapportInterimaire($_GET["chef_dequipe_id"],$_GET["date_generation"] , $_GET["chantier_id"]);
 
+        $allAbsence = Dsk::getAllAbsence($_GET["date_generation"]);
 
-    //    var_dump($interimaireList);
-    //    var_dump($rapportInt);
+    //  var_dump($allAbsence);
+
+    //  exit;
+
+
+    //  var_dump($interimaireList);
+    //  var_dump($rapportInt);
 
         $newArray = array();
             // Mise à jour du champ htot pour les intérimaires
@@ -323,6 +331,21 @@ $conf = Config::getInstance();
         //exit;
 
 
+        if(!empty($absentHorsNoyau)){
+            if(!empty($allAbsence)){
+                foreach($allAbsence as $pointage){
+                    foreach($absentHorsNoyau as $rapport){
+                        if($rapport['ouvrier_id']=== $pointage['matricule']){
+                            Rapport::setHorsNoyauHourCalculated($pointage['timemin']/60, $rapport['id']);
+                        }
+                    }
+                }
+            }
+        }
+
+
+
+
         // Mise à jour des heures pointées au niveau des différentes matrices générées
         if(!empty($allPointage)){
             foreach($allPointage as $pointage){
@@ -336,7 +359,8 @@ $conf = Config::getInstance();
             }
 
             //exit;
-
+        /****
+            Plus besoin de mettre à jour le htot des absents du noyau car cette valeur est retournée par la fonction établie sous la requête de DSK
             foreach($allPointage as $pointage){
                 foreach($noyauAbsent as $rapport){
                     if($rapport['ouvrier_id']=== $pointage['matricule']){
@@ -344,18 +368,19 @@ $conf = Config::getInstance();
                     }
                 }
             }
-
-            foreach($allPointage as $pointage){
-                foreach($horsNoyau as $rapport){
-                    if($rapport['ouvrier_id']=== $pointage['matricule']){
-                        Rapport::setWorkerHourCalculated($pointage['hpoint'], $rapport['id']);
-                    }
-                }
-            }
-
+        ****/
+            /*
             foreach($allPointage as $pointage){
                 foreach($absentHorsNoyau as $rapport){
                     if($rapport['ouvrier_id']=== $pointage['matricule']){
+                        Rapport::setHorsNoyauHourCalculated($pointage['timemin'], $rapport['id']);
+                    }
+                }
+            }
+            */
+            foreach($allPointage as $pointage){
+                foreach($horsNoyau as $rapport){
+                    if($rapport['ouvrier_id'] === $pointage['matricule']){
                         Rapport::setWorkerHourCalculated($pointage['hpoint'], $rapport['id']);
                     }
                 }
@@ -507,6 +532,8 @@ $conf = Config::getInstance();
         if($_GET['isValid']==='false'){
             $conf->addError('Merci de confirmer la validité des informations.');
         }
+
+
         include $conf->getViewsDir().'header.php';
         include $conf->getViewsDir().'sidebar.php';
         include $conf->getViewsDir().'erapportShow.php';

@@ -49,27 +49,46 @@ if(!empty($_SESSION)){
     $interimaireList = Rapport::getInterimaireByTeamSiteAndDate($_GET["date_generation"], $_GET["chef_dequipe_id"], $_GET["chantier_id"]);
 
     $rapportInt = Rapport::getRapportInterimaire($_GET["chef_dequipe_id"],$_GET["date_generation"] , $_GET["chantier_id"]);
+
+
+    //    var_dump($interimaireList);
     //    var_dump($rapportInt);
 
-    //    exit;
+    $newArray = array();
     // Mise à jour du champ htot pour les intérimaires
     if(!empty($interimaireList)){
         foreach($interimaireList as $interimaire){
             foreach($rapportInt as $rapportDetailInt){
                 if(($rapportDetailInt['interimaire_id']=== $interimaire['matricule']) && (($rapportDetailInt['ht1']+$rapportDetailInt['ht2']+$rapportDetailInt['ht3']+$rapportDetailInt['ht4']+$rapportDetailInt['ht5']+$rapportDetailInt['ht6']) != 0)){
+                    //    var_dump($interimaire['matricule']) ;
                     Rapport::updateHtotInterimaire($interimaire['matricule']);
                 }
             }
         }
     }
 
-
-
+    //    exit;
     //    var_dump($interimaireList);
 
     //    exit;
 
-    $allPointage = Dsk::getCalculTotalHoraire($_GET["date_generation"], $_GET["chantier_code"]);
+
+    //    var_dump(strtotime($_GET["date_generation"]));
+
+    //    var_dump(strtotime(date('Y/m/d', time())));
+    //    exit;
+
+    //var_dump($_GET["date_generation"]);
+
+    //exit;
+
+    if(strtotime($_GET["date_generation"]) != strtotime(date('Y/m/d', time()))){
+        $allPointage = Dsk::getCalculTotalHoraire($_GET["date_generation"], $_GET["chantier_code"]) ;
+    }
+
+    $allAbsence = Dsk::getAllAbsence($_GET["date_generation"]);
+
+    //$allPointage = Dsk::getCalculTotalHoraire($_GET["date_generation"], $_GET["chantier_code"]) ;
 
     //var_dump($pointage);
 
@@ -80,8 +99,11 @@ if(!empty($_SESSION)){
 
     // exit;
     $chefDequipeMatricule = $rapportJournalier->getChefDEquipeMatricule();
-    $rapportJournalierDate = $rapportJournalier->getDate();
+    $rapportJournalierDate = date('d-m-Y',strtotime($rapportJournalier->getDate()));
 
+    //var_dump(date('d-m-Y',strtotime($rapportJournalierDate)));
+
+    //exit;
 
 
 
@@ -318,6 +340,18 @@ if(!empty($_SESSION)){
 
 
     // Mise à jour des heures pointées au niveau des différentes matrices générées
+
+    if(!empty($absentHorsNoyau)){
+        if(!empty($allAbsence)){
+            foreach($allAbsence as $pointage){
+                foreach($absentHorsNoyau as $rapport){
+                    if($rapport['ouvrier_id']=== $pointage['matricule']){
+                        Rapport::setHorsNoyauHourCalculated($pointage['timemin']/60, $rapport['id']);
+                    }
+                }
+            }
+        }
+    }
     if(!empty($allPointage)){
         foreach($allPointage as $pointage){
             foreach($noyau as $rapport){
@@ -330,7 +364,7 @@ if(!empty($_SESSION)){
         }
 
         //exit;
-
+        /*
         foreach($allPointage as $pointage){
             foreach($noyauAbsent as $rapport){
                 if($rapport['ouvrier_id']=== $pointage['matricule']){
@@ -346,7 +380,7 @@ if(!empty($_SESSION)){
                 }
             }
         }
-
+        */
         foreach($allPointage as $pointage){
             foreach($absentHorsNoyau as $rapport){
                 if($rapport['ouvrier_id']=== $pointage['matricule']){
@@ -358,7 +392,7 @@ if(!empty($_SESSION)){
 
     // Récupération des ids des différents rapports générés absents à savoir ceux du noyau, les absents et les hors noyaux
 
-    $i = 0;
+    //    $i = 0;
 
     for($i=0; $i<1; $i++){
         if(!empty($noyau)){

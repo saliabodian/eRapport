@@ -485,12 +485,14 @@ class Rapport extends DbObject{
                             `equipe`,
                             `ouvrier_id`,
                             `fullname`,
+                            `habs`,
                             `motif_abs`)
                             VALUES(
                             :rapport_id,
                             :equipe,
                             :ouvrier_id,
                             :fullname,
+                            :habs,
                             :motif_abs)';
             $stmt=Config::getInstance()->getPDO()->prepare($sql);
             $stmt->bindValue(':rapport_id',$rapport['id'], \PDO::PARAM_INT);
@@ -502,6 +504,7 @@ class Rapport extends DbObject{
             }*/
             $stmt->bindValue(':ouvrier_id',$team['matricule'], \PDO::PARAM_INT);
             $stmt->bindValue(':fullname',$team['fullname'], \PDO::PARAM_STR);
+            $stmt->bindValue(':habs',$team['timemin']/60, \PDO::PARAM_INT);
             $stmt->bindValue(':motif_abs',$team['motif'], \PDO::PARAM_STR);
             if($stmt->execute()===false){
                 print_r($stmt->errorInfo());
@@ -1261,6 +1264,22 @@ class Rapport extends DbObject{
 
         $stmt = Config::getInstance()->getPDO()->prepare($sql);
         $stmt->bindValue(':htot', $htot);
+        $stmt->bindValue(':id', $id);
+
+        //var_dump($sql);
+
+        if(($stmt->execute()) === false) {
+            print_r($stmt->errorInfo());
+        }
+    }
+
+    public static function setHorsNoyauHourCalculated($habs, $id){
+        $sql = '
+                UPDATE `rapport_detail` SET `habs`=:habs WHERE `id`=:id
+              ';
+
+        $stmt = Config::getInstance()->getPDO()->prepare($sql);
+        $stmt->bindValue(':habs', $habs);
         $stmt->bindValue(':id', $id);
 
         //var_dump($sql);
@@ -2643,6 +2662,7 @@ class Rapport extends DbObject{
                     htot <> (ht1 + ht2 + ht3 + ht4 + ht5 + ht6)
                         AND rapport_detail.validated = 1
                         AND rapport_detail.submitted = 1
+                        AND (rapport.rapport_type LIKE "NOYAU" OR rapport.rapport_type LIKE "HORSNOYAU")
                 GROUP BY rapport_detail.id';
         $stmt = Config::getInstance()->getPDO()->prepare($sql);
 
@@ -2684,7 +2704,8 @@ class Rapport extends DbObject{
                     OR abs = 'Travaux Autre Chantier (TAC)'
                     OR abs = 'Maladie (M)')
                     AND rapport_detail.validated = '1'
-                    AND rapport_detail.submitted = '1'";
+                    AND rapport_detail.submitted = '1'
+                    AND (rapport.rapport_type LIKE 'NOYAU' OR rapport.rapport_type LIKE 'HORSNOYAU')";
         $stmt = Config::getInstance()->getPDO()->prepare($sql);
 
         if($stmt->execute()=== false){
