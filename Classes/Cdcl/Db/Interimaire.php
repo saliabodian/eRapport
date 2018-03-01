@@ -1014,19 +1014,23 @@ class Interimaire extends DbObject{
     }
 
     public static function affectationInterimaireSaved($chantier_id, $week, $isAffected, $date_debut){
-        for($i=0; $i<7; $i++){
+        $day = intval(intval(date('N', strtotime($date_debut->format('Y-m-d')))));
+        $rel = 7 - $day;
+        $date_fin = $date_debut->modify('+'.$rel .'day');
+        for($i=0; $i<=7; $i++){
             $sql= 'INSERT INTO `interimaire_has_chantier`
                 (`interimaire_id`,
                 `chantier_id`,
-                doy,
-                woy,
-                date_debut,
-                date_fin)
+                `doy`,
+                `woy`,
+                `date_debut`,
+                `date_fin`)
                 VALUES(
                 :interimaire_id,
                 :chantier_id,
                 :doy,
                 :woy,
+                :year,
                 :date_debut,
                 :date_fin
                 )';
@@ -1036,7 +1040,7 @@ class Interimaire extends DbObject{
             $stmt->bindValue(':doy', date('Y-m-d', mktime(0,0,0, date('m', strtotime($date_debut)), date('d', strtotime($date_debut))+$i, date('Y', strtotime($date_debut)))));
             $stmt->bindValue(':woy', $week, \PDO::PARAM_INT);
             $stmt->bindValue(':date_debut', $date_debut);
-            $stmt->bindValue(':date_fin', date('Y-m-d', mktime(0,0,0, date('m', strtotime($date_debut)), date('d', strtotime($date_debut))+6, date('Y', strtotime($date_debut)))));
+            $stmt->bindValue(':date_fin', $date_fin);
             if ($stmt->execute() === false) {
                 print_r($stmt->errorInfo());
             }
@@ -1064,15 +1068,18 @@ class Interimaire extends DbObject{
 
     }
 
-    public static function checkInterimaireAffectation($chantier_id, $week, $interimaire_id){
+    public static function checkInterimaireAffectation($chantier_id, $week, $year, $interimaire_id){
         $sql = 'SELECT * FROM interimaire_has_chantier WHERE
             interimaire_id= :interimaire_id
             AND chantier_id= :chantier_id
-            AND woy= :woy';
+            AND woy= :woy
+            AND year=:year'
+        ;
         $stmt = Config::getInstance()->getPDO()->prepare($sql);
         $stmt->bindValue(':interimaire_id', $interimaire_id, \PDO::PARAM_INT);
         $stmt->bindValue(':chantier_id', $chantier_id, \PDO::PARAM_INT);
         $stmt->bindValue(':woy', $week, \PDO::PARAM_INT);
+        $stmt->bindValue(':year', $year, \PDO::PARAM_INT);
         if ($stmt->execute() === false) {
             print_r($stmt->errorInfo());
         }else{
@@ -1314,4 +1321,50 @@ class Interimaire extends DbObject{
         }
     }
 
+    public static function getOuvrier($chantierId){
+        $sql = 'SELECT distinct fullname, ouvrier_id, interimaire_id
+                FROM rapport_detail, rapport, chantier
+                WHERE rapport_detail.rapport_id = rapport.id
+                AND rapport.chantier = :chantierId
+                ORDER BY interimaire_id, ouvrier_id ASC';
+        $stmt = Config::getInstance()->getPDO()->prepare($sql);
+        $stmt->bindValue(':chantierId', $chantierId, \PDO::PARAM_INT);
+        if($stmt->execute()===false){
+            print_r($stmt->errorInfo());
+        }else{
+            return $listOuvrier = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        }
+    }
+
+    public static function getOuvrierTache($fullname){
+        $sql = 'SELECT DISTINCT
+                    tache.id, tache.code, tache.nom
+                FROM
+                    rapport,
+                    rapport_detail,
+                    rapport_detail_has_tache,
+                    tache
+                WHERE
+                    rapport_detail_has_tache.rapport_detail_id = rapport_detail.id
+                    AND (ouvrier_id like :fullname OR interimaire_id like :fullname)
+                    AND rapport_detail.rapport_id = rapport.id
+                    AND rapport_detail_has_tache.tache_id = tache.id';
+        $stmt = Config::getInstance()->getPDO()->prepare($sql);
+        $stmt->bindValue(':fullname', $fullname, \PDO::PARAM_INT);
+        if($stmt->execute()===false){
+            print_r($stmt->errorInfo());
+        }else{
+            return $listOuvrierTache = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        }
+    }
+
+    public static function majScript (){
+        $sql = "SELECT * FROM interimaire_has_chantier  where 1=1";
+        $stmt = Config::getInstance()->getPDO()->prepare($sql);
+        if($stmt->execute()===false){
+            print_r($stmt->errorInfo());
+        }else{
+            return $allRows = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        }
+    }
 }
