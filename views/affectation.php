@@ -1,46 +1,39 @@
 <div id="content">
     <div id="content-header">
         <hr>
-        <h1>Ré-affectation des intérimaires</h1>
+        <h1>Affectation des intérimaires</h1>
     </div>
     <div class="container-fluid">
-        <hr>
         <div class="row-fluid">
             <div class="span12">
                 <div class="widget-box">
                     <div class="widget-title"> <span class="icon"> <i class="icon-align-justify"></i> </span>
-                        <h5>Ré-affectation des intérimaires</h5>
+                        <h5>Affectation Hebdomadaire</h5>
                     </div>
+
                     <div class="widget-content nopadding">
                         <?php include 'alert.php'; ?>
-                        <form action="" method="get"  class="form-horizontal">
-                            <input type="hidden" name="reaffect" value="true"/>
-                            <div class="control-group">
-                                <label class="control-label">Semaine à dupliquer :</label>
-                                <div class="controls mySelect">
-                                    <select class="select2-container" name="weekToDuplicate" id="">
-                                        <?php for($i=1; $i<=52; $i++): ?>
-                                            <option value="<?= $i ?>" <?php if($i== (date('W',time())-1)) : ?> selected="selected" <?php endif; ?>><?= 'Semaine '.$i ?> </option>
-                                        <?php endfor; ?>
-                                    </select>
+                        <form action="" method="get" class="form-horizontal">
+                            <div class="controls-row nopadding">
+                                <input type="hidden" name="affectation" value="true">
+                                <label class="controls span2 m-wrap">Semaine du</label>
+                                <div class="controls span2 m-wrap">
+                                    <input type="text" name="date_affectation" class=" btn datepicker btn-block" value="" />
                                 </div>
-                            </div>
-                            <div class="control-group">
-                                <label class="control-label">Nouvelle semaine d'affectation :</label>
-                                <div class="controls mySelect">
-                                    <select class="select2-container" name="weekToAffect" id="">
-                                        <?php for($i=1; $i<=52; $i++): ?>
-                                            <option value="<?= $i ?>" <?php if($i== (date('W',time()))) : ?> selected="selected" <?php endif; ?>><?= 'Semaine '.$i ?> </option>
-                                        <?php endfor; ?>
-                                    </select>
+                                <div class="controls span3 m-wrap">
+                                    <input type="submit" class="btn-primary" value="Affecter les intérimaires" style="text-align:left;"/>
                                 </div>
-                            </div>
-
-                            <div class="form-actions">
-                                <input type="submit" class="btn btn-success" value="Ré-affecter" />
                             </div>
                         </form>
                     </div>
+                    <!--div class="widget-content nopadding">
+                        <form action="" method="get" class="form-horizontal">
+                            <input type="hidden" name="nextweekaffectation" value="true">
+                            <div class="form-actions ">
+                                <input type="submit" class="btn-large btn-info span12" value="Affectation pour la semaine suivante" style="text-align:center;"/>
+                            </div>
+                        </form>
+                    </div-->
                 </div>
             </div>
         </div>
@@ -76,7 +69,7 @@
             <div class="span12">
                 <div class="widget-box">
                     <div class="widget-title"> <span class="icon"> <i class="icon-align-justify"></i> </span>
-                        <h5>Liste des intérmaires à affecter</h5>
+                        <h5>Liste des intérmaires affectés en fonction du chantier et de la semaine</h5>
                     </div>
                     <div class="widget-content nopadding">
                         <?php include 'alert.php'; ?>

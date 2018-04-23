@@ -165,18 +165,17 @@
                                     <input type="hidden" name="date_generation" value="<?= $_GET['date_generation']?>"/>
                                     <input type="hidden" name="chantier_code" value="<?= $_GET['chantier_code']?>"/>
                                     <input type="hidden" name="chantier_id" value="<?= $_GET['chantier_id']?>"/>
-                                    <table class="table table-bordered with-check">
+                                    <table class="table table-bordered table-striped">
                                         <thead>
                                         <tr>
-                                            <th><input type="checkbox" name="check_all_abs" id="check_all_abs" value=""/></th>
                                             <th>Nom Complet</th>
-                                            <th>Abs</th>
+                                            <th>Motif absence</th>
+                                            <th>Heure(s) absence</th>
                                         </tr>
                                         </thead>
                                         <tbody>
                                         <?php foreach ($rapportNoyauAbsent as $rapport ) : ?>
                                             <tr>
-                                            <td><input type="checkbox" name="selected_matricule[]" class="checkbox checkbox_abs" value="<?= isset($rapport['ouvrier_id'])? $rapport['ouvrier_id'] : (isset($rapport['interimaire_id'])? $rapport['interimaire_id'] : '')?>" /></td>
                                             <td>
                                                 <?php if ($rapport['htot'] != ($rapport['ht1'] + $rapport['ht2'] +$rapport['ht3'] +$rapport['ht4'] +$rapport['ht5'] + $rapport['ht6'])) : ?>
                                                     <img src="img/warning-yellow-black.png" alt="erreur volume horaire">
@@ -185,6 +184,7 @@
                                                     <img src="img/dialog-stop-2.png" alt="absence saisie">
                                                 <?php endif ?><?= isset($rapport['ouvrier_id'])? $rapport['ouvrier_id'] : (isset($rapport['interimaire_id'])? $rapport['interimaire_id'] : '')?> - <?=$rapport['fullname']?>
                                             </td>
+                                                <td ><?= $rapport['abs'] ?></td>
                                             <td ><?= $rapport['habs'] ?></td>
                                             </tr>
                                         <?php  endforeach;  ?>
@@ -194,23 +194,6 @@
                                         </tr>
                                         </tbody>
                                     </table>
-                                    <hr>
-                                    <?php if($_SESSION['post_id']==='1') :?>
-                                        <?php if($_GET['submitted'] === '1') :?>
-                                            <input disabled class="span4 btn btn-success" type="submit" value="Renseigner l'absence">
-                                        <?php else : ?>
-                                            <input class="span4 btn btn-success" type="submit" value="Renseigner l'absence">
-                                        <?php endif ; ?>
-                                    <?php elseif($_SESSION['post_id']==='5' || $_SESSION['post_id']==='3') : ?>
-                                        <?php if($_GET['validated'] === '1') :?>
-                                            <input disabled class="span4 btn btn-success" type="submit" value="Renseigner l'absence">
-                                        <?php else : ?>
-                                            <input class="span4 btn btn-success" type="submit" value="Renseigner l'absence">
-                                        <?php endif ; ?>
-                                    <?php else : ?>
-                                        <input class="span4 btn btn-success" type="submit" value="Renseigner l'absence">
-                                    <?php endif ; ?>
-                                    <hr>
                                     <div class="controls">
                                         <?php if(!empty($noyauAbsentHeader)) : ?>
                                             <?php foreach($noyauAbsentHeader as $noyauHeaderdetail) : ?>
@@ -242,18 +225,17 @@
                                     <input type="hidden" name="date_generation" value="<?= $_GET['date_generation']?>"/>
                                     <input type="hidden" name="chantier_code" value="<?= $_GET['chantier_code']?>"/>
                                     <input type="hidden" name="chantier_id" value="<?= $_GET['chantier_id']?>"/>
-                                    <table class="table table-bordered with-check">
+                                    <table class="table table-bordered table-striped">
                                         <thead>
                                             <tr>
-                                                <th><input type="checkbox" name="check_all_abs_hn" id="check_all_abs_hn" value=""/></th>
                                                 <th>Nom Complet</th>
-                                                <th>Abs</th>
+                                                <th>Motif absence</th>
+                                                <th>Heure(s) absence</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <?php foreach ($rapportAbsentHorsNoyau as $rapport ) : ?>
                                                 <tr>
-                                                    <td><input type="checkbox" name="selected_matricule[]" class="checkbox checkbox_abs_hn" value="<?= isset($rapport['ouvrier_id'])? $rapport['ouvrier_id'] : (isset($rapport['interimaire_id'])? $rapport['interimaire_id'] : '')?>" /></td>
                                                     <td>
                                                         <?php if ($rapport['htot'] != ($rapport['ht1'] + $rapport['ht2'] +$rapport['ht3'] +$rapport['ht4'] +$rapport['ht5'] + $rapport['ht6'])) : ?>
                                                             <img src="img/warning-yellow-black.png" alt="erreur volume horaire">
@@ -263,6 +245,7 @@
                                                         <?php endif ?>
                                                         <?= isset($rapport['ouvrier_id'])? $rapport['ouvrier_id'] : (isset($rapport['interimaire_id'])? $rapport['interimaire_id'] : '')?> - <?=$rapport['fullname']?>
                                                     </td>
+                                                    <td ><?= $rapport['abs'] ?></td>
                                                     <td ><?= $rapport['habs'] ?></td>
                                                 </tr>
                                             <?php  endforeach;  ?>
@@ -272,23 +255,6 @@
                                             </tr>
                                         </tbody>
                                     </table>
-                                    <hr>
-                                    <?php if($_SESSION['post_id']==='1') :?>
-                                        <?php if($_GET['submitted'] === '1') :?>
-                                            <input disabled class="span4 btn btn-success" type="submit" value="Renseigner l'absence">
-                                        <?php else : ?>
-                                            <input class="span4 btn btn-success" type="submit" value="Renseigner l'absence">
-                                        <?php endif ; ?>
-                                    <?php elseif($_SESSION['post_id']==='5' || $_SESSION['post_id']==='3') : ?>
-                                        <?php if($_GET['validated'] === '1') :?>
-                                            <input disabled class="span4 btn btn-success" type="submit" value="Renseigner l'absence">
-                                        <?php else : ?>
-                                            <input class="span4 btn btn-success" type="submit" value="Renseigner l'absence">
-                                        <?php endif ; ?>
-                                    <?php else : ?>
-                                        <input class="span4 btn btn-success" type="submit" value="Renseigner l'absence">
-                                    <?php endif ; ?>
-                                    <hr>
                                     <div class="controls">
                                         <?php if(!empty($absentHorsNoyauHeader)) : ?>
                                             <?php foreach($absentHorsNoyauHeader as $noyauHeaderdetail) : ?>
@@ -358,7 +324,7 @@
                                                     <?php if (!empty($rapport['habs']) || !empty($rapport['abs'])) : ?>
                                                         <img src="img/dialog-stop-2.png" alt="absence saisie">
                                                     <?php endif ?>
-                                                    <?= isset($rapport['ouvrier_id'])? $rapport['ouvrier_id'] : (isset($rapport['interimaire_id'])? $rapport['interimaire_id'] : '')?> - <?=$rapport['fullname']?>
+                                                    <?= isset($rapport['ouvrier_id'])? $rapport['ouvrier_id'] : (isset($rapport['interimaire_id'])? $rapport['interimaire_id'] : '')?> - <?=$rapport['fullname']?><?= ($rapport['dpl_pers']=== '1')? ' (T)' : '' ?>
                                                 </td>
                                                 <td ><?= $rapport['htot'] ?></td>
                                                 <?php if (!empty($horsNoyauHeader)) : ?>

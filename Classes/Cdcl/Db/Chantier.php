@@ -184,6 +184,31 @@ class Chantier extends DbObject{
         return $returnList;
     }
 
+    public static function getAllActifSites()
+    {
+        $sql=' SELECT * FROM chantier WHERE actif=1
+        ';
+        $pdoStmt = Config::getInstance()->getPDO()->prepare($sql);
+        if ($pdoStmt->execute() === false) {
+            print_r($pdoStmt->errorInfo());
+        }
+        else {
+            $allChantiers = $pdoStmt->fetchAll(\PDO::FETCH_ASSOC);
+            foreach ($allChantiers as $row) {
+
+                $returnList[$row['id']]['id'] = $row['id'];
+                $returnList[$row['id']]['nom'] = $row['nom'];
+                $returnList[$row['id']]['code'] = $row['code'];
+                $returnList[$row['id']]['adresse'] = $row['adresse'];
+                $returnList[$row['id']]['adresse_fac'] = $row['adresse_fac'];
+                $returnList[$row['id']]['date_exec'] = $row['date_exec'];
+                $returnList[$row['id']]['actif'] = $row['actif'];
+                $returnList[$row['id']]['asc_mtn'] = $row['asc_mtn'];
+            }
+        }
+        return $returnList;
+    }
+
     /**
      * @return array
      * @throws InvalidSqlQueryException
@@ -388,5 +413,60 @@ class Chantier extends DbObject{
         }
     }
 
-
+    public static function getChantierHasUser(){
+        $sql = 'SELECT
+            chantier_has_user.id,
+            user.id as usr_id,
+            user.username,
+            user.firstname,
+            user.lastname,
+            chantier.id as chantier_id,
+            chantier.code,
+            chantier.nom
+        FROM
+            chantier_has_user,
+            user,
+            chantier
+        WHERE
+            chantier_has_user.user_id = user.id
+                AND chantier_has_user.chantier_id=chantier.id
+                AND user.post_id = 1
+                AND chantier.actif = 1';
+        $stmt = Config::getInstance()->getPDO()->prepare($sql);
+        if($stmt->execute()===false){
+            print_r($stmt->errorInfo());
+        }else{
+            $chantierHasUser = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        }
+        return $chantierHasUser;
+    }
+    public static function getChantierHasUserId($chantierHasUserId){
+        $sql = 'SELECT
+            chantier_has_user.id,
+            user.id as usr_id,
+            user.username,
+            user.firstname,
+            user.lastname,
+            chantier.id as chantier_id,
+            chantier.code,
+            chantier.nom
+        FROM
+            chantier_has_user,
+            user,
+            chantier
+        WHERE
+            chantier_has_user.user_id = user.id
+                AND chantier_has_user.chantier_id=chantier.id
+                AND user.post_id = 1
+                AND chantier.actif = 1
+                AND chantier_has_user.id =:chantier_has_user_id';
+        $stmt = Config::getInstance()->getPDO()->prepare($sql);
+        $stmt->bindValue(':chantier_has_user_id', $chantierHasUserId);
+        if($stmt->execute()===false){
+            print_r($stmt->errorInfo());
+        }else{
+            $chantierHasUserRow = $stmt->fetch();
+        }
+        return $chantierHasUserRow;
+    }
 }

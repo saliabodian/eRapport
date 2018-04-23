@@ -4,6 +4,27 @@
         <h1>Les anomalies RH  </h1>
     </div>
     <div class="container-fluid">
+    <div class="row-fluid">
+        <div class="span12">
+            <div class="widget-box">
+                <div class="widget-title"> <span class="icon"> <i class="icon-align-justify"></i> </span>
+                    <h5>Traitement des anomalies pré-mensuelles</h5>
+                </div>
+                <div>
+                    <div class="widget-content nopadding">
+                        <form action="" method="post" class="form-horizontal">
+                            <div class="form-actions">
+                                <input type="hidden" name="month_anomaly_treatment" value="true">
+                                <input type="text" class="btn span3" disabled>
+                                <input type="submit" class="btn btn-success span6" value="Traiter les anomlies">
+                                <input type="text" class="btn span3" disabled>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
         <hr>
         <div class="row-fluid">
             <div class="span12">
@@ -28,6 +49,7 @@
                                     </thead>
                                     <?php foreach ($hourAnomaly as $anomaly) : ?>
                                         <form method="post" action="rapportDetail.php">
+                                            <input type="hidden" name="rapport_detail_id" value="<?= $anomaly['id'] ?>"/>
                                             <input type="hidden" name="rapport_type" value="<?= $anomaly['rapport_type'] ?>"/>
                                             <input type="hidden" name="rapport_id" value="<?= $anomaly['rapport_id']?>"/>
                                             <input type="hidden" name="chef_dequipe_id" value="<?= $anomaly['equipe']?>"/>
@@ -44,7 +66,7 @@
                                                 <td><?= $anomaly['ht1']+$anomaly['ht2']+$anomaly['ht3']+$anomaly['ht4']+$anomaly['ht5']+$anomaly['ht6']?></td>
                                                 <td><?= $anomaly['code'].' - '.$anomaly['nom'] ?></td>
                                                 <td><?= date('d-m-Y',strtotime($anomaly['date']))?></td>
-                                                <td><input type="submit" value="Modifier"></td>
+                                                <td><span><input class="btn btn-inverse" type="submit" value="Lire"> <a href="anomalieRh.php?hour_traitement=<?= $anomaly['id'] ?>" class="btn btn-light"><i class="icon-trash"></i> Traiter</a></td>
                                             </tr>
                                             </tbody>
                                         </form>
@@ -79,6 +101,7 @@
                                     </thead>
                                     <?php foreach ($absenceList as $anomaly) : ?>
                                         <form method="post" action="rapportDetail.php">
+                                            <input type="hidden" name="rapport_detail_id" value="<?= $anomaly['id'] ?>"/>
                                             <input type="hidden" name="rapport_type" value="<?= $anomaly['rapport_type'] ?>"/>
                                             <input type="hidden" name="rapport_id" value="<?= $anomaly['rapport_id']?>"/>
                                             <input type="hidden" name="chef_dequipe_id" value="<?= $anomaly['equipe']?>"/>
@@ -94,7 +117,7 @@
                                                 <td><?= $anomaly['abs'].' - '.$anomaly['habs'].'H' ?></td>
                                                 <td><?= $anomaly['code'].' - '.$anomaly['nom']?></td>
                                                 <td><?= date('d-m-Y',strtotime($anomaly['date'])) ?></td>
-                                                <td><input type="submit" value="Modifier"></td>
+                                                <td><input class="btn btn-inverse " type="submit" value="Lire"> <a href="anomalieRh.php?absence_traitement=<?= $anomaly['id'] ?>" class="btn btn-light"><i class="icon-trash"></i> Traiter</a></td>
                                             </tr>
                                             </tbody>
                                         </form>

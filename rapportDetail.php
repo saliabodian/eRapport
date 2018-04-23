@@ -5,7 +5,19 @@
  * Date: 09/10/2017
  * Time: 11:42
  */
-spl_autoload_register();
+// spl_autoload_register();
+
+spl_autoload_register(function ($pClassName) {
+    if (strpos($pClassName, "\\")) {
+        $namespaces = explode("\\", $pClassName);
+        $classname = array_pop($namespaces);
+        $includingClassname = __DIR__.'/'.join('/', $namespaces).'/'.$classname.'.php';
+    }
+    else {
+        $includingClassname = __DIR__.'/'.$pClassName.'.php';
+    }
+    require $includingClassname;
+});
 
 use \Classes\Cdcl\Config\Config;
 
@@ -98,9 +110,6 @@ if(!empty($_SESSION)){
         }
 
 
-        //var_dump($_POST);
-
-        //exit;
 
 
         if(($_POST['type_task'])!= 'Catégorie'){
@@ -177,7 +186,10 @@ if(!empty($_SESSION)){
             }
         }
 
-        $dpl_pers = ($_POST['dpl_pers']=== 'on')? 1 : 0;
+        if(isset($_POST['dpl_pers'])){
+            $dpl_pers = ($_POST['dpl_pers']=== 'on')? 1 : 0;
+        }
+
 
         if($_SESSION['post_id'] === '1'){
             $chef_dequipe_updated = $_SESSION['username'];
@@ -190,6 +202,7 @@ if(!empty($_SESSION)){
         if($form){
 
             if ($_POST['anomaly']==='true'){
+
                 Rapport::updateRapportDetail($_POST['rapport_detail_id'], $_POST['htot'], $_POST['hins'],$_POST['machine'], $_POST['abs'],
                     $_POST['habs'], $dpl_pers,$_POST['km'], $_POST['remarque'], $chef_dequipe_updated,
                     $_POST['type_task'], $_POST['tasks'], $_POST['bat'], $_POST['axe'], $_POST['et'], $_POST['ht'],
@@ -204,6 +217,7 @@ if(!empty($_SESSION)){
             }else{
                 // var_dump($_POST['machine']);
                 // exit;
+
                 Rapport::updateRapportDetail($_POST['rapport_detail_id'], $_POST['htot'], $_POST['hins'], $_POST['machine'], $_POST['abs'],
                     $_POST['habs'], $dpl_pers,$_POST['km'], $_POST['remarque'], $chef_dequipe_updated,
                     $_POST['type_task'], $_POST['tasks'], $_POST['bat'], $_POST['axe'], $_POST['et'], $_POST['ht'],
@@ -640,7 +654,7 @@ if(!empty($_SESSION)){
             }
 
             if($_POST["rapport_type"]==='ABSENTHORSNOYAU'){
-                $rapportAbsentHorsNoyau = Rapport::getRapportAbsentHorsNoyau($_POST["date_generation"], $_POST["chantier_id"]);
+                $rapportAbsentHorsNoyau = Rapport::getRapportAbsentHorsNoyau($_POST["date_generation"], $_POST["chantier_id"],  $_POST["chef_dequipe_matricule"]);
                 foreach($rapportAbsentHorsNoyau as $rapport){
                     if(in_array($rapport['ouvrier_id'], $matriculeList)){
                         $workerToUpdate[$rapport['id']]['rapport_detail_id']= $rapport['id'];
@@ -1249,7 +1263,7 @@ if(!empty($_SESSION)){
         }
 
         if($_POST["rapport_type"]==='ABSENTHORSNOYAU'){
-            $rapportAbsentHorsNoyau = Rapport::getRapportAbsentHorsNoyau($_POST["date_generation"], $_POST["chantier_id"]);
+            $rapportAbsentHorsNoyau = Rapport::getRapportAbsentHorsNoyau($_POST["date_generation"], $_POST["chantier_id"], $_POST["chef_dequipe_matricule"]);
             foreach($rapportAbsentHorsNoyau as $rapport){
                 if(in_array($rapport['ouvrier_id'], $matriculeList)){
                     $workerToUpdate[$rapport['id']]['rapport_detail_id']= $rapport['id'];
@@ -1405,6 +1419,10 @@ if(!empty($_SESSION)){
             }
         }
 
+    //    var_dump($workerToUpdate);
+
+    //    exit;
+
         /*
          * Test de vérification du txpe de matrice Mix, Ouvrier uniquement ou Interimaire uniquement
          *
@@ -1427,6 +1445,25 @@ if(!empty($_SESSION)){
     }else{
         header('Location: erapportShow.php?rapport_id='.$_POST['rapport_id'].'&rapport_type='.$_POST['rapport_type'].'&chef_dequipe_id='.$_POST['chef_dequipe_id'].'&chef_dequipe_matricule='.$_POST['chef_dequipe_matricule'].'&date_generation='.$_POST['date_generation'].'&chantier_id='.$_POST['chantier_id'].'&chantier_code='.$_POST['chantier_code'].'&erreur=true');
     }
+
+    /**
+     *
+     *
+     * Gestion de la durée pendant laquelle un User peut être
+     * sans activité avant que le système ne le déconncete
+     * Cette durée a été mis à 15mn soit 900s
+     *
+     *
+     */
+
+    if (isset($_SESSION['LAST_REQUEST_TIME'])) {
+        if (time() - $_SESSION['LAST_REQUEST_TIME'] > 900) {
+            // session timed out, last request is longer than 3 minutes ago
+            $_SESSION = array();
+            session_destroy();
+        }
+    }
+    $_SESSION['LAST_REQUEST_TIME'] = time();
 
 }else{
     header('Location: index.php');

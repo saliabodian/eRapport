@@ -16,6 +16,7 @@
                             <input type="hidden" name="fin" value="<?= $interimaireSelected['date_fin'] ?>">
                             <input type="hidden" name="interimaire_id" value="<?= $interimaireSelected['interimaire_id'] ?>">
                             <input type="hidden" name="chantier_id" value="<?= $interimaireSelected['chantier_id'] ?>">
+                            <input type="hidden" name="chantier_select" value="true">
                             <div class="control-group">
                                 <label class="control-label" for="interimaire"> Intérimaire <span></span>:</label>
                                 <div class="controls">
@@ -29,11 +30,11 @@
                                 </div>
                             </div>
                             <div class="control-group">
-                                <label class="control-label span3 m-wrap">Nouveau chantier</label>
+                                <label class="control-label span3 m-wrap">Chantier / Chef d'équipe</label>
                                 <div class="controls">
-                                    <SELECT type="text" class="span11"  name="new_chantier">
-                                        <?php foreach($listChantierActifs as $id=>$chantier): ?>
-                                        <option value="<?= $id?>"<?php if ($id == $interimaireSelected['chantier_id']) : ?> selected="selected"<?php endif; ?>><?= $chantier?></option>
+                                    <SELECT type="text" class="span11"  name="chantier_user">
+                                        <?php foreach($chantierHasUser as $chantierUser): ?>
+                                        <option value="<?= $chantierUser['id']?>"<?php if ($chantierUser['chantier_id'] == $interimaireSelected['chantier_id']) : ?> selected="selected"<?php endif; ?>><?= $chantierUser['username'].' - '.$chantierUser['firstname'].' '.$chantierUser['lastname'].' / '.$chantierUser['code'].' - '.$chantierUser['nom']?></option>
                                         <?php endforeach; ?>
                                     </SELECT>
                                 </div>

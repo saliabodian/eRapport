@@ -1,5 +1,5 @@
 <div>
-    <div id=>
+    <div>
         <hr>
         <h2>
             <img src="img/logo.png" alt="Logo"  height="42" width="80"> &nbsp;&nbsp; Rapport journalier du <?= date('d-m-Y',strtotime($rapportJournalierDate)) ?> / Noyau : <?= $chefDequipeMatricule ?> / Chantier : <?= $_GET["chantier_code"] ?>
@@ -136,132 +136,6 @@
         <div>
             <div>
                 <div>
-                    <?php if(!empty($rapportNoyauAbsent)){ ?>
-                        <div>
-                            <div>
-                                <h3 style="page-break-before: always;">Rapport journalier des absents du noyau <?= '('.date('d-m-Y',strtotime($rapportJournalierDate)).' / '. $_GET["chantier_code"].')'?></h3>
-                            </div>
-                            <div>
-                                <form method="post" action="rapportDetail.php">
-                                    <input type="hidden" name="rapport_type" value="ABSENT"/>
-                                    <input type="hidden" name="rapport_id" value="<?= $_GET['rapport_id']?>"/>
-                                    <input type="hidden" name="chef_dequipe_id" value="<?= $_GET['chef_dequipe_id']?>"/>
-                                    <input type="hidden" name="chef_dequipe_matricule" value="<?= $_GET['chef_dequipe_matricule']?>"/>
-                                    <input type="hidden" name="date_generation" value="<?= $_GET['date_generation']?>"/>
-                                    <input type="hidden" name="chantier_code" value="<?= $_GET['chantier_code']?>"/>
-                                    <input type="hidden" name="chantier_id" value="<?= $_GET['chantier_id']?>"/>
-                                    <table style="page-break-inside: avoid; border: 1px; border-collapse: collapse;">
-                                        <thead>
-                                        <tr style="background-color: #68ff72;">
-                                            <th style="text-align: left;  border:solid 1px #000000;">&nbsp;Nom Complet&nbsp;</th>
-                                            <th style="text-align: center;  border:solid 1px #000000;">&nbsp;Abs&nbsp;</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        <?php foreach ($rapportNoyauAbsent as $rapport ) : ?>
-                                            <tr>
-                                                <td style="text-align: left;  border:solid 1px #000000;">&nbsp;
-                                                    <?php if ($rapport['htot'] != ($rapport['ht1'] + $rapport['ht2'] +$rapport['ht3'] +$rapport['ht4'] +$rapport['ht5'] + $rapport['ht6'])) : ?>
-                                                        <img src="img/warning-yellow-black.png" alt="erreur volume horaire">
-                                                    <?php endif ?>
-                                                    <?php if (!empty($rapport['habs']) || !empty($rapport['abs'])) : ?>
-                                                        <img src="img/dialog-stop-2.png" alt="absence saisie">
-                                                    <?php endif ?>
-                                                    <?= isset($rapport['ouvrier_id'])? $rapport['ouvrier_id'] : (isset($rapport['interimaire_id'])? $rapport['interimaire_id'] : '')?> - <?=$rapport['fullname']?>&nbsp;&nbsp;&nbsp;
-                                                </td>
-                                                <td style="text-align: center;  border:solid 1px #000000;" ><?= $rapport['habs'] ?></td>
-                                            </tr>
-                                        <?php  endforeach;  ?>
-                                        <tr>
-                                            <td style="text-align: left;  border:solid 1px #000000; color: red; "><b>&nbsp;Totaux</b></td>
-                                            <td style="text-align: center;  border:solid 1px #000000; color: red; "><b><?= $absentHourAbsencesGlobal; ?></b></td>
-                                        </tr>
-                                        </tbody>
-                                    </table>
-                                    <hr>
-                                    <div class="controls">
-                                        <?php if(!empty($noyauAbsentHeader)) : ?>
-                                            <?php foreach($noyauAbsentHeader as $noyauHeaderdetail) : ?>
-                                                <input type="text" class="span4" value="<?= $noyauHeaderdetail['code'].': '.$noyauHeaderdetail['nom']?> " style="width: 200px;" disabled/>
-                                            <?php endforeach; ?>
-                                        <?php endif ; ?>
-                                    </div>
-                                    <?php if(!empty($noyauAbsentHeader)) : ?>
-                                        <hr>
-                                    <?php endif ; ?>
-                                </form>
-                            </div>
-                        </div>
-                    <?php } ?>
-                </div>
-            </div>
-        </div>
-        <div>
-            <div>
-                <div>
-                    <?php if(!empty($rapportAbsentHorsNoyau)){ ?>
-                        <div>
-                            <div>
-                                <h3 style="page-break-before: always;">Rapport journalier des absents hors noyau <?= '('.date('d-m-Y',strtotime($rapportJournalierDate)).' / '. $_GET["chantier_code"].')'?></h3>
-                            </div>
-                            <div>
-                                <form method="post" action="rapportDetail.php">
-                                    <input type="hidden" name="rapport_type" value="ABSENTHORSNOYAU"/>
-                                    <input type="hidden" name="rapport_id" value="<?= $_GET['rapport_id']?>"/>
-                                    <input type="hidden" name="chef_dequipe_id" value="<?= $_GET['chef_dequipe_id']?>"/>
-                                    <input type="hidden" name="chef_dequipe_matricule" value="<?= $_GET['chef_dequipe_matricule']?>"/>
-                                    <input type="hidden" name="date_generation" value="<?= $_GET['date_generation']?>"/>
-                                    <input type="hidden" name="chantier_code" value="<?= $_GET['chantier_code']?>"/>
-                                    <input type="hidden" name="chantier_id" value="<?= $_GET['chantier_id']?>"/>
-                                    <table style="page-break-inside: avoid; border: 1px; border-collapse: collapse;"  autosize="1">
-                                        <thead>
-                                        <tr style="background-color: #68ff72;">
-                                            <th style="text-align: left;  border:solid 1px #000000;">&nbsp;Nom Complet&nbsp;</th>
-                                            <th style="text-align: center;  border:solid 1px #000000;">&nbsp;Abs&nbsp;</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        <?php foreach ($rapportAbsentHorsNoyau as $rapport ) : ?>
-                                            <tr>
-                                            <td style="text-align: left;  border:solid 1px #000000;">&nbsp;
-                                                <?php if ($rapport['htot'] != ($rapport['ht1'] + $rapport['ht2'] +$rapport['ht3'] +$rapport['ht4'] +$rapport['ht5'] + $rapport['ht6'])) : ?>
-                                                    <img src="img/warning-yellow-black.png" alt="erreur volume horaire">
-                                                <?php endif ?>
-                                                <?php if (!empty($rapport['habs']) || !empty($rapport['abs'])) : ?>
-                                                    <img src="img/dialog-stop-2.png" alt="absence saisie">
-                                                <?php endif ?>
-                                                <?= isset($rapport['ouvrier_id'])? $rapport['ouvrier_id'] : (isset($rapport['interimaire_id'])? $rapport['interimaire_id'] : '')?> - <?=$rapport['fullname']?>&nbsp;&nbsp;&nbsp;
-                                            </td>
-                                            <td style="text-align: center;  border:solid 1px #000000;" ><?= $rapport['habs'] ?></td>
-                                            </tr>
-                                        <?php  endforeach;  ?>
-                                        <tr>
-                                            <td style="text-align: left;  border:solid 1px #000000; color: red; "><b>&nbsp;Totaux</b></td>
-                                            <td style="text-align: center;  border:solid 1px #000000; color: red; "><b><?= $absentHorsNoyauHourAbsencesGlobal; ?></b></td>
-                                        </tr>
-                                        </tbody>
-                                    </table>
-                                    <hr>
-                                    <div>
-                                        <?php if(!empty($absentHorsNoyauHeader)) : ?>
-                                            <?php foreach($absentHorsNoyauHeader as $noyauHeaderdetail) : ?>
-                                                <input type="text" class="span4" value="<?= $noyauHeaderdetail['code'].': '.$noyauHeaderdetail['nom']?>" style="width: 200px;" disabled/>
-                                            <?php endforeach; ?>
-                                        <?php endif ; ?>
-                                        <?php if(!empty($absentHorsNoyauHeader)) : ?>
-                                            <hr>
-                                        <?php endif ; ?>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    <?php } ?>
-                </div>
-            </div>
-        </div>
-        <div>
-            <div>
-                <div>
                     <?php if(!empty($rapportHorsNoyau)){ ?>
                         <div>
                             <div>
@@ -302,7 +176,7 @@
                                                 <?php if (!empty($rapport['habs']) || !empty($rapport['abs'])) : ?>
                                                     <img src="img/dialog-stop-2.png" alt="absence saisie">
                                                 <?php endif ?>
-                                                <?= isset($rapport['ouvrier_id'])? $rapport['ouvrier_id'] : (isset($rapport['interimaire_id'])? $rapport['interimaire_id'] : '')?> - <?=$rapport['fullname']?>&nbsp;&nbsp;&nbsp;</td>
+                                                <?= isset($rapport['ouvrier_id'])? $rapport['ouvrier_id'] : (isset($rapport['interimaire_id'])? $rapport['interimaire_id'] : '')?> - <?=$rapport['fullname']?><?= ($rapport['dpl_pers']=== '1')? ' (T)' : '' ?>&nbsp;&nbsp;&nbsp;</td>
                                             <td style="text-align: center;  border:solid 1px #000000;" ><?= $rapport['htot'] ?></td>
                                             <?php if (!empty($horsNoyauHeader)) : ?>
                                                 <?php foreach($horsNoyauHeader as $noyauHeaderdetail) : ?>
@@ -364,7 +238,7 @@
                                             <td style="text-align: center;  border:solid 1px #000000; color: red; "><b><?= $horsNoyauHourAbsencesGlobal; ?></b></td>
                                             <td style="text-align: center;  border:solid 1px #000000; color: red; "><b><?= $horsNoyauHourPenibleGlobal; ?></b></td>
                                             <td style="text-align: center;  border:solid 1px #000000; color: red; "><b><?= $horsNoyauKmGlobal; ?></b></td>
-                                            <td style="text-align: center;  border:solid 1px #000000; color: red; "></td>
+                                            <td style="text-align: center;  border:solid 1px #000000; color: #ff0000; "></td>
                                         </tr>
                                         </tbody>
                                     </table>

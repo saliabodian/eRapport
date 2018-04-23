@@ -6,7 +6,19 @@
  * Time: 16:42
  */
 
-spl_autoload_register();
+// spl_autoload_register();
+
+spl_autoload_register(function ($pClassName) {
+    if (strpos($pClassName, "\\")) {
+        $namespaces = explode("\\", $pClassName);
+        $classname = array_pop($namespaces);
+        $includingClassname = __DIR__.'/'.join('/', $namespaces).'/'.$classname.'.php';
+    }
+    else {
+        $includingClassname = __DIR__.'/'.$pClassName.'.php';
+    }
+    require $includingClassname;
+});
 
 use Classes\Cdcl\Config\Config;
 
@@ -103,6 +115,26 @@ if(!empty($_SESSION)){
     include $conf->getViewsDir().'sidebar.php';
     include $conf->getViewsDir().'post.php';
     include $conf->getViewsDir().'footer.php';
+
+    /**
+     *
+     *
+     * Gestion de la durée pendant laquelle un User peut être
+     * sans activité avant que le système ne le déconncete
+     * Cette durée a été mis à 15mn soit 900s
+     *
+     *
+     */
+
+    if (isset($_SESSION['LAST_REQUEST_TIME'])) {
+        if (time() - $_SESSION['LAST_REQUEST_TIME'] > 900) {
+            // session timed out, last request is longer than 3 minutes ago
+            $_SESSION = array();
+            session_destroy();
+        }
+    }
+    $_SESSION['LAST_REQUEST_TIME'] = time();
+
 }else{
     header('Location: index.php');
 }

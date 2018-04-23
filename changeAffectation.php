@@ -6,7 +6,19 @@
  * Time: 19:25
  */
 
-spl_autoload_register();
+// spl_autoload_register();
+
+spl_autoload_register(function ($pClassName) {
+    if (strpos($pClassName, "\\")) {
+        $namespaces = explode("\\", $pClassName);
+        $classname = array_pop($namespaces);
+        $includingClassname = __DIR__.'/'.join('/', $namespaces).'/'.$classname.'.php';
+    }
+    else {
+        $includingClassname = __DIR__.'/'.$pClassName.'.php';
+    }
+    require $includingClassname;
+});
 
 use Classes\Cdcl\Config\Config;
 
@@ -38,15 +50,22 @@ if(!empty($_SESSION)) {
 
     $nomChantierChoisi = $chantierChoisiValues->getNom();
 
+    $chantierHasUser = Chantier::getChantierHasUser();
 
+
+    //var_dump($chantierHasUser);
+    //exit;
 
     // Date du jour sélectionné
     //$_GET['date_deb'] = timestamp
-    $selectedDay = !empty(date('Y-m-d', strtotime($_GET['date_deb']))) ? date('Y-m-d', strtotime($_GET['date_deb'])) : "";
+    if(isset($_GET['date_deb'])){
+        $selectedDay = !empty(date('Y-m-d', strtotime($_GET['date_deb']))) ? date('Y-m-d', strtotime($_GET['date_deb'])) : "";
 
 
-    // Semanine  correspondant au jour sélectionné
-    $selectedWeek = date('W', strtotime($selectedDay));
+        // Semanine  correspondant au jour sélectionné
+        $selectedWeek = date('W', strtotime($selectedDay));
+    }
+
 
 
     $selectChantier = new SelectHelper($listChantierActifs, $chantier_id->getId(), array(
@@ -81,9 +100,12 @@ if(!empty($_SESSION)) {
         $date_debut = isset($_POST['debut'])? $_POST['debut'] : "";
         $date_fin = isset($_POST['fin'])? $_POST['fin'] : "";
         $row_id = isset($_POST['int_has_cht_id'])? $_POST['int_has_cht_id'] : "";
-        $newChantierId = isset($_POST['new_chantier'])? $_POST['new_chantier'] : "";
+        $ChantierHasUserId = isset($_POST['chantier_user'])? $_POST['chantier_user'] : "";
         $newDate = isset($_POST['doy']) ? date('Y-m-d', strtotime($_POST['doy'])) : '';
         $interimaireId = isset($_POST['interimaire_id']) ? $_POST['interimaire_id'] : '';
+        $chantierAndUserId = Chantier::getChantierHasUserId($ChantierHasUserId);
+
+    //    var_dump($chantierAndUserId);
         $form = true;
 
         //var_dump($newDate);
@@ -93,7 +115,7 @@ if(!empty($_SESSION)) {
             $form = false;
         }
 
-        $affectationExist = Interimaire::checkChantierAndDoyAffectation($newDate, $interimaireId, $newChantierId);
+        $affectationExist = Interimaire::checkChantierAndDoyAffectation($newDate, $interimaireId, $chantierAndUserId['chantier_id'],  $chantierAndUserId['usr_id']);
 
         $dateIsOk = Interimaire::compareDateForChangeAffectation($newDate, $date_debut, $date_fin);
         if($dateIsOk>=1){
@@ -105,12 +127,19 @@ if(!empty($_SESSION)) {
             $conf->addError('La date choisie n\'appartient pas à la semaine courantre');
             $form = false;
         }
-
+    //    var_dump($_POST);
+    //    exit;
         if($form){
-           // var_dump($form);
+            // var_dump($form);
+            // var_dump($chantierAndUserId['usr_id']);
+            // var_dump($chantierAndUserId['chantier_id']);
+            // var_dump($row_id);
+            // var_dump($newDate);
+            // var_dump($form);
 
-           // exit;
-            Interimaire::changeChantierAffectation($newDate, $newChantierId, $row_id);
+            // exit;
+
+            Interimaire::changeChantierAffectation($newDate, $chantierAndUserId['chantier_id'],$chantierAndUserId['usr_id'], $row_id);
             header('Location: showAffectation.php?success=' .urlencode('Ajout/Modification effectuée').'&date_deb='.$date_debut.'&chantier_id='.$_GET['chantier_id']);
         //    header('Location: changeAffectation.php?success='.urlencode('Ajout/Modification effectuée').'&row_id='.$row_id.'&date_debut='.$date_debut.'&date_fin='.$date_fin.'&new_date='.$newDate);
             exit;
@@ -130,6 +159,27 @@ if(!empty($_SESSION)) {
     include $conf->getViewsDir() . "sidebar.php";
     include $conf->getViewsDir() . "changeAffectation.php";
     include $conf->getViewsDir() . "footer.php";
+
+    /**
+     *
+     *
+     * Gestion de la durée pendant laquelle un User peut être
+     * sans activité avant que le système ne le déconncete
+     * Cette durée a été mis à 15mn soit 900s
+     *
+     *
+     */
+
+    if (isset($_SESSION['LAST_REQUEST_TIME'])) {
+        if (time() - $_SESSION['LAST_REQUEST_TIME'] > 900) {
+            // session timed out, last request is longer than 3 minutes ago
+            $_SESSION = array();
+            session_destroy();
+        }
+    }
+    $_SESSION['LAST_REQUEST_TIME'] = time();
+
+
 }else{
     header('Location: index.php');
 }

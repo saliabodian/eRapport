@@ -36,6 +36,9 @@ var_dump($stmt->fetchAll());
 exit;
 
 */
+
+/*
+
 $dbh = ibase_connect("31.204.90.68:C:\DSK\Data\dsk2.fdb","SYSDBA","masterkey");
 
 
@@ -44,7 +47,7 @@ $dbh = ibase_connect("31.204.90.68:C:\DSK\Data\dsk2.fdb","SYSDBA","masterkey");
 /** 1. Liste des chantiers des chefs d'équipe sur la journée sélectionnée.*/
 /** Ce sont tous les chantiers sur lesquels les chefs d’équipe ont fait au moins 1 pointage :*/
 
-
+/*
 echo "1. Liste des chantiers des chefs d'équipe sur la journée sélectionnée.<br><br>";
 echo "Ce sont tous les chantiers sur lesquels les chefs d’équipe ont fait au moins 1 pointage :<br><br>";
 
@@ -162,7 +165,7 @@ var_dump($all_chef_dequipe_of_the_day);
 
 
 /*2. Liste des chefs d'équipe sur un chantier et une date donnée :*/
-/**/
+/*
 echo "2. Liste des chefs d'équipe sur un chantier et une date donnée :<br><br>";
 
 $sql = "
@@ -399,7 +402,7 @@ $sql = "
  * soit l'ouvrier
  */
 
-/*  */
+/*
 
 $sth = ibase_query($dbh, $sql);
 
@@ -710,11 +713,11 @@ echo "<br>récupération des pointages<br>";
 
 /*$sql = "Select Rvalue,fullname, codepers, nopers
                 from listaccountdate('2017-10-16','2017-10-16') left join pers on pers.nopers = listaccountdate.rnopers where raccount in (156100)";
-*/
+
 $rapport_annee = 2017;
 $rapport_mois = 10;
 $rapport_jour = 16;
-$chantier_int = 156100;
+    $chantier_int = 156100;
 
 $sql = "Select Rvalue,fullname, codepers, nopers from listaccountdate('".$rapport_annee."-".$rapport_mois."-".$rapport_jour."','".$rapport_annee."-".$rapport_mois."-".$rapport_jour."') left join pers on pers.nopers = listaccountdate.rnopers where raccount in (".$chantier_int.")";
 $sth = ibase_query($dbh, $sql);
@@ -731,6 +734,346 @@ while ($row = ibase_fetch_object($sth))
     $i++;
 }
 var_dump($pointeuse) ;
+*/
+
+echo "<br>Liste des absents hors noyau<br>";
+
+$dbh = ibase_connect("31.204.90.68:C:\DSK\Data\dsk2.fdb","SYSDBA","masterkey");
+//    $dbh = ibase_connect("10.10.110.30:C:\DSK\Data\dsk2.fdb","SYSDBA","masterkey");
+
+$sql = "
+        SELECT PERS.CODEPERS, Absence.NoPers,Absence.Thedate, Pers.FULLNAME, ACCOUNT.CUSTOM, TERMS.GIDDID, ABSENCE.TIMEMIN, ACCOUNT.CAPTION1 FROM Absence
+            INNER JOIN Pers on (Pers.NoPers=ABSENCE.NoPers)
+            INNER JOIN PERSHISTORY ON
+             ((PERSHISTORY.NOPERS=ABSENCE.NOPERS)
+             AND (PERSHISTORY.STARTDATE<= ABSENCE.THEDATE)
+             AND (PERS.CODECOSTCENTERREF NOT IN ('5470', '5420'))
+             AND ((PERSHISTORY.ENDDATE IS NULL) OR (PERSHISTORY.ENDDATE>= ABSENCE.THEDATE))
+            )
+            INNER JOIN Booking ON
+             ((Booking.NOPERS=Absence.NOPERS)
+             AND (Booking.THEDATE=(SELECT MAX(THEDATE) from booking where (booking.NoPers = Pers.NoPers and (booking.BK1<>0 or booking.BK2<>0) and booking.THEDATE<='2018-01-31')))
+            )
+
+            LEFT JOIN TERMS ON (
+              (
+              TERMS.GIDDID = BOOKING.BKT1
+              ) OR
+              (
+              TERMS.GIDDID = BOOKING.BKT2
+              ) OR
+              (
+              TERMS.GIDDID = BOOKING.BKT3
+              ) OR
+              (
+              TERMS.GIDDID = BOOKING.BKT4
+              ) OR
+              (
+              TERMS.GIDDID = BOOKING.BKT5
+              ) OR
+              (
+              TERMS.GIDDID = BOOKING.BKT6
+              ) OR
+              (
+              TERMS.GIDDID = BOOKING.BKT7
+              ) OR
+              (
+              TERMS.GIDDID = BOOKING.BKT8
+              ) OR
+              (
+              TERMS.GIDDID = BOOKING.BKT9
+              ) OR
+              (
+              TERMS.GIDDID = BOOKING.BKT10
+              ) OR
+              (
+              TERMS.GIDDID = BOOKING.BKT11
+              ) OR
+              (
+              TERMS.GIDDID = BOOKING.BKT12
+              ) OR
+              (
+              TERMS.GIDDID = BOOKING.BKT13
+              ) OR
+              (
+              TERMS.GIDDID = BOOKING.BKT14
+              ) OR
+              (
+              TERMS.GIDDID = BOOKING.BKT15
+              ) OR
+              (
+              TERMS.GIDDID = BOOKING.BKT16
+              ) OR
+              (
+              TERMS.GIDDID = BOOKING.BKT17
+              ) OR
+              (
+              TERMS.GIDDID = BOOKING.BKT18
+              ) OR
+              (
+              TERMS.GIDDID = BOOKING.BKT19
+              ) OR
+              (
+              TERMS.GIDDID = BOOKING.BKT20
+              )
+              )
+              INNER JOIN
+              TERMSHISTORY
+              ON ((TERMSHISTORY.NOTERM = TERMS.NOTERM)
+              AND (TERMSHISTORY.STARTDATE<=BOOKING.THEDATE)
+              AND ((TERMSHISTORY.ENDDATE>=BOOKING.THEDATE) OR TERMSHISTORY.ENDDATE IS NULL))
+
+            INNER JOIN account on ((Account.NoAccount=TERMSHISTORY.SIte) AND (ACCOUNT.CUSTOM = 163066) )
+
+            WHERE Absence.THEDATE='2018-01-31'
+            AND  PERSHISTORY.CUSTOM3 <> '646'
+            AND (PERS.CODECOSTCENTERREF NOT IN ('5470', '5420'))
+            ";
+
+$sth = ibase_query($dbh, $sql);
+
+$i = 0;
+
+while ($row = ibase_fetch_object($sth))
+{
+    $absenceHorsNoyau[$i]["matricule"] = trim($row->CODEPERS);
+    $absenceHorsNoyau[$i]["fullname"] = $row->FULLNAME;
+    $absenceHorsNoyau[$i]["date"] = $row->THEDATE;
+    $absenceHorsNoyau[$i]["timemin"] = $row->TIMEMIN;
+    $absenceHorsNoyau[$i]["motif"] = $row->CAPTION1;
+
+    $i++;
+}
+
+var_dump($absenceHorsNoyau);
+
+/*
+echo "<br><br>";
+    echo "Les hors noyaux pour une date donnée";
+echo "<br><br>";
+    $dbh = ibase_connect("31.204.90.68:C:\DSK\Data\dsk2.fdb","SYSDBA","masterkey");
+    //    $dbh = ibase_connect("10.10.110.30:C:\DSK\Data\dsk2.fdb","SYSDBA","masterkey");
+
+
+
+    $sql= "SELECT PERSHISTORY.CUSTOM3, Booking.NoPers, Pers.FULLNAME,PERS.CODEPERS, ACCOUNT.CUSTOM  FROM BOOKING
+                INNER JOIN Pers on (Pers.NoPers=Booking.NoPers)
+                INNER JOIN PERSHISTORY ON
+                ((PERSHISTORY.NOPERS=BOOKING.NOPERS)
+                    AND (PERSHISTORY.STARTDATE<= BOOKING.THEDATE)
+                    AND (PERS.CODECOSTCENTERREF NOT IN ('5470', '5420'))
+                    AND ((PERSHISTORY.ENDDATE IS NULL) OR (PERSHISTORY.ENDDATE>= Booking.THEDATE))
+                )
+                LEFT JOIN TERMS ON (
+                    (
+                    TERMS.GIDDID = BOOKING.BKT1
+                    ) OR
+                    (
+                    TERMS.GIDDID = BOOKING.BKT2
+                    ) OR
+                    (
+                    TERMS.GIDDID = BOOKING.BKT3
+                    ) OR
+                    (
+                    TERMS.GIDDID = BOOKING.BKT4
+                    ) OR
+                    (
+                    TERMS.GIDDID = BOOKING.BKT5
+                    ) OR
+                    (
+                    TERMS.GIDDID = BOOKING.BKT6
+                    ) OR
+                    (
+                    TERMS.GIDDID = BOOKING.BKT7
+                    ) OR
+                    (
+                    TERMS.GIDDID = BOOKING.BKT8
+                    ) OR
+                    (
+                    TERMS.GIDDID = BOOKING.BKT9
+                    ) OR
+                    (
+                    TERMS.GIDDID = BOOKING.BKT10
+                    ) OR
+                    (
+                    TERMS.GIDDID = BOOKING.BKT11
+                    ) OR
+                    (
+                    TERMS.GIDDID = BOOKING.BKT12
+                    ) OR
+                    (
+                    TERMS.GIDDID = BOOKING.BKT13
+                    ) OR
+                    (
+                    TERMS.GIDDID = BOOKING.BKT14
+                    ) OR
+                    (
+                    TERMS.GIDDID = BOOKING.BKT15
+                    ) OR
+                    (
+                    TERMS.GIDDID = BOOKING.BKT16
+                    ) OR
+                    (
+                    TERMS.GIDDID = BOOKING.BKT17
+                    ) OR
+                    (
+                    TERMS.GIDDID = BOOKING.BKT18
+                    ) OR
+                    (
+                    TERMS.GIDDID = BOOKING.BKT19
+                    ) OR
+                    (
+                    TERMS.GIDDID = BOOKING.BKT20
+                    )
+                )
+                  INNER JOIN
+                  TERMSHISTORY
+                  ON ((TERMSHISTORY.NOTERM = TERMS.NOTERM)
+                      AND (TERMSHISTORY.STARTDATE<=BOOKING.THEDATE)
+                      AND ((TERMSHISTORY.ENDDATE>=BOOKING.THEDATE) OR TERMSHISTORY.ENDDATE IS NULL))
+
+                 INNER JOIN account on (Account.NoAccount=TERMSHISTORY.SIte and ACCOUNT.CUSTOM=163066)
+
+                 WHERE THEDATE='2018-03-05'
+
+                AND PERSHISTORY.CUSTOM3 NOT IN (SELECT PERSHISTORY.CUSTOM3  FROM BOOKING
+                INNER JOIN Pers on (Pers.NoPers=Booking.NoPers)
+                INNER JOIN PERSHISTORY ON
+                ((PERSHISTORY.NOPERS=BOOKING.NOPERS)
+                    AND (PERSHISTORY.STARTDATE<= BOOKING.THEDATE)
+                    AND (PERS.CODECOSTCENTERREF NOT IN ('5470', '5420'))
+                    AND ((PERSHISTORY.ENDDATE IS NULL) OR (PERSHISTORY.ENDDATE>= Booking.THEDATE)))
+                    LEFT JOIN TERMS ON (
+                        (
+                        TERMS.GIDDID = BOOKING.BKT1
+                        ) OR
+                        (
+                        TERMS.GIDDID = BOOKING.BKT2
+                        ) OR
+                        (
+                        TERMS.GIDDID = BOOKING.BKT3
+                        ) OR
+                        (
+                        TERMS.GIDDID = BOOKING.BKT4
+                        ) OR
+                        (
+                        TERMS.GIDDID = BOOKING.BKT5
+                        ) OR
+                        (
+                        TERMS.GIDDID = BOOKING.BKT6
+                        ) OR
+                        (
+                        TERMS.GIDDID = BOOKING.BKT7
+                        ) OR
+                        (
+                        TERMS.GIDDID = BOOKING.BKT8
+                        ) OR
+                        (
+                        TERMS.GIDDID = BOOKING.BKT9
+                        ) OR
+                        (
+                        TERMS.GIDDID = BOOKING.BKT10
+                        ) OR
+                        (
+                        TERMS.GIDDID = BOOKING.BKT11
+                        ) OR
+                        (
+                        TERMS.GIDDID = BOOKING.BKT12
+                        ) OR
+                        (
+                        TERMS.GIDDID = BOOKING.BKT13
+                        ) OR
+                        (
+                        TERMS.GIDDID = BOOKING.BKT14
+                        ) OR
+                        (
+                        TERMS.GIDDID = BOOKING.BKT15
+                        ) OR
+                        (
+                        TERMS.GIDDID = BOOKING.BKT16
+                        ) OR
+                        (
+                        TERMS.GIDDID = BOOKING.BKT17
+                        ) OR
+                        (
+                        TERMS.GIDDID = BOOKING.BKT18
+                        ) OR
+                        (
+                        TERMS.GIDDID = BOOKING.BKT19
+                        ) OR
+                        (
+                        TERMS.GIDDID = BOOKING.BKT20
+                        )
+                    )
+                    INNER JOIN
+                        TERMSHISTORY
+                    ON ((TERMSHISTORY.NOTERM = TERMS.NOTERM)
+                    AND (TERMSHISTORY.STARTDATE<=BOOKING.THEDATE)
+                    AND ((TERMSHISTORY.ENDDATE>=BOOKING.THEDATE) OR TERMSHISTORY.ENDDATE IS NULL))
+
+                    INNER JOIN account on (Account.NoAccount=TERMSHISTORY.SITE and ACCOUNT.CUSTOM=163066)
+
+                    WHERE THEDATE='2018-03-05'
+
+                    AND PERSHISTORY.CUSTOM3 = PERS.CODEPERS
+                )";
+    // AND ((PERSHISTORY.CODECOSTCENTER <> '5470') OR (PERSHISTORY.CODECOSTCENTER <> '5420'))
+    $sth = ibase_query($dbh, $sql);
+
+    //    var_dump($sql);
+
+    //    exit;
+    $i=0;
+
+    while($row = ibase_fetch_object($sth)) {
+        $horsNoyau[$i]["noyau"] = $row->CUSTOM3;
+        $horsNoyau[$i]["id"] = $row->NOPERS;
+        $horsNoyau[$i]["matricule"] = trim($row->CODEPERS);
+        $horsNoyau[$i]["fullname"] = $row->FULLNAME;
+        $horsNoyau[$i]["chantier"] = $row->CUSTOM;
+        $i++;
+    }
+
+    $horsNoyau = isset($horsNoyau) ? $horsNoyau : '';
+
+    var_dump($horsNoyau);
+
+
+$dbh = ibase_connect("31.204.90.68:C:\DSK\Data\dsk2.fdb","SYSDBA","masterkey");
+//    $dbh = ibase_connect("10.10.110.30:C:\DSK\Data\dsk2.fdb","SYSDBA","masterkey");
+
+
+$stmt = "select noaccount, caption1, custom, giddid
+                from account
+                left join termshistory on account.NOACCOUNT = termshistory.site left join terms on termshistory.NOTERM = terms.NOTERM
+                where (noaccount > 20000) and (mod(noaccount,10) = 1) and (account.custom = 163066)";
+
+$sth = ibase_query($dbh, $stmt);
+$row = ibase_fetch_object($sth);
+$chantier_id = $row->NOACCOUNT;
+
+$sql = "
+                Select Rvalue,fullname, codepers, nopers, raccount
+                from listaccountdate('2018-03-05', '2018-03-05')
+                left join pers on pers.nopers = listaccountdate.rnopers
+                where raccount in (".$chantier_id.")
+                ";
+
+$sth = ibase_query($dbh, $sql);
+
+$i = 0;
+
+while ($row = ibase_fetch_object($sth))
+{
+    $pointeuse[$i]["matricule"] = trim($row->CODEPERS);
+    $pointeuse[$i]["id"] = $row->NOPERS;
+    $pointeuse[$i]["nom"] = $row->FULLNAME;
+    $pointeuse[$i]["hpoint"] = $row->RVALUE/60;
+
+    $i++;
+}
+
+var_dump($pointeuse);
 
 
 ?>

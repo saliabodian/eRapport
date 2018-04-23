@@ -112,6 +112,9 @@ class Dsk {
             $allChefDEquipeByDay[$i]["chantier"] = $row->CUSTOM;
             $i++;
         }
+
+        $allChefDEquipeByDay = isset($allChefDEquipeByDay)? $allChefDEquipeByDay : '';
+
         return $allChefDEquipeByDay;
     }
 
@@ -211,6 +214,7 @@ class Dsk {
             $chefDEquipeOnsite[$i]["noyau"] = $row->CUSTOM3;
             $i++;
         }
+        $chefDEquipeOnsite = isset($chefDEquipeOnsite) ? $chefDEquipeOnsite : '';
     return $chefDEquipeOnsite;
     }
 
@@ -629,6 +633,7 @@ class Dsk {
             $i++;
         }
 
+        $team = isset($team)? $team : '';
         return $team;
     }
 
@@ -669,6 +674,7 @@ class Dsk {
             $i++;
         }
 
+        $pointeuse = isset($pointeuse)? $pointeuse : '';
         return $pointeuse;
     }
 
@@ -789,11 +795,21 @@ class Dsk {
         //    $dbh = ibase_connect("10.10.110.30:C:\DSK\Data\dsk2.fdb","SYSDBA","masterkey");
 
         $sql = "
-        SELECT PERS.CODEPERS, Absence.NoPers,Absence.Thedate, Pers.FULLNAME, ACCOUNT.CUSTOM, TERMS.GIDDID, ABSENCE.TIMEMIN, ACCOUNT.CAPTION1 FROM Absence
+        SELECT 	PERS.CODEPERS,
+	            Absence.NoPers,
+	            Absence.Thedate,
+	            Pers.FULLNAME,
+	            ACCOUNT.CUSTOM,
+                ACCOUNT.NOACCOUNT,
+	            TERMS.GIDDID,
+	            ABSENCE.TIMEMIN,
+	            ACCOUNT1.CAPTION1,
+                ACCOUNT1.NOACCOUNT FROM Absence
             INNER JOIN Pers on (Pers.NoPers=ABSENCE.NoPers)
             INNER JOIN PERSHISTORY ON
              ((PERSHISTORY.NOPERS=ABSENCE.NOPERS)
              AND (PERSHISTORY.STARTDATE<= ABSENCE.THEDATE)
+             AND (PERS.CODECOSTCENTERREF NOT IN ('5470', '5420'))
              AND ((PERSHISTORY.ENDDATE IS NULL) OR (PERSHISTORY.ENDDATE>= ABSENCE.THEDATE))
             )
             INNER JOIN Booking ON
@@ -870,9 +886,11 @@ class Dsk {
               AND ((TERMSHISTORY.ENDDATE>=BOOKING.THEDATE) OR TERMSHISTORY.ENDDATE IS NULL))
 
             INNER JOIN account on ((Account.NoAccount=TERMSHISTORY.SIte) AND (ACCOUNT.CUSTOM = ".$chantier_code.") )
+            INNER JOIN account AS account1 on ((account1.NoAccount=ABSENCE.NOACCOUNT) )
 
             WHERE Absence.THEDATE='".$date."'
             AND  PERSHISTORY.CUSTOM3 <> '".$noyau."'
+            AND (PERS.CODECOSTCENTERREF NOT IN ('5470', '5420'))
             ";
 
         $sth = ibase_query($dbh, $sql);
@@ -892,6 +910,7 @@ class Dsk {
         // ????
         $absenceHorsNoyau = isset($absenceHorsNoyau)? $absenceHorsNoyau : '';
         return $absenceHorsNoyau;
+    //    sleep(5);
     }
 
 }

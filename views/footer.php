@@ -265,6 +265,48 @@
         });
     }
 
+    function getChantierId(val) {
+        //test du javascript
+        //alert("ok");
+        //implémentation de la fonction AJAX
+        $.ajax({
+            type: "POST",
+            url: "getOuvrier.php",
+            data: "chantier_id=" + val,
+            success: function (data) {
+                $(".fullname").html(data);
+            }
+        });
+    }
+
+    function getFullname(val) {
+        //test du javascript
+        //alert("ok");
+        //implémentation de la fonction AJAX
+        $.ajax({
+            type: "POST",
+            url: "getOuvrierTache.php",
+            data: "fullname=" + val,
+            success: function (data) {
+                $(".tache_ouvrier").html(data);
+            }
+        });
+    }
+
+    function getChantierId2(val) {
+        //test du javascript
+        //alert("ok");
+        //implémentation de la fonction AJAX
+        $.ajax({
+            type: "POST",
+            url: "getChefDequipe.php",
+            data: "chantier_id=" + val,
+            success: function (data) {
+                $(".chef_dequipe").html(data);
+            }
+        });
+    }
+
 
 /*
 
@@ -285,6 +327,40 @@
 
 
 */
+    function printErapport(){
+
+        var nb = document.getElementById("nb").value;
+    //    var id_rapport_1 = document.getElementById("id_rapport_1").value;
+
+    //    alert( nb);
+    //    alert( id_rapport_1);
+
+        for(var i=0;i<nb ;i++){
+            var randomnumber = Math.floor((Math.random()*100)+1);
+            var id_rapport = document.getElementById("id_rapport_"+i).value;
+        //    alert(id_rapport);
+            var date = document.getElementById("date_"+i).value;
+        //    alert(date);
+            var rapport_type = document.getElementById("rapport_type_"+i).value;
+            var user_id = document.getElementById("user_id_"+i).value;
+            var username = document.getElementById("username_"+i).value;
+            var firstname = document.getElementById("firstname_"+i).value;
+            var lastname = document.getElementById("lastname_"+i).value;
+            var chantier_id = document.getElementById("chantier_id_"+i).value;
+            var code = document.getElementById("code_"+i).value;
+            var nom = document.getElementById("nom_"+i).value;
+            var submitted = document.getElementById("submitted_"+i).value;
+            var validated = document.getElementById("validated_"+i).value;
+            var generated_by = document.getElementById("generated_by_"+i).value;
+        //    alert(id_rapport);
+            window.open("eRapportShowPrint.php?rapport_id="+id_rapport+"&rapport_type="+rapport_type+"&chef_dequipe_id="+user_id+"&chef_dequipe_matricule="+username+"&date_generation="+date+"&chantier_id="+chantier_id+"&chantier_code="+code+"&validated="+validated+"&submitted="+submitted, id_rapport);
+            window.close();
+        }
+
+    //    window.open("eRapportShowPrint.php?rapport_id="+id_rapport+"&rapport_type="+rapport_type+"&chef_dequipe_id="+user_id+"&chef_dequipe_matricule="+username+"&date_generation="+date+"&chantier_id="+chantier_id+"&chantier_code="+code+"&validated="+validated+"&submitted="+submitted+".pdf");
+    //    window.open("http://www.google.lu");
+    //    window.open("http://www.seneweb.com");
+    }
 </script>
 </body>
 </html>

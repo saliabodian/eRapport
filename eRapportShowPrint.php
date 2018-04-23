@@ -6,7 +6,19 @@
  * Time: 15:05
  */
 
-spl_autoload_register();
+// spl_autoload_register();
+
+spl_autoload_register(function ($pClassName) {
+    if (strpos($pClassName, "\\")) {
+        $namespaces = explode("\\", $pClassName);
+        $classname = array_pop($namespaces);
+        $includingClassname = __DIR__.'/'.join('/', $namespaces).'/'.$classname.'.php';
+    }
+    else {
+        $includingClassname = __DIR__.'/'.$pClassName.'.php';
+    }
+    require $includingClassname;
+});
 
 require __DIR__ . '/vendor/autoload.php';
 
@@ -46,13 +58,27 @@ if(!empty($_SESSION)){
     // $_GET["chantier_code"]=> string(6) "156100"
     // }
 
+    $_GET['validated']=isset($_GET['validated'])? $_GET['validated'] : '';
+
+    $_GET['submitted']=isset($_GET['submitted'])? $_GET['submitted'] : '';
+
     $interimaireList = Rapport::getInterimaireByTeamSiteAndDate($_GET["date_generation"], $_GET["chef_dequipe_id"], $_GET["chantier_id"]);
+
+    $interimaireMobileList = Rapport::getInterimaireMobileByTeamSiteAndDate($_GET["date_generation"],$_GET["chantier_id"]);
 
     $rapportInt = Rapport::getRapportInterimaire($_GET["chef_dequipe_id"],$_GET["date_generation"] , $_GET["chantier_id"]);
 
+    $rapportIntMob = Rapport::getRapportInterimaireMobile($_GET["date_generation"] , $_GET["chantier_id"]);
 
-    //    var_dump($interimaireList);
-    //    var_dump($rapportInt);
+    $allAbsence = Dsk::getAllAbsence($_GET["date_generation"]);
+
+    //  var_dump($allAbsence);
+
+    //  exit;
+
+
+    //  var_dump($interimaireList);
+    //  var_dump($rapportInt);
 
     $newArray = array();
     // Mise à jour du champ htot pour les intérimaires
@@ -67,8 +93,19 @@ if(!empty($_SESSION)){
         }
     }
 
-    //    exit;
+    if(!empty($interimaireMobileList)){
+        foreach($interimaireMobileList as $interimaire){
+            foreach($rapportIntMob as $rapportDetailInt){
+                if(($rapportDetailInt['interimaire_id']=== $interimaire['matricule']) && (($rapportDetailInt['ht1']+$rapportDetailInt['ht2']+$rapportDetailInt['ht3']+$rapportDetailInt['ht4']+$rapportDetailInt['ht5']+$rapportDetailInt['ht6']) != 0)){
+                    //    var_dump($interimaire['matricule']) ;
+                    Rapport::updateHtotInterimaire($interimaire['matricule']);
+                }
+            }
+        }
+    }
+
     //    var_dump($interimaireList);
+    //    var_dump($interimaireMobileList);
 
     //    exit;
 
@@ -78,15 +115,9 @@ if(!empty($_SESSION)){
     //    var_dump(strtotime(date('Y/m/d', time())));
     //    exit;
 
-    //var_dump($_GET["date_generation"]);
-
-    //exit;
-
     if(strtotime($_GET["date_generation"]) != strtotime(date('Y/m/d', time()))){
         $allPointage = Dsk::getCalculTotalHoraire($_GET["date_generation"], $_GET["chantier_code"]) ;
     }
-
-    $allAbsence = Dsk::getAllAbsence($_GET["date_generation"]);
 
     //$allPointage = Dsk::getCalculTotalHoraire($_GET["date_generation"], $_GET["chantier_code"]) ;
 
@@ -119,10 +150,11 @@ if(!empty($_SESSION)){
         $noyauDetails = Rapport::getRapportNoyau($_GET['chef_dequipe_id'], $_GET['date_generation'], $_GET['chantier_id']);
         $noyauAbsentDetails = Rapport::getRapportAbsentNoyau($_GET['chef_dequipe_id'], $_GET['date_generation'], $_GET['chantier_id']);
         $horsNoyauDetails = Rapport::getRapportHorsNoyau($_GET['date_generation'], $_GET['chantier_id']);
-        $absentHorsNoyauDetails = Rapport::getRapportAbsentHorsNoyau($_GET['date_generation'], $_GET['chantier_id']);
+        $absentHorsNoyauDetails = Rapport::getRapportAbsentHorsNoyau($_GET['date_generation'], $_GET['chantier_id'], $_GET['chef_dequipe_matricule']);
 
         $noyauList = Dsk::getTeamPointing($_GET["chef_dequipe_matricule"], $_GET["chantier_code"], $_GET["date_generation"]);
         $interimaireList = Rapport::getInterimaireByTeamSiteAndDate($_GET["date_generation"], $_GET["chef_dequipe_id"], $_GET["chantier_id"]);
+        $interimaireMobileList = Rapport::getInterimaireMobileByTeamSiteAndDate($_GET["date_generation"],$_GET["chantier_id"]);
         $horsNoyauList = Dsk::getTeamLess($_GET["date_generation"], $_GET["chantier_code"]);
         $absentHorsNoyauList = Dsk::getAllHorsNoyauAbsence($_GET["chef_dequipe_matricule"], $_GET["date_generation"], $_GET["chantier_code"]);
         $absentList = Dsk::getAllNoyauAbsence($_GET["chef_dequipe_matricule"], $_GET["date_generation"]);
@@ -131,7 +163,7 @@ if(!empty($_SESSION)){
         // comparer les valeurs et voir si elles existent dans la liste détails ou l'inverse
         // cf. rapportDetail
 
-        //var_dump($noyauDetails);
+
         //var_dump($noyauAbsentDetails);
         //var_dump($horsNoyauDetails);
         // var_dump($noyauList);
@@ -141,7 +173,9 @@ if(!empty($_SESSION)){
         $newNoyauList = array();
         $oldNoyauList = array();
         $newInterimaireList = array();
+        $newInterimaireMobileList = array();
         $oldInterimaireList = array();
+        $oldInterimaireMobileList = array();
         $newAbsentList = array();
         $oldAbsentList = array();
         $newHorsNoyauList = array();
@@ -163,7 +197,6 @@ if(!empty($_SESSION)){
             }
         }
 
-
         $newNoyauList = array_diff($newNoyauList, $oldNoyauList);
 
         if(!empty($noyauList)){
@@ -172,7 +205,7 @@ if(!empty($_SESSION)){
                     $newNoyauListToAdd[$noyau['id']]['id']= $noyau['id'];
                     $newNoyauListToAdd[$noyau['id']]['matricule']= $noyau['matricule'];
                     $newNoyauListToAdd[$noyau['id']]['fullname']= $noyau['fullname'];
-                    $newNoyauListToAdd[$noyau['id']]['']= $noyau['chantier'];
+                    $newNoyauListToAdd[$noyau['id']]['chantier']= $noyau['chantier'];
                     $newNoyauListToAdd[$noyau['id']]['noyau']= $noyau['noyau'];
                 }
             }
@@ -211,6 +244,49 @@ if(!empty($_SESSION)){
                 }
             }
         }
+
+        //Regénaration pour les intérimaires mobiles
+
+        if(!empty($interimaireMobileList)){
+            foreach($interimaireMobileList as $list){
+                $newInterimaireMobileList[] = $list["matricule"];
+            }
+        }
+
+        if(!empty($horsNoyauDetails)){
+            foreach($horsNoyauDetails as $details){
+                if(!empty($details['interimaire_id'])){
+                    $oldInterimaireMobileList[]=$details['interimaire_id'];
+                }
+            }
+        }
+
+        //    var_dump($oldInterimaireMobileList);
+        //    var_dump($newInterimaireMobileList);
+
+
+
+        $newInterimaireMobileList = array_diff($newInterimaireMobileList, $oldInterimaireMobileList);
+
+        //    var_dump($newInterimaireMobileList);
+
+        //    exit;
+
+        if(!empty($interimaireMobileList)){
+            foreach($interimaireMobileList as $interimaire){
+                if(in_array($interimaire['matricule'], $newInterimaireMobileList)){
+                    $newIntermaireMobileListToAdd[$interimaire['id']]['id'] = $interimaire['id'];
+                    $newIntermaireMobileListToAdd[$interimaire['id']]['interimaire_id'] = $interimaire['interimaire_id'];
+                    $newIntermaireMobileListToAdd[$interimaire['id']]['chantier_id'] =$interimaire['chantier_id'] ;
+                    $newIntermaireMobileListToAdd[$interimaire['id']]['doy'] = $interimaire['doy'];
+                    $newIntermaireMobileListToAdd[$interimaire['id']]['woy'] = $interimaire['woy'];
+                    $newIntermaireMobileListToAdd[$interimaire['id']]['matricule'] = $interimaire['matricule'];
+                    $newIntermaireMobileListToAdd[$interimaire['id']]['lastname'] = $interimaire['lastname'];
+                    $newIntermaireMobileListToAdd[$interimaire['id']]['firstname'] = $interimaire['firstname'];
+                }
+            }
+        }
+
 
 
         //    var_dump($newIntermaireListToAdd);
@@ -296,7 +372,7 @@ if(!empty($_SESSION)){
                     $newAbsentHorsNoyauListToAdd[$horsNoyau['id']]['id']= $horsNoyau['id'];
                     $newAbsentHorsNoyauListToAdd[$horsNoyau['id']]['matricule']= $horsNoyau['matricule'];
                     $newAbsentHorsNoyauListToAdd[$horsNoyau['id']]['fullname']= $horsNoyau['fullname'];
-                    $newAbsentHorsNoyauListToAdd[$horsNoyau['id']]['']= $horsNoyau['chantier'];
+                    $newAbsentHorsNoyauListToAdd[$horsNoyau['id']]['chantier']= $horsNoyau['chantier'];
                     $newAbsentHorsNoyauListToAdd[$horsNoyau['id']]['noyau']= $horsNoyau['noyau'];
                 }
             }
@@ -323,7 +399,10 @@ if(!empty($_SESSION)){
         }
 
         if(!empty($newAbsentHorsNoyauListToAdd)){
-            Rapport::saveRapportDetailAbsentHorsNoyau($_GET['date_generation'], $_GET['chantier_id'], $newAbsentHorsNoyauListToAdd);
+            Rapport::saveRapportDetailAbsentHorsNoyau($_GET['date_generation'], $_GET['chantier_id'], $newAbsentHorsNoyauListToAdd, $_GET['chef_dequipe_matricule']);
+        }
+        if(!empty($newIntermaireMobileListToAdd)){
+            Rapport::saveRapportDetailInterimaireMobile($_GET['date_generation'], $_GET['chantier_id'],$newIntermaireMobileListToAdd);
         }
     }
 
@@ -334,12 +413,10 @@ if(!empty($_SESSION)){
     $noyau = Rapport::getRapportNoyau($_GET['chef_dequipe_id'], $_GET['date_generation'], $_GET['chantier_id']);
     $noyauAbsent = Rapport::getRapportAbsentNoyau($_GET['chef_dequipe_id'], $_GET['date_generation'], $_GET['chantier_id']);
     $horsNoyau = Rapport::getRapportHorsNoyau($_GET['date_generation'], $_GET['chantier_id']);
-    $absentHorsNoyau = Rapport::getRapportAbsentHorsNoyau($_GET['date_generation'], $_GET['chantier_id']);
+    $absentHorsNoyau = Rapport::getRapportAbsentHorsNoyau($_GET['date_generation'], $_GET['chantier_id'], $_GET['chef_dequipe_matricule']);
     //var_dump($horsNoyau);
     //exit;
 
-
-    // Mise à jour des heures pointées au niveau des différentes matrices générées
 
     if(!empty($absentHorsNoyau)){
         if(!empty($allAbsence)){
@@ -352,6 +429,11 @@ if(!empty($_SESSION)){
             }
         }
     }
+
+
+
+
+    // Mise à jour des heures pointées au niveau des différentes matrices générées
     if(!empty($allPointage)){
         foreach($allPointage as $pointage){
             foreach($noyau as $rapport){
@@ -364,26 +446,29 @@ if(!empty($_SESSION)){
         }
 
         //exit;
+        /****
+        Plus besoin de mettre à jour le htot des absents du noyau car cette valeur est retournée par la fonction établie sous la requête de DSK
+        foreach($allPointage as $pointage){
+        foreach($noyauAbsent as $rapport){
+        if($rapport['ouvrier_id']=== $pointage['matricule']){
+        Rapport::setWorkerHourCalculated($pointage['hpoint'], $rapport['id']);
+        }
+        }
+        }
+         ****/
         /*
         foreach($allPointage as $pointage){
-            foreach($noyauAbsent as $rapport){
+            foreach($absentHorsNoyau as $rapport){
                 if($rapport['ouvrier_id']=== $pointage['matricule']){
-                    Rapport::setWorkerHourCalculated($pointage['hpoint'], $rapport['id']);
-                }
-            }
-        }
-
-        foreach($allPointage as $pointage){
-            foreach($horsNoyau as $rapport){
-                if($rapport['ouvrier_id']=== $pointage['matricule']){
-                    Rapport::setWorkerHourCalculated($pointage['hpoint'], $rapport['id']);
+                    Rapport::setHorsNoyauHourCalculated($pointage['timemin'], $rapport['id']);
                 }
             }
         }
         */
+
         foreach($allPointage as $pointage){
-            foreach($absentHorsNoyau as $rapport){
-                if($rapport['ouvrier_id']=== $pointage['matricule']){
+            foreach($horsNoyau as $rapport){
+                if($rapport['ouvrier_id'] === $pointage['matricule']){
                     Rapport::setWorkerHourCalculated($pointage['hpoint'], $rapport['id']);
                 }
             }
@@ -471,7 +556,11 @@ if(!empty($_SESSION)){
     $rapportNoyau = Rapport::getRapportNoyau($_GET['chef_dequipe_id'], $_GET['date_generation'], $_GET['chantier_id']);
     $rapportNoyauAbsent = Rapport::getRapportAbsentNoyau($_GET['chef_dequipe_id'], $_GET['date_generation'], $_GET['chantier_id']);
     $rapportHorsNoyau = Rapport::getRapportHorsNoyau($_GET['date_generation'], $_GET['chantier_id']);
-    $rapportAbsentHorsNoyau = Rapport::getRapportAbsentHorsNoyau($_GET['date_generation'], $_GET['chantier_id']);
+    $rapportAbsentHorsNoyau = Rapport::getRapportAbsentHorsNoyau($_GET['date_generation'], $_GET['chantier_id'], $_GET['chef_dequipe_matricule']);
+
+    //    var_dump($rapportHorsNoyau);
+
+    //    exit;
 
     $noyauHourGlobal = 0;
     $horsNoyauHourGlobal = 0;
@@ -535,8 +624,8 @@ if(!empty($_SESSION)){
     if($_GET['isValid']==='false'){
         $conf->addError('Merci de confirmer la validité des informations.');
     }
-//    include $conf->getViewsDir().'header.php';
-//    include $conf->getViewsDir().'sidebar.php';
+
+
     include $conf->getViewsDir().'eRapportShowPrint.php';
 //    include $conf->getViewsDir().'footer.php';
 
@@ -553,6 +642,26 @@ if(!empty($_SESSION)){
 
     $mpdf->WriteHTML($html);
     $mpdf->Output('E-Rapport_du_'.$rapportJournalierDate.'_noyau_'.$chefDequipeMatricule.'_chantier_'.$_GET['chantier_code'].'.pdf',\Mpdf\Output\Destination::DOWNLOAD);
+
+    /**
+     *
+     *
+     * Gestion de la durée pendant laquelle un User peut être
+     * sans activité avant que le système ne le déconncete
+     * Cette durée a été mis à 15mn soit 900s
+     *
+     *
+     */
+
+    if (isset($_SESSION['LAST_REQUEST_TIME'])) {
+        if (time() - $_SESSION['LAST_REQUEST_TIME'] > 900) {
+            // session timed out, last request is longer than 3 minutes ago
+            $_SESSION = array();
+            session_destroy();
+        }
+    }
+    $_SESSION['LAST_REQUEST_TIME'] = time();
+
 
 }else{
     header('Location: index.php');

@@ -11,14 +11,13 @@
                     <div class="widget-title"> <span class="icon"> <i class="icon-align-justify"></i> </span>
                         <h5>Recherche multicritères</h5>
                     </div>
-                        <form action="" method="get" class="form-horizontal">
-                            <div class="controls controls-row">
-                                <label class="span2 m-wrap">Rechercher :</label>
-                                <input type="text" class="span6 m-wrap" name="search"/>
-                                <button type="submit" class="btn btn-success span3 m-wrap" >Rechercher</button>
-                            </div>
-                        </form>
-
+                    <form action="" method="get" class="form-horizontal">
+                        <div class="controls controls-row">
+                            <label class="span2 m-wrap">Rechercher :</label>
+                            <input type="text" class="span6 m-wrap" name="search"/>
+                            <button type="submit" class="btn btn-success span3 m-wrap" >Rechercher</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -75,7 +74,7 @@
                             <div class="control-group">
                                 <label for="prenom" class="control-label">Prénom <span>*</span>:</label>
                                 <div class="controls">
-                                    <input type="text" class="span11" placeholder="Préom" name="firstname" value="<?= $interimaireObject->getFirstname() ?>"/>
+                                    <input type="text" class="span11" placeholder="Prénom" name="firstname" value="<?= $interimaireObject->getFirstname() ?>"/>
                                 </div>
                             </div>
                             <div class="control-group">
@@ -136,7 +135,7 @@
                             <div class="control-group">
                                 <label for="date_fin" class="control-label">Date fin de mission:</label>
                                 <div class="controls">
-                                    <input name="date_fin" class="datepicker" value="<?= $interimaireObject->getDateFin()?>"/>
+                                    <input name="date_fin" class="datepicker" value="<?= $interimaireObject->getDateFin()?>" disabled/>
                                 </div>
                             </div>
                             <div class="form-actions">

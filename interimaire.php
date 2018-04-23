@@ -6,7 +6,20 @@
  * Time: 16:42
  */
 
-spl_autoload_register();
+//spl_autoload_register();
+
+spl_autoload_register(function ($pClassName) {
+    if (strpos($pClassName, "\\")) {
+        $namespaces = explode("\\", $pClassName);
+        $classname = array_pop($namespaces);
+        $includingClassname = __DIR__.'/'.join('/', $namespaces).'/'.$classname.'.php';
+    }
+    else {
+        $includingClassname = __DIR__.'/'.$pClassName.'.php';
+    }
+    require $includingClassname;
+});
+
 
 use \Classes\Cdcl\Config\Config;
 
@@ -44,7 +57,6 @@ if(!empty($_SESSION)){
     }
 
     // var_dump($interimaireList);
-
     // exit;
 
     $metierList = Metier::getAllForSelect();
@@ -80,7 +92,8 @@ if(!empty($_SESSION)){
 
 
     if(!empty($_POST)) {
-        // exit;
+        //var_dump($_POST);
+        //exit;
         $interimaireId = isset($_POST['interimaire_id']) ? $_POST['interimaire_id'] : '';
 
         //var_dump($matricule);
@@ -90,18 +103,25 @@ if(!empty($_SESSION)){
         $lastname = isset($_POST['lastname']) ? $_POST['lastname'] : '';
         $actif = isset($_POST['actif']) ?  1 : 0;
         $taux = isset($_POST['taux']) ? $_POST['taux'] : '';
+        $taux_horaire = isset($_POST['$taux_horaire']) ? $_POST['$taux_horaire'] : '';
         $evaluateur = isset($_POST['evaluateur']) ? $_POST['evaluateur'] : '';
         $evaluation = isset($_POST['evaluation']) ? $_POST['evaluation'] : '';
         $chantier_id = isset($_POST['chantier_id']) ? $_POST['chantier_id'] : 0;
         //var_dump($chantier_id);
         //exit;
         $charte_securite = isset($_POST['charte_securite']) ?  1 : 0;
-        $date_evaluation = isset($_POST['date_evaluation']) ? date('Y-m-d',strtotime($_POST['date_evaluation'])) : '';
-        $date_vm = isset($_POST['date_vm']) ? date('Y-m-d',strtotime($_POST['date_vm'])): '';
-        $date_prem_cont = isset($_POST['date_prem_cont']) ? date('Y-m-d', strtotime($_POST['date_prem_cont'])) : '';
-        $date_cont_rec = isset($_POST['date_cont_rec']) ? date('Y-m-d', strtotime($_POST['date_cont_rec'])) : '';
-        $date_deb = isset($_POST['date_deb']) ? date('Y-m-d', strtotime($_POST['date_deb'])) : '';
-        $date_fin = isset($_POST['date_fin']) ? date('Y-m-d', strtotime($_POST['date_fin'])) : '';
+        //$date_evaluation = isset($_POST['date_evaluation']) ? date('Y-m-d',strtotime($_POST['date_evaluation'])) : '';
+        $date_evaluation = isset($_POST['date_evaluation']) ? new \DateTime($_POST['date_evaluation']) : new \DateTime('0000-00-00');
+        //$date_vm = isset($_POST['date_vm']) ? date('Y-m-d',strtotime($_POST['date_vm'])): '';
+        $date_vm = isset($_POST['date_vm']) ? new \DateTime($_POST['date_vm']): new \DateTime('0000-00-00');
+        //$date_prem_cont = isset($_POST['date_prem_cont']) ? date('Y-m-d', strtotime($_POST['date_prem_cont'])) : '';
+        $date_prem_cont = isset($_POST['date_prem_cont']) ? new \DateTime($_POST['date_prem_cont']) : new \DateTime('0000-00-00');
+        //$date_cont_rec = isset($_POST['date_cont_rec']) ? date('Y-m-d', strtotime($_POST['date_cont_rec'])) : '';
+        $date_cont_rec = isset($_POST['date_cont_rec']) ? new \DateTime($_POST['date_cont_rec']) : new \DateTime('0000-00-00');
+        // $date_deb = isset($_POST['date_deb']) ? date('Y-m-d', strtotime($_POST['date_deb'])) : '';
+        $date_deb = isset($_POST['date_deb']) ? new \DateTime($_POST['date_deb']) : new \DateTime('0000-00-00');
+        //$date_fin = isset($_POST['date_fin']) ? date('Y-m-d', strtotime($_POST['date_fin'])) : '';
+        //$date_fin = isset($_POST['date_fin']) ? new DateTime($_POST['date_fin']) : '';
         $worker_status = isset($_POST['worker_status']) ? $_POST['worker_status'] : '';
         $rem_med = isset($_POST['rem_med']) ? $_POST['rem_med'] : '';
         $remarques = isset($_POST['remarques']) ? $_POST['remarques'] : '';
@@ -121,7 +141,6 @@ if(!empty($_SESSION)){
         }
         */
 
-        //exit;
 
 
 
@@ -184,48 +203,85 @@ if(!empty($_SESSION)){
                 $formOk = false;
             }
 
-            if($date_deb <= '1970-01-01'){
+            if(empty($date_deb)){
                 $conf->addError('Veuillez renseigner une date de début de mission valide.');
                 $formOk = false;
             }
 
-            if($date_deb >= $date_fin){
-                $conf->addError('Veuillez renseigner une date de fin de mission valide.');
-                $formOk = false;
-            }
 
             // Date du jour sélectionné
             //$_GET['date_deb'] = timestamp
-            $selectedDay = !empty(date('Y-m-d', strtotime($date_deb))) ? date('Y-m-d', strtotime($date_deb)) : "";
+            $selectedDay = !empty($date_deb) ? intval($date_deb->format('N')) : "";
             // var_dump($selectedDay);
             // echo "<br>";
 
             // Semanine  correspondant au jour sélectionné
-            $selectedWeek = date('W', strtotime($selectedDay));
+            $selectedWeek = !empty($date_deb) ? intval($date_deb->format('W')) : "";
             // var_dump($selectedWeek);
             // echo "<br>";
 
+            // Année  correspondante au jour sélectionné
+            $selectedYear = !empty($date_deb) ? intval($date_deb->format('Y')) : "";
+            // var_dump($selectedWeek);
+            // echo "<br>";
+
+
             // Calcul de l'écart entre le jour de $day et le lundi (=1)
-            $rel = 1 - date('N', strtotime($selectedDay));
+            $rel = 7 - $selectedDay;
+
+            $date_fin = new DateTime($date_deb->format('Y-m-d').' +'.$rel .'day');
+
+        //    var_dump($date_deb);
+
 
             //calcul du premier jour de la semaine sélectionnée
             // $firstDaySelectedWeek est une la valeur de la date au format 2017-09-18"
             // strtotime($firstDaySelectedWeek) renvoie le timestamp de la valeur $firstDaySelectedWeek
-            $firstDaySelectedWeek = date('Y-m-d', strtotime("$rel days", strtotime($selectedDay)));
-            if($_POST['interimaire_id'] != 0){
-                $affectationExists = Interimaire::checkInterimaireAffectation($_POST['chantier_id'],$selectedWeek,$_POST['interimaire_id']);
+            //$firstDaySelectedWeek = date('Y-m-d', strtotime("$rel days", strtotime($selectedDay)));
+
+        //    var_dump($_POST['interimaire_id']);
+        //    exit;
+            if(intval($_POST['interimaire_id']) != 0){
+                $affectationExists = Interimaire::checkInterimaireAffectation($_POST['chantier_id'],$selectedWeek,$selectedYear,$_POST['interimaire_id']);
             //    var_dump($affectationExists);
             //    exit;
                 if ($affectationExists >= 1){
-                    $conf->addWarning("Cet intérimaire a déjà été affecté pour ce chantier et cette date");
-                    // var_dump($conf->getInstance()->getWarningList());
-                    // exit;
+                    $conf->addError("Cet intérimaire a déjà été affecté pour ce chantier et cette date");
+                    $formOk = false;
                 }
             }
+        }else{
+            if(empty($date_deb)){
+                $conf->addError('Veuillez renseigner une date de début de mission valide.');
+                $formOk = false;
+            }
+
+
+            // Date du jour sélectionné
+            //$_GET['date_deb'] = timestamp
+            $selectedDay = !empty($date_deb) ? intval($date_deb->format('N')) : "";
+            // var_dump($selectedDay);
+            // echo "<br>";
+
+            // Semanine  correspondant au jour sélectionné
+            $selectedWeek = !empty($date_deb) ? intval($date_deb->format('W')) : "";
+            // var_dump($selectedWeek);
+            // echo "<br>";
+
+            // Année  correspondante au jour sélectionné
+            $selectedYear = !empty($date_deb) ? intval($date_deb->format('Y')) : "";
+            // var_dump($selectedWeek);
+            // echo "<br>";
+
+
+            // Calcul de l'écart entre le jour de $day et le lundi (=1)
+            $rel = 7 - $selectedDay;
+
+            $date_fin = new DateTime($date_deb->format('Y-m-d').' +'.$rel .'day');
         }
 
-
         if ($formOk) {
+
             // Je remplis l'objet Interimaire avec les valeurs récupérées en POST
             $interimaireObject = new Interimaire
             ($interimaireId,
@@ -240,12 +296,12 @@ if(!empty($_SESSION)){
             $evaluateur,
             new Chantier($chantier_id),
             $charte_securite,
-            $date_evaluation,
-            $date_vm,
-            $date_prem_cont,
-            $date_cont_rec,
-            $date_deb,
-            $date_fin,
+            $date_evaluation->format('Y-m-d'),
+            $date_vm->format('Y-m-d'),
+            $date_prem_cont->format('Y-m-d'),
+            $date_cont_rec->format('Y-m-d'),
+            $date_deb->format('Y-m-d'),
+            $date_fin->format('Y-m-d'),
             $worker_status,
             $rem_med,
             $remarques,
@@ -262,19 +318,19 @@ if(!empty($_SESSION)){
             // exit;
             $interimaireObject->saveDB();
 
-            //  var_dump($interimaireObject);
+        //    var_dump($interimaireObject);
 
-            // exit;
+        //    exit;
 
             if($_POST['interimaire_id'] != 0){
                 if($affectationExists < 1){
-                    $affectation = Interimaire::affectationInterimaireSaved($chantier_id, $selectedWeek,$_POST['interimaire_id'], $firstDaySelectedWeek);
+                    $affectation = Interimaire::affectationInterimaireSaved($chantier_id, $selectedWeek, $_POST['interimaire_id'], $date_deb);
                 }
             }else{
                 $id = Interimaire::getLastId($agence_id, $matricule);
                 // var_dump($id);
                 // exit;
-                 $affectation = Interimaire::affectationInterimaireSaved($chantier_id, $selectedWeek,$id, $firstDaySelectedWeek);
+                 $affectation = Interimaire::affectationInterimaireSaved($chantier_id, $selectedWeek, $id, $date_deb);
             }
 
 

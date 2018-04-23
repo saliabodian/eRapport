@@ -50,6 +50,14 @@
                                     <input name="date_gen" class="datepicker" value=""/>
                                 </div>
                             </div>
+                            <?php if(($_SESSION['post_id'] !== '1') || ($nbChantierUserAffected >1 ))  : ?>
+                                <div class="control-group">
+                                    <label  class=" control-label" for="">Chef d'équipe absent </label>
+                                    <div class="controls">
+                                        <input  type="checkbox"  name="missing" >
+                                    </div>
+                                </div>
+                            <?php endif ; ?>
                             <div class="form-actions">
                                 <div class=" span4 btn-block"></div>
                                 <div class="span4">
@@ -157,19 +165,20 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <?php foreach ($rapportValidatedList as $rapportValidated ) : ?>
-                                        <tr class="odd gradeX">
-                                            <td><?= date('d-m-Y',strtotime($rapportValidated['date'])) ?></td>
-                                            <td style="text-align: center"><?= $rapportValidated['username'].' - '.$rapportValidated['lastname'].' '.$rapportValidated['firstname'] ?></td>
-                                            <td style="text-align: center"><?= $rapportValidated['code'].' - '.$rapportValidated['nom'] ?></td>
-                                            <td>
-                                                <a href="erapportShow.php?rapport_id=<?=$rapportValidated['id_rapport']?>&rapport_type=<?=$rapportValidated['rapport_type']?>&chef_dequipe_id=<?= $rapportValidated['user_id']?>&chef_dequipe_matricule=<?= $rapportValidated['username']?>&date_generation=<?= $rapportValidated['date']?>&chantier_id=<?= $rapportValidated['chantier_id']?>&chantier_code=<?= $rapportValidated['code']?>&validated=<?= $rapportValidated['validated']?>&submitted=<?= $rapportValidated['submitted']?>"  class="btn btn-warning  btn-block">Consulter</a>
-                                            </td>
-                                            <td>
-                                                <a href="eRapportShowPrint.php?rapport_id=<?=$rapportValidated['id_rapport']?>&rapport_type=<?=$rapportValidated['rapport_type']?>&chef_dequipe_id=<?= $rapportValidated['user_id']?>&chef_dequipe_matricule=<?= $rapportValidated['username']?>&date_generation=<?= $rapportValidated['date']?>&chantier_id=<?= $rapportValidated['chantier_id']?>&chantier_code=<?= $rapportValidated['code']?>&validated=<?= $rapportValidated['validated']?>&submitted=<?= $rapportValidated['submitted']?>" class="btn btn-block">Imprimer</a>
-                                            </td>
-                                        </tr>
-                                    <?php  endforeach;  ?>
+                                        <?php foreach ($rapportValidatedList as $rapportValidated ) : ?>
+                                            <tr class="odd gradeX">
+                                                <td><?= date('d-m-Y',strtotime($rapportValidated['date'])) ?></td>
+                                                <td style="text-align: center"><?= $rapportValidated['username'].' - '.$rapportValidated['lastname'].' '.$rapportValidated['firstname'] ?></td>
+                                                <td style="text-align: center"><?= $rapportValidated['code'].' - '.$rapportValidated['nom'] ?></td>
+                                                <td>
+                                                    <a href="erapportShow.php?rapport_id=<?=$rapportValidated['id_rapport']?>&rapport_type=<?=$rapportValidated['rapport_type']?>&chef_dequipe_id=<?= $rapportValidated['user_id']?>&chef_dequipe_matricule=<?= $rapportValidated['username']?>&date_generation=<?= $rapportValidated['date']?>&chantier_id=<?= $rapportValidated['chantier_id']?>&chantier_code=<?= $rapportValidated['code']?>&validated=<?= $rapportValidated['validated']?>&submitted=<?= $rapportValidated['submitted']?>"  class="btn btn-warning  btn-block">Consulter</a>
+                                                </td>
+                                                <td>
+                                                    <!--a  onclick="javascript:void(ouvrirLesSites());" href="#">Imprimer</a-->
+                                                    <a href="eRapportShowPrint.php?rapport_id=<?=$rapportValidated['id_rapport']?>&rapport_type=<?=$rapportValidated['rapport_type']?>&chef_dequipe_id=<?= $rapportValidated['user_id']?>&chef_dequipe_matricule=<?= $rapportValidated['username']?>&date_generation=<?= $rapportValidated['date']?>&chantier_id=<?= $rapportValidated['chantier_id']?>&chantier_code=<?= $rapportValidated['code']?>&validated=<?= $rapportValidated['validated']?>&submitted=<?= $rapportValidated['submitted']?>" class="btn btn-block">Imprimer</a
+                                                </td>
+                                            </tr>
+                                        <?php  endforeach;  ?>
                                     </tbody>
                                 </table>
                             </div>

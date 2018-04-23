@@ -22,7 +22,7 @@
                                 <input type="hidden" name="chantier_code" value="<?= $_POST['chantier_code']?>">
                                 <input type="hidden" name="chantier_id" value="<?= $_POST['chantier_id']?>">
                                 <input type="hidden" value="true" name="majForm"/>
-                                <input type="hidden" name="anomaly" value="<?= $_POST['anomaly']?>"/>
+                                <input type="hidden" name="anomaly" value="<?= isset($_POST['anomaly'])?$_POST['anomaly'] : '' ?>"/>
                                 <?php if(sizeof($workerToUpdate) === 1) : ?>
                                     <?php foreach ($workerToUpdate as $worker) : ?>
                                         <input type="hidden" value="<?= $worker["chef_dequipe_updated"] ?>" name="chef_dequipe_updated"/>
@@ -35,7 +35,7 @@
                                     <input type="hidden" name="rapport_detail_id[]" class="span4" value="<?= $worker['rapport_detail_id'] ?>" />
                                 <?php endforeach; ?>
                                 <div class="control-group">
-                                    <label class="control-label">Matricule(s) :</label>
+                                    <label class="control-label" style="font-size: medium; font-weight: bold">Matricule(s) :</label>
                                     <div class="controls">
                                         <?php foreach($workerToUpdate as $worker) : ?>
                                             <input type="text" class="span4" value="<?= isset($worker['ouvrier_id'])? $worker['ouvrier_id'] : (isset($worker['interimaire_id'])? $worker['interimaire_id'] : '')?> - <?=$worker['fullname']?>" disabled/>
@@ -93,6 +93,8 @@
                                                         <?php elseif  (($worker['abs'] === 'Congé Syndical (CS)')) : ?>
                                                         <?php elseif  (($worker['abs'] === 'Visite Médicale STI (STI)')) : ?>
                                                         <?php elseif  (($worker['abs'] === 'Travaux Autre Chantier (TAC)')) : ?>
+                                                        <?php elseif  (($worker['abs'] === 'Fin de mission (FM)')) : ?>
+                                                        <?php elseif  (($worker['abs'] === 'Transfert vers autre chantier (TVC)')) : ?>
                                                         selected = "selected" <?php endif; ?> ><?= $worker['abs'] ?></option>
                                                         <option></option>
                                                         <option value="Maladie (M)">Maladie (M)</option>
@@ -106,6 +108,8 @@
                                                         <option value="Congé Syndical (CS)">Congé Syndical (CS)</option>
                                                         <option value="Visite Médicale STI (STI)">Visite Médicale STI (STI)</option>
                                                         <option value="Travaux Autre Chantier (TAC)">Travaux Autre Chantier (TAC)</option>
+                                                        <option value="Fin de mission (FM)">Fin de mission (FM)</option>
+                                                        <option value="Transfert vers autre chantier (TVC)">Transfert vers autre chantier (TVC)</option>
                                                     </select>
                                             <?php endforeach; ?>
                                         <?php else : ?>
@@ -122,6 +126,7 @@
                                                 <option value="Congé Syndical (CS)">Congé Syndical (CS)</option>
                                                 <option value="Visite Médicale STI (STI)">Visite Médicale STI (STI)</option>
                                                 <option value="Travaux Autre Chantier (TAC)">Travaux Autre Chantier (TAC)</option>
+                                                <option value="Transfert vers autre chantier (TVC)">Transfert vers autre chantier (TVC)</option>
                                             </select>
                                         <?php endif; ?>
                                     </div>
@@ -140,7 +145,7 @@
                                 </div>
                                 <!-- Ajout des tâches de manières dynamiques avec jQuery-->
                                 <div class="control-group">
-                                    <label class="control-label">Catégorie de tâche :</label>
+                                    <label class="control-label" style="font-size: medium; font-weight: bold">Catégorie de tâche :</label>
                                     <div class="controls tasks">
                                         <?php if(sizeof($workerToUpdate)=== 1) : ?>
                                             <select class="span4 typeTask mySelect select2-container" name="type_task" onchange="getId(this.value)">
@@ -185,19 +190,84 @@
                                         <div class="control-group">
                                             <label class="control-label">Batiment :</label>
                                             <div class="controls">
-                                                <input type="text" class="span9" id="bat" name="bat" value="<?=$worker['bat_1']?>" placeholder="">
+                                                <input type="text" class="span4" id="bat" name="bat" <?php if(!empty($worker['bat_1'])) : ?> value="<?= $worker['bat_1'] ?>" <?php else :?> placeholder="Batiment" <?php endif ; ?> >
                                             </div>
                                         </div>
                                         <div class="control-group">
                                             <label class="control-label">Axe :</label>
                                             <div class="controls">
-                                                <input type="text" class="span9" id="axe" name="axe" value="<?=$worker['axe_1']?>" placeholder="">
+                                                <input type="text" class="span4" id="axe" name="axe"  <?php if(!empty($worker['axe_1'])) :?> value="<?= $worker['axe_1'] ?>" <?php else :?> placeholder="Axe" <?php endif ; ?>>
                                             </div>
                                         </div>
                                         <div class="control-group">
                                             <label class="control-label">Etage :</label>
                                             <div class="controls">
-                                                <input type="text" class="span9" id="et" name="et" value="<?=$worker['et_1']?>" placeholder="">
+                                                <select class="select2-container span2" name="et">
+                                                    <option value="<?= $worker['et_1'] ?>" <?php if(($worker['et_1'] === 'Niveau 10')) : ?>
+                                                    <?php elseif  (($worker['et_1'] === 'Niveau 9')) : ?>
+                                                    <?php elseif  (($worker['et_1'] === 'Niveau 8')) : ?>
+                                                    <?php elseif  (($worker['et_1'] === 'Niveau 7')) : ?>
+                                                    <?php elseif  (($worker['et_1'] === 'Niveau 6')) : ?>
+                                                    <?php elseif  (($worker['et_1'] === 'Niveau 5')) : ?>
+                                                    <?php elseif  (($worker['et_1'] === 'Niveau 4')) : ?>
+                                                    <?php elseif  (($worker['et_1'] === 'Niveau 3')) : ?>
+                                                    <?php elseif  (($worker['et_1'] === 'Niveau 2')) : ?>
+                                                    <?php elseif  (($worker['et_1'] === 'Niveau 1')) : ?>
+                                                    <?php elseif  (($worker['et_1'] === 'RDC')) : ?>
+                                                    <?php elseif  (($worker['et_1'] === 'Niveau -0.5')) : ?>
+                                                    <?php elseif  (($worker['et_1'] === 'Niveau -1')) : ?>
+                                                    <?php elseif  (($worker['et_1'] === 'Niveau -1.5')) : ?>
+                                                    <?php elseif  (($worker['et_1'] === 'Niveau -2')) : ?>
+                                                    <?php elseif  (($worker['et_1'] === 'Niveau -2.5')) : ?>
+                                                    <?php elseif  (($worker['et_1'] === 'Niveau -3')) : ?>
+                                                    <?php elseif  (($worker['et_1'] === 'Niveau -3.5')) : ?>
+                                                    <?php elseif  (($worker['et_1'] === 'Niveau -4')) : ?>
+                                                    <?php elseif  (($worker['et_1'] === 'Niveau -4.5')) : ?>
+                                                    <?php elseif  (($worker['et_1'] === 'Niveau -5')) : ?>
+                                                    <?php elseif  (($worker['et_1'] === 'Niveau -5.5')) : ?>
+                                                    <?php elseif  (($worker['et_1'] === 'Niveau -6')) : ?>
+                                                    <?php elseif  (($worker['et_1'] === 'Niveau -6.5')) : ?>
+                                                    <?php elseif  (($worker['et_1'] === 'Niveau -7')) : ?>
+                                                    <?php elseif  (($worker['et_1'] === 'Niveau -7.5')) : ?>
+                                                    <?php elseif  (($worker['et_1'] === 'Niveau -8')) : ?>
+                                                    <?php elseif  (($worker['et_1'] === 'Niveau -8.5')) : ?>
+                                                    <?php elseif  (($worker['et_1'] === 'Niveau -9')) : ?>
+                                                    <?php elseif  (($worker['et_1'] === 'Niveau -9.5')) : ?>
+                                                    <?php elseif  (($worker['et_1'] === 'Niveau -10')) : ?>
+                                                        selected = "selected" <?php endif; ?> ><?= $worker['et_1'] ?></option>
+                                                    <option></option>
+                                                    <option value="Niveau 10">Niveau 10</option>
+                                                    <option value="Niveau 9">Niveau 9</option>
+                                                    <option value="Niveau 8">Niveau 8</option>
+                                                    <option value="Niveau 7">Niveau 7</option>
+                                                    <option value="Niveau 6">Niveau 6</option>
+                                                    <option value="Niveau 5">Niveau 5</option>
+                                                    <option value="Niveau 4">Niveau 4</option>
+                                                    <option value="Niveau 3">Niveau 3</option>
+                                                    <option value="Niveau 2">Niveau 2</option>
+                                                    <option value="Niveau 1">Niveau 1</option>
+                                                    <option value="Niveau RDC">Niveau RDC</option>
+                                                    <option value="Niveau -0.5">Niveau -0.5</option>
+                                                    <option value="Niveau -1">Niveau -1</option>
+                                                    <option value="Niveau -1.5">Niveau -1.5</option>
+                                                    <option value="Niveau -2">Niveau -2</option>
+                                                    <option value="Niveau -2.5">Niveau -2.5</option>
+                                                    <option value="Niveau -3">Niveau -3</option>
+                                                    <option value="Niveau -3.5">Niveau -3.5</option>
+                                                    <option value="Niveau -4">Niveau -4</option>
+                                                    <option value="Niveau -4.5">Niveau -4.5</option>
+                                                    <option value="Niveau -5">Niveau -5</option>
+                                                    <option value="Niveau -5.5">Niveau -5.5</option>
+                                                    <option value="Niveau -6">Niveau -6</option>
+                                                    <option value="Niveau -6.5">Niveau -6.5</option>
+                                                    <option value="Niveau -7">Niveau -7</option>
+                                                    <option value="Niveau -7.5">Niveau -7.5</option>
+                                                    <option value="Niveau -8">Niveau -8</option>
+                                                    <option value="Niveau -8.5">Niveau -8.5</option>
+                                                    <option value="Niveau -9">Niveau -9</option>
+                                                    <option value="Niveau -9.5">Niveau -9.5</option>
+                                                    <option value="Niveau -10">Niveau -10</option>
+                                                </select>
                                             </div>
                                         </div>
                                         <div class="control-group">
@@ -211,19 +281,84 @@
                                     <div class="control-group">
                                         <label class="control-label">Batiment :</label>
                                         <div class="controls">
-                                            <input type="text" class="span9" id="bat" name="bat" value="" placeholder="">
+                                            <input type="text" class="span4" id="bat" name="bat" <?php if(!empty($worker['bat_1'])) : ?> value="<?= $worker['bat_1'] ?>" <?php else :?> placeholder="Batiment" <?php endif ; ?>>
                                         </div>
                                     </div>
                                     <div class="control-group">
                                         <label class="control-label">Axe :</label>
                                         <div class="controls">
-                                            <input type="text" class="span9" id="axe" name="axe" value="" placeholder="">
+                                            <input type="text" class="span4" id="axe" name="axe" <?php if(!empty($worker['axe_1'])) :?> value="<?= $worker['axe_1'] ?>" <?php else :?> placeholder="Axe" <?php endif ; ?>>
                                         </div>
                                     </div>
                                     <div class="control-group">
                                         <label class="control-label">Etage :</label>
                                         <div class="controls">
-                                            <input type="text" class="span9" id="et" name="et" value="" placeholder="">
+                                            <select class="select2-container span2" name="et">
+                                                <option value="<?= $worker['et_1'] ?>" <?php if(($worker['et_1'] === 'Niveau 10')) : ?>
+                                                <?php elseif  (($worker['et_1'] === 'Niveau 9')) : ?>
+                                                <?php elseif  (($worker['et_1'] === 'Niveau 8')) : ?>
+                                                <?php elseif  (($worker['et_1'] === 'Niveau 7')) : ?>
+                                                <?php elseif  (($worker['et_1'] === 'Niveau 6')) : ?>
+                                                <?php elseif  (($worker['et_1'] === 'Niveau 5')) : ?>
+                                                <?php elseif  (($worker['et_1'] === 'Niveau 4')) : ?>
+                                                <?php elseif  (($worker['et_1'] === 'Niveau 3')) : ?>
+                                                <?php elseif  (($worker['et_1'] === 'Niveau 2')) : ?>
+                                                <?php elseif  (($worker['et_1'] === 'Niveau 1')) : ?>
+                                                <?php elseif  (($worker['et_1'] === 'RDC')) : ?>
+                                                <?php elseif  (($worker['et_1'] === 'Niveau -0.5')) : ?>
+                                                <?php elseif  (($worker['et_1'] === 'Niveau -1')) : ?>
+                                                <?php elseif  (($worker['et_1'] === 'Niveau -1.5')) : ?>
+                                                <?php elseif  (($worker['et_1'] === 'Niveau -2')) : ?>
+                                                <?php elseif  (($worker['et_1'] === 'Niveau -2.5')) : ?>
+                                                <?php elseif  (($worker['et_1'] === 'Niveau -3')) : ?>
+                                                <?php elseif  (($worker['et_1'] === 'Niveau -3.5')) : ?>
+                                                <?php elseif  (($worker['et_1'] === 'Niveau -4')) : ?>
+                                                <?php elseif  (($worker['et_1'] === 'Niveau -4.5')) : ?>
+                                                <?php elseif  (($worker['et_1'] === 'Niveau -5')) : ?>
+                                                <?php elseif  (($worker['et_1'] === 'Niveau -5.5')) : ?>
+                                                <?php elseif  (($worker['et_1'] === 'Niveau -6')) : ?>
+                                                <?php elseif  (($worker['et_1'] === 'Niveau -6.5')) : ?>
+                                                <?php elseif  (($worker['et_1'] === 'Niveau -7')) : ?>
+                                                <?php elseif  (($worker['et_1'] === 'Niveau -7.5')) : ?>
+                                                <?php elseif  (($worker['et_1'] === 'Niveau -8')) : ?>
+                                                <?php elseif  (($worker['et_1'] === 'Niveau -8.5')) : ?>
+                                                <?php elseif  (($worker['et_1'] === 'Niveau -9')) : ?>
+                                                <?php elseif  (($worker['et_1'] === 'Niveau -9.5')) : ?>
+                                                <?php elseif  (($worker['et_1'] === 'Niveau -10')) : ?>
+                                                    selected = "selected" <?php endif; ?> ><?= $worker['et_1'] ?></option>
+                                                <option></option>
+                                                <option value="Niveau 10">Niveau 10</option>
+                                                <option value="Niveau 9">Niveau 9</option>
+                                                <option value="Niveau 8">Niveau 8</option>
+                                                <option value="Niveau 7">Niveau 7</option>
+                                                <option value="Niveau 6">Niveau 6</option>
+                                                <option value="Niveau 5">Niveau 5</option>
+                                                <option value="Niveau 4">Niveau 4</option>
+                                                <option value="Niveau 3">Niveau 3</option>
+                                                <option value="Niveau 2">Niveau 2</option>
+                                                <option value="Niveau 1">Niveau 1</option>
+                                                <option value="Niveau RDC">Niveau RDC</option>
+                                                <option value="Niveau -0.5">Niveau -0.5</option>
+                                                <option value="Niveau -1">Niveau -1</option>
+                                                <option value="Niveau -1.5">Niveau -1.5</option>
+                                                <option value="Niveau -2">Niveau -2</option>
+                                                <option value="Niveau -2.5">Niveau -2.5</option>
+                                                <option value="Niveau -3">Niveau -3</option>
+                                                <option value="Niveau -3.5">Niveau -3.5</option>
+                                                <option value="Niveau -4">Niveau -4</option>
+                                                <option value="Niveau -4.5">Niveau -4.5</option>
+                                                <option value="Niveau -5">Niveau -5</option>
+                                                <option value="Niveau -5.5">Niveau -5.5</option>
+                                                <option value="Niveau -6">Niveau -6</option>
+                                                <option value="Niveau -6.5">Niveau -6.5</option>
+                                                <option value="Niveau -7">Niveau -7</option>
+                                                <option value="Niveau -7.5">Niveau -7.5</option>
+                                                <option value="Niveau -8">Niveau -8</option>
+                                                <option value="Niveau -8.5">Niveau -8.5</option>
+                                                <option value="Niveau -9">Niveau -9</option>
+                                                <option value="Niveau -9.5">Niveau -9.5</option>
+                                                <option value="Niveau -10">Niveau -10</option>
+                                            </select>
                                         </div>
                                     </div>
                                     <div class="control-group">
@@ -236,7 +371,7 @@
                                                 <!--a Gestion dynamique de l'ajout d'une tache mis en suspend</a-->
                                                 <!--a class="sAdd btn btn-success add-more" title="" href="#"><i class="icon-plus"></i></a-->
                                 <div class="control-group">
-                                    <label class="control-label">Catégorie de tâche :</label>
+                                    <label class="control-label" style="font-size: medium; font-weight: bold">Catégorie de tâche :</label>
                                     <div class="controls tasks">
                                         <?php if(sizeof($workerToUpdate)=== 1) : ?>
                                             <select class="span4 typeTask2 mySelect select2-container" name="type_task2" onchange="getId2(this.value)">
@@ -283,19 +418,84 @@
                                                 <div class="control-group">
                                                     <label class="control-label">Batiment :</label>
                                                     <div class="controls">
-                                                        <input type="text" class="span9" id="bat2" name="bat2" value="<?= $worker['bat_2'] ?>" placeholder="">
+                                                        <input type="text" class="span4" id="bat2" name="bat2" <?php if(!empty($worker['bat2'])) : ?> value="<?= $worker['bat2'] ?>" <?php else :?> placeholder="Batiment" <?php endif ; ?>>
                                                     </div>
                                                 </div>
                                                 <div class="control-group">
                                                     <label class="control-label">Axe :</label>
                                                     <div class="controls">
-                                                        <input type="text" class="span9" id="axe2" name="axe2" value="<?= $worker['axe_2'] ?>" placeholder="">
+                                                        <input type="text" class="span4" id="axe2" name="axe2" <?php if(!empty($worker['axe2'])) : ?> value="<?= $worker['axe2'] ?>" <?php else :?> placeholder="Axe" <?php endif ; ?>>
                                                     </div>
                                                 </div>
                                                 <div class="control-group">
                                                     <label class="control-label">Etage :</label>
                                                     <div class="controls">
-                                                        <input type="text" class="span9" id="et2" name="et2" value="<?= $worker['et_2'] ?>" placeholder="">
+                                                        <select class="select2-container span2" name="et2">
+                                                            <option value="<?= $worker['et_2'] ?>" <?php if(($worker['et_2'] === 'Niveau 10')) : ?>
+                                                            <?php elseif  (($worker['et_2'] === 'Niveau 9')) : ?>
+                                                            <?php elseif  (($worker['et_2'] === 'Niveau 8')) : ?>
+                                                            <?php elseif  (($worker['et_2'] === 'Niveau 7')) : ?>
+                                                            <?php elseif  (($worker['et_2'] === 'Niveau 6')) : ?>
+                                                            <?php elseif  (($worker['et_2'] === 'Niveau 5')) : ?>
+                                                            <?php elseif  (($worker['et_2'] === 'Niveau 4')) : ?>
+                                                            <?php elseif  (($worker['et_2'] === 'Niveau 3')) : ?>
+                                                            <?php elseif  (($worker['et_2'] === 'Niveau 2')) : ?>
+                                                            <?php elseif  (($worker['et_2'] === 'Niveau 1')) : ?>
+                                                            <?php elseif  (($worker['et_2'] === 'RDC')) : ?>
+                                                            <?php elseif  (($worker['et_2'] === 'Niveau -0.5')) : ?>
+                                                            <?php elseif  (($worker['et_2'] === 'Niveau -1')) : ?>
+                                                            <?php elseif  (($worker['et_2'] === 'Niveau -1.5')) : ?>
+                                                            <?php elseif  (($worker['et_2'] === 'Niveau -2')) : ?>
+                                                            <?php elseif  (($worker['et_2'] === 'Niveau -2.5')) : ?>
+                                                            <?php elseif  (($worker['et_2'] === 'Niveau -3')) : ?>
+                                                            <?php elseif  (($worker['et_2'] === 'Niveau -3.5')) : ?>
+                                                            <?php elseif  (($worker['et_2'] === 'Niveau -4')) : ?>
+                                                            <?php elseif  (($worker['et_2'] === 'Niveau -4.5')) : ?>
+                                                            <?php elseif  (($worker['et_2'] === 'Niveau -5')) : ?>
+                                                            <?php elseif  (($worker['et_2'] === 'Niveau -5.5')) : ?>
+                                                            <?php elseif  (($worker['et_2'] === 'Niveau -6')) : ?>
+                                                            <?php elseif  (($worker['et_2'] === 'Niveau -6.5')) : ?>
+                                                            <?php elseif  (($worker['et_2'] === 'Niveau -7')) : ?>
+                                                            <?php elseif  (($worker['et_2'] === 'Niveau -7.5')) : ?>
+                                                            <?php elseif  (($worker['et_2'] === 'Niveau -8')) : ?>
+                                                            <?php elseif  (($worker['et_2'] === 'Niveau -8.5')) : ?>
+                                                            <?php elseif  (($worker['et_2'] === 'Niveau -9')) : ?>
+                                                            <?php elseif  (($worker['et_2'] === 'Niveau -9.5')) : ?>
+                                                            <?php elseif  (($worker['et_2'] === 'Niveau -10')) : ?>
+                                                                selected = "selected" <?php endif; ?> ><?= $worker['et_2'] ?></option>
+                                                            <option></option>
+                                                            <option value="Niveau 10">Niveau 10</option>
+                                                            <option value="Niveau 9">Niveau 9</option>
+                                                            <option value="Niveau 8">Niveau 8</option>
+                                                            <option value="Niveau 7">Niveau 7</option>
+                                                            <option value="Niveau 6">Niveau 6</option>
+                                                            <option value="Niveau 5">Niveau 5</option>
+                                                            <option value="Niveau 4">Niveau 4</option>
+                                                            <option value="Niveau 3">Niveau 3</option>
+                                                            <option value="Niveau 2">Niveau 2</option>
+                                                            <option value="Niveau 1">Niveau 1</option>
+                                                            <option value="Niveau RDC">Niveau RDC</option>
+                                                            <option value="Niveau -0.5">Niveau -0.5</option>
+                                                            <option value="Niveau -1">Niveau -1</option>
+                                                            <option value="Niveau -1.5">Niveau -1.5</option>
+                                                            <option value="Niveau -2">Niveau -2</option>
+                                                            <option value="Niveau -2.5">Niveau -2.5</option>
+                                                            <option value="Niveau -3">Niveau -3</option>
+                                                            <option value="Niveau -3.5">Niveau -3.5</option>
+                                                            <option value="Niveau -4">Niveau -4</option>
+                                                            <option value="Niveau -4.5">Niveau -4.5</option>
+                                                            <option value="Niveau -5">Niveau -5</option>
+                                                            <option value="Niveau -5.5">Niveau -5.5</option>
+                                                            <option value="Niveau -6">Niveau -6</option>
+                                                            <option value="Niveau -6.5">Niveau -6.5</option>
+                                                            <option value="Niveau -7">Niveau -7</option>
+                                                            <option value="Niveau -7.5">Niveau -7.5</option>
+                                                            <option value="Niveau -8">Niveau -8</option>
+                                                            <option value="Niveau -8.5">Niveau -8.5</option>
+                                                            <option value="Niveau -9">Niveau -9</option>
+                                                            <option value="Niveau -9.5">Niveau -9.5</option>
+                                                            <option value="Niveau -10">Niveau -10</option>
+                                                        </select>
                                                     </div>
                                                 </div>
                                                 <div class="control-group">
@@ -309,19 +509,84 @@
                                             <div class="control-group">
                                                 <label class="control-label">Batiment :</label>
                                                 <div class="controls">
-                                                    <input type="text" class="span9" id="bat2" name="bat2" value="" placeholder="">
+                                                    <input type="text" class="span4" id="bat2" name="bat2"  <?php if(!empty($worker['bat2'])) : ?> value="<?= $worker['bat2'] ?>" <?php else :?> placeholder="Batiment" <?php endif ; ?>>
                                                 </div>
                                             </div>
                                             <div class="control-group">
                                                 <label class="control-label">Axe :</label>
                                                 <div class="controls">
-                                                    <input type="text" class="span9" id="axe2" name="axe2" value="" placeholder="">
+                                                    <input type="text" class="span4" id="axe2" name="axe2"  <?php if(!empty($worker['axe2'])) : ?> value="<?= $worker['axe2'] ?>" <?php else :?> placeholder="Axe" <?php endif ; ?>>
                                                 </div>
                                             </div>
                                             <div class="control-group">
                                                 <label class="control-label">Etage :</label>
                                                 <div class="controls">
-                                                    <input type="text" class="span9" id="et2" name="et2" value="" placeholder="">
+                                                    <select class="select2-container span2" name="et2">
+                                                        <option value="<?= $worker['et_2'] ?>" <?php if(($worker['et_2'] === 'Niveau 10')) : ?>
+                                                        <?php elseif  (($worker['et_2'] === 'Niveau 9')) : ?>
+                                                        <?php elseif  (($worker['et_2'] === 'Niveau 8')) : ?>
+                                                        <?php elseif  (($worker['et_2'] === 'Niveau 7')) : ?>
+                                                        <?php elseif  (($worker['et_2'] === 'Niveau 6')) : ?>
+                                                        <?php elseif  (($worker['et_2'] === 'Niveau 5')) : ?>
+                                                        <?php elseif  (($worker['et_2'] === 'Niveau 4')) : ?>
+                                                        <?php elseif  (($worker['et_2'] === 'Niveau 3')) : ?>
+                                                        <?php elseif  (($worker['et_2'] === 'Niveau 2')) : ?>
+                                                        <?php elseif  (($worker['et_2'] === 'Niveau 1')) : ?>
+                                                        <?php elseif  (($worker['et_2'] === 'RDC')) : ?>
+                                                        <?php elseif  (($worker['et_2'] === 'Niveau -0.5')) : ?>
+                                                        <?php elseif  (($worker['et_2'] === 'Niveau -1')) : ?>
+                                                        <?php elseif  (($worker['et_2'] === 'Niveau -1.5')) : ?>
+                                                        <?php elseif  (($worker['et_2'] === 'Niveau -2')) : ?>
+                                                        <?php elseif  (($worker['et_2'] === 'Niveau -2.5')) : ?>
+                                                        <?php elseif  (($worker['et_2'] === 'Niveau -3')) : ?>
+                                                        <?php elseif  (($worker['et_2'] === 'Niveau -3.5')) : ?>
+                                                        <?php elseif  (($worker['et_2'] === 'Niveau -4')) : ?>
+                                                        <?php elseif  (($worker['et_2'] === 'Niveau -4.5')) : ?>
+                                                        <?php elseif  (($worker['et_2'] === 'Niveau -5')) : ?>
+                                                        <?php elseif  (($worker['et_2'] === 'Niveau -5.5')) : ?>
+                                                        <?php elseif  (($worker['et_2'] === 'Niveau -6')) : ?>
+                                                        <?php elseif  (($worker['et_2'] === 'Niveau -6.5')) : ?>
+                                                        <?php elseif  (($worker['et_2'] === 'Niveau -7')) : ?>
+                                                        <?php elseif  (($worker['et_2'] === 'Niveau -7.5')) : ?>
+                                                        <?php elseif  (($worker['et_2'] === 'Niveau -8')) : ?>
+                                                        <?php elseif  (($worker['et_2'] === 'Niveau -8.5')) : ?>
+                                                        <?php elseif  (($worker['et_2'] === 'Niveau -9')) : ?>
+                                                        <?php elseif  (($worker['et_2'] === 'Niveau -9.5')) : ?>
+                                                        <?php elseif  (($worker['et_2'] === 'Niveau -10')) : ?>
+                                                            selected = "selected" <?php endif; ?> ><?= $worker['et_2'] ?></option>
+                                                        <option></option>
+                                                        <option value="Niveau 10">Niveau 10</option>
+                                                        <option value="Niveau 9">Niveau 9</option>
+                                                        <option value="Niveau 8">Niveau 8</option>
+                                                        <option value="Niveau 7">Niveau 7</option>
+                                                        <option value="Niveau 6">Niveau 6</option>
+                                                        <option value="Niveau 5">Niveau 5</option>
+                                                        <option value="Niveau 4">Niveau 4</option>
+                                                        <option value="Niveau 3">Niveau 3</option>
+                                                        <option value="Niveau 2">Niveau 2</option>
+                                                        <option value="Niveau 1">Niveau 1</option>
+                                                        <option value="Niveau RDC">Niveau RDC</option>
+                                                        <option value="Niveau -0.5">Niveau -0.5</option>
+                                                        <option value="Niveau -1">Niveau -1</option>
+                                                        <option value="Niveau -1.5">Niveau -1.5</option>
+                                                        <option value="Niveau -2">Niveau -2</option>
+                                                        <option value="Niveau -2.5">Niveau -2.5</option>
+                                                        <option value="Niveau -3">Niveau -3</option>
+                                                        <option value="Niveau -3.5">Niveau -3.5</option>
+                                                        <option value="Niveau -4">Niveau -4</option>
+                                                        <option value="Niveau -4.5">Niveau -4.5</option>
+                                                        <option value="Niveau -5">Niveau -5</option>
+                                                        <option value="Niveau -5.5">Niveau -5.5</option>
+                                                        <option value="Niveau -6">Niveau -6</option>
+                                                        <option value="Niveau -6.5">Niveau -6.5</option>
+                                                        <option value="Niveau -7">Niveau -7</option>
+                                                        <option value="Niveau -7.5">Niveau -7.5</option>
+                                                        <option value="Niveau -8">Niveau -8</option>
+                                                        <option value="Niveau -8.5">Niveau -8.5</option>
+                                                        <option value="Niveau -9">Niveau -9</option>
+                                                        <option value="Niveau -9.5">Niveau -9.5</option>
+                                                        <option value="Niveau -10">Niveau -10</option>
+                                                    </select>
                                                 </div>
                                             </div>
                                             <div class="control-group">
@@ -346,7 +611,7 @@
                                 </div>
                                 <fieldset class="moreActions">
                                     <div class="control-group">
-                                        <label class="control-label">Catégorie de tâche:</label>
+                                        <label class="control-label" style="font-size: medium; font-weight: bold">Catégorie de tâche:</label>
                                         <div class="controls tasks">
                                             <?php if(sizeof($workerToUpdate)===1) :?>
                                             <select class="span4 typeTask3 mySelect" name="type_task3" onchange="getId3(this.value)">
@@ -386,28 +651,93 @@
                                             <?php endif ; ?>
                                             </div>
                                         </div>
-                                            <?php if(sizeof($workerToUpdate)===1) : ?>
-                                                <?php foreach($workerToUpdate as $worker) : ?>
+                                <?php if(sizeof($workerToUpdate)===1) : ?>
+                                    <?php foreach($workerToUpdate as $worker) : ?>
 
                                     <div class="control-group">
                                         <label class="control-label">Batiment :</label>
                                         <div class="controls">
-                                                <input type="text" class="span9" id="bat3" name="bat3" value="<?= $worker['bat_3'] ?>" placeholder="">
-                                            </div>
+                                            <input type="text" class="span4" id="bat3" name="bat3" <?php if(!empty($worker['bat3'])) : ?> value="<?= $worker['bat3'] ?>" <?php else :?> placeholder="Batiment" <?php endif ; ?>>
                                         </div>
+                                    </div>
 
                                     <div class="control-group">
                                         <label class="control-label">Axe :</label>
                                         <div class="controls">
-                                                <input type="text" class="span9" id="axe3" name="axe3" value="<?= $worker['axe_3'] ?>" placeholder="">
+                                                <input type="text" class="span4" id="axe3" name="axe3" <?php if(!empty($worker['axe3'])) : ?> value="<?= $worker['axe3'] ?>" <?php else :?> placeholder="Axe" <?php endif ; ?>>
                                             </div>
                                         </div>
 
                                     <div class="control-group">
                                         <label class="control-label">Etage :</label>
                                         <div class="controls">
-                                                <input type="text" class="span9" id="et3" name="et3" value="<?= $worker['et_3'] ?>" placeholder="">
-                                            </div>
+                                            <select class="select2-container span2" name="et3">
+                                                <option value="<?= $worker['et_3'] ?>" <?php if(($worker['et_3'] === 'Niveau 10')) : ?>
+                                                <?php elseif  (($worker['et_3'] === 'Niveau 9')) : ?>
+                                                <?php elseif  (($worker['et_3'] === 'Niveau 8')) : ?>
+                                                <?php elseif  (($worker['et_3'] === 'Niveau 7')) : ?>
+                                                <?php elseif  (($worker['et_3'] === 'Niveau 6')) : ?>
+                                                <?php elseif  (($worker['et_3'] === 'Niveau 5')) : ?>
+                                                <?php elseif  (($worker['et_3'] === 'Niveau 4')) : ?>
+                                                <?php elseif  (($worker['et_3'] === 'Niveau 3')) : ?>
+                                                <?php elseif  (($worker['et_3'] === 'Niveau 2')) : ?>
+                                                <?php elseif  (($worker['et_3'] === 'Niveau 1')) : ?>
+                                                <?php elseif  (($worker['et_3'] === 'RDC')) : ?>
+                                                <?php elseif  (($worker['et_3'] === 'Niveau -0.5')) : ?>
+                                                <?php elseif  (($worker['et_3'] === 'Niveau -1')) : ?>
+                                                <?php elseif  (($worker['et_3'] === 'Niveau -1.5')) : ?>
+                                                <?php elseif  (($worker['et_3'] === 'Niveau -2')) : ?>
+                                                <?php elseif  (($worker['et_3'] === 'Niveau -2.5')) : ?>
+                                                <?php elseif  (($worker['et_3'] === 'Niveau -3')) : ?>
+                                                <?php elseif  (($worker['et_3'] === 'Niveau -3.5')) : ?>
+                                                <?php elseif  (($worker['et_3'] === 'Niveau -4')) : ?>
+                                                <?php elseif  (($worker['et_3'] === 'Niveau -4.5')) : ?>
+                                                <?php elseif  (($worker['et_3'] === 'Niveau -5')) : ?>
+                                                <?php elseif  (($worker['et_3'] === 'Niveau -5.5')) : ?>
+                                                <?php elseif  (($worker['et_3'] === 'Niveau -6')) : ?>
+                                                <?php elseif  (($worker['et_3'] === 'Niveau -6.5')) : ?>
+                                                <?php elseif  (($worker['et_3'] === 'Niveau -7')) : ?>
+                                                <?php elseif  (($worker['et_3'] === 'Niveau -7.5')) : ?>
+                                                <?php elseif  (($worker['et_3'] === 'Niveau -8')) : ?>
+                                                <?php elseif  (($worker['et_3'] === 'Niveau -8.5')) : ?>
+                                                <?php elseif  (($worker['et_3'] === 'Niveau -9')) : ?>
+                                                <?php elseif  (($worker['et_3'] === 'Niveau -9.5')) : ?>
+                                                <?php elseif  (($worker['et_3'] === 'Niveau -10')) : ?>
+                                                    selected = "selected" <?php endif; ?> ><?= $worker['et_3'] ?></option>
+                                                <option></option>
+                                                <option value="Niveau 10">Niveau 10</option>
+                                                <option value="Niveau 9">Niveau 9</option>
+                                                <option value="Niveau 8">Niveau 8</option>
+                                                <option value="Niveau 7">Niveau 7</option>
+                                                <option value="Niveau 6">Niveau 6</option>
+                                                <option value="Niveau 5">Niveau 5</option>
+                                                <option value="Niveau 4">Niveau 4</option>
+                                                <option value="Niveau 3">Niveau 3</option>
+                                                <option value="Niveau 2">Niveau 2</option>
+                                                <option value="Niveau 1">Niveau 1</option>
+                                                <option value="Niveau RDC">Niveau RDC</option>
+                                                <option value="Niveau -0.5">Niveau -0.5</option>
+                                                <option value="Niveau -1">Niveau -1</option>
+                                                <option value="Niveau -1.5">Niveau -1.5</option>
+                                                <option value="Niveau -2">Niveau -2</option>
+                                                <option value="Niveau -2.5">Niveau -2.5</option>
+                                                <option value="Niveau -3">Niveau -3</option>
+                                                <option value="Niveau -3.5">Niveau -3.5</option>
+                                                <option value="Niveau -4">Niveau -4</option>
+                                                <option value="Niveau -4.5">Niveau -4.5</option>
+                                                <option value="Niveau -5">Niveau -5</option>
+                                                <option value="Niveau -5.5">Niveau -5.5</option>
+                                                <option value="Niveau -6">Niveau -6</option>
+                                                <option value="Niveau -6.5">Niveau -6.5</option>
+                                                <option value="Niveau -7">Niveau -7</option>
+                                                <option value="Niveau -7.5">Niveau -7.5</option>
+                                                <option value="Niveau -8">Niveau -8</option>
+                                                <option value="Niveau -8.5">Niveau -8.5</option>
+                                                <option value="Niveau -9">Niveau -9</option>
+                                                <option value="Niveau -9.5">Niveau -9.5</option>
+                                                <option value="Niveau -10">Niveau -10</option>
+                                            </select>
+                                        </div>
                                         </div>
 
                                     <div class="control-group">
@@ -422,21 +752,21 @@
                                     <div class="control-group">
                                         <label class="control-label">Batiment :</label>
                                         <div class="controls">
-                                                <input type="text" class="span9" id="bat3" name="bat3" value="" placeholder="">
+                                                <input type="text" class="span4" id="bat3" name="bat3" <?php if(!empty($worker['bat3'])) : ?> value="<?= $worker['bat3'] ?>" <?php else :?> placeholder="Batiment" <?php endif ; ?>>
                                             </div>
                                         </div>
 
                                     <div class="control-group">
                                         <label class="control-label">Axe :</label>
                                         <div class="controls">
-                                                <input type="text" class="span9" id="axe3" name="axe3" value="" placeholder="">
+                                                <input type="text" class="span4" id="axe3" name="axe3" <?php if(!empty($worker['axe3'])) : ?> value="<?= $worker['axe3'] ?>" <?php else :?> placeholder="Axe" <?php endif ; ?>>
                                             </div>
                                         </div>
 
                                     <div class="control-group">
                                         <label class="control-label">Etage :</label>
                                         <div class="controls">
-                                                <input type="text" class="span9" id="et3" name="et3" value="" placeholder="">
+                                                <input type="text" class="span9" id="et3" name="et3" <?php if(!empty($worker['et3'])) : ?> value="<?= $worker['et3'] ?>" <?php else :?> placeholder="Etage" <?php endif ; ?>>
                                             </div>
                                         </div>
 
@@ -448,7 +778,7 @@
                                         </div>
                                             <?php endif ; ?>
                                     <div class="control-group">
-                                        <label class="control-label">Catégorie de tâche :</label>
+                                        <label class="control-label" style="font-size: medium; font-weight: bold">Catégorie de tâche :</label>
                                         <div class="controls tasks">
                                             <?php if(sizeof($workerToUpdate)===1) : ?>
                                                 <select class="span4 typeTask4 mySelect" name="type_task4" onchange="getId4(this.value)">
@@ -493,19 +823,19 @@
                                                 <div class="control-group">
                                                     <label class="control-label">Batiment :</label>
                                                     <div class="controls">
-                                                        <input type="text" class="span9" id="bat4" name="bat4" value="<?= $worker['bat_4'] ?>" placeholder="">
+                                                        <input type="text" class="span4" id="bat4" name="bat4" <?php if(!empty($worker['bat4'])) : ?> value="<?= $worker['bat4'] ?>" <?php else :?> placeholder="Batiment" <?php endif ; ?>>
                                                 </div>
                                             </div>
                                             <div class="control-group">
                                                 <label class="control-label">Axe :</label>
                                                 <div class="controls">
-                                                    <input type="text" class="span9" id="axe4" name="axe4" value="<?= $worker['axe_4'] ?>" placeholder="">
+                                                    <input type="text" class="span4" id="axe4" name="axe4" <?php if(!empty($worker['axe4'])) : ?> value="<?= $worker['axe4'] ?>" <?php else :?> placeholder="Axe" <?php endif ; ?>>
                                                 </div>
                                             </div>
                                             <div class="control-group">
                                                 <label class="control-label">Etage :</label>
                                                 <div class="controls">
-                                                    <input type="text" class="span9" id="et4" name="et4" value="<?= $worker['et_4'] ?>" placeholder="">
+                                                    <input type="text" class="span9" id="et4" name="et4" <?php if(!empty($worker['et4'])) : ?> value="<?= $worker['et4'] ?>" <?php else :?> placeholder="Etage" <?php endif ; ?>>
                                                 </div>
                                             </div>
                                             <div class="control-group">
@@ -521,19 +851,19 @@
                                             <div class="control-group">
                                                 <label class="control-label">Batiment :</label>
                                                 <div class="controls">
-                                                    <input type="text" class="span9" id="bat4" name="bat4" value="" placeholder="">
+                                                    <input type="text" class="span9" id="bat4" name="bat4" <?php if(!empty($worker['bat4'])) : ?> value="<?= $worker['bat4'] ?>" <?php else :?> placeholder="Batiment" <?php endif ; ?>>
                                                 </div>
                                             </div>
                                             <div class="control-group">
                                                 <label class="control-label">Axe :</label>
                                                 <div class="controls">
-                                                    <input type="text" class="span9" id="axe4" name="axe4" value="" placeholder="">
+                                                    <input type="text" class="span9" id="axe4" name="axe4" <?php if(!empty($worker['axe4'])) : ?> value="<?= $worker['axe4'] ?>" <?php else :?> placeholder="Axe" <?php endif ; ?>>
                                                 </div>
                                             </div>
                                             <div class="control-group">
                                                 <label class="control-label">Etage :</label>
                                                 <div class="controls">
-                                                    <input type="text" class="span9" id="et4" name="et4" value="" placeholder="">
+                                                    <input type="text" class="span9" id="et4" name="et4" <?php if(!empty($worker['et4'])) : ?> value="<?= $worker['et4'] ?>" <?php else :?> placeholder="Etage" <?php endif ; ?>>
                                                 </div>
                                             </div>
                                             <div class="control-group">
@@ -546,7 +876,7 @@
                                                 <!--a class="sAdd btn btn-success add-more" title="" href="#"><i class="icon-plus"></i></a-->
                                             <?php endif; ?>
                                     <div class="control-group">
-                                        <label class="control-label">Catégorie de tâche :</label>
+                                        <label class="control-label" style="font-size: medium; font-weight: bold">Catégorie de tâche :</label>
                                         <div class="controls tasks">
                                             <?php if(sizeof($workerToUpdate)===1) : ?>
                                             <select class="span4 typeTask5 mySelect" name="type_task5" onchange="getId5(this.value)">
@@ -591,19 +921,19 @@
                                                 <div class="control-group">
                                                     <label class="control-label">Batiment :</label>
                                                     <div class="controls">
-                                                        <input type="text" class="span9" id="bat5" name="bat5" value="<?= $worker['bat_5'] ?>" placeholder="">
+                                                        <input type="text" class="span9" id="bat5" name="bat5" <?php if(!empty($worker['bat5'])) : ?> value="<?= $worker['bat5'] ?>" <?php else :?> placeholder="Batiment" <?php endif ; ?>>
                                                     </div>
                                                 </div>
                                                 <div class="control-group">
                                                     <label class="control-label">Axe :</label>
                                                     <div class="controls">
-                                                        <input type="text" class="span9" id="axe5" name="axe5" value="<?= $worker['axe_5'] ?>" placeholder="">
+                                                        <input type="text" class="span9" id="axe5" name="axe5" <?php if(!empty($worker['axe5'])) : ?> value="<?= $worker['axe5'] ?>" <?php else :?> placeholder="Axe" <?php endif ; ?>>
                                                     </div>
                                                 </div>
                                                 <div class="control-group">
                                                     <label class="control-label">Etage :</label>
                                                     <div class="controls">
-                                                        <input type="text" class="span9" id="et5" name="et5" value="<?= $worker['et_5'] ?>" placeholder="">
+                                                        <input type="text" class="span9" id="et5" name="et5" <?php if(!empty($worker['et5'])) : ?> value="<?= $worker['et5'] ?>" <?php else :?> placeholder="Etage" <?php endif ; ?>>
                                                     </div>
                                                 </div>
                                                 <div class="control-group">
@@ -619,19 +949,19 @@
                                                 <div class="control-group">
                                                     <label class="control-label">Batiment :</label>
                                                     <div class="controls">
-                                                        <input type="text" class="span9" id="bat5" name="bat5" value="" placeholder="">
+                                                        <input type="text" class="span9" id="bat5" name="bat5" <?php if(!empty($worker['bat5'])) : ?> value="<?= $worker['bat5'] ?>" <?php else :?> placeholder="Batiment" <?php endif ; ?>>
                                                     </div>
                                                 </div>
                                                 <div class="control-group">
                                                     <label class="control-label">Axe :</label>
                                                     <div class="controls">
-                                                        <input type="text" class="span9" id="axe5" name="axe5" value="" placeholder="">
+                                                        <input type="text" class="span9" id="axe5" name="axe5" <?php if(!empty($worker['axe5'])) : ?> value="<?= $worker['axe5'] ?>" <?php else :?> placeholder="Axe" <?php endif ; ?>>
                                                     </div>
                                                 </div>
                                                 <div class="control-group">
                                                     <label class="control-label">Etage :</label>
                                                     <div class="controls">
-                                                        <input type="text" class="span9" id="et5" name="et5" value="" placeholder="">
+                                                        <input type="text" class="span9" id="et5" name="et5" <?php if(!empty($worker['et5'])) : ?> value="<?= $worker['et5'] ?>" <?php else :?> placeholder="Etage" <?php endif ; ?>>
                                                     </div>
                                                 </div>
                                                 <div class="control-group">
@@ -644,7 +974,7 @@
                                                 <!--a class="sAdd btn btn-success add-more" title="" href="#"><i class="icon-plus"></i></a-->
                                             <?php endif; ?>
                                     <div class="control-group">
-                                        <label class="control-label">Catégorie de tâche :</label>
+                                        <label class="control-label" style="font-size: medium; font-weight: bold">Catégorie de tâche :</label>
                                         <div class="controls tasks">
                                             <?php if(sizeof($workerToUpdate)===1) : ?>
                                                 <select class="span4 typeTask6 mySelect" name="type_task6" onchange="getId6(this.value)">
@@ -689,19 +1019,19 @@
                                                 <div class="control-group">
                                                     <label class="control-label">Batiment :</label>
                                                     <div class="controls">
-                                                        <input type="text" class="span9" id="bat6" name="bat6" value="<?= $worker['bat_6'] ?>" placeholder="Batiment">
+                                                        <input type="text" class="span9" id="bat6" name="bat6" <?php if(!empty($worker['bat6'])) : ?> value="<?= $worker['bat6'] ?>" <?php else :?> placeholder="Batiment" <?php endif ; ?>>
                                                     </div>
                                                 </div>
                                                 <div class="control-group">
                                                     <label class="control-label">Axe :</label>
                                                     <div class="controls">
-                                                        <input type="text" class="span9" id="axe6" name="axe6" value="<?= $worker['axe_6'] ?>" placeholder="Axe">
+                                                        <input type="text" class="span9" id="axe6" name="axe6" <?php if(!empty($worker['axe6'])) : ?> value="<?= $worker['axe6'] ?>" <?php else :?> placeholder="Axe" <?php endif ; ?>>
                                                     </div>
                                                 </div>
                                                 <div class="control-group">
                                                     <label class="control-label">Etage :</label>
                                                     <div class="controls">
-                                                        <input type="text" class="span9" id="et6" name="et6" value="<?= $worker['et_6'] ?>" placeholder="Etage">
+                                                        <input type="text" class="span9" id="et6" name="et6" <?php if(!empty($worker['et6'])) : ?> value="<?= $worker['et6'] ?>" <?php else :?> placeholder="Etage" <?php endif ; ?>>
                                                     </div>
                                                 </div>
                                                 <div class="control-group">
@@ -717,19 +1047,19 @@
                                             <div class="control-group">
                                                 <label class="control-label">Batiment :</label>
                                                 <div class="controls">
-                                                    <input type="text" class="span9" id="bat6" name="bat6" value="" placeholder="Batiment">
+                                                    <input type="text" class="span9" id="bat6" name="bat6" <?php if(!empty($worker['bat6'])) : ?> value="<?= $worker['bat6'] ?>" <?php else :?> placeholder="Batiment" <?php endif ; ?>>
                                                 </div>
                                             </div>
                                             <div class="control-group">
                                                 <label class="control-label">Axe :</label>
                                                 <div class="controls">
-                                                    <input type="text" class="span9" id="axe6" name="axe6" value="" placeholder="Axe">
+                                                    <input type="text" class="span9" id="axe6" name="axe6" <?php if(!empty($worker['axe6'])) : ?> value="<?= $worker['axe6'] ?>" <?php else :?> placeholder="Axe" <?php endif ; ?>>
                                                 </div>
                                             </div>
                                             <div class="control-group">
                                                 <label class="control-label">Etage :</label>
                                                 <div class="controls">
-                                                    <input type="text" class="span9" id="et6" name="et6" value="" placeholder="Etage">
+                                                    <input type="text" class="span9" id="et6" name="et6" <?php if(!empty($worker['et6'])) : ?> value="<?= $worker['et6'] ?>" <?php else :?> placeholder="Etage" <?php endif ; ?>>
                                                 </div>
                                             </div>
                                             <div class="control-group">

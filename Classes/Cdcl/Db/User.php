@@ -249,8 +249,8 @@ Class User extends DbObject{
                 `lastname`= :lastname,
                 `email`= :email,
                 `registration_number`= :registration_number,
-                `password`= :password,
                 `post_id`= :post_id
+                `password`= :password,
                 WHERE `id` = :id
                 ';
             $stmt = Config::getInstance()->getPDO()->prepare($sql);
@@ -260,8 +260,8 @@ Class User extends DbObject{
             $stmt->bindValue(':lastname', $this->lastname);
             $stmt->bindValue(':email', $this->email);
             $stmt->bindValue(':registration_number', $this->registration_number);
-            $stmt->bindValue(':password', md5($this->password));
             $stmt->bindValue(':post_id', $this->post_id->getId(), \PDO::PARAM_INT);
+            $stmt->bindValue(':password', md5($this->password));
 
             if ($stmt->execute() === false) {
                 print_r($stmt->errorInfo());
@@ -419,6 +419,9 @@ Class User extends DbObject{
             //var_dump($loginExist);
 
            // var_dump($passwordExist);
+
+            $passwordExist = isset($passwordExist)? $passwordExist : "";
+
             if($passwordExist>0){
                 $formOk = true;
             }else{
@@ -505,6 +508,47 @@ Class User extends DbObject{
         }
     }
 
+    public static function listChantierByUser2($user_id){
+        $sql='SELECT chantier_has_user.chantier_id, chantier.id, chantier.nom, chantier.code FROM chantier_has_user
+              INNER JOIN
+              chantier ON chantier.id = chantier_has_user.chantier_id
+              WHERE user_id= :user_id';
+        $stmt = Config::getInstance()->getPDO()->prepare($sql);
+        $stmt->bindValue(':user_id', $user_id, \PDO::PARAM_INT);
+        if ($stmt->execute() === false) {
+            print_r($stmt->errorInfo());
+        }
+        else {
+            $listChantiers = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+            return $listChantiers;
+        }
+    }
+
+
+    public static function getChefDequipe($chantierId){
+        $sql = 'SELECT
+                    user.id, user.username, user.firstname, user.lastname
+                FROM
+                    user,
+                    chantier_has_user,
+                    chantier
+                WHERE
+                    post_id = 1
+                AND chantier_has_user.user_id=user.id
+                AND chantier_has_user.chantier_id = chantier.id
+                AND chantier.id = :chantierId';
+        $stmt = Config::getInstance()->getPDO()->prepare($sql);
+        $stmt->bindValue(':chantierId', $chantierId, \PDO::PARAM_INT);
+        if($stmt->execute()===false){
+            print_r($stmt->errorInfo());
+        }else{
+            return $listChefDequipe = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        }
+    }
+
+
+
     public static function getAllForSelectChefDEquipebyChantier($chantier_id)
     {
         $sql = '
@@ -531,6 +575,7 @@ Class User extends DbObject{
                 $returnList[$row['id']] = $row['username'].' '.$row['firstname'].' '.$row['lastname'];
             }
         }
+        $returnList = isset($returnList) ? $returnList : '';
         return $returnList;
     }
 
@@ -562,6 +607,7 @@ Class User extends DbObject{
                 $returnList[$row['id']] = $row['username'].' '.$row['firstname'].' '.$row['lastname'];
             }
         }
+        $returnList = isset($returnList) ? $returnList : '';
         return $returnList;
     }
 

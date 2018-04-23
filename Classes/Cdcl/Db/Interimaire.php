@@ -8,6 +8,8 @@
 
 namespace Classes\Cdcl\Db;
 
+use \Datetime;
+
 use Classes\Cdcl\Config\Config;
 
 class Interimaire extends DbObject{
@@ -451,9 +453,9 @@ class Interimaire extends DbObject{
                 $data['old_metier_denomination'],
                 new Metier($data['metier_id']),
                 new Agence($data['agence_id']),
-                new Agence($data['qualif_id']),
-                new Agence($data['dpt_id']),
-                new Agence($data['user_id']),
+                new Qualification($data['qualif_id']),
+                new Departement($data['dpt_id']),
+                new User($data['user_id']),
                 $data['created']
             );
         }
@@ -474,7 +476,7 @@ class Interimaire extends DbObject{
         else {
             $allInterimaires = $pdoStmt->fetchAll(\PDO::FETCH_ASSOC);
             foreach ($allInterimaires as $row) {
-
+                $returnList[$row['id']]['id'] = $row['id'];
                 $returnList[$row['id']]['matricule'] = $row['matricule'];
                 $returnList[$row['id']]['matricule_cns'] = $row['matricule_cns'];
                 $returnList[$row['id']]['firstname'] = $row['firstname'];
@@ -543,7 +545,7 @@ class Interimaire extends DbObject{
                     `departement` ON `interimaire`.`dpt_id` = `departement`.`id`
                 LEFT OUTER JOIN
                     `user` ON `interimaire`.`user_id` = `user`.`id`
-                AND interimaire.actif=1
+                WHERE interimaire.actif=1
                  ORDER BY interimaire.lastname';
         $pdoStmt = Config::getInstance()->getPDO()->prepare($sql);
         if ($pdoStmt->execute() === false) {
@@ -552,7 +554,7 @@ class Interimaire extends DbObject{
         else {
             $allInterimaires = $pdoStmt->fetchAll(\PDO::FETCH_ASSOC);
             foreach ($allInterimaires as $row) {
-
+                $returnList[$row['id']]['id'] = $row['id'];
                 $returnList[$row['id']]['matricule'] = $row['matricule'];
                 $returnList[$row['id']]['matricule_cns'] = $row['matricule_cns'];
                 $returnList[$row['id']]['firstname'] = $row['firstname'];
@@ -573,7 +575,6 @@ class Interimaire extends DbObject{
                 $returnList[$row['id']]['worker_status'] = $row['worker_status'];
                 $returnList[$row['id']]['rem_med'] = $row['rem_med'];
                 $returnList[$row['id']]['remarques'] = $row['remarques'];
-                $returnList[$row['id']]['old_metier_denomination'] = $row['old_metier_denomination'];
                 $returnList[$row['id']]['nom_metier'] = $row['nom_metier'];
                 $returnList[$row['id']]['nom_agence'] = $row['nom'];
             }
@@ -667,6 +668,7 @@ class Interimaire extends DbObject{
                 $returnList[$row['id']] = $row['matricule'].' '.$row['firstname'].' '.$row['lastname'];
             }
         }
+        $returnList = isset($returnList)? $returnList : '';
         return $returnList;
     }
 
@@ -864,7 +866,7 @@ class Interimaire extends DbObject{
             $stmt->bindValue(':date_cont_rec', $this->date_cont_rec);
             $stmt->bindValue(':date_deb', $this->date_deb);
             $stmt->bindValue(':date_fin', $this->date_fin);
-            $stmt->bindValue(':worker_status', $this->worker_status);
+            $stmt->bindValue(':worker_status', 'INTERIMAIRE');
             $stmt->bindValue(':rem_med', $this->rem_med);
             $stmt->bindValue(':remarques', $this->remarques);
             $stmt->bindValue(':old_metier_denomination', $this->old_metier_denomination);
@@ -1013,16 +1015,49 @@ class Interimaire extends DbObject{
         }
     }
 
+/*    public static function affectationInterimaireSaved($chantier_id, $week, $isAffected, $date_debut){
+        for($i=0; $i<7; $i++){
+            $sql= 'INSERT INTO `interimaire_has_chantier`
+                (`interimaire_id`,
+                `chantier_id`,
+                doy,
+                woy,
+                date_debut,
+                date_fin)
+                VALUES(
+                :interimaire_id,
+                :chantier_id,
+                :doy,
+                :woy,
+                :date_debut,
+                :date_fin
+                )';
+            $stmt = Config::getInstance()->getPDO()->prepare($sql);
+            $stmt->bindValue(':interimaire_id', $isAffected, \PDO::PARAM_INT);
+            $stmt->bindValue(':chantier_id', $chantier_id, \PDO::PARAM_INT);
+            $stmt->bindValue(':doy', date('Y-m-d', mktime(0,0,0, date('m', strtotime($date_debut)), date('d', strtotime($date_debut))+$i, date('Y', strtotime($date_debut)))));
+            $stmt->bindValue(':woy', $week, \PDO::PARAM_INT);
+            $stmt->bindValue(':date_debut', $date_debut);
+            $stmt->bindValue(':date_fin', date('Y-m-d', mktime(0,0,0, date('m', strtotime($date_debut)), date('d', strtotime($date_debut))+6, date('Y', strtotime($date_debut)))));
+            if ($stmt->execute() === false) {
+                print_r($stmt->errorInfo());
+            }
+        }
+    }*/
+
     public static function affectationInterimaireSaved($chantier_id, $week, $isAffected, $date_debut){
-        $day = intval(intval(date('N', strtotime($date_debut->format('Y-m-d')))));
+        $day = intval($date_debut->format('N'));
         $rel = 7 - $day;
-        $date_fin = $date_debut->modify('+'.$rel .'day');
-        for($i=0; $i<=7; $i++){
+        $date_fin = new DateTime($date_debut->format('Y-m-d').' +'.$rel .'day');
+        for($i=0; $i<=$rel ; $i++){
+            $doy = new DateTime($date_debut->format('Y-m-d').' +'.$i .'day');
+            $year = $doy->format('Y');
             $sql= 'INSERT INTO `interimaire_has_chantier`
                 (`interimaire_id`,
                 `chantier_id`,
                 `doy`,
                 `woy`,
+                `year`,
                 `date_debut`,
                 `date_fin`)
                 VALUES(
@@ -1037,10 +1072,11 @@ class Interimaire extends DbObject{
             $stmt = Config::getInstance()->getPDO()->prepare($sql);
             $stmt->bindValue(':interimaire_id', $isAffected, \PDO::PARAM_INT);
             $stmt->bindValue(':chantier_id', $chantier_id, \PDO::PARAM_INT);
-            $stmt->bindValue(':doy', date('Y-m-d', mktime(0,0,0, date('m', strtotime($date_debut)), date('d', strtotime($date_debut))+$i, date('Y', strtotime($date_debut)))));
+            $stmt->bindValue(':doy', $doy->format('Y-m-d'));
             $stmt->bindValue(':woy', $week, \PDO::PARAM_INT);
-            $stmt->bindValue(':date_debut', $date_debut);
-            $stmt->bindValue(':date_fin', $date_fin);
+            $stmt->bindValue(':year', $year, \PDO::PARAM_INT);
+            $stmt->bindValue(':date_debut', $date_debut->format('Y-m-d'));
+            $stmt->bindValue(':date_fin', $date_fin->format('Y-m-d'));
             if ($stmt->execute() === false) {
                 print_r($stmt->errorInfo());
             }
@@ -1067,13 +1103,50 @@ class Interimaire extends DbObject{
         }
 
     }
+    /*
+    public static function checkInterimaireAffectation($chantier_id, $week, $interimaire_id){
+        $sql = 'SELECT * FROM interimaire_has_chantier WHERE
+            interimaire_id= :interimaire_id
+            AND chantier_id= :chantier_id
+            AND woy= :woy';
+        $stmt = Config::getInstance()->getPDO()->prepare($sql);
+        $stmt->bindValue(':interimaire_id', $interimaire_id, \PDO::PARAM_INT);
+        $stmt->bindValue(':chantier_id', $chantier_id, \PDO::PARAM_INT);
+        $stmt->bindValue(':woy', $week, \PDO::PARAM_INT);
+        if ($stmt->execute() === false) {
+            print_r($stmt->errorInfo());
+        }else{
+            return $stmt->rowCount();
+        }
+    } */
 
     public static function checkInterimaireAffectation($chantier_id, $week, $year, $interimaire_id){
         $sql = 'SELECT * FROM interimaire_has_chantier WHERE
             interimaire_id= :interimaire_id
             AND chantier_id= :chantier_id
             AND woy= :woy
-            AND year=:year'
+            AND year=:year
+            AND ismobile = 0'
+        ;
+        $stmt = Config::getInstance()->getPDO()->prepare($sql);
+        $stmt->bindValue(':interimaire_id', $interimaire_id, \PDO::PARAM_INT);
+        $stmt->bindValue(':chantier_id', $chantier_id, \PDO::PARAM_INT);
+        $stmt->bindValue(':woy', $week, \PDO::PARAM_INT);
+        $stmt->bindValue(':year', $year, \PDO::PARAM_INT);
+        if ($stmt->execute() === false) {
+            print_r($stmt->errorInfo());
+        }else{
+            return $stmt->rowCount();
+        }
+    }
+
+    public static function checkInterimaireAffectationTemporaire($chantier_id, $week, $year, $interimaire_id){
+        $sql = 'SELECT * FROM interimaire_has_chantier WHERE
+            interimaire_id= :interimaire_id
+            AND chantier_id= :chantier_id
+            AND woy= :woy
+            AND year=:year
+            AND ismobile = 1'
         ;
         $stmt = Config::getInstance()->getPDO()->prepare($sql);
         $stmt->bindValue(':interimaire_id', $interimaire_id, \PDO::PARAM_INT);
@@ -1119,11 +1192,12 @@ class Interimaire extends DbObject{
     }
     /**fetchAll(\PDO::FETCH_ASSOC);*/
 
-    public static function changeChantierAffectation($day, $chantier_id, $id){
+    public static function changeChantierAffectation($day, $chantier_id, $chef_dequipe_id, $id){
 
-        $sql = 'UPDATE interimaire_has_chantier SET doy = :doy , chantier_id=:chantier_id WHERE id = :id';
+        $sql = 'UPDATE interimaire_has_chantier SET doy = :doy , chantier_id=:chantier_id, chef_dequipe_id=:chef_dequipe_id WHERE id = :id';
         $stmt=Config::getInstance()->getPDO()->prepare($sql);
         $stmt->bindValue(':doy', $day, \PDO::PARAM_INT);
+        $stmt->bindValue(':chef_dequipe_id', $chef_dequipe_id, \PDO::PARAM_INT);
     //    $stmt->bindValue(':doy', date('Y-m-d', mktime(0,0,0, date('m', strtotime($day)), date('d', strtotime($day)), date('Y', strtotime($day)))), \PDO::PARAM_INT);
         $stmt->bindValue(':chantier_id', $chantier_id, \PDO::PARAM_INT);
         $stmt->bindValue(':id', $id, \PDO::PARAM_INT);
@@ -1140,12 +1214,14 @@ class Interimaire extends DbObject{
         }
     }
 
-    public static function checkChantierAndDoyAffectation($day, $interimaire_id, $chantier_id){
-        $sql='SELECT * FROM interimaire_has_chantier WHERE chantier_id= :chantier_id AND doy= :doy AND interimaire_id = :interimaire_id';
+    public static function checkChantierAndDoyAffectation($day, $interimaire_id, $chantier_id, $chef_dequipe_id){
+        $sql='SELECT * FROM interimaire_has_chantier, user, interimaire WHERE chantier_id= :chantier_id AND doy= :doy AND interimaire_id = :interimaire_id
+              AND interimaire.id =:interimaire_id AND interimaire.user_id = user.id AND (interimaire_has_chantier.chefe_dequipe_id=:chef_dequipe_id OR interimaire.user_id=:chef_dequipe_id)';
         $stmt=Config::getInstance()->getPDO()->prepare($sql);
         $stmt->bindValue(':doy', $day, \PDO::PARAM_INT);
         $stmt->bindValue(':interimaire_id', $interimaire_id, \PDO::PARAM_INT);
         $stmt->bindValue(':chantier_id', $chantier_id, \PDO::PARAM_INT);
+        $stmt->bindValue(':chef_dequipe_id', $chef_dequipe_id, \PDO::PARAM_INT);
         if ($stmt->execute() === false) {
             print_r($stmt->errorInfo());
         }else{
@@ -1321,6 +1397,7 @@ class Interimaire extends DbObject{
         }
     }
 
+
     public static function getOuvrier($chantierId){
         $sql = 'SELECT distinct fullname, ouvrier_id, interimaire_id
                 FROM rapport_detail, rapport, chantier
@@ -1335,6 +1412,7 @@ class Interimaire extends DbObject{
             return $listOuvrier = $stmt->fetchAll(\PDO::FETCH_ASSOC);
         }
     }
+
 
     public static function getOuvrierTache($fullname){
         $sql = 'SELECT DISTINCT
@@ -1358,6 +1436,246 @@ class Interimaire extends DbObject{
         }
     }
 
+    /*Affectation des Intérimaires pour la semaine courante nouvelle version*/
+
+    public static function affectationInterimaire($dateCourante){
+        $interimaireList = Interimaire::getAllIntActifs();
+    //    $dateCourante = new DateTime();
+        $dateCourante = new DateTime($dateCourante);
+        $numeroJour = intval($dateCourante->format('N'));
+        $ecartVersPremierJour = $numeroJour -1;
+
+        $premierJourDeLaSemaine = new DateTime($dateCourante->format('Y-m-d').'-'.$ecartVersPremierJour.' days');
+        $dernierJourDeLaSemaine = new DateTime($premierJourDeLaSemaine->format('Y-m-d').'+6 days');
+        $numeroSemaineCourrante = intval($premierJourDeLaSemaine->format('W'));
+        $anneeSemaineCourrante = intval($premierJourDeLaSemaine->format('Y'));
+    //    $premierJourDeLaSemaineProchaine = new DateTime($premierJourDeLaSemaine->format('Y-m-d').'+7 days');
+    //    $dernierJourDeLaSemaineProchaine = new DateTime($dernierJourDeLaSemaine->format('Y-m-d').'+7 days');
+    //    $numeroSemaineProchaine = intval($premierJourDeLaSemaineProchaine->format('W'));
+    //    $anneeSemaineProchaine = intval($premierJourDeLaSemaineProchaine->format('Y'));
+    //    var_dump($premierJourDeLaSemaine);
+    //    var_dump($dernierJourDeLaSemaine);
+    //    var_dump($numeroSemaineCourrante);
+    //    var_dump($anneeSemaineCourrante);
+    //    var_dump($premierJourDeLaSemaineProchaine);
+    //    var_dump($dernierJourDeLaSemaineProchaine);
+    //    var_dump($numeroSemaineProchaine);
+    //    var_dump($anneeSemaineProchaine);
+        $premierJourDeLaSemaine = $premierJourDeLaSemaine->format('Y-m-d');
+        $dernierJourDeLaSemaine = $dernierJourDeLaSemaine->format('Y-m-d');
+    //    $premierJourDeLaSemaineProchaine = $premierJourDeLaSemaineProchaine->format('Y-m-d');
+    //    $dernierJourDeLaSemaineProchaine = $dernierJourDeLaSemaineProchaine->format('Y-m-d');
+
+        foreach($interimaireList as $interimaire){
+            $id=$interimaire['id'];
+            // Je me suis rendu compte qu'il y a des intérimaires actifs avec la colonne chantier_id vide :-( donc si c'est le cas je mets l'id 21 du ferrallaige
+            $chantier_id = isset($interimaire['evaluation_chantier_id']) ? $interimaire['evaluation_chantier_id']: 21;
+            $sql = " UPDATE interimaire SET date_deb=:date_debut, date_fin=:date_fin WHERE id=:id";
+            $stmt = Config::getInstance()->getPDO()->prepare($sql);
+            $stmt->bindValue(':date_debut', $premierJourDeLaSemaine);
+            $stmt->bindValue(':date_fin', $dernierJourDeLaSemaine);
+            $stmt->bindValue(':id', $id);
+            if($stmt->execute()===false){
+                print_r($stmt->errorInfo());
+            }
+
+            $affectationExist = Interimaire::checkInterimaireAffectation($chantier_id, $numeroSemaineCourrante, $anneeSemaineCourrante, $id);
+
+            if($affectationExist <1 ){
+                for($i=0; $i<7; $i++){
+                    if($i===0){
+                        $doy =  new DateTime($premierJourDeLaSemaine) ;
+                        $doy = $doy->format('Y-m-d');
+
+                    }else{
+                        $doy = new DateTime($premierJourDeLaSemaine.'+'.$i.' day') ;
+                        $doy = $doy->format('Y-m-d');
+                    }
+
+                //    var_dump($doy);
+                //    var_dump($numeroSemaineCourrante);
+                //    var_dump($anneeSemaineCourrante);
+
+
+
+                    $sql='INSERT INTO interimaire_has_chantier (interimaire_id,
+                          chantier_id,
+                          doy,
+                          woy,
+                          year,
+                          date_debut,
+                          date_fin)
+                          VALUES
+                          (:interimaire_id,
+                          :chantier_id,
+                          :doy,
+                          :woy,
+                          :year,
+                          :date_debut,
+                          :date_fin)';
+                    $stmt = Config::getInstance()->getPDO()->prepare($sql);
+                    $stmt->bindValue(':interimaire_id', $id);
+                    $stmt->bindValue(':chantier_id', $chantier_id);
+                    $stmt->bindValue(':doy', $doy);
+                    $stmt->bindValue(':woy', $numeroSemaineCourrante);
+                    $stmt->bindValue(':year', $anneeSemaineCourrante);
+                    $stmt->bindValue(':date_debut', $premierJourDeLaSemaine);
+                    $stmt->bindValue(':date_fin', $dernierJourDeLaSemaine);
+                    if($stmt->execute()===false){
+                        print_r($stmt->errorInfo());
+                    }
+                }
+            }
+        }
+
+    }
+
+    /*Affectation des Intérimaires pour la gestion de la mobilité*/
+
+    public static function affectationInterimaireMobilite($dateDebut, $dateFin, $daysNumber, $chantier_id, $interimnaire_id){
+        $dateDebut = $dateDebut->format('Y-m-d');
+        $dateFin = $dateFin->format('Y-m-d');
+
+        for($i=0; $i<=$daysNumber; $i++){
+                    if($i===0){
+                        $doy =  new DateTime($dateDebut) ;
+                        $week =  intval($doy->format('W')) ;
+                        $year =  intval($doy->format('Y')) ;
+                        $doy = $doy->format('Y-m-d');
+
+                    }else{
+                        $doy = new DateTime($dateDebut.'+'.$i.' day') ;
+                        $week =  intval($doy->format('W')) ;
+                        $year =  intval($doy->format('Y')) ;
+                        $doy = $doy->format('Y-m-d');
+                    }
+
+
+                    $sql='INSERT INTO interimaire_has_chantier (interimaire_id,
+                          chantier_id,
+                          doy,
+                          woy,
+                          year,
+                          date_debut,
+                          date_fin,
+                          ismobile)
+                          VALUES
+                          (:interimaire_id,
+                          :chantier_id,
+                          :doy,
+                          :woy,
+                          :year,
+                          :date_debut,
+                          :date_fin,
+                          :ismobile)';
+                    $stmt = Config::getInstance()->getPDO()->prepare($sql);
+                    $stmt->bindValue(':interimaire_id', $interimnaire_id);
+                    $stmt->bindValue(':chantier_id', $chantier_id);
+                    $stmt->bindValue(':doy', $doy);
+                    $stmt->bindValue(':woy', $week);
+                    $stmt->bindValue(':year', $year);
+                    $stmt->bindValue(':date_debut', $dateDebut);
+                    $stmt->bindValue(':date_fin', $dateFin);
+                    $stmt->bindValue(':ismobile', 1);
+                    if($stmt->execute()===false){
+                        print_r($stmt->errorInfo());
+                    }
+                }
+    }
+
+    //**Affectation pour la semaine suivante**/
+
+    public static function affectationInterimaireNextWeek(){
+        $interimaireList = Interimaire::getAllIntActifs();
+        $dateCourante = new DateTime();
+        $numeroJour = intval($dateCourante->format('N'));
+        $ecartVersPremierJour = $numeroJour -1;
+
+        $premierJourDeLaSemaine = new DateTime($dateCourante->format('Y-m-d').'-'.$ecartVersPremierJour.' days');
+        $dernierJourDeLaSemaine = new DateTime($premierJourDeLaSemaine->format('Y-m-d').'+6 days');
+        //$numeroSemaineCourrante = intval($premierJourDeLaSemaine->format('W'));
+        //$anneeSemaineCourrante = intval($premierJourDeLaSemaine->format('Y'));
+        $premierJourDeLaSemaineProchaine = new DateTime($premierJourDeLaSemaine->format('Y-m-d').'+7 days');
+        $dernierJourDeLaSemaineProchaine = new DateTime($dernierJourDeLaSemaine->format('Y-m-d').'+7 days');
+        $numeroSemaineProchaine = intval($premierJourDeLaSemaineProchaine->format('W'));
+        $anneeSemaineProchaine = intval($premierJourDeLaSemaineProchaine->format('Y'));
+        //    var_dump($premierJourDeLaSemaine);
+        //    var_dump($dernierJourDeLaSemaine);
+        //    var_dump($numeroSemaineCourrante);
+        //    var_dump($anneeSemaineCourrante);
+        //    var_dump($premierJourDeLaSemaineProchaine);
+        //    var_dump($dernierJourDeLaSemaineProchaine);
+        //    var_dump($numeroSemaineProchaine);
+        //    var_dump($anneeSemaineProchaine);
+        //$premierJourDeLaSemaine = $premierJourDeLaSemaine->format('Y-m-d');
+        //$dernierJourDeLaSemaine = $dernierJourDeLaSemaine->format('Y-m-d');
+        $premierJourDeLaSemaineProchaine = $premierJourDeLaSemaineProchaine->format('Y-m-d');
+        $dernierJourDeLaSemaineProchaine = $dernierJourDeLaSemaineProchaine->format('Y-m-d');
+
+        foreach($interimaireList as $interimaire){
+            $id=$interimaire['id'];
+            // Je me suis rendu compte qu'il y a des intérimaires actifs avec la colonne chantier_id vide :-( donc si c'est le cas je mets l'id 21 du ferrallaige
+            $chantier_id = isset($interimaire['evaluation_chantier_id']) ? $interimaire['evaluation_chantier_id']: 21;
+            $sql = " UPDATE interimaire SET date_deb=:date_debut, date_fin=:date_fin WHERE id=:id";
+            $stmt = Config::getInstance()->getPDO()->prepare($sql);
+            $stmt->bindValue(':date_debut', $premierJourDeLaSemaineProchaine);
+            $stmt->bindValue(':date_fin', $dernierJourDeLaSemaineProchaine);
+            $stmt->bindValue(':id', $id);
+            if($stmt->execute()===false){
+                print_r($stmt->errorInfo());
+            }
+
+            $affectationExist = Interimaire::checkInterimaireAffectation($chantier_id, $numeroSemaineProchaine, $anneeSemaineProchaine, $id);
+
+            if($affectationExist <1 ){
+                for($i=0; $i<7; $i++){
+                    if($i===0){
+                        $doy =  new DateTime($premierJourDeLaSemaineProchaine) ;
+                        $doy = $doy->format('Y-m-d');
+
+                    }else{
+                        $doy = new DateTime($premierJourDeLaSemaineProchaine.'+'.$i.' day') ;
+                        $doy = $doy->format('Y-m-d');
+                    }
+
+                    //    var_dump($doy);
+                    //    var_dump($numeroSemaineCourrante);
+                    //    var_dump($anneeSemaineCourrante);
+
+
+
+                    $sql='INSERT INTO interimaire_has_chantier (interimaire_id,
+                          chantier_id,
+                          doy,
+                          woy,
+                          year,
+                          date_debut,
+                          date_fin)
+                          VALUES
+                          (:interimaire_id,
+                          :chantier_id,
+                          :doy,
+                          :woy,
+                          :year,
+                          :date_debut,
+                          :date_fin)';
+                    $stmt = Config::getInstance()->getPDO()->prepare($sql);
+                    $stmt->bindValue(':interimaire_id', $id);
+                    $stmt->bindValue(':chantier_id', $chantier_id);
+                    $stmt->bindValue(':doy', $doy);
+                    $stmt->bindValue(':woy', $numeroSemaineProchaine);
+                    $stmt->bindValue(':year', $anneeSemaineProchaine);
+                    $stmt->bindValue(':date_debut', $premierJourDeLaSemaineProchaine);
+                    $stmt->bindValue(':date_fin', $dernierJourDeLaSemaineProchaine);
+                    if($stmt->execute()===false){
+                        print_r($stmt->errorInfo());
+                    }
+                }
+            }
+        }
+
+    }
+
     public static function majScript (){
         $sql = "SELECT * FROM interimaire_has_chantier  where 1=1";
         $stmt = Config::getInstance()->getPDO()->prepare($sql);
@@ -1365,6 +1683,96 @@ class Interimaire extends DbObject{
             print_r($stmt->errorInfo());
         }else{
             return $allRows = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        }
+    }
+
+    public static function updateDates(){
+        $interimaires = Interimaire::getAll();
+
+        foreach($interimaires as $interimaire){
+            if($interimaire['date_deb']=='0000-00-00'){
+                /*
+                var_dump($interimaire['id']);
+                var_dump($interimaire['date_prem_cont']);
+                var_dump($interimaire['date_deb']);
+                var_dump($interimaire['date_fin']);
+                */
+                $date= new DateTime($interimaire['date_prem_cont']);
+                $date= $date->format('Y-m-d');
+                $date_fin = new DateTime($date.'+6 days');
+                $date_fin = $date_fin->format('Y-m-d');
+
+                /*
+                var_dump($date);
+                var_dump($date_fin);
+                */
+
+                $sql = "UPDATE interimaire SET date_evaluation =:date_evaluation,
+                        date_cont_rec=:date_cont_rec,
+                        date_deb=:date_deb,
+                        date_fin =:date_fin,
+                        date_vm =:date_vm
+                        WHERE id=:id
+                        AND id BETWEEN 1 AND 500";
+                $stmt = Config::getInstance()->getPDO()->prepare($sql);
+                $stmt->bindValue(':date_evaluation', $date);
+                $stmt->bindValue(':date_fin', $date_fin);
+                $stmt->bindValue(':date_deb', $date);
+                $stmt->bindValue(':date_cont_rec', $date);
+                $stmt->bindValue(':date_vm', $date);
+                $stmt->bindValue(':id', $interimaire['id']);
+                if($stmt->execute()===false){
+                    print_r($stmt->errorInfo());
+                }
+
+                $sql = "UPDATE interimaire SET date_evaluation =:date_evaluation,
+                        date_cont_rec=:date_cont_rec,
+                        date_deb=:date_deb,
+                        date_fin =:date_fin,
+                        date_vm =:date_vm
+                        WHERE id=:id
+                        AND id BETWEEN 501 AND 1000";
+                $stmt = Config::getInstance()->getPDO()->prepare($sql);
+                $stmt->bindValue(':date_evaluation', $date);
+                $stmt->bindValue(':date_fin', $date_fin);
+                $stmt->bindValue(':date_deb', $date);
+                $stmt->bindValue(':date_cont_rec', $date);
+                $stmt->bindValue(':date_vm', $date);
+                $stmt->bindValue(':id', $interimaire['id']);
+                if($stmt->execute()===false){
+                    print_r($stmt->errorInfo());
+                }
+
+                $sql = "UPDATE interimaire SET date_evaluation =:date_evaluation,
+                        date_cont_rec=:date_cont_rec,
+                        date_deb=:date_deb,
+                        date_fin =:date_fin,
+                        date_vm =:date_vm
+                        WHERE id=:id
+                        AND id BETWEEN 1001 AND 1500";
+                $stmt = Config::getInstance()->getPDO()->prepare($sql);
+                $stmt->bindValue(':date_evaluation', $date);
+                $stmt->bindValue(':date_fin', $date_fin);
+                $stmt->bindValue(':date_deb', $date);
+                $stmt->bindValue(':date_cont_rec', $date);
+                $stmt->bindValue(':date_vm', $date);
+                $stmt->bindValue(':id', $interimaire['id']);
+                if($stmt->execute()===false){
+                    print_r($stmt->errorInfo());
+                }
+            }
+        }
+    }
+
+    public static function testDateTime($date_debut, $date_fin){
+        $sql = 'UPDATE interimaire_has_chantier SET date_debut=:date_debut, date_fin=:date_fin  WHERE interimaire_id=43';
+        $stmt = Config::getInstance()->getPDO()->prepare($sql);
+        $stmt->bindValue('date_debut', $date_debut);
+        $stmt->bindValue('date_fin', $date_fin);
+        if($stmt->execute()===false){
+            print_r($stmt->errorInfo());
+        }else{
+            return 'OK';
         }
     }
 }
