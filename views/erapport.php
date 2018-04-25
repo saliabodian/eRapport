@@ -50,14 +50,12 @@
                                     <input name="date_gen" class="datepicker" value=""/>
                                 </div>
                             </div>
-                            <?php if(($_SESSION['post_id'] !== '1') || ($nbChantierUserAffected >1 ))  : ?>
                                 <div class="control-group">
                                     <label  class=" control-label" for="">Chef d'équipe absent </label>
                                     <div class="controls">
                                         <input  type="checkbox"  name="missing" >
                                     </div>
                                 </div>
-                            <?php endif ; ?>
                             <div class="form-actions">
                                 <div class=" span4 btn-block"></div>
                                 <div class="span4">

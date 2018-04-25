@@ -281,51 +281,19 @@
                                     <div class="control-group">
                                         <label class="control-label">Batiment :</label>
                                         <div class="controls">
-                                            <input type="text" class="span4" id="bat" name="bat" <?php if(!empty($worker['bat_1'])) : ?> value="<?= $worker['bat_1'] ?>" <?php else :?> placeholder="Batiment" <?php endif ; ?>>
+                                            <input type="text" class="span4" id="bat" name="bat"  placeholder="Batiment" >
                                         </div>
                                     </div>
                                     <div class="control-group">
                                         <label class="control-label">Axe :</label>
                                         <div class="controls">
-                                            <input type="text" class="span4" id="axe" name="axe" <?php if(!empty($worker['axe_1'])) :?> value="<?= $worker['axe_1'] ?>" <?php else :?> placeholder="Axe" <?php endif ; ?>>
+                                            <input type="text" class="span4" id="axe" name="axe" placeholder="Axe" >
                                         </div>
                                     </div>
                                     <div class="control-group">
                                         <label class="control-label">Etage :</label>
                                         <div class="controls">
                                             <select class="select2-container span2" name="et">
-                                                <option value="<?= $worker['et_1'] ?>" <?php if(($worker['et_1'] === 'Niveau 10')) : ?>
-                                                <?php elseif  (($worker['et_1'] === 'Niveau 9')) : ?>
-                                                <?php elseif  (($worker['et_1'] === 'Niveau 8')) : ?>
-                                                <?php elseif  (($worker['et_1'] === 'Niveau 7')) : ?>
-                                                <?php elseif  (($worker['et_1'] === 'Niveau 6')) : ?>
-                                                <?php elseif  (($worker['et_1'] === 'Niveau 5')) : ?>
-                                                <?php elseif  (($worker['et_1'] === 'Niveau 4')) : ?>
-                                                <?php elseif  (($worker['et_1'] === 'Niveau 3')) : ?>
-                                                <?php elseif  (($worker['et_1'] === 'Niveau 2')) : ?>
-                                                <?php elseif  (($worker['et_1'] === 'Niveau 1')) : ?>
-                                                <?php elseif  (($worker['et_1'] === 'RDC')) : ?>
-                                                <?php elseif  (($worker['et_1'] === 'Niveau -0.5')) : ?>
-                                                <?php elseif  (($worker['et_1'] === 'Niveau -1')) : ?>
-                                                <?php elseif  (($worker['et_1'] === 'Niveau -1.5')) : ?>
-                                                <?php elseif  (($worker['et_1'] === 'Niveau -2')) : ?>
-                                                <?php elseif  (($worker['et_1'] === 'Niveau -2.5')) : ?>
-                                                <?php elseif  (($worker['et_1'] === 'Niveau -3')) : ?>
-                                                <?php elseif  (($worker['et_1'] === 'Niveau -3.5')) : ?>
-                                                <?php elseif  (($worker['et_1'] === 'Niveau -4')) : ?>
-                                                <?php elseif  (($worker['et_1'] === 'Niveau -4.5')) : ?>
-                                                <?php elseif  (($worker['et_1'] === 'Niveau -5')) : ?>
-                                                <?php elseif  (($worker['et_1'] === 'Niveau -5.5')) : ?>
-                                                <?php elseif  (($worker['et_1'] === 'Niveau -6')) : ?>
-                                                <?php elseif  (($worker['et_1'] === 'Niveau -6.5')) : ?>
-                                                <?php elseif  (($worker['et_1'] === 'Niveau -7')) : ?>
-                                                <?php elseif  (($worker['et_1'] === 'Niveau -7.5')) : ?>
-                                                <?php elseif  (($worker['et_1'] === 'Niveau -8')) : ?>
-                                                <?php elseif  (($worker['et_1'] === 'Niveau -8.5')) : ?>
-                                                <?php elseif  (($worker['et_1'] === 'Niveau -9')) : ?>
-                                                <?php elseif  (($worker['et_1'] === 'Niveau -9.5')) : ?>
-                                                <?php elseif  (($worker['et_1'] === 'Niveau -10')) : ?>
-                                                    selected = "selected" <?php endif; ?> ><?= $worker['et_1'] ?></option>
                                                 <option></option>
                                                 <option value="Niveau 10">Niveau 10</option>
                                                 <option value="Niveau 9">Niveau 9</option>
@@ -418,13 +386,13 @@
                                                 <div class="control-group">
                                                     <label class="control-label">Batiment :</label>
                                                     <div class="controls">
-                                                        <input type="text" class="span4" id="bat2" name="bat2" <?php if(!empty($worker['bat2'])) : ?> value="<?= $worker['bat2'] ?>" <?php else :?> placeholder="Batiment" <?php endif ; ?>>
+                                                        <input type="text" class="span4" id="bat2" name="bat2" <?php if(!empty($worker['bat_2'])) : ?> value="<?= $worker['bat_2'] ?>" <?php else :?> placeholder="Batiment" <?php endif ; ?>>
                                                     </div>
                                                 </div>
                                                 <div class="control-group">
                                                     <label class="control-label">Axe :</label>
                                                     <div class="controls">
-                                                        <input type="text" class="span4" id="axe2" name="axe2" <?php if(!empty($worker['axe2'])) : ?> value="<?= $worker['axe2'] ?>" <?php else :?> placeholder="Axe" <?php endif ; ?>>
+                                                        <input type="text" class="span4" id="axe2" name="axe2" <?php if(!empty($worker['axe_2'])) : ?> value="<?= $worker['axe_2'] ?>" <?php else :?> placeholder="Axe" <?php endif ; ?>>
                                                     </div>
                                                 </div>
                                                 <div class="control-group">
@@ -509,51 +477,19 @@
                                             <div class="control-group">
                                                 <label class="control-label">Batiment :</label>
                                                 <div class="controls">
-                                                    <input type="text" class="span4" id="bat2" name="bat2"  <?php if(!empty($worker['bat2'])) : ?> value="<?= $worker['bat2'] ?>" <?php else :?> placeholder="Batiment" <?php endif ; ?>>
+                                                    <input type="text" class="span4" id="bat2" name="bat2" placeholder="Batiment" >
                                                 </div>
                                             </div>
                                             <div class="control-group">
                                                 <label class="control-label">Axe :</label>
                                                 <div class="controls">
-                                                    <input type="text" class="span4" id="axe2" name="axe2"  <?php if(!empty($worker['axe2'])) : ?> value="<?= $worker['axe2'] ?>" <?php else :?> placeholder="Axe" <?php endif ; ?>>
+                                                    <input type="text" class="span4" id="axe2" name="axe2" placeholder="Axe" >
                                                 </div>
                                             </div>
                                             <div class="control-group">
                                                 <label class="control-label">Etage :</label>
                                                 <div class="controls">
                                                     <select class="select2-container span2" name="et2">
-                                                        <option value="<?= $worker['et_2'] ?>" <?php if(($worker['et_2'] === 'Niveau 10')) : ?>
-                                                        <?php elseif  (($worker['et_2'] === 'Niveau 9')) : ?>
-                                                        <?php elseif  (($worker['et_2'] === 'Niveau 8')) : ?>
-                                                        <?php elseif  (($worker['et_2'] === 'Niveau 7')) : ?>
-                                                        <?php elseif  (($worker['et_2'] === 'Niveau 6')) : ?>
-                                                        <?php elseif  (($worker['et_2'] === 'Niveau 5')) : ?>
-                                                        <?php elseif  (($worker['et_2'] === 'Niveau 4')) : ?>
-                                                        <?php elseif  (($worker['et_2'] === 'Niveau 3')) : ?>
-                                                        <?php elseif  (($worker['et_2'] === 'Niveau 2')) : ?>
-                                                        <?php elseif  (($worker['et_2'] === 'Niveau 1')) : ?>
-                                                        <?php elseif  (($worker['et_2'] === 'RDC')) : ?>
-                                                        <?php elseif  (($worker['et_2'] === 'Niveau -0.5')) : ?>
-                                                        <?php elseif  (($worker['et_2'] === 'Niveau -1')) : ?>
-                                                        <?php elseif  (($worker['et_2'] === 'Niveau -1.5')) : ?>
-                                                        <?php elseif  (($worker['et_2'] === 'Niveau -2')) : ?>
-                                                        <?php elseif  (($worker['et_2'] === 'Niveau -2.5')) : ?>
-                                                        <?php elseif  (($worker['et_2'] === 'Niveau -3')) : ?>
-                                                        <?php elseif  (($worker['et_2'] === 'Niveau -3.5')) : ?>
-                                                        <?php elseif  (($worker['et_2'] === 'Niveau -4')) : ?>
-                                                        <?php elseif  (($worker['et_2'] === 'Niveau -4.5')) : ?>
-                                                        <?php elseif  (($worker['et_2'] === 'Niveau -5')) : ?>
-                                                        <?php elseif  (($worker['et_2'] === 'Niveau -5.5')) : ?>
-                                                        <?php elseif  (($worker['et_2'] === 'Niveau -6')) : ?>
-                                                        <?php elseif  (($worker['et_2'] === 'Niveau -6.5')) : ?>
-                                                        <?php elseif  (($worker['et_2'] === 'Niveau -7')) : ?>
-                                                        <?php elseif  (($worker['et_2'] === 'Niveau -7.5')) : ?>
-                                                        <?php elseif  (($worker['et_2'] === 'Niveau -8')) : ?>
-                                                        <?php elseif  (($worker['et_2'] === 'Niveau -8.5')) : ?>
-                                                        <?php elseif  (($worker['et_2'] === 'Niveau -9')) : ?>
-                                                        <?php elseif  (($worker['et_2'] === 'Niveau -9.5')) : ?>
-                                                        <?php elseif  (($worker['et_2'] === 'Niveau -10')) : ?>
-                                                            selected = "selected" <?php endif; ?> ><?= $worker['et_2'] ?></option>
                                                         <option></option>
                                                         <option value="Niveau 10">Niveau 10</option>
                                                         <option value="Niveau 9">Niveau 9</option>
@@ -657,14 +593,14 @@
                                     <div class="control-group">
                                         <label class="control-label">Batiment :</label>
                                         <div class="controls">
-                                            <input type="text" class="span4" id="bat3" name="bat3" <?php if(!empty($worker['bat3'])) : ?> value="<?= $worker['bat3'] ?>" <?php else :?> placeholder="Batiment" <?php endif ; ?>>
+                                            <input type="text" class="span4" id="bat3" name="bat3" <?php if(!empty($worker['bat_3'])) : ?> value="<?= $worker['bat_3'] ?>" <?php else :?> placeholder="Batiment" <?php endif ; ?>>
                                         </div>
                                     </div>
 
                                     <div class="control-group">
                                         <label class="control-label">Axe :</label>
                                         <div class="controls">
-                                                <input type="text" class="span4" id="axe3" name="axe3" <?php if(!empty($worker['axe3'])) : ?> value="<?= $worker['axe3'] ?>" <?php else :?> placeholder="Axe" <?php endif ; ?>>
+                                                <input type="text" class="span4" id="axe3" name="axe3" <?php if(!empty($worker['axe_3'])) : ?> value="<?= $worker['axe_3'] ?>" <?php else :?> placeholder="Axe" <?php endif ; ?>>
                                             </div>
                                         </div>
 
@@ -746,29 +682,62 @@
                                                 <input type="text" class="span2" id="ht3" name="ht3" value="<?= $worker['ht3'] ?>" placeholder="">
                                             </div>
                                         </div>
-                                           <?php endforeach ;?>
-                                            <?php else : ?>
+                                   <?php endforeach ;?>
+                                <?php else : ?>
 
                                     <div class="control-group">
                                         <label class="control-label">Batiment :</label>
                                         <div class="controls">
-                                                <input type="text" class="span4" id="bat3" name="bat3" <?php if(!empty($worker['bat3'])) : ?> value="<?= $worker['bat3'] ?>" <?php else :?> placeholder="Batiment" <?php endif ; ?>>
+                                                <input type="text" class="span4" id="bat3" name="bat3"placeholder="Batiment" >
                                             </div>
                                         </div>
 
                                     <div class="control-group">
                                         <label class="control-label">Axe :</label>
                                         <div class="controls">
-                                                <input type="text" class="span4" id="axe3" name="axe3" <?php if(!empty($worker['axe3'])) : ?> value="<?= $worker['axe3'] ?>" <?php else :?> placeholder="Axe" <?php endif ; ?>>
+                                                <input type="text" class="span4" id="axe3" name="axe3" placeholder="Axe" >
                                             </div>
                                         </div>
 
                                     <div class="control-group">
                                         <label class="control-label">Etage :</label>
                                         <div class="controls">
-                                                <input type="text" class="span9" id="et3" name="et3" <?php if(!empty($worker['et3'])) : ?> value="<?= $worker['et3'] ?>" <?php else :?> placeholder="Etage" <?php endif ; ?>>
-                                            </div>
+                                            <select class="select2-container span2" name="et3">
+                                                <option></option>
+                                                <option value="Niveau 10">Niveau 10</option>
+                                                <option value="Niveau 9">Niveau 9</option>
+                                                <option value="Niveau 8">Niveau 8</option>
+                                                <option value="Niveau 7">Niveau 7</option>
+                                                <option value="Niveau 6">Niveau 6</option>
+                                                <option value="Niveau 5">Niveau 5</option>
+                                                <option value="Niveau 4">Niveau 4</option>
+                                                <option value="Niveau 3">Niveau 3</option>
+                                                <option value="Niveau 2">Niveau 2</option>
+                                                <option value="Niveau 1">Niveau 1</option>
+                                                <option value="Niveau RDC">Niveau RDC</option>
+                                                <option value="Niveau -0.5">Niveau -0.5</option>
+                                                <option value="Niveau -1">Niveau -1</option>
+                                                <option value="Niveau -1.5">Niveau -1.5</option>
+                                                <option value="Niveau -2">Niveau -2</option>
+                                                <option value="Niveau -2.5">Niveau -2.5</option>
+                                                <option value="Niveau -3">Niveau -3</option>
+                                                <option value="Niveau -3.5">Niveau -3.5</option>
+                                                <option value="Niveau -4">Niveau -4</option>
+                                                <option value="Niveau -4.5">Niveau -4.5</option>
+                                                <option value="Niveau -5">Niveau -5</option>
+                                                <option value="Niveau -5.5">Niveau -5.5</option>
+                                                <option value="Niveau -6">Niveau -6</option>
+                                                <option value="Niveau -6.5">Niveau -6.5</option>
+                                                <option value="Niveau -7">Niveau -7</option>
+                                                <option value="Niveau -7.5">Niveau -7.5</option>
+                                                <option value="Niveau -8">Niveau -8</option>
+                                                <option value="Niveau -8.5">Niveau -8.5</option>
+                                                <option value="Niveau -9">Niveau -9</option>
+                                                <option value="Niveau -9.5">Niveau -9.5</option>
+                                                <option value="Niveau -10">Niveau -10</option>
+                                            </select>
                                         </div>
+                                    </div>
 
                                     <div class="control-group">
                                         <label class="control-label">Heure(s) :</label>
@@ -776,7 +745,7 @@
                                                 <input type="text" class="span2" id="ht3" name="ht3" value="" placeholder="">
                                             </div>
                                         </div>
-                                            <?php endif ; ?>
+                                <?php endif ; ?>
                                     <div class="control-group">
                                         <label class="control-label" style="font-size: medium; font-weight: bold">Catégorie de tâche :</label>
                                         <div class="controls tasks">
@@ -818,26 +787,91 @@
                                             <?php endif; ?>
                                             </div>
                                         </div>
-                                            <?php if(sizeof($workerToUpdate)===1) : ?>
-                                                <?php foreach($workerToUpdate as $worker) : ?>
-                                                <div class="control-group">
-                                                    <label class="control-label">Batiment :</label>
-                                                    <div class="controls">
-                                                        <input type="text" class="span4" id="bat4" name="bat4" <?php if(!empty($worker['bat4'])) : ?> value="<?= $worker['bat4'] ?>" <?php else :?> placeholder="Batiment" <?php endif ; ?>>
+                                    <?php if(sizeof($workerToUpdate)===1) : ?>
+                                        <?php foreach($workerToUpdate as $worker) : ?>
+                                            <div class="control-group">
+                                                <label class="control-label">Batiment :</label>
+                                                <div class="controls">
+                                                    <input type="text" class="span4" id="bat4" name="bat4" <?php if(!empty($worker['bat_4'])) : ?> value="<?= $worker['bat_4'] ?>" <?php else :?> placeholder="Batiment" <?php endif ; ?>>
                                                 </div>
                                             </div>
                                             <div class="control-group">
                                                 <label class="control-label">Axe :</label>
                                                 <div class="controls">
-                                                    <input type="text" class="span4" id="axe4" name="axe4" <?php if(!empty($worker['axe4'])) : ?> value="<?= $worker['axe4'] ?>" <?php else :?> placeholder="Axe" <?php endif ; ?>>
+                                                    <input type="text" class="span4" id="axe4" name="axe4" <?php if(!empty($worker['axe_4'])) : ?> value="<?= $worker['axe_4'] ?>" <?php else :?> placeholder="Axe" <?php endif ; ?>>
                                                 </div>
                                             </div>
                                             <div class="control-group">
-                                                <label class="control-label">Etage :</label>
-                                                <div class="controls">
-                                                    <input type="text" class="span9" id="et4" name="et4" <?php if(!empty($worker['et4'])) : ?> value="<?= $worker['et4'] ?>" <?php else :?> placeholder="Etage" <?php endif ; ?>>
-                                                </div>
-                                            </div>
+                                                        <label class="control-label">Etage :</label>
+                                                        <div class="controls">
+                                                            <select class="select2-container span2" name="et4">
+                                                                <option value="<?= $worker['et_4'] ?>" <?php if(($worker['et_4'] === 'Niveau 10')) : ?>
+                                                                <?php elseif  (($worker['et_4'] === 'Niveau 9')) : ?>
+                                                                <?php elseif  (($worker['et_4'] === 'Niveau 8')) : ?>
+                                                                <?php elseif  (($worker['et_4'] === 'Niveau 7')) : ?>
+                                                                <?php elseif  (($worker['et_4'] === 'Niveau 6')) : ?>
+                                                                <?php elseif  (($worker['et_4'] === 'Niveau 5')) : ?>
+                                                                <?php elseif  (($worker['et_4'] === 'Niveau 4')) : ?>
+                                                                <?php elseif  (($worker['et_4'] === 'Niveau 3')) : ?>
+                                                                <?php elseif  (($worker['et_4'] === 'Niveau 2')) : ?>
+                                                                <?php elseif  (($worker['et_4'] === 'Niveau 1')) : ?>
+                                                                <?php elseif  (($worker['et_4'] === 'RDC')) : ?>
+                                                                <?php elseif  (($worker['et_4'] === 'Niveau -0.5')) : ?>
+                                                                <?php elseif  (($worker['et_4'] === 'Niveau -1')) : ?>
+                                                                <?php elseif  (($worker['et_4'] === 'Niveau -1.5')) : ?>
+                                                                <?php elseif  (($worker['et_4'] === 'Niveau -2')) : ?>
+                                                                <?php elseif  (($worker['et_4'] === 'Niveau -2.5')) : ?>
+                                                                <?php elseif  (($worker['et_4'] === 'Niveau -3')) : ?>
+                                                                <?php elseif  (($worker['et_4'] === 'Niveau -3.5')) : ?>
+                                                                <?php elseif  (($worker['et_4'] === 'Niveau -4')) : ?>
+                                                                <?php elseif  (($worker['et_4'] === 'Niveau -4.5')) : ?>
+                                                                <?php elseif  (($worker['et_4'] === 'Niveau -5')) : ?>
+                                                                <?php elseif  (($worker['et_4'] === 'Niveau -5.5')) : ?>
+                                                                <?php elseif  (($worker['et_4'] === 'Niveau -6')) : ?>
+                                                                <?php elseif  (($worker['et_4'] === 'Niveau -6.5')) : ?>
+                                                                <?php elseif  (($worker['et_4'] === 'Niveau -7')) : ?>
+                                                                <?php elseif  (($worker['et_4'] === 'Niveau -7.5')) : ?>
+                                                                <?php elseif  (($worker['et_4'] === 'Niveau -8')) : ?>
+                                                                <?php elseif  (($worker['et_4'] === 'Niveau -8.5')) : ?>
+                                                                <?php elseif  (($worker['et_4'] === 'Niveau -9')) : ?>
+                                                                <?php elseif  (($worker['et_4'] === 'Niveau -9.5')) : ?>
+                                                                <?php elseif  (($worker['et_4'] === 'Niveau -10')) : ?>
+                                                                    selected = "selected" <?php endif; ?> ><?= $worker['et_4'] ?></option>
+                                                                <option></option>
+                                                                <option value="Niveau 10">Niveau 10</option>
+                                                                <option value="Niveau 9">Niveau 9</option>
+                                                                <option value="Niveau 8">Niveau 8</option>
+                                                                <option value="Niveau 7">Niveau 7</option>
+                                                                <option value="Niveau 6">Niveau 6</option>
+                                                                <option value="Niveau 5">Niveau 5</option>
+                                                                <option value="Niveau 4">Niveau 4</option>
+                                                                <option value="Niveau 3">Niveau 3</option>
+                                                                <option value="Niveau 2">Niveau 2</option>
+                                                                <option value="Niveau 1">Niveau 1</option>
+                                                                <option value="Niveau RDC">Niveau RDC</option>
+                                                                <option value="Niveau -0.5">Niveau -0.5</option>
+                                                                <option value="Niveau -1">Niveau -1</option>
+                                                                <option value="Niveau -1.5">Niveau -1.5</option>
+                                                                <option value="Niveau -2">Niveau -2</option>
+                                                                <option value="Niveau -2.5">Niveau -2.5</option>
+                                                                <option value="Niveau -3">Niveau -3</option>
+                                                                <option value="Niveau -3.5">Niveau -3.5</option>
+                                                                <option value="Niveau -4">Niveau -4</option>
+                                                                <option value="Niveau -4.5">Niveau -4.5</option>
+                                                                <option value="Niveau -5">Niveau -5</option>
+                                                                <option value="Niveau -5.5">Niveau -5.5</option>
+                                                                <option value="Niveau -6">Niveau -6</option>
+                                                                <option value="Niveau -6.5">Niveau -6.5</option>
+                                                                <option value="Niveau -7">Niveau -7</option>
+                                                                <option value="Niveau -7.5">Niveau -7.5</option>
+                                                                <option value="Niveau -8">Niveau -8</option>
+                                                                <option value="Niveau -8.5">Niveau -8.5</option>
+                                                                <option value="Niveau -9">Niveau -9</option>
+                                                                <option value="Niveau -9.5">Niveau -9.5</option>
+                                                                <option value="Niveau -10">Niveau -10</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
                                             <div class="control-group">
                                                 <label class="control-label">Heure(s) :</label>
                                                 <div class="controls">
@@ -846,27 +880,60 @@
                                             </div>
                                                     <!--a Gestion dynamique de l'ajout d'une tache mis en suspend</a-->
                                                     <!--a class="sAdd btn btn-success add-more" title="" href="#"><i class="icon-plus"></i></a-->
-                                                <?php endforeach ; ?>
-                                            <?php else : ?>
-                                            <div class="control-group">
+                                        <?php endforeach ; ?>
+                                    <?php else : ?>
+                                        <div class="control-group">
                                                 <label class="control-label">Batiment :</label>
                                                 <div class="controls">
-                                                    <input type="text" class="span9" id="bat4" name="bat4" <?php if(!empty($worker['bat4'])) : ?> value="<?= $worker['bat4'] ?>" <?php else :?> placeholder="Batiment" <?php endif ; ?>>
+                                                    <input type="text" class="span9" id="bat4" name="bat4"  placeholder="Batiment" >
                                                 </div>
                                             </div>
-                                            <div class="control-group">
+                                        <div class="control-group">
                                                 <label class="control-label">Axe :</label>
                                                 <div class="controls">
-                                                    <input type="text" class="span9" id="axe4" name="axe4" <?php if(!empty($worker['axe4'])) : ?> value="<?= $worker['axe4'] ?>" <?php else :?> placeholder="Axe" <?php endif ; ?>>
+                                                    <input type="text" class="span9" id="axe4" name="axe4"  placeholder="Axe" >
                                                 </div>
                                             </div>
-                                            <div class="control-group">
-                                                <label class="control-label">Etage :</label>
-                                                <div class="controls">
-                                                    <input type="text" class="span9" id="et4" name="et4" <?php if(!empty($worker['et4'])) : ?> value="<?= $worker['et4'] ?>" <?php else :?> placeholder="Etage" <?php endif ; ?>>
+                                        <div class="control-group">
+                                                    <label class="control-label">Etage :</label>
+                                                    <div class="controls">
+                                                        <select class="select2-container span2" name="et4">
+                                                            <option></option>
+                                                            <option value="Niveau 10">Niveau 10</option>
+                                                            <option value="Niveau 9">Niveau 9</option>
+                                                            <option value="Niveau 8">Niveau 8</option>
+                                                            <option value="Niveau 7">Niveau 7</option>
+                                                            <option value="Niveau 6">Niveau 6</option>
+                                                            <option value="Niveau 5">Niveau 5</option>
+                                                            <option value="Niveau 4">Niveau 4</option>
+                                                            <option value="Niveau 3">Niveau 3</option>
+                                                            <option value="Niveau 2">Niveau 2</option>
+                                                            <option value="Niveau 1">Niveau 1</option>
+                                                            <option value="Niveau RDC">Niveau RDC</option>
+                                                            <option value="Niveau -0.5">Niveau -0.5</option>
+                                                            <option value="Niveau -1">Niveau -1</option>
+                                                            <option value="Niveau -1.5">Niveau -1.5</option>
+                                                            <option value="Niveau -2">Niveau -2</option>
+                                                            <option value="Niveau -2.5">Niveau -2.5</option>
+                                                            <option value="Niveau -3">Niveau -3</option>
+                                                            <option value="Niveau -3.5">Niveau -3.5</option>
+                                                            <option value="Niveau -4">Niveau -4</option>
+                                                            <option value="Niveau -4.5">Niveau -4.5</option>
+                                                            <option value="Niveau -5">Niveau -5</option>
+                                                            <option value="Niveau -5.5">Niveau -5.5</option>
+                                                            <option value="Niveau -6">Niveau -6</option>
+                                                            <option value="Niveau -6.5">Niveau -6.5</option>
+                                                            <option value="Niveau -7">Niveau -7</option>
+                                                            <option value="Niveau -7.5">Niveau -7.5</option>
+                                                            <option value="Niveau -8">Niveau -8</option>
+                                                            <option value="Niveau -8.5">Niveau -8.5</option>
+                                                            <option value="Niveau -9">Niveau -9</option>
+                                                            <option value="Niveau -9.5">Niveau -9.5</option>
+                                                            <option value="Niveau -10">Niveau -10</option>
+                                                        </select>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div class="control-group">
+                                        <div class="control-group">
                                                 <label class="control-label">Heure(s) :</label>
                                                 <div class="controls">
                                                     <input type="text" class="span2" id="ht4" name="ht4" value="" placeholder="">
@@ -874,7 +941,7 @@
                                             </div>
                                                 <!--a Gestion dynamique de l'ajout d'une tache mis en suspend</a-->
                                                 <!--a class="sAdd btn btn-success add-more" title="" href="#"><i class="icon-plus"></i></a-->
-                                            <?php endif; ?>
+                                    <?php endif; ?>
                                     <div class="control-group">
                                         <label class="control-label" style="font-size: medium; font-weight: bold">Catégorie de tâche :</label>
                                         <div class="controls tasks">
@@ -897,45 +964,110 @@
                                             <?php endif; ?>
                                             </div>
                                         </div>
-                                            <div class="control-group">
-                                                <label class="control-label">Tâche :</label>
-                                                <div class="controls">
+                                        <div class="control-group">
+                                            <label class="control-label">Tâche :</label>
+                                            <div class="controls">
                                             <?php if(sizeof($workerToUpdate)===1) : ?>
-                                            <select class="span4 mySelect task5" name="tasks5">
-                                                <option>Tâche</option>
-                                                <?php foreach($listTache as $tache) :?>
-                                                    <?php foreach($workerToUpdate as $worker) : ?>
-                                                        <option value="<?= $tache['id']?>" <?php if($tache['id']===$worker['task_id_5']) :?> selected="selected" <?php endif ; ?>><?= $tache['code'].' '.$tache['nom']?></option>
+                                                <select class="span4 mySelect task5" name="tasks5">
+                                                    <option>Tâche</option>
+                                                    <?php foreach($listTache as $tache) :?>
+                                                        <?php foreach($workerToUpdate as $worker) : ?>
+                                                            <option value="<?= $tache['id']?>" <?php if($tache['id']===$worker['task_id_5']) :?> selected="selected" <?php endif ; ?>><?= $tache['code'].' '.$tache['nom']?></option>
+                                                        <?php endforeach ; ?>
                                                     <?php endforeach ; ?>
-                                                <?php endforeach ; ?>
-                                            </select>
+                                                </select>
                                             <?php else : ?>
                                                 <select class="span4 mySelect task5" name="tasks5">
                                                     <option>Tâche</option>
                                                 </select>
                                             <?php endif; ?>
-                                                    </div>
-                                                </div>
-                                            <?php if(sizeof($workerToUpdate)===1) : ?>
+                                        </div>
+                                    </div>
+                                    <?php if(sizeof($workerToUpdate)===1) : ?>
                                                 <?php foreach($workerToUpdate as $worker) : ?>
                                                 <div class="control-group">
                                                     <label class="control-label">Batiment :</label>
                                                     <div class="controls">
-                                                        <input type="text" class="span9" id="bat5" name="bat5" <?php if(!empty($worker['bat5'])) : ?> value="<?= $worker['bat5'] ?>" <?php else :?> placeholder="Batiment" <?php endif ; ?>>
+                                                        <input type="text" class="span9" id="bat5" name="bat5" <?php if(!empty($worker['bat_5'])) : ?> value="<?= $worker['bat_5'] ?>" <?php else :?> placeholder="Batiment" <?php endif ; ?>>
                                                     </div>
                                                 </div>
                                                 <div class="control-group">
                                                     <label class="control-label">Axe :</label>
                                                     <div class="controls">
-                                                        <input type="text" class="span9" id="axe5" name="axe5" <?php if(!empty($worker['axe5'])) : ?> value="<?= $worker['axe5'] ?>" <?php else :?> placeholder="Axe" <?php endif ; ?>>
+                                                        <input type="text" class="span9" id="axe5" name="axe5" <?php if(!empty($worker['axe_5'])) : ?> value="<?= $worker['axe_5'] ?>" <?php else :?> placeholder="Axe" <?php endif ; ?>>
                                                     </div>
                                                 </div>
-                                                <div class="control-group">
-                                                    <label class="control-label">Etage :</label>
-                                                    <div class="controls">
-                                                        <input type="text" class="span9" id="et5" name="et5" <?php if(!empty($worker['et5'])) : ?> value="<?= $worker['et5'] ?>" <?php else :?> placeholder="Etage" <?php endif ; ?>>
+                                                    <div class="control-group">
+                                                        <label class="control-label">Etage :</label>
+                                                        <div class="controls">
+                                                            <select class="select2-container span2" name="et5">
+                                                                <option value="<?= $worker['et_5'] ?>" <?php if(($worker['et_5'] === 'Niveau 10')) : ?>
+                                                                <?php elseif  (($worker['et_5'] === 'Niveau 9')) : ?>
+                                                                <?php elseif  (($worker['et_5'] === 'Niveau 8')) : ?>
+                                                                <?php elseif  (($worker['et_5'] === 'Niveau 7')) : ?>
+                                                                <?php elseif  (($worker['et_5'] === 'Niveau 6')) : ?>
+                                                                <?php elseif  (($worker['et_5'] === 'Niveau 5')) : ?>
+                                                                <?php elseif  (($worker['et_5'] === 'Niveau 4')) : ?>
+                                                                <?php elseif  (($worker['et_5'] === 'Niveau 3')) : ?>
+                                                                <?php elseif  (($worker['et_5'] === 'Niveau 2')) : ?>
+                                                                <?php elseif  (($worker['et_5'] === 'Niveau 1')) : ?>
+                                                                <?php elseif  (($worker['et_5'] === 'RDC')) : ?>
+                                                                <?php elseif  (($worker['et_5'] === 'Niveau -0.5')) : ?>
+                                                                <?php elseif  (($worker['et_5'] === 'Niveau -1')) : ?>
+                                                                <?php elseif  (($worker['et_5'] === 'Niveau -1.5')) : ?>
+                                                                <?php elseif  (($worker['et_5'] === 'Niveau -2')) : ?>
+                                                                <?php elseif  (($worker['et_5'] === 'Niveau -2.5')) : ?>
+                                                                <?php elseif  (($worker['et_5'] === 'Niveau -3')) : ?>
+                                                                <?php elseif  (($worker['et_5'] === 'Niveau -3.5')) : ?>
+                                                                <?php elseif  (($worker['et_5'] === 'Niveau -4')) : ?>
+                                                                <?php elseif  (($worker['et_5'] === 'Niveau -4.5')) : ?>
+                                                                <?php elseif  (($worker['et_5'] === 'Niveau -5')) : ?>
+                                                                <?php elseif  (($worker['et_5'] === 'Niveau -5.5')) : ?>
+                                                                <?php elseif  (($worker['et_5'] === 'Niveau -6')) : ?>
+                                                                <?php elseif  (($worker['et_5'] === 'Niveau -6.5')) : ?>
+                                                                <?php elseif  (($worker['et_5'] === 'Niveau -7')) : ?>
+                                                                <?php elseif  (($worker['et_5'] === 'Niveau -7.5')) : ?>
+                                                                <?php elseif  (($worker['et_5'] === 'Niveau -8')) : ?>
+                                                                <?php elseif  (($worker['et_5'] === 'Niveau -8.5')) : ?>
+                                                                <?php elseif  (($worker['et_5'] === 'Niveau -9')) : ?>
+                                                                <?php elseif  (($worker['et_5'] === 'Niveau -9.5')) : ?>
+                                                                <?php elseif  (($worker['et_5'] === 'Niveau -10')) : ?>
+                                                                    selected = "selected" <?php endif; ?> ><?= $worker['et_5'] ?></option>
+                                                                <option></option>
+                                                                <option value="Niveau 10">Niveau 10</option>
+                                                                <option value="Niveau 9">Niveau 9</option>
+                                                                <option value="Niveau 8">Niveau 8</option>
+                                                                <option value="Niveau 7">Niveau 7</option>
+                                                                <option value="Niveau 6">Niveau 6</option>
+                                                                <option value="Niveau 5">Niveau 5</option>
+                                                                <option value="Niveau 4">Niveau 4</option>
+                                                                <option value="Niveau 3">Niveau 3</option>
+                                                                <option value="Niveau 2">Niveau 2</option>
+                                                                <option value="Niveau 1">Niveau 1</option>
+                                                                <option value="Niveau RDC">Niveau RDC</option>
+                                                                <option value="Niveau -0.5">Niveau -0.5</option>
+                                                                <option value="Niveau -1">Niveau -1</option>
+                                                                <option value="Niveau -1.5">Niveau -1.5</option>
+                                                                <option value="Niveau -2">Niveau -2</option>
+                                                                <option value="Niveau -2.5">Niveau -2.5</option>
+                                                                <option value="Niveau -3">Niveau -3</option>
+                                                                <option value="Niveau -3.5">Niveau -3.5</option>
+                                                                <option value="Niveau -4">Niveau -4</option>
+                                                                <option value="Niveau -4.5">Niveau -4.5</option>
+                                                                <option value="Niveau -5">Niveau -5</option>
+                                                                <option value="Niveau -5.5">Niveau -5.5</option>
+                                                                <option value="Niveau -6">Niveau -6</option>
+                                                                <option value="Niveau -6.5">Niveau -6.5</option>
+                                                                <option value="Niveau -7">Niveau -7</option>
+                                                                <option value="Niveau -7.5">Niveau -7.5</option>
+                                                                <option value="Niveau -8">Niveau -8</option>
+                                                                <option value="Niveau -8.5">Niveau -8.5</option>
+                                                                <option value="Niveau -9">Niveau -9</option>
+                                                                <option value="Niveau -9.5">Niveau -9.5</option>
+                                                                <option value="Niveau -10">Niveau -10</option>
+                                                            </select>
+                                                        </div>
                                                     </div>
-                                                </div>
                                                 <div class="control-group">
                                                     <label class="control-label">Heure(s) :</label>
                                                     <div class="controls">
@@ -949,19 +1081,52 @@
                                                 <div class="control-group">
                                                     <label class="control-label">Batiment :</label>
                                                     <div class="controls">
-                                                        <input type="text" class="span9" id="bat5" name="bat5" <?php if(!empty($worker['bat5'])) : ?> value="<?= $worker['bat5'] ?>" <?php else :?> placeholder="Batiment" <?php endif ; ?>>
+                                                        <input type="text" class="span9" id="bat5" name="bat5"  placeholder="Batiment" >
                                                     </div>
                                                 </div>
                                                 <div class="control-group">
                                                     <label class="control-label">Axe :</label>
                                                     <div class="controls">
-                                                        <input type="text" class="span9" id="axe5" name="axe5" <?php if(!empty($worker['axe5'])) : ?> value="<?= $worker['axe5'] ?>" <?php else :?> placeholder="Axe" <?php endif ; ?>>
+                                                        <input type="text" class="span9" id="axe5" name="axe5"  placeholder="Axe" >
                                                     </div>
                                                 </div>
                                                 <div class="control-group">
                                                     <label class="control-label">Etage :</label>
                                                     <div class="controls">
-                                                        <input type="text" class="span9" id="et5" name="et5" <?php if(!empty($worker['et5'])) : ?> value="<?= $worker['et5'] ?>" <?php else :?> placeholder="Etage" <?php endif ; ?>>
+                                                        <select class="select2-container span2" name="et5">
+                                                            <option></option>
+                                                            <option value="Niveau 10">Niveau 10</option>
+                                                            <option value="Niveau 9">Niveau 9</option>
+                                                            <option value="Niveau 8">Niveau 8</option>
+                                                            <option value="Niveau 7">Niveau 7</option>
+                                                            <option value="Niveau 6">Niveau 6</option>
+                                                            <option value="Niveau 5">Niveau 5</option>
+                                                            <option value="Niveau 4">Niveau 4</option>
+                                                            <option value="Niveau 3">Niveau 3</option>
+                                                            <option value="Niveau 2">Niveau 2</option>
+                                                            <option value="Niveau 1">Niveau 1</option>
+                                                            <option value="Niveau RDC">Niveau RDC</option>
+                                                            <option value="Niveau -0.5">Niveau -0.5</option>
+                                                            <option value="Niveau -1">Niveau -1</option>
+                                                            <option value="Niveau -1.5">Niveau -1.5</option>
+                                                            <option value="Niveau -2">Niveau -2</option>
+                                                            <option value="Niveau -2.5">Niveau -2.5</option>
+                                                            <option value="Niveau -3">Niveau -3</option>
+                                                            <option value="Niveau -3.5">Niveau -3.5</option>
+                                                            <option value="Niveau -4">Niveau -4</option>
+                                                            <option value="Niveau -4.5">Niveau -4.5</option>
+                                                            <option value="Niveau -5">Niveau -5</option>
+                                                            <option value="Niveau -5.5">Niveau -5.5</option>
+                                                            <option value="Niveau -6">Niveau -6</option>
+                                                            <option value="Niveau -6.5">Niveau -6.5</option>
+                                                            <option value="Niveau -7">Niveau -7</option>
+                                                            <option value="Niveau -7.5">Niveau -7.5</option>
+                                                            <option value="Niveau -8">Niveau -8</option>
+                                                            <option value="Niveau -8.5">Niveau -8.5</option>
+                                                            <option value="Niveau -9">Niveau -9</option>
+                                                            <option value="Niveau -9.5">Niveau -9.5</option>
+                                                            <option value="Niveau -10">Niveau -10</option>
+                                                        </select>
                                                     </div>
                                                 </div>
                                                 <div class="control-group">
@@ -1016,30 +1181,95 @@
                                         </div>
                                             <?php if(sizeof($workerToUpdate)===1) : ?>
                                                 <?php foreach($workerToUpdate as $worker) :?>
-                                                <div class="control-group">
-                                                    <label class="control-label">Batiment :</label>
-                                                    <div class="controls">
-                                                        <input type="text" class="span9" id="bat6" name="bat6" <?php if(!empty($worker['bat6'])) : ?> value="<?= $worker['bat6'] ?>" <?php else :?> placeholder="Batiment" <?php endif ; ?>>
+                                                    <div class="control-group">
+                                                        <label class="control-label">Batiment :</label>
+                                                        <div class="controls">
+                                                            <input type="text" class="span9" id="bat6" name="bat6" <?php if(!empty($worker['bat_6'])) : ?> value="<?= $worker['bat_6'] ?>" <?php else :?> placeholder="Batiment" <?php endif ; ?>>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                                <div class="control-group">
-                                                    <label class="control-label">Axe :</label>
-                                                    <div class="controls">
-                                                        <input type="text" class="span9" id="axe6" name="axe6" <?php if(!empty($worker['axe6'])) : ?> value="<?= $worker['axe6'] ?>" <?php else :?> placeholder="Axe" <?php endif ; ?>>
+                                                    <div class="control-group">
+                                                        <label class="control-label">Axe :</label>
+                                                        <div class="controls">
+                                                            <input type="text" class="span9" id="axe6" name="axe6" <?php if(!empty($worker['axe_6'])) : ?> value="<?= $worker['axe_6'] ?>" <?php else :?> placeholder="Axe" <?php endif ; ?>>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                                <div class="control-group">
-                                                    <label class="control-label">Etage :</label>
-                                                    <div class="controls">
-                                                        <input type="text" class="span9" id="et6" name="et6" <?php if(!empty($worker['et6'])) : ?> value="<?= $worker['et6'] ?>" <?php else :?> placeholder="Etage" <?php endif ; ?>>
+                                                    <div class="control-group">
+                                                            <label class="control-label">Etage :</label>
+                                                            <div class="controls">
+                                                                <select class="select2-container span2" name="et6">
+                                                                    <option value="<?= $worker['et_6'] ?>" <?php if(($worker['et_6'] === 'Niveau 10')) : ?>
+                                                                    <?php elseif  (($worker['et_6'] === 'Niveau 9')) : ?>
+                                                                    <?php elseif  (($worker['et_6'] === 'Niveau 8')) : ?>
+                                                                    <?php elseif  (($worker['et_6'] === 'Niveau 7')) : ?>
+                                                                    <?php elseif  (($worker['et_6'] === 'Niveau 6')) : ?>
+                                                                    <?php elseif  (($worker['et_6'] === 'Niveau 5')) : ?>
+                                                                    <?php elseif  (($worker['et_6'] === 'Niveau 4')) : ?>
+                                                                    <?php elseif  (($worker['et_6'] === 'Niveau 3')) : ?>
+                                                                    <?php elseif  (($worker['et_6'] === 'Niveau 2')) : ?>
+                                                                    <?php elseif  (($worker['et_6'] === 'Niveau 1')) : ?>
+                                                                    <?php elseif  (($worker['et_6'] === 'RDC')) : ?>
+                                                                    <?php elseif  (($worker['et_6'] === 'Niveau -0.5')) : ?>
+                                                                    <?php elseif  (($worker['et_6'] === 'Niveau -1')) : ?>
+                                                                    <?php elseif  (($worker['et_6'] === 'Niveau -1.5')) : ?>
+                                                                    <?php elseif  (($worker['et_6'] === 'Niveau -2')) : ?>
+                                                                    <?php elseif  (($worker['et_6'] === 'Niveau -2.5')) : ?>
+                                                                    <?php elseif  (($worker['et_6'] === 'Niveau -3')) : ?>
+                                                                    <?php elseif  (($worker['et_6'] === 'Niveau -3.5')) : ?>
+                                                                    <?php elseif  (($worker['et_6'] === 'Niveau -4')) : ?>
+                                                                    <?php elseif  (($worker['et_6'] === 'Niveau -4.5')) : ?>
+                                                                    <?php elseif  (($worker['et_6'] === 'Niveau -5')) : ?>
+                                                                    <?php elseif  (($worker['et_6'] === 'Niveau -5.5')) : ?>
+                                                                    <?php elseif  (($worker['et_6'] === 'Niveau -6')) : ?>
+                                                                    <?php elseif  (($worker['et_6'] === 'Niveau -6.5')) : ?>
+                                                                    <?php elseif  (($worker['et_6'] === 'Niveau -7')) : ?>
+                                                                    <?php elseif  (($worker['et_6'] === 'Niveau -7.5')) : ?>
+                                                                    <?php elseif  (($worker['et_6'] === 'Niveau -8')) : ?>
+                                                                    <?php elseif  (($worker['et_6'] === 'Niveau -8.5')) : ?>
+                                                                    <?php elseif  (($worker['et_6'] === 'Niveau -9')) : ?>
+                                                                    <?php elseif  (($worker['et_6'] === 'Niveau -9.5')) : ?>
+                                                                    <?php elseif  (($worker['et_6'] === 'Niveau -10')) : ?>
+                                                                        selected = "selected" <?php endif; ?> ><?= $worker['et_6'] ?></option>
+                                                                    <option></option>
+                                                                    <option value="Niveau 10">Niveau 10</option>
+                                                                    <option value="Niveau 9">Niveau 9</option>
+                                                                    <option value="Niveau 8">Niveau 8</option>
+                                                                    <option value="Niveau 7">Niveau 7</option>
+                                                                    <option value="Niveau 6">Niveau 6</option>
+                                                                    <option value="Niveau 5">Niveau 5</option>
+                                                                    <option value="Niveau 4">Niveau 4</option>
+                                                                    <option value="Niveau 3">Niveau 3</option>
+                                                                    <option value="Niveau 2">Niveau 2</option>
+                                                                    <option value="Niveau 1">Niveau 1</option>
+                                                                    <option value="Niveau RDC">Niveau RDC</option>
+                                                                    <option value="Niveau -0.5">Niveau -0.5</option>
+                                                                    <option value="Niveau -1">Niveau -1</option>
+                                                                    <option value="Niveau -1.5">Niveau -1.5</option>
+                                                                    <option value="Niveau -2">Niveau -2</option>
+                                                                    <option value="Niveau -2.5">Niveau -2.5</option>
+                                                                    <option value="Niveau -3">Niveau -3</option>
+                                                                    <option value="Niveau -3.5">Niveau -3.5</option>
+                                                                    <option value="Niveau -4">Niveau -4</option>
+                                                                    <option value="Niveau -4.5">Niveau -4.5</option>
+                                                                    <option value="Niveau -5">Niveau -5</option>
+                                                                    <option value="Niveau -5.5">Niveau -5.5</option>
+                                                                    <option value="Niveau -6">Niveau -6</option>
+                                                                    <option value="Niveau -6.5">Niveau -6.5</option>
+                                                                    <option value="Niveau -7">Niveau -7</option>
+                                                                    <option value="Niveau -7.5">Niveau -7.5</option>
+                                                                    <option value="Niveau -8">Niveau -8</option>
+                                                                    <option value="Niveau -8.5">Niveau -8.5</option>
+                                                                    <option value="Niveau -9">Niveau -9</option>
+                                                                    <option value="Niveau -9.5">Niveau -9.5</option>
+                                                                    <option value="Niveau -10">Niveau -10</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    <div class="control-group">
+                                                        <label class="control-label">Heure(s) :</label>
+                                                        <div class="controls">
+                                                            <input type="text" class="span2" id="ht6" name="ht6" value="<?= $worker['ht6'] ?>" placeholder="Hre">
+                                                        </div>
                                                     </div>
-                                                </div>
-                                                <div class="control-group">
-                                                    <label class="control-label">Heure(s) :</label>
-                                                    <div class="controls">
-                                                        <input type="text" class="span2" id="ht6" name="ht6" value="<?= $worker['ht6'] ?>" placeholder="Hre">
-                                                    </div>
-                                                </div>
                                                     <!--a Gestion dynamique de l'ajout d'une tache mis en suspend</a-->
                                                     <!--a class="sAdd btn btn-success add-more" title="" href="#"><i class="icon-plus"></i></a-->
                                                 <?php endforeach;?>
@@ -1047,21 +1277,54 @@
                                             <div class="control-group">
                                                 <label class="control-label">Batiment :</label>
                                                 <div class="controls">
-                                                    <input type="text" class="span9" id="bat6" name="bat6" <?php if(!empty($worker['bat6'])) : ?> value="<?= $worker['bat6'] ?>" <?php else :?> placeholder="Batiment" <?php endif ; ?>>
+                                                    <input type="text" class="span9" id="bat6" name="bat6"  placeholder="Batiment" >
                                                 </div>
                                             </div>
                                             <div class="control-group">
                                                 <label class="control-label">Axe :</label>
                                                 <div class="controls">
-                                                    <input type="text" class="span9" id="axe6" name="axe6" <?php if(!empty($worker['axe6'])) : ?> value="<?= $worker['axe6'] ?>" <?php else :?> placeholder="Axe" <?php endif ; ?>>
+                                                    <input type="text" class="span9" id="axe6" name="axe6" placeholder="Axe" >
                                                 </div>
                                             </div>
                                             <div class="control-group">
-                                                <label class="control-label">Etage :</label>
-                                                <div class="controls">
-                                                    <input type="text" class="span9" id="et6" name="et6" <?php if(!empty($worker['et6'])) : ?> value="<?= $worker['et6'] ?>" <?php else :?> placeholder="Etage" <?php endif ; ?>>
+                                                    <label class="control-label">Etage :</label>
+                                                    <div class="controls">
+                                                        <select class="select2-container span2" name="et6">
+                                                            <option></option>
+                                                            <option value="Niveau 10">Niveau 10</option>
+                                                            <option value="Niveau 9">Niveau 9</option>
+                                                            <option value="Niveau 8">Niveau 8</option>
+                                                            <option value="Niveau 7">Niveau 7</option>
+                                                            <option value="Niveau 6">Niveau 6</option>
+                                                            <option value="Niveau 5">Niveau 5</option>
+                                                            <option value="Niveau 4">Niveau 4</option>
+                                                            <option value="Niveau 3">Niveau 3</option>
+                                                            <option value="Niveau 2">Niveau 2</option>
+                                                            <option value="Niveau 1">Niveau 1</option>
+                                                            <option value="Niveau RDC">Niveau RDC</option>
+                                                            <option value="Niveau -0.5">Niveau -0.5</option>
+                                                            <option value="Niveau -1">Niveau -1</option>
+                                                            <option value="Niveau -1.5">Niveau -1.5</option>
+                                                            <option value="Niveau -2">Niveau -2</option>
+                                                            <option value="Niveau -2.5">Niveau -2.5</option>
+                                                            <option value="Niveau -3">Niveau -3</option>
+                                                            <option value="Niveau -3.5">Niveau -3.5</option>
+                                                            <option value="Niveau -4">Niveau -4</option>
+                                                            <option value="Niveau -4.5">Niveau -4.5</option>
+                                                            <option value="Niveau -5">Niveau -5</option>
+                                                            <option value="Niveau -5.5">Niveau -5.5</option>
+                                                            <option value="Niveau -6">Niveau -6</option>
+                                                            <option value="Niveau -6.5">Niveau -6.5</option>
+                                                            <option value="Niveau -7">Niveau -7</option>
+                                                            <option value="Niveau -7.5">Niveau -7.5</option>
+                                                            <option value="Niveau -8">Niveau -8</option>
+                                                            <option value="Niveau -8.5">Niveau -8.5</option>
+                                                            <option value="Niveau -9">Niveau -9</option>
+                                                            <option value="Niveau -9.5">Niveau -9.5</option>
+                                                            <option value="Niveau -10">Niveau -10</option>
+                                                        </select>
+                                                    </div>
                                                 </div>
-                                            </div>
                                             <div class="control-group">
                                                 <label class="control-label">Heure(s) :</label>
                                                 <div class="controls">
@@ -1113,7 +1376,7 @@
                                                 </select>
                                             <?php endforeach; ?>
                                         <?php else : ?>
-                                            <select class="select2-container" name="machine">
+                                            <select class="span4 select2-container" name="machine">
                                                 <option></option>
                                                 <option value="Marteau">Marteau</option>
                                                 <option value="Marteau piqueur">Marteau piqueur</option>
