@@ -27,6 +27,8 @@ use Classes\Cdcl\Db\Rapport;
 
 use Classes\Cdcl\Db\Tache;
 
+use Classes\Cdcl\Db\Chantier;
+
 use Classes\Cdcl\Config\Dsk;
 
 $conf = Config::getInstance();
@@ -38,13 +40,45 @@ if(!empty($_SESSION)){
     //exit;
 
     /**array(37) {
-    ["matriculeList"]=>string(5) "Array"["htot"]=>string(1) "8"["abs"]=>string(10) "Congé (C)"["habs"]=>string(1) "8"["type_task"]=>array(1) {[0]=>string(22) "Choisir une catégorie"
-    }["tasks"]=>array(1) {[0]=>string(18) "Choisir une tâche"}["batiment"]=>array(1) {[0]=>string(0) ""}["axe"]=>array(1) {[0]=>string(0) ""}["etage"]=>array(1) {[0]=>string(0) ""}["type_task2"]=>string(1) "4"["tasks2"]=>string(2) "17"["batiment2"]=>string(1) "A"["axe2"]=>
-    string(1) "2"["etage2"]=>string(1) "1"["type_task3"]=>string(2) "10"["tasks3"]=>string(1) "9"["batiment3"]=>string(1) "B"["axe3"]=>string(1) "1"["etage3"]=>string(1) "1"["type_task4"]=>string(2) "10"
-    ["tasks4"]=>string(2) "74"["batiment4"]=>string(1) "C"["axe4"]=>string(1) "1"["etage4"]=>string(1) "1"["type_task5"]=>string(1) "4"["tasks5"]=>string(2) "17"
-    ["batiment5"]=>string(1) "D"["axe5"]=>string(1) "1"["etage5"]=>string(1) "1"["type_task6"]=>string(1) "4"["tasks6"]=>string(2) "17"["batiment6"]=>string(1) "E"
-    ["axe6"]=>string(1) "1"["etage6"]=>string(1) "1"["hins"]=>string(1) "2"["dpl_pers"]=>
-    string(0) ""["km"]=>string(1) "5"
+    ["matriculeList"]=>string(5)
+     * "Array"
+     * ["htot"]=>string(1) "8"
+     * ["abs"]=>string(10) "Congé (C)"
+     * ["habs"]=>string(1) "8"
+     * ["type_task"]=>array(1)
+     * {[0]=>string(22) "Choisir une catégorie"}
+     * ["tasks"]=>array(1)
+     * {[0]=>string(18) "Choisir une tâche"}
+     * ["batiment"]=>array(1) {[0]=>string(0) ""}
+     * ["axe"]=>array(1) {[0]=>string(0) ""}
+     * ["etage"]=>array(1) {[0]=>string(0) ""}
+     * ["type_task2"]=>string(1) "4"["tasks2"]=>string(2) "17"
+     * ["batiment2"]=>string(1) "A"
+     * ["axe2"]=> string(1) "2"
+     * ["etage2"]=>string(1) "1"
+     * ["type_task3"]=>string(2) "10"
+     * ["tasks3"]=>string(1) "9"
+     * ["batiment3"]=>string(1) "B"
+     * ["axe3"]=>string(1) "1"
+     * ["etage3"]=>string(1) "1"
+     * ["type_task4"]=>string(2) "10"
+     * ["tasks4"]=>string(2) "74"
+     * ["batiment4"]=>string(1) "C"
+     * ["axe4"]=>string(1) "1"
+     * ["etage4"]=>string(1) "1"
+     * ["type_task5"]=>string(1) "4"
+     * ["tasks5"]=>string(2) "17"
+     * ["batiment5"]=>string(1) "D"
+     * ["axe5"]=>string(1) "1"
+     * ["etage5"]=>string(1) "1"
+     * ["type_task6"]=>string(1) "4"
+     * ["tasks6"]=>string(2) "17"
+     * ["batiment6"]=>string(1) "E"
+     * ["axe6"]=>string(1) "1"
+     * ["etage6"]=>string(1) "1"
+     * ["hins"]=>string(1) "2"
+     * ["dpl_pers"]=>string(0) ""
+     * ["km"]=>string(1) "5"
     }*/
     // exit;
 
@@ -65,6 +99,14 @@ if(!empty($_SESSION)){
         $matriculeList = isset($_POST['selected_matricule'])? $_POST['selected_matricule'] : '';
     }*/
     $matriculeList = isset($_POST['selected_matricule'])? $_POST['selected_matricule'] : '';
+
+    $batimentList = Chantier::chantierBatimentList($_POST['chantier_id']);
+
+    $batimentList = isset($batimentList) ? $batimentList : '';
+
+
+
+    //var_dump($batimentList);
     /*var_dump($matriculeList);
 
     foreach( $matriculeList as $matricule){
@@ -98,13 +140,17 @@ if(!empty($_SESSION)){
         // Gestion des contrôles a effectué avant soumission
         // du formulaire et insertion en base de données
 
-        if( ($_POST['ht']=== 0 ||  $_POST['ht']=== '')
-            && ($_POST['ht2']=== 0 || $_POST['ht2']=== '')
-            && ($_POST['ht3']=== 0 || $_POST['ht3']=== '')
-            && ($_POST['ht4']=== 0 || $_POST['ht4']=== '')
-            && ($_POST['ht5']===0 ||  $_POST['ht5']=== '')
-            && ($_POST['ht6']===0 ||  $_POST['ht6']=== '')
-            && ($_POST['htot']===0 ||  $_POST['htot']=== '')){
+    //    var_dump($_POST);
+
+    //    exit;
+
+        if( ($_POST['ht']=== '0' ||  $_POST['ht']=== '')
+            && ($_POST['ht2']=== '0' || $_POST['ht2']=== '')
+            && ($_POST['ht3']=== '0' || $_POST['ht3']=== '')
+            && ($_POST['ht4']=== '0' || $_POST['ht4']=== '')
+            && ($_POST['ht5']=== '0' ||  $_POST['ht5']=== '')
+            && ($_POST['ht6']=== '0' ||  $_POST['ht6']=== '')
+            && ($_POST['htot']=== '0' ||  $_POST['htot']=== '')){
             $conf->addError('Veuillez saisir au moins une tâche.');
             $form = false;
         }
@@ -197,6 +243,37 @@ if(!empty($_SESSION)){
             if(($_SESSION['post_id'] != '1') && isset($_POST['chef_dequipe_updated'])){
                 $chef_dequipe_updated = $_POST['chef_dequipe_updated'];
             }
+        }
+
+        if($_POST['type_task'] === 'Catégorie' && $_POST['tasks'] === 'Tâche' && !empty($_POST['ht'])){
+            $conf->addError('Veuillez renseigner la tâche 1');
+            $form = false;
+        }
+
+        if($_POST['type_task2'] === 'Catégorie' && $_POST['tasks2'] === 'Tâche' && !empty($_POST['ht2'])){
+            $conf->addError('Veuillez renseigner la tâche 2');
+            $form = false;
+        }
+
+
+        if($_POST['type_task3'] === 'Catégorie' && $_POST['tasks3'] === 'Tâche' && !empty($_POST['ht3'])){
+            $conf->addError('Veuillez renseigner la tâche 3');
+            $form = false;
+        }
+
+        if($_POST['type_task4'] === 'Catégorie' && $_POST['tasks4'] === 'Tâche' && !empty($_POST['ht4'])){
+            $conf->addError('Veuillez renseigner la tâche 4');
+            $form = false;
+        }
+
+        if($_POST['type_task5'] === 'Catégorie' && $_POST['tasks5'] === 'Tâche' && !empty($_POST['ht5'])){
+            $conf->addError('Veuillez renseigner la tâche 5');
+            $form = false;
+        }
+
+        if($_POST['type_task6'] === 'Catégorie' && $_POST['tasks6'] === 'Tâche' && !empty($_POST['ht6'])){
+            $conf->addError('Veuillez renseigner la tâche 6');
+            $form = false;
         }
 
         if($form){

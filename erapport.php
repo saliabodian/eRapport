@@ -36,7 +36,13 @@ $conf = Config::getInstance();
 
 if(!empty($_SESSION)){
 
+    $teamLeaderMatricule = array();
 
+    $teamLeaderMatricule = isset($teamLeaderMatricule) ? $teamLeaderMatricule : '';
+
+    $teamLeaderOnsite = array();
+
+    $teamLeaderOnsite = isset($teamLeaderOnsite) ? $teamLeaderOnsite : '';
     // var_dump($_SESSION['post_id'] );
 
     // exit;
@@ -79,22 +85,29 @@ if(!empty($_SESSION)){
     }
 
 
+
     //Gestion de la suppression d'un rapport
     $_GET['sup'] = isset($_GET['sup'])? $_GET['sup'] : '';
     if($_GET['sup']=== 'true'){
 
+
         Rapport::deleteRapport($_GET['chef_dequipe_id'], $_GET['date_generation'], $_GET['chantier_id']);
+
+
         Rapport::deleteRapportAbsentHorsNoyau($_GET['date_generation'], $_GET['chantier_id'], $_GET['chef_dequipe_matricule']);
         //    exit;
-
+    //    var_dump($value);
+    //    exit ;
         $deleted = Rapport::checkAllRapportDeleted($_GET['date_generation'], $_GET['chantier_id']);
 
+   //     var_dump($deleted);
 
+    //    exit;
         if($deleted === true){
-            Rapport::deleteRapportHorsNoyau($_GET['date_generation'], $_GET['chantier_id']);
+            $value =    Rapport::deleteRapportHorsNoyau($_GET['date_generation'], $_GET['chantier_id']);
         }
 
-    //    var_dump($deleted);
+    //    var_dump($value);
     //    exit;
     }
 
@@ -116,6 +129,7 @@ if(!empty($_SESSION)){
     // Nombre de chefs d'équipe affectés sur ce chantier pour la gestion de la génération des rapports
     $teamLeaderAffectedOnSite = isset($teamLeaderAffectedOnSite)? $teamLeaderAffectedOnSite : '';
 
+
     if($_SESSION['post_id'] === '1'){
 
         $chefDEquipeList[$_SESSION['id']] =  $_SESSION['username'].' '.$_SESSION['firstname'].' '.$_SESSION['lastname'];
@@ -129,7 +143,7 @@ if(!empty($_SESSION)){
     }
 
 
-    //var_dump($teamLeaderAffectedOnSite);
+    //var_dump($chefDEquipeList);
     //exit;
 
 
@@ -200,6 +214,30 @@ if(!empty($_SESSION)){
             $form=false;
         }
 
+        $siteWithItp = Chantier::getChantierActifWithItp();
+        if(!empty($siteWithItp)){
+            foreach($siteWithItp as $site){
+                $siteWithItpId[] = $site['id'];
+            }
+        }
+
+
+    //    var_dump($siteWithItpId);
+    //    var_dump($_POST['chantier_id']);
+    //    var_dump($today);
+    //    var_dump($dateRapport);
+
+        // Gestion de la génération des rapports journaliers en J+1 uniquement
+        if(!empty($siteWithItp)){
+            if (in_array($_POST['chantier_id'], $siteWithItpId)) {
+                if($dateRapport >= $today){
+                    $conf->addError(' Aucun rapport ne peut être généré pour cette date. Mode intempéries sur chantier activé!');
+                    $form=false;
+                }
+            }
+        }
+
+
 
         $chantier = Chantier::get($chantierId);
 
@@ -253,6 +291,12 @@ if(!empty($_SESSION)){
         /////////////////////////////////////////////////////////////////////////////
         if($form && empty($teamLeaderMissing)){
 
+
+
+        //    var_dump($teamLeaderOnsite);
+
+        //    exit;
+
             $rapportId = isset($rapportId)? $rapportId : "";
             $terminal = isset($terminal)? $terminal : "";
             $rapportType = isset($rapportType)? $rapportType : "";
@@ -261,9 +305,12 @@ if(!empty($_SESSION)){
             $validated = isset($validated)? $validated : "";
             $deleted = isset($deleted)? $deleted : "";
 
-            //    echo "je suis la";
 
-            //    exit;
+            //    var_dump($_POST);
+            //    var_dump($dateRapport);
+
+
+
 
             // var_dump(new User($chefDEquipeId));
 
@@ -283,22 +330,74 @@ if(!empty($_SESSION)){
                 $deleted
             );
 
-            // var_dump($noyauObject);
+        //     var_dump($noyauObject);
+
+        //    exit;
             // Génération du rapport du NOYAU pour le chef d'équipe connecté ou pour celui qu'on a choisi (si on est admin ou RH)
 
             // Génération d'un rapport pour les ouvriers absents appartenant au chef d'équipe connecté
 
             $absentList = Dsk::getAllNoyauAbsence($matricule, $dateRapport);
-        //    var_dump($absentList);
+
             if(!empty($absentList)){
                 $noyauObject->saveDBAbsentDuNoyau();
+
                 $rapportJournalierAbsent = Rapport::saveRapportDetailAbsent($dateRapport, $chantierId, $matricule, $absentList);
             }
 
             $noyauList = Dsk::getTeamPointing($matricule, $chantierCode, $dateRapport);
+
             $interimaireList = Rapport::getInterimaireByTeamSiteAndDate($dateRapport, $chefDEquipeId, $chantierId);
 
+            // Gestion de la liste des éléments faisant parti du noyau
+            // dans le cas ou le mode INTEMPERIE EST ACTIF
+            if(!empty($siteWithItp)){
+                if (in_array($_POST['chantier_id'], $siteWithItpId)) {
 
+                    if(!empty($noyauList)){
+                        $noyauListLength  = sizeof($noyauList);
+                        for($i = 0; $i<$noyauListLength; $i++){
+                            $newNoyauList[$i]['id'] = $noyauList[$i]['id'];
+                            $newNoyauList[$i]['matricule'] = $noyauList[$i]['matricule'];
+                            $newNoyauList[$i]['fullname'] = $noyauList[$i]['fullname'];
+                            $newNoyauList[$i]['chantier'] = $noyauList[$i]['chantier'];
+                            $newNoyauList[$i]['noyau'] = $noyauList[$i]['noyau'];
+                        }
+                    }else{
+                        $noyauListLength = 0;
+                    }
+
+                    $noyauListToAdd = Dsk::getAllNoyauIntemperieAbsence($matricule, $dateRapport);
+
+                //    var_dump($noyauListToAdd);
+
+                //    exit;
+
+                    if(!empty($noyauListToAdd)){
+                        $noyauListToAddLength = sizeof($noyauListToAdd);
+
+                        for($j=0; $j<($noyauListToAddLength); $j++){
+                            $newNoyauList[$j+$noyauListLength]['id'] = $noyauListToAdd[$j]['id'];
+                            $newNoyauList[$j+$noyauListLength]['matricule'] = $noyauListToAdd[$j]['matricule'];
+                            $newNoyauList[$j+$noyauListLength]['fullname'] = $noyauListToAdd[$j]['fullname'];
+                            $newNoyauList[$j+$noyauListLength]['chantier'] = $chantierCode;
+                            $newNoyauList[$j+$noyauListLength]['noyau'] = $matricule;
+                        }
+
+                    }
+                    if(!empty($newNoyauList)){
+                        $noyauList = array_unique($newNoyauList, SORT_REGULAR );
+                    }
+                }
+            }
+
+
+
+        //    var_dump($noyauList);
+        //    exit;
+    //
+
+    //        exit;
             // Même si le chef d'équipe il n'existe pas de membre de son équipe (ouvrier + interimaire)
             // Je génére une ligne pour le chef d'équipe connecté ou celui pour lequel on veut générer le rapport
             // pour pouvoir lui rattacher au moins les hors noyaux
@@ -307,13 +406,40 @@ if(!empty($_SESSION)){
 
             // On génére pour le chef d'équipe en question les détails respectifs si ils existent
 
+
             if(!empty($noyauList)){
                 $rapportJournalierNoyau = Rapport::saveRapportDetail($dateRapport, $chantierId, $matricule, $noyauList);
+
+                if(!empty($siteWithItp)) {
+                    if (in_array($_POST['chantier_id'], $siteWithItpId)) {
+
+                        $rapportNoyau = Rapport::getRapportNoyauItp($dateRapport, $_POST['chantier_id'], $matricule);
+
+                        if(!empty($rapportNoyau)){
+                            $noyaux = Rapport::getRapportDetailsItp($rapportNoyau['id']);
+                        }
+
+                        $allPointage = Dsk::getCalculTotalHoraire($dateRapport, $chantierCode);
+
+                        if (!empty($allPointage)) {
+                            foreach ($allPointage as $pointage) {
+                                foreach ($noyaux as $noyau) {
+                                    if ($noyau['ouvrier_id'] === $pointage['matricule']) {
+                                        //    var_dump($pointage['hpoint']);
+                                        //    var_dump($rapport['id']);
+                                        Rapport::setWorkerHourCalculated($pointage['hpoint'], $noyau['id']);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
 
             if(!empty($interimaireList)){
                 $rapportJournalierInterimaire = Rapport::saveRapportDetailInterimaire($dateRapport, $chantierId, $matricule, $interimaireList);
             }
+
 
             // Génération des rapports HORSNOYAU et ABSENTHORSNOYAU pour tous les chefs d'équipe.
             // NB : ce rapport n'est généré qu'une seule fois quelque soit le chef d'équipe
@@ -324,11 +450,159 @@ if(!empty($_SESSION)){
             $rjHorsNoyauExist = Rapport::checkChefDEquipeRapportHorsNoyauExist($dateRapport, $chantierId);
 
             if($rjHorsNoyauExist === false){
+
                 $horsNoyauList = Dsk::getTeamLess($dateRapport, $chantierCode);
+
+                // Gestion de la liste des hors noyaux dans le cas ou le mode INTEMPERIE EST ACTIF
+                if(!empty($siteWithItp)){
+                    if (in_array($_POST['chantier_id'], $siteWithItpId)) {
+
+                        if($teamLeaderOnsite <>0){
+                            if(!empty($horsNoyauList)){
+                                $horsNoyauListLength  = sizeof($horsNoyauList);
+                                for($i = 0; $i<$horsNoyauListLength; $i++){
+                                    $newHorsNoyauList[$i]['noyau'] = $horsNoyauList[$i]['noyau'];
+                                    $newHorsNoyauList[$i]['id'] = $horsNoyauList[$i]['id'];
+                                    $newHorsNoyauList[$i]['matricule'] = $horsNoyauList[$i]['matricule'];
+                                    $newHorsNoyauList[$i]['fullname'] = $horsNoyauList[$i]['fullname'];
+                                    $newHorsNoyauList[$i]['chantier'] = $horsNoyauList[$i]['chantier'];
+                                }
+                            }else{
+                                $horsNoyauListLength = 0;
+                            }
+
+                            if(!empty($teamLeaderOnsite)){
+                                foreach($teamLeaderOnsite as $teamLeader){
+                                    $teamLeaderMatricule[]= $teamLeader['matricule'];
+                                }
+                            }
+
+                            $horsNoyauListToAdd = Dsk::getAllHorsNoyauIntemperieAbsence($matricule,$dateRapport, $chantierCode);
+
+                            if(!empty($horsNoyauListToAdd)){
+
+                                $n=0;
+                                for($i=0; $i< sizeof($horsNoyauListToAdd); $i++){
+                                    if(!in_array($horsNoyauListToAdd[$i]['noyau'], $teamLeaderMatricule )){
+                                        $newHorsNoyauListToAdd[$n]['noyau'] = $horsNoyauListToAdd[$i]['noyau'];
+                                        $newHorsNoyauListToAdd[$n]['id'] = $horsNoyauListToAdd[$i]['id'];
+                                        $newHorsNoyauListToAdd[$n]['matricule'] = $horsNoyauListToAdd[$i]['matricule'];
+                                        $newHorsNoyauListToAdd[$n]['fullname'] = $horsNoyauListToAdd[$i]['fullname'];
+                                        $newHorsNoyauListToAdd[$n]['chantier'] = $chantierCode;
+                                        $n++;
+                                    }
+                                }
+
+                                $newHorsNoyauListToAddLength = sizeof($newHorsNoyauListToAdd);
+
+                                for($j=0; $j<($newHorsNoyauListToAddLength); $j++){
+                                    $newHorsNoyauList[$j+$horsNoyauListLength]['noyau'] = $newHorsNoyauListToAdd[$j]['noyau'];
+                                    $newHorsNoyauList[$j+$horsNoyauListLength]['id'] = $newHorsNoyauListToAdd[$j]['id'];
+                                    $newHorsNoyauList[$j+$horsNoyauListLength]['matricule'] = $newHorsNoyauListToAdd[$j]['matricule'];
+                                    $newHorsNoyauList[$j+$horsNoyauListLength]['fullname'] = $newHorsNoyauListToAdd[$j]['fullname'];
+                                    $newHorsNoyauList[$j+$horsNoyauListLength]['chantier'] = $chantierCode;
+                                }
+                            }
+
+                            if(!empty($newHorsNoyauList)){
+                                $horsNoyauList = array_unique($newHorsNoyauList, SORT_REGULAR );
+                            }
+                        }else{
+                            if(!empty($horsNoyauList)){
+                                $horsNoyauListLength  = sizeof($horsNoyauList);
+                                for($i = 0; $i<$horsNoyauListLength; $i++){
+                                    $newHorsNoyauList[$i]['noyau'] = $horsNoyauList[$i]['noyau'];
+                                    $newHorsNoyauList[$i]['id'] = $horsNoyauList[$i]['id'];
+                                    $newHorsNoyauList[$i]['matricule'] = $horsNoyauList[$i]['matricule'];
+                                    $newHorsNoyauList[$i]['fullname'] = $horsNoyauList[$i]['fullname'];
+                                    $newHorsNoyauList[$i]['chantier'] = $horsNoyauList[$i]['chantier'];
+                                }
+                            }else{
+                                $horsNoyauListLength = 0;
+                            }
+
+                            $chefDequipeAffectedOnSite = User::getAllChefDEquipebyChantier($_POST['chantier_id']);
+
+
+                            if(!empty($chefDequipeAffectedOnSite)){
+                                foreach($chefDequipeAffectedOnSite as $teamLeader){
+                                    $teamLeaderMatricule[]= $teamLeader['username'];
+                                }
+                            }
+
+
+                            $horsNoyauListToAdd = Dsk::getAllHorsNoyauIntemperieAbsence($matricule,$dateRapport, $chantierCode);
+
+                            if(!empty($horsNoyauListToAdd)){
+
+                                $n=0;
+                                for($i=0; $i< sizeof($horsNoyauListToAdd); $i++){
+                                    if(!in_array($horsNoyauListToAdd[$i]['noyau'], $teamLeaderMatricule )){
+                                        $newHorsNoyauListToAdd[$n]['noyau'] = $horsNoyauListToAdd[$i]['noyau'];
+                                        $newHorsNoyauListToAdd[$n]['id'] = $horsNoyauListToAdd[$i]['id'];
+                                        $newHorsNoyauListToAdd[$n]['matricule'] = $horsNoyauListToAdd[$i]['matricule'];
+                                        $newHorsNoyauListToAdd[$n]['fullname'] = $horsNoyauListToAdd[$i]['fullname'];
+                                        $newHorsNoyauListToAdd[$n]['chantier'] = $chantierCode;
+                                        $n++;
+                                    }
+                                }
+
+                                $newHorsNoyauListToAddLength = sizeof($newHorsNoyauListToAdd);
+
+                                for($j=0; $j<($newHorsNoyauListToAddLength); $j++){
+                                    $newHorsNoyauList[$j+$horsNoyauListLength]['noyau'] = $newHorsNoyauListToAdd[$j]['noyau'];
+                                    $newHorsNoyauList[$j+$horsNoyauListLength]['id'] = $newHorsNoyauListToAdd[$j]['id'];
+                                    $newHorsNoyauList[$j+$horsNoyauListLength]['matricule'] = $newHorsNoyauListToAdd[$j]['matricule'];
+                                    $newHorsNoyauList[$j+$horsNoyauListLength]['fullname'] = $newHorsNoyauListToAdd[$j]['fullname'];
+                                    $newHorsNoyauList[$j+$horsNoyauListLength]['chantier'] = $chantierCode;
+                                }
+                            }
+
+                            if(!empty($newHorsNoyauList)){
+                                $horsNoyauList = array_unique($newHorsNoyauList, SORT_REGULAR );
+                            }
+                        }
+
+
+                    }
+                }
+
+            //    echo "hors noyau après traitement <br>";
+
+            //    var_dump($horsNoyauList);
+
                 if(!empty($horsNoyauList)){
                     $noyauObject->saveDBHorsNoyau();
                     $rapportJournalierHorsNoyau = Rapport::saveRapportDetailHorsNoyau($dateRapport, $chantierId, $horsNoyauList);
+                    if(!empty($siteWithItp)){
+                        if (in_array($_POST['chantier_id'], $siteWithItpId)) {
+
+                            $rapportHorsNoyau = Rapport::getRapportHorsNoyauItp($dateRapport, $_POST['chantier_id'], $matricule);
+
+                            if(!empty($rapportHorsNoyau)){
+                                $horsNoyaux = Rapport::getRapportDetailsItp($rapportHorsNoyau['id']);
+                            }
+                        //    echo "hors noyau détails après traitement <br>";
+                        //    var_dump($horsNoyaux);
+
+                            $allPointage = Dsk::getCalculTotalHoraire($dateRapport, $chantierCode) ;
+
+                            if(!empty($allPointage)){
+                                foreach ($allPointage as $pointage) {
+                                    foreach ($horsNoyaux as $horsNoyau) {
+                                        if ($horsNoyau['ouvrier_id'] === $pointage['matricule']) {
+                                            Rapport::setWorkerHourCalculated($pointage['hpoint'], $horsNoyau['id']);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
+
+            //    exit;
+                //////
+
                 $interimaireMobileList = Rapport::getInterimaireMobileByTeamSiteAndDate($dateRapport, $chantierId);
                 if(!empty($interimaireMobileList)){
                     $rapportJournalierInterimnaireMobile = Rapport::saveRapportDetailInterimaireMobile($dateRapport, $chantierId, $interimaireMobileList);
@@ -337,7 +611,7 @@ if(!empty($_SESSION)){
 
             $rjAbsentHorsNoyauExist = Rapport::checkrapportAbsentHorsNoyauExist($dateRapport, $chantierId, $matricule);
 
-            //    var_dump($rjAbsentHorsNoyauExist);
+            //      var_dump($rjAbsentHorsNoyauExist);
 
             //    exit;
             // problème
@@ -358,6 +632,8 @@ if(!empty($_SESSION)){
         /////////////////////////////////////////////////////////////////////////////////////
 
         if(!empty($teamLeaderMissing) && ($teamLeaderAffectedOnSite<= 1) && $form){
+
+            echo "CAS 2";
 
 
             $rapportId = isset($rapportId)? $rapportId : "";
@@ -426,19 +702,122 @@ if(!empty($_SESSION)){
             if($rjHorsNoyauExist === false){
             //    echo "je suis la 2";
             //    exit;
-            $noyauObject->saveDBHorsNoyau();
+                $noyauObject->saveDBHorsNoyau();
 
                 $horsNoyauList = Dsk::getTeamLess($dateRapport, $chantierCode);
+
+                // Gestion de la liste des hors noyaux dans le cas ou le mode INTEMPERIE EST ACTIF
+                if(!empty($siteWithItp)){
+                    if (in_array($_POST['chantier_id'], $siteWithItpId)) {
+
+                        if(!empty($horsNoyauList)){
+                            $horsNoyauListLength  = sizeof($horsNoyauList);
+                            for($i = 0; $i<$horsNoyauListLength; $i++){
+                                $newHorsNoyauList[$i]['noyau'] = $horsNoyauList[$i]['noyau'];
+                                $newHorsNoyauList[$i]['id'] = $horsNoyauList[$i]['id'];
+                                $newHorsNoyauList[$i]['matricule'] = $horsNoyauList[$i]['matricule'];
+                                $newHorsNoyauList[$i]['fullname'] = $horsNoyauList[$i]['fullname'];
+                                $newHorsNoyauList[$i]['chantier'] = $horsNoyauList[$i]['chantier'];
+                            }
+                        }else{
+                            $horsNoyauListLength = 0;
+                        }
+
+                        foreach($teamLeaderOnsite as $teamLeader){
+                            $teamLeaderMatricule[]= $teamLeader['matricule'];
+                        }
+
+                        $horsNoyauListToAdd = Dsk::getAllHorsNoyauIntemperieAbsence($matricule,$dateRapport, $chantierCode);
+
+                        $noyauListToAdd = Dsk::getAllNoyauIntemperieAbsence($matricule, $dateRapport);
+
+                        //    var_dump($noyauListToAdd);
+
+                        if(!empty($horsNoyauListToAdd)){
+                            $lengthHNToAdd = sizeof($horsNoyauListToAdd);
+                        }else{
+                            $lengthHNToAdd = 0;
+                        }
+
+                        if(!empty($noyauListToAdd)){
+
+                            $lengthNToAdd = sizeof($noyauListToAdd);
+
+                            for($i=0; $i < $lengthNToAdd; $i++){
+
+                                $horsNoyauListToAdd[$i + $lengthHNToAdd]['id'] = $noyauListToAdd[$i]['id'];
+                                $horsNoyauListToAdd[$i + $lengthHNToAdd]['noyau'] = $noyauListToAdd[$i]['noyau'];
+                                $horsNoyauListToAdd[$i + $lengthHNToAdd]['matricule'] = $noyauListToAdd[$i]['matricule'];
+                                $horsNoyauListToAdd[$i + $lengthHNToAdd]['fullname'] = $noyauListToAdd[$i]['fullname'];
+                                $horsNoyauListToAdd[$i + $lengthHNToAdd]['date'] = $noyauListToAdd[$i]['date'];
+                                $horsNoyauListToAdd[$i + $lengthHNToAdd]['timemin'] = $noyauListToAdd[$i]['timemin'];
+                                $horsNoyauListToAdd[$i + $lengthHNToAdd]['motif'] = $noyauListToAdd[$i]['motif'];
+                            }
+                        }
+
+
+                        if(!empty($horsNoyauListToAdd)){
+
+                            $n=0;
+                            for($i=0; $i< sizeof($horsNoyauListToAdd); $i++){
+                                if(!in_array($horsNoyauListToAdd[$i]['noyau'], $teamLeaderMatricule )){
+                                    $newHorsNoyauListToAdd[$n]['noyau'] = $horsNoyauListToAdd[$i]['noyau'];
+                                    $newHorsNoyauListToAdd[$n]['id'] = $horsNoyauListToAdd[$i]['id'];
+                                    $newHorsNoyauListToAdd[$n]['matricule'] = $horsNoyauListToAdd[$i]['matricule'];
+                                    $newHorsNoyauListToAdd[$n]['fullname'] = $horsNoyauListToAdd[$i]['fullname'];
+                                    $newHorsNoyauListToAdd[$n]['chantier'] = $chantierCode;
+                                    $n++;
+                                }
+                            }
+
+                            $newHorsNoyauListToAddLength = sizeof($newHorsNoyauListToAdd);
+
+                            for($j=0; $j<($newHorsNoyauListToAddLength); $j++){
+                                $newHorsNoyauList[$j+$horsNoyauListLength]['noyau'] = $newHorsNoyauListToAdd[$j]['noyau'];
+                                $newHorsNoyauList[$j+$horsNoyauListLength]['id'] = $newHorsNoyauListToAdd[$j]['id'];
+                                $newHorsNoyauList[$j+$horsNoyauListLength]['matricule'] = $newHorsNoyauListToAdd[$j]['matricule'];
+                                $newHorsNoyauList[$j+$horsNoyauListLength]['fullname'] = $newHorsNoyauListToAdd[$j]['fullname'];
+                                $newHorsNoyauList[$j+$horsNoyauListLength]['chantier'] = $chantierCode;
+                            }
+                        }
+
+                        if(!empty($newHorsNoyauList)){
+                            $horsNoyauList = array_unique($newHorsNoyauList, SORT_REGULAR );
+                        }
+                    }
+                }
+
+
                 $interimaireMobileList = Rapport::getInterimaireMobileByTeamSiteAndDate($dateRapport, $chantierId);
 
-                //var_dump($interimaireMobileList);
-
-                //exit;
-
-
-
                 if(!empty($horsNoyauList)){
+
                     $rapportJournalierHorsNoyau = Rapport::saveRapportDetailHorsNoyau($dateRapport, $chantierId, $horsNoyauList);
+
+                    if(!empty($siteWithItp)) {
+                        if (in_array($_POST['chantier_id'], $siteWithItpId)) {
+
+                            $rapportHorsNoyau = Rapport::getRapportHorsNoyauItp($dateRapport, $_POST['chantier_id'], $matricule);
+
+                            if(!empty($rapportHorsNoyau)){
+                                $horsNoyaux = Rapport::getRapportDetailsItp($rapportHorsNoyau['id']);
+                            }
+
+                            $allPointage = Dsk::getCalculTotalHoraire($dateRapport, $chantierCode);
+
+                            if (!empty($allPointage)) {
+                                foreach ($allPointage as $pointage) {
+                                    foreach ($horsNoyaux as $noyau) {
+                                        if ($noyau['ouvrier_id'] === $pointage['matricule']) {
+                                            //    var_dump($pointage['hpoint']);
+                                            //    var_dump($rapport['id']);
+                                            Rapport::setWorkerHourCalculated($pointage['hpoint'], $noyau['id']);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             //    var_dump($rapportJournalierHorsNoyau);
             //    exit;
@@ -480,7 +859,8 @@ if(!empty($_SESSION)){
         ///////////////////////////////////////////////////////////////////////////////////////////////
         if(!empty($teamLeaderMissing) && ($teamLeaderAffectedOnSite > 1 ) && $form){
 
-
+        //    echo "CAS 3";
+        //    exit;
 
             $rapportId = isset($rapportId)? $rapportId : "";
             $terminal = isset($terminal)? $terminal : "";
@@ -559,10 +939,144 @@ if(!empty($_SESSION)){
 
             if($rjHorsNoyauExist === false){
                 $horsNoyauList = Dsk::getTeamLess($dateRapport, $chantierCode);
+
+                // Gestion de la liste des hors noyaux dans le cas ou le mode INTEMPERIE EST ACTIF
+                if(!empty($siteWithItp)){
+
+
+                    if (in_array($_POST['chantier_id'], $siteWithItpId)) {
+                        if(!empty($teamLeaderOnsite)){
+                            foreach($teamLeaderOnsite as $teamLeader){
+                                $teamLeaderMatricule[]= $teamLeader['matricule'];
+                            }
+                        }
+
+
+                        if(!empty($horsNoyauList)){
+                        //    echo "hors noyau";
+                        //    var_dump($horsNoyauList);
+
+
+                            $horsNoyauListLength  = sizeof($horsNoyauList);
+                            for($i = 0; $i<$horsNoyauListLength; $i++){
+                                $newHorsNoyauList[$i]['noyau'] = $horsNoyauList[$i]['noyau'];
+                                $newHorsNoyauList[$i]['id'] = $horsNoyauList[$i]['id'];
+                                $newHorsNoyauList[$i]['matricule'] = $horsNoyauList[$i]['matricule'];
+                                $newHorsNoyauList[$i]['fullname'] = $horsNoyauList[$i]['fullname'];
+                                $newHorsNoyauList[$i]['chantier'] = $horsNoyauList[$i]['chantier'];
+                            }
+                        }else{
+                            $horsNoyauListLength = 0;
+                        }
+
+                        $horsNoyauListToAdd = Dsk::getAllHorsNoyauIntemperieAbsence($matricule,$dateRapport, $chantierCode);
+                        /*id*/
+                        /*matricule*/
+                        /*fullname*/
+                        /*date*/
+                        /*timemin*/
+                    //    echo "hors noyau to add";
+
+                    //    var_dump($horsNoyauListToAdd);
+
+                        $noyauListToAdd = Dsk::getAllNoyauIntemperieAbsence($matricule, $dateRapport);
+
+                    //    var_dump($noyauListToAdd);
+
+                        if(!empty($horsNoyauListToAdd)){
+                            $lengthHNToAdd = sizeof($horsNoyauListToAdd);
+                        }else{
+                            $lengthHNToAdd = 0;
+                        }
+
+                        if(!empty($noyauListToAdd)){
+
+                            $lengthNToAdd = sizeof($noyauListToAdd);
+
+                            for($i=0; $i < $lengthNToAdd; $i++){
+
+                                $horsNoyauListToAdd[$i + $lengthHNToAdd]['id'] = $noyauListToAdd[$i]['id'];
+                                $horsNoyauListToAdd[$i + $lengthHNToAdd]['noyau'] = $noyauListToAdd[$i]['noyau'];
+                                $horsNoyauListToAdd[$i + $lengthHNToAdd]['matricule'] = $noyauListToAdd[$i]['matricule'];
+                                $horsNoyauListToAdd[$i + $lengthHNToAdd]['fullname'] = $noyauListToAdd[$i]['fullname'];
+                                $horsNoyauListToAdd[$i + $lengthHNToAdd]['date'] = $noyauListToAdd[$i]['date'];
+                                $horsNoyauListToAdd[$i + $lengthHNToAdd]['timemin'] = $noyauListToAdd[$i]['timemin'];
+                                $horsNoyauListToAdd[$i + $lengthHNToAdd]['motif'] = $noyauListToAdd[$i]['motif'];
+                            }
+                        }
+
+                    //    var_dump($horsNoyauListToAdd);
+
+                    //    exit;
+
+                        if(!empty($horsNoyauListToAdd)){
+
+                            $n=0;
+                            for($i=0; $i< sizeof($horsNoyauListToAdd); $i++){
+                                if(!empty($teamLeaderMatricule)){
+                                    if(!in_array($horsNoyauListToAdd[$i]['noyau'], $teamLeaderMatricule )){
+                                        $newHorsNoyauListToAdd[$n]['noyau'] = $horsNoyauListToAdd[$i]['noyau'];
+                                        $newHorsNoyauListToAdd[$n]['id'] = $horsNoyauListToAdd[$i]['id'];
+                                        $newHorsNoyauListToAdd[$n]['matricule'] = $horsNoyauListToAdd[$i]['matricule'];
+                                        $newHorsNoyauListToAdd[$n]['fullname'] = $horsNoyauListToAdd[$i]['fullname'];
+                                        $newHorsNoyauListToAdd[$n]['chantier'] = $chantierCode;
+                                        $n++;
+                                    }
+                                }
+
+                            }
+
+                        //    var_dump($newHorsNoyauListToAdd);
+                            if(!empty($newHorsNoyauListToAdd)){
+                                $newHorsNoyauListToAddLength = sizeof($newHorsNoyauListToAdd);
+
+                                for($j=0; $j<($newHorsNoyauListToAddLength); $j++){
+                                    $newHorsNoyauList[$j+$horsNoyauListLength]['noyau'] = $newHorsNoyauListToAdd[$j]['noyau'];
+                                    $newHorsNoyauList[$j+$horsNoyauListLength]['id'] = $newHorsNoyauListToAdd[$j]['id'];
+                                    $newHorsNoyauList[$j+$horsNoyauListLength]['matricule'] = $newHorsNoyauListToAdd[$j]['matricule'];
+                                    $newHorsNoyauList[$j+$horsNoyauListLength]['fullname'] = $newHorsNoyauListToAdd[$j]['fullname'];
+                                    $newHorsNoyauList[$j+$horsNoyauListLength]['chantier'] = $chantierCode;
+                                }
+                            }
+                        }
+                        if(!empty($newHorsNoyauList)){
+                            $horsNoyauList = array_unique($newHorsNoyauList, SORT_REGULAR );
+                        }
+                    }
+                }
+
+            //    var_dump($horsNoyauListToAdd);
+            //    var_dump($horsNoyauList);
+
+            //    exit;
+
                 $interimaireMobileList = Rapport::getInterimaireMobileByTeamSiteAndDate($dateRapport, $chantierId);
+
                 if(!empty($horsNoyauList)){
                     $noyauObject->saveDBHorsNoyau();
                     $rapportJournalierHorsNoyau = Rapport::saveRapportDetailHorsNoyau($dateRapport, $chantierId, $horsNoyauList);
+                    if (in_array($_POST['chantier_id'], $siteWithItpId)) {
+
+                        $rapportHorsNoyau = Rapport::getRapportHorsNoyauItp($dateRapport, $_POST['chantier_id'], $matricule);
+
+                        if(!empty($rapportHorsNoyau)){
+                            $horsNoyaux = Rapport::getRapportDetailsItp($rapportHorsNoyau['id']);
+                        }
+
+                        $allPointage = Dsk::getCalculTotalHoraire($dateRapport, $chantierCode);
+
+                        if (!empty($allPointage)) {
+                            foreach ($allPointage as $pointage) {
+                                foreach ($horsNoyaux as $noyau) {
+                                    if ($noyau['ouvrier_id'] === $pointage['matricule']) {
+                                        //    var_dump($pointage['hpoint']);
+                                        //    var_dump($rapport['id']);
+                                        Rapport::setWorkerHourCalculated($pointage['hpoint'], $noyau['id']);
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
                 if(!empty($interimaireMobileList)){
                     $rapportJournalierInterimnaireMobile = Rapport::saveRapportDetailInterimaireMobile($dateRapport, $chantierId, $interimaireMobileList);
@@ -586,6 +1100,59 @@ if(!empty($_SESSION)){
     }
 
 
+    ////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////
+    //                                                            //
+    //      Mise à jour des détails avec la tâche Intempérie      //
+    //                                                            //
+    ////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////
+
+
+
+    if(!empty($siteWithItp)){
+        if (in_array($_POST['chantier_id'], $siteWithItpId)) {
+            $rapportNoyau = Rapport::getRapportNoyauItp($dateRapport, $_POST['chantier_id'], $matricule);
+            $rapportHorsNoyau = Rapport::getRapportHorsNoyauItp($dateRapport, $_POST['chantier_id'], $matricule);
+
+            if(!empty($rapportNoyau['id']) && !empty($noyauListToAdd)){
+                Rapport::setItpTask($rapportNoyau['id'], $noyauListToAdd);
+            }
+
+            if(!empty($rapportHorsNoyau) && !empty($horsNoyauListToAdd)){
+                Rapport::setItpTask($rapportHorsNoyau['id'], $horsNoyauListToAdd);
+            }
+
+            if(!empty($rapportNoyau)){
+                $noyaux = Rapport::getRapportDetailsOuvrierItp($rapportNoyau['id']);
+            }
+
+            if(!empty($rapportHorsNoyau)){
+                $horsNoyaux = Rapport::getRapportDetailsOuvrierItp($rapportHorsNoyau['id']);
+            }
+
+            if($teamLeaderMissing){
+
+                if(!empty($horsNoyauListToAdd)){
+                    Rapport::updateHtotForIntemperie($dateRapport, $_POST['chantier_id'], $horsNoyauListToAdd);
+                }
+            }else{
+                if(!empty($noyauListToAdd)){
+
+                    Rapport::updateHtotForIntemperie($dateRapport,  $_POST['chantier_id'], $noyauListToAdd);
+                }
+
+
+                if(!empty($horsNoyauListToAdd)){
+                    Rapport::updateHtotForIntemperie($dateRapport, $_POST['chantier_id'], $horsNoyauListToAdd);
+                }
+            }
+
+
+        }
+    }
+
+    //exit;
 
     if($_SESSION['post_id'] === "3"){
 
@@ -623,6 +1190,8 @@ if(!empty($_SESSION)){
         'id' => 'id',
         'class' => 'select2-container',
     ));
+
+//    exit;
 
     include $conf->getViewsDir().'header.php';
     include $conf->getViewsDir().'sidebar.php';

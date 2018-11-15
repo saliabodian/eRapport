@@ -27,7 +27,7 @@
                                     Date début <span>*</span> :
                                 </label>
                                 <div class="controls">
-                                    <input name="date_deb" class="datepicker" value=""/>
+                                    <input autocomplete="off" name="date_deb" class="datepicker" value=""/>
                                 </div>
                             </div>
                             <div class="control-group">
@@ -35,7 +35,7 @@
                                     Date fin <span>*</span> :
                                 </label>
                                 <div class="controls">
-                                    <input name="date_fin" class="datepicker" value=""/>
+                                    <input name="date_fin" autocomplete="off" class="datepicker" value=""/>
                                 </div>
                             </div>
                             <div class="form-actions">
@@ -88,10 +88,9 @@
                 </div>
             </div>
         </div>
-        <?php if($_SESSION['post_id']=== "7") : ?>
-            <?php if(!empty($condenseTaskDoneOnSite)) : ?>
-                <div class="row-fluid">
-                    <div class="span12">
+        <?php if(!empty($condenseTaskDoneOnSite)) : ?>
+            <div class="row-fluid">
+                <div class="span12">
                         <div class="widget-box">
                             <div class="widget-title"> <span class="icon"> <i class="icon-align-justify"></i> </span>
                                 <h5>Export en CSV</h5>
@@ -113,8 +112,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
-            <?php endif ; ?>
+            </div>
         <?php endif ; ?>
     </div>
 </div>

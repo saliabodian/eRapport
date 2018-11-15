@@ -81,7 +81,7 @@ $i=0;
 $dbHost = 'localhost';
 $dbUser = 'root';
 $dbPassword = 'salihin_cdcl';
-$dbDatabase = 'erapportnew';
+$dbDatabase = 'cdcl_test';
 
 
 $dsn = 'mysql:dbname='.$dbDatabase.';host='.$dbHost.';charset=UTF8';

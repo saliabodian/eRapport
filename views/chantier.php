@@ -58,6 +58,13 @@
                                     <input type="text" class="span11" placeholder="Adresse" name="adresse"  value="<?= $chantierObject->getAdresse() ?>"/>
                                 </div>
                             </div>
+                            <!--div class="control-group field_wrapper">
+                                <label for="batiment" class="control-label">Bâtiment :</label>
+                                <div class="controls">
+                                    <input id="spaceBottom" type="text" class="span4" placeholder="Batiment" name="bat[]"/>
+                                    <a href="javascript:void(0);" class="add_button" title="Add field"><img src="img/plus-mini.png"/></a>
+                                </div>
+                            </div-->
                             <div class="control-group">
                                 <label for="is_actif" class="control-label">Est Actif ?</label>
                                 <div class="controls">
@@ -71,19 +78,49 @@
                                 </div>
                             </div>
                             <div class="form-actions">
-                                <div class=" span2 btn-block"></div>
                                 <div class="span4">
                                     <button type="submit" class="btn btn-success btn-block" >Enregistrer</button>
                                 </div>
                                 <div class="span4">
                                     <a href="?delete=<?= $chantierObject->getId() ?>" class="btn btn-warning  btn-block<?php if ($chantierObject->getId() <= 0) : ?> disabled<?php endif; ?>" role="button" aria-disabled="true">Supprimer</a>
                                 </div>
-                                <div class=" span2 btn-block"></div>
+                                <div class="span4">
+                                    <a href="batiment.php?chantier_id=<?= $chantierObject->getId() ?>" class="btn btn-block btn-primary <?php if ($chantierObject->getId() <= 0) : ?> disabled<?php endif; ?>" role="button" aria-disabled="true"> Ajout de bâtiment</a>
+                                </div>
                             </div>
                         </form>
                     </div>
                 </div>
             </div>
         </div>
+        <?php if(!empty($batimentList)) :?>
+        <div class="row-fluid">
+            <div class="span6">
+                <div class="widget-box">
+                    <div class="widget-title"> <span class="icon"><i class="icon-home"></i></span>
+                        <h5>Liste des bâtiments</h5>
+                    </div>
+                    <div class="widget-content nopadding">
+                        <table class="table table-striped table-bordered">
+                            <thead>
+                            <tr>
+                                <th>Bâtiment</th>
+                                <th>Statut</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach($batimentList as $batiment) :?>
+                                <tr>
+                                    <td class="taskDesc"><i class="icon-info-sign"></i> <?= $batiment['nom']?></td>
+                                    <td class="taskOptions"><a href="batiment.php?id=<?= $batiment['id'] ?>" class="tip-top" data-original-title="Update"><i class="icon-eye-open"></i></a> </td>
+                                </tr>
+                                <?php endforeach ; ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <?php endif ; ?>
     </div>
 </div>

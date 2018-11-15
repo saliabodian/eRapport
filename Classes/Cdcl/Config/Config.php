@@ -36,7 +36,7 @@ Class Config {
         try {
             $this->db = new \PDO($dsn, $dbUser, $dbPassword);
         }
-        catch(Exception $e) {
+        catch(\Exception $e) {
             echo 'Config :: Can\'t connect ['.$e->getMessage().']';
             exit;
         }

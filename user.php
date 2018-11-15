@@ -119,6 +119,7 @@ if(!empty($_SESSION)){
         $password1 = isset($_POST['password1']) ? $_POST['password1'] : '';
         $password2 = isset($_POST['password2']) ? $_POST['password2'] : '';
         $post_id = isset($_POST['post_id']) ? $_POST['post_id'] : '';
+        $_POST['duallistbox_demo1'] = isset($_POST['duallistbox_demo1']) ? $_POST['duallistbox_demo1'] : '';
         $formOk = true;
 
 
@@ -166,21 +167,23 @@ if(!empty($_SESSION)){
             $conf->addError('Email non valide.');
         }
 
-        if (empty($_POST['password1'])) {
-            $conf->addError('Veuillez renseigner le mot de passe.');
-            $formOk = false;
-        }
+        if ($userObject->getId() <= 0){
 
-        if ($_POST['password2'] != $_POST['password1']) {
-            $conf->addError('Veuillez confirmer votre mot de passe.');
-            $formOk = false;
+            if (empty($_POST['password1'])) {
+                $conf->addError('Veuillez renseigner le mot de passe.');
+                $formOk = false;
+            }
+
+            if ($_POST['password2'] != $_POST['password1']) {
+                $conf->addError('Veuillez confirmer votre mot de passe.');
+                $formOk = false;
+            }
         }
 
         if (empty($post_id)) {
             $conf->addError('Veuillez définir une fonction.');
             $formOk = false;
         }
-
 
         if ($formOk) {
             // Je remplis l'objet User avec les valeurs récupérées en POST
@@ -197,6 +200,12 @@ if(!empty($_SESSION)){
 
 
             $userObject->userHasChantierSaveDb($userId,$_POST['duallistbox_demo1']);
+
+
+
+        //    var_dump($userObject);
+
+        //    exit;
 
             //$userObject->userHasChantierSaveDb($userId, $_POST['duallistbox_demo1']);
             $userObject->saveDB();

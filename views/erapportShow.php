@@ -65,7 +65,7 @@
                                                                 <?php endforeach ; ?>
                                                             <?php elseif ($rapport['task_id_2'] === $noyauHeaderdetail['tache_id']) : ?>
                                                                 <?php foreach($noyauWorkerTask[$rapport['id']] as $task) : ?>
-                                                                    <?php if($task['tache_id']=== $rapport['task_id_2']) : ?>
+                                                                    <?php if($task['tache_id'] === $rapport['task_id_2']) : ?>
                                                                         <td><?= $task['vhr'] ?></td>
                                                                     <?php endif; ?>
                                                                 <?php endforeach ; ?>
@@ -421,14 +421,14 @@
             </div>
         </div>
         <hr>
-        <form method="get" action="erapport.php">
-            <div class="row-fluid span12 selfInline" >
+            <form method="get" action="erapport.php">
+                <div class="row-fluid span12 selfInline" >
                 <div class="control-group ">
                     Je confirme que les informations saisies sont correctes .
                     <input type="checkbox" name="isValid">
                 </div>
             </div>
-            <div class="row-fluid" >
+                <div class="row-fluid" >
                     <div class="span12">
                         <input type="hidden" name="rapport_id" value="<?= $_GET['rapport_id'] ?>">
                         <input type="hidden" name="rapport_type" value="<?= $_GET['rapport_type'] ?>">

@@ -70,12 +70,13 @@
             <div class="span12">
                 <div class="widget-content nopadding">
                     <?php if(!empty($rapportValidatedList)){ ?>
+                        <input class="span12" id="myInput" type="text" placeholder="Rechercher..">
                         <div class="widget-box">
                             <div class="widget-title"> <span class="icon"> <i class="icon-th"></i> </span>
                                 <h5>Liste des rapports à imprimer (<?= isset($nb)? $nb : '' ?>)</h5>
                             </div>
                             <div class="widget-content nopadding">
-                                <table class="table table-bordered table-striped">
+                                <table class="table table-bordered table-striped" id="myTable">
                                     <thead>
                                     <tr>
                                         <th>Date</th>

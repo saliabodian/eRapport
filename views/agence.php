@@ -38,7 +38,7 @@
                     </div>
                     <div class="widget-content nopadding">
                         <?php include 'alert.php'; ?>
-                        <form id="agenceForm" action="" method="post" class="form-horizontal">
+                         <form id="agenceForm" action="" method="post" class="form-horizontal">
                             <input type="hidden" name="agence_id" value="<?= $agenceObject->getId() ?>">
                             <div class="control-group">
                                 <label class="control-label" for="agence">Agence <span>*</span>:</label>

@@ -80,8 +80,23 @@ if(!empty($_SESSION)){
     //  var_dump($interimaireList);
     //  var_dump($rapportInt);
 
+    $siteWithItp = Chantier::getChantierActifWithItp();
+    if(!empty($siteWithItp)){
+        foreach($siteWithItp as $site){
+            $siteWithItpId[] = $site['id'];
+        }
+    }
+    if(!empty($siteWithItpId)){
+        if (in_array($_GET['chantier_id'], $siteWithItpId)) {
+            $itpActive = true;
+        }else{
+            $itpActive = false;
+        }
+    }
+
     $newArray = array();
     // Mise à jour du champ htot pour les intérimaires
+
     if(!empty($interimaireList)){
         foreach($interimaireList as $interimaire){
             foreach($rapportInt as $rapportDetailInt){
@@ -115,9 +130,12 @@ if(!empty($_SESSION)){
     //    var_dump(strtotime(date('Y/m/d', time())));
     //    exit;
 
-    if(strtotime($_GET["date_generation"]) != strtotime(date('Y/m/d', time()))){
-        $allPointage = Dsk::getCalculTotalHoraire($_GET["date_generation"], $_GET["chantier_code"]) ;
+    if($itpActive === false){
+        if(strtotime($_GET["date_generation"]) != strtotime(date('Y/m/d', time()))){
+            $allPointage = Dsk::getCalculTotalHoraire($_GET["date_generation"], $_GET["chantier_code"]) ;
+        }
     }
+
 
     //$allPointage = Dsk::getCalculTotalHoraire($_GET["date_generation"], $_GET["chantier_code"]) ;
 
@@ -417,13 +435,14 @@ if(!empty($_SESSION)){
     //var_dump($horsNoyau);
     //exit;
 
-
-    if(!empty($absentHorsNoyau)){
-        if(!empty($allAbsence)){
-            foreach($allAbsence as $pointage){
-                foreach($absentHorsNoyau as $rapport){
-                    if($rapport['ouvrier_id']=== $pointage['matricule']){
-                        Rapport::setHorsNoyauHourCalculated($pointage['timemin']/60, $rapport['id']);
+    if($itpActive === false){
+        if(!empty($absentHorsNoyau)){
+            if(!empty($allAbsence)){
+                foreach($allAbsence as $pointage){
+                    foreach($absentHorsNoyau as $rapport){
+                        if($rapport['ouvrier_id']=== $pointage['matricule']){
+                            Rapport::setHorsNoyauHourCalculated($pointage['timemin']/60, $rapport['id']);
+                        }
                     }
                 }
             }
@@ -434,46 +453,49 @@ if(!empty($_SESSION)){
 
 
     // Mise à jour des heures pointées au niveau des différentes matrices générées
-    if(!empty($allPointage)){
-        foreach($allPointage as $pointage){
-            foreach($noyau as $rapport){
-                if($rapport['ouvrier_id'] === $pointage['matricule']){
-                    //    var_dump($pointage['hpoint']);
-                    //    var_dump($rapport['id']);
-                    Rapport::setWorkerHourCalculated($pointage['hpoint'], $rapport['id']);
+    if($itpActive === false){
+        if(!empty($allPointage)){
+            foreach($allPointage as $pointage){
+                foreach($noyau as $rapport){
+                    if($rapport['ouvrier_id'] === $pointage['matricule']){
+                        //    var_dump($pointage['hpoint']);
+                        //    var_dump($rapport['id']);
+                        Rapport::setWorkerHourCalculated($pointage['hpoint'], $rapport['id']);
+                    }
                 }
             }
-        }
 
-        //exit;
-        /****
-        Plus besoin de mettre à jour le htot des absents du noyau car cette valeur est retournée par la fonction établie sous la requête de DSK
-        foreach($allPointage as $pointage){
-        foreach($noyauAbsent as $rapport){
-        if($rapport['ouvrier_id']=== $pointage['matricule']){
-        Rapport::setWorkerHourCalculated($pointage['hpoint'], $rapport['id']);
-        }
-        }
-        }
-         ****/
-        /*
-        foreach($allPointage as $pointage){
-            foreach($absentHorsNoyau as $rapport){
-                if($rapport['ouvrier_id']=== $pointage['matricule']){
-                    Rapport::setHorsNoyauHourCalculated($pointage['timemin'], $rapport['id']);
+            //exit;
+            /****
+            Plus besoin de mettre à jour le htot des absents du noyau car cette valeur est retournée par la fonction établie sous la requête de DSK
+            foreach($allPointage as $pointage){
+            foreach($noyauAbsent as $rapport){
+            if($rapport['ouvrier_id']=== $pointage['matricule']){
+            Rapport::setWorkerHourCalculated($pointage['hpoint'], $rapport['id']);
+            }
+            }
+            }
+             ****/
+            /*
+            foreach($allPointage as $pointage){
+                foreach($absentHorsNoyau as $rapport){
+                    if($rapport['ouvrier_id']=== $pointage['matricule']){
+                        Rapport::setHorsNoyauHourCalculated($pointage['timemin'], $rapport['id']);
+                    }
                 }
             }
-        }
-        */
+            */
 
-        foreach($allPointage as $pointage){
-            foreach($horsNoyau as $rapport){
-                if($rapport['ouvrier_id'] === $pointage['matricule']){
-                    Rapport::setWorkerHourCalculated($pointage['hpoint'], $rapport['id']);
+            foreach($allPointage as $pointage){
+                foreach($horsNoyau as $rapport){
+                    if($rapport['ouvrier_id'] === $pointage['matricule']){
+                        Rapport::setWorkerHourCalculated($pointage['hpoint'], $rapport['id']);
+                    }
                 }
             }
         }
     }
+
 
     // Récupération des ids des différents rapports générés absents à savoir ceux du noyau, les absents et les hors noyaux
 

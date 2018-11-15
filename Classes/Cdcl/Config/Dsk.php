@@ -20,7 +20,7 @@ class Dsk {
 
     public static function allChefDEquipeForDay($date){
         $dbh = ibase_connect("31.204.90.68:C:\DSK\Data\dsk2.fdb","SYSDBA","masterkey");
-    //   $dbh = ibase_connect("10.10.110.30:C:\DSK\Data\dsk2.fdb","SYSDBA","masterkey");
+        //$dbh = ibase_connect("10.10.110.30:C:\DSK\Data\dsk2.fdb","SYSDBA","masterkey");
 
         $sql = "
         SELECT Booking.NoPers,Pers.CODEPERS, Pers.FULLNAME, ACCOUNT.CUSTOM  FROM BOOKING
@@ -108,7 +108,7 @@ class Dsk {
 
         while($row = ibase_fetch_object($sth)){
             $allChefDEquipeByDay[$i]["matricule"] = trim($row->CODEPERS);
-            $allChefDEquipeByDay[$i]["fullname"] = $row->FULLNAME;
+            $allChefDEquipeByDay[$i]["fullname"] = utf8_encode($row->FULLNAME);
             $allChefDEquipeByDay[$i]["chantier"] = $row->CUSTOM;
             $i++;
         }
@@ -209,7 +209,7 @@ class Dsk {
         $i=0;
         while($row = ibase_fetch_object($sth)) {
             $chefDEquipeOnsite[$i]["matricule"] = trim($row->CODEPERS);
-            $chefDEquipeOnsite[$i]["fullname"] = $row->FULLNAME;
+            $chefDEquipeOnsite[$i]["fullname"] = utf8_encode($row->FULLNAME);
             $chefDEquipeOnsite[$i]["chantier"] = $row->CUSTOM;
             $chefDEquipeOnsite[$i]["noyau"] = $row->CUSTOM3;
             $i++;
@@ -312,7 +312,7 @@ class Dsk {
         while($row = ibase_fetch_object($sth)) {
             $team[$i]["id"] = $row->NOPERS;
             $team[$i]["matricule"] = trim($row->CODEPERS);
-            $team[$i]["fullname"] = $row->FULLNAME;
+            $team[$i]["fullname"] = utf8_encode($row->FULLNAME);
             $team[$i]["chantier"] = $row->CUSTOM;
             $team[$i]["noyau"] = $row->CUSTOM3;
             $i++;
@@ -344,10 +344,10 @@ class Dsk {
         while($row = ibase_fetch_object($sth)) {
             $absence[$i]["id"] = $row->NOPERS;
             $absence[$i]["matricule"] = trim($row->CODEPERS);
-            $absence[$i]["fullname"] = $row->FULLNAME;
+            $absence[$i]["fullname"] = utf8_encode($row->FULLNAME);
             $absence[$i]["date"] = $row->THEDATE;
             $absence[$i]["timemin"] = $row->TIMEMIN;
-            $absence[$i]["caption1"] = $row->CAPTION1;
+            $absence[$i]["caption1"] = utf8_encode($row->CAPTION1);
             $i++;
         }
 
@@ -362,10 +362,11 @@ class Dsk {
     //    $dbh = ibase_connect("10.10.110.30:C:\DSK\Data\dsk2.fdb","SYSDBA","masterkey");
 
         $sql = "
-            SELECT PERS.NOPERS,PERS.CODEPERS, PERS.FULLNAME, ABSENCE.THEDATE, ABSENCE.TIMEMIN, ACCOUNT.CAPTION1 FROM ABSENCE
+            SELECT PERS.NOPERS,PERS.CODEPERS, PERS.FULLNAME, ABSENCE.THEDATE, ABSENCE.TIMEMIN, ACCOUNT.NOACCOUNT, ACCOUNT.CAPTION1 FROM ABSENCE
             INNER JOIN PERS ON PERS.NOPERS = ABSENCE.NOPERS
             INNER JOIN ACCOUNT ON ABSENCE.NOACCOUNT= ACCOUNT.NOACCOUNT
             WHERE THEDATE='".$date."'
+            AND ACCOUNT.NOACCOUNT <> 20
             ";
 
         $sth = ibase_query($dbh, $sql);
@@ -375,10 +376,10 @@ class Dsk {
         while($row = ibase_fetch_object($sth)) {
             $allAbsence[$i]["id"] = $row->NOPERS;
             $allAbsence[$i]["matricule"] = trim($row->CODEPERS);
-            $allAbsence[$i]["fullname"] = $row->FULLNAME;
+            $allAbsence[$i]["fullname"] = utf8_encode($row->FULLNAME);
             $allAbsence[$i]["date"] = $row->THEDATE;
             $allAbsence[$i]["timemin"] = $row->TIMEMIN;
-            $allAbsence[$i]["motif"] = $row->CAPTION1;
+            $allAbsence[$i]["motif"] = utf8_encode($row->CAPTION1);
             $i++;
         }
         $allAbsence = isset($allAbsence)? $allAbsence : '';
@@ -567,7 +568,7 @@ class Dsk {
             $horsNoyau[$i]["noyau"] = $row->CUSTOM3;
             $horsNoyau[$i]["id"] = $row->NOPERS;
             $horsNoyau[$i]["matricule"] = trim($row->CODEPERS);
-            $horsNoyau[$i]["fullname"] = $row->FULLNAME;
+            $horsNoyau[$i]["fullname"] = utf8_encode($row->FULLNAME);
             $horsNoyau[$i]["chantier"] = $row->CUSTOM;
             $i++;
         }
@@ -599,9 +600,9 @@ class Dsk {
 
             $absence_cumulee[$i]["id"] = $row->NOPERS;
             $absence_cumulee[$i]["matricule"] = trim($row->CODEPERS);
-            $absence_cumulee[$i]["fullname"] = $row->FULLNAME;
+            $absence_cumulee[$i]["fullname"] = utf8_encode($row->FULLNAME);
             $absence_cumulee[$i]["date"] = $row->THEDATE;
-            $absence_cumulee[$i]["absence"] = $row->ABSENCE;
+            $absence_cumulee[$i]["absence"] = utf8_encode($row->ABSENCE);
 
             $i++;
         }
@@ -643,7 +644,11 @@ class Dsk {
         $dbh = ibase_connect("31.204.90.68:C:\DSK\Data\dsk2.fdb","SYSDBA","masterkey");
     //    $dbh = ibase_connect("10.10.110.30:C:\DSK\Data\dsk2.fdb","SYSDBA","masterkey");
 
+    //    var_dump($date);
 
+    //    var_dump($chantier);
+
+    //    exit;
         $stmt = "select noaccount, caption1, custom, giddid
                 from account
                 left join termshistory on account.NOACCOUNT = termshistory.site left join terms on termshistory.NOTERM = terms.NOTERM
@@ -668,7 +673,7 @@ class Dsk {
         {
             $pointeuse[$i]["matricule"] = trim($row->CODEPERS);
             $pointeuse[$i]["id"] = $row->NOPERS;
-            $pointeuse[$i]["nom"] = $row->FULLNAME;
+            $pointeuse[$i]["nom"] = utf8_encode($row->FULLNAME);
             $pointeuse[$i]["hpoint"] = $row->RVALUE/60;
 
             $i++;
@@ -696,15 +701,46 @@ class Dsk {
         while ($row = ibase_fetch_object($sth))
         {
             $profession[$i]["matricule"] = $row->NOPERS;
-            $profession[$i]["nom"] = $row->FULLNAME;
-            $profession[$i]["metier"] = $row->CUSTOM1;
-            $profession[$i]["dpt"] = $row->CODEDEPT;
+            $profession[$i]["nom"] = utf8_encode($row->FULLNAME);
+            $profession[$i]["metier"] = utf8_encode($row->CUSTOM1);
+            $profession[$i]["dpt"] = utf8_encode($row->CODEDEPT);
 
             $i++;
         }
 
         return $profession;
     }
+
+    // Liste des ouvriers par noyau et par département
+
+    public static function getAllWorkerNoyau($noyau){
+
+            $dbh = ibase_connect("31.204.90.68:C:\DSK\Data\dsk2.fdb","SYSDBA","masterkey");
+        //    $dbh = ibase_connect("10.10.110.30:C:\DSK\Data\dsk2.fdb","SYSDBA","masterkey");
+
+        $sql="SELECT PERS.FULLNAME, PERS.NOPERS , PERS.CODEPERS, PERSHISTORY.CUSTOM1, PERSHISTORY.CUSTOM3, PERSHISTORY.CODEDEPT FROM PERS
+                JOIN PERSHISTORY ON PERS.NOPERS = PERSHISTORY.NOPERS
+                WHERE ((PERSHISTORY.STARTDATE <= current_timestamp) AND ((PERSHISTORY.ENDDATE >= current_timestamp) OR PERSHISTORY.ENDDATE IS NULL))
+                AND PERSHISTORY.CUSTOM3 = '".$noyau."'
+                ORDER BY PERS.FULLNAME
+                ";
+
+        $sth = ibase_query($dbh, $sql);
+
+        while ($row = ibase_fetch_object($sth))
+        {
+            $noyaux[$i]["matricule"] = $row->CODEPERS;
+            $noyaux[$i]["noyau"] = $row->CUSTOM3;
+            $noyaux[$i]["nom"] = utf8_encode($row->FULLNAME);
+            $noyaux[$i]["metier"] = utf8_encode($row->CUSTOM1);
+            $noyaux[$i]["dpt"] = utf8_encode($row->CODEDEPT);
+
+            $i++;
+        }
+
+        return $noyaux;
+    }
+
 
     // Liste des départements
 
@@ -723,7 +759,7 @@ class Dsk {
 
         while ($row = ibase_fetch_object($sth))
         {
-            $dept[$i]["dpt"] = $row->CODEDEPT;
+            $dept[$i]["dpt"] = utf8_encode($row->CODEDEPT);
 
             $i++;
         }
@@ -746,7 +782,7 @@ class Dsk {
 
         while ($row = ibase_fetch_object($sth))
         {
-            $metier[$i]["metier"] = $row->CUSTOM1;
+            $metier[$i]["metier"] = utf8_encode($row->CUSTOM1);
 
             $i++;
         }
@@ -766,8 +802,46 @@ class Dsk {
                 WHERE THEDATE='".$date."' AND
                 (PERSHISTORY.STARTDATE<='".$date."'
                 AND (PERSHISTORY.ENDDATE>='".$date."' OR PERSHISTORY.ENDDATE IS NULL) )
+                AND ACCOUNT.NOACCOUNT <> 20
+                AND PERSHISTORY.CUSTOM3= '".$noyau."'
+                ";
+
+    //
+        $sth = ibase_query($dbh, $sql);
+
+        $i=0;
+
+        while ($row = ibase_fetch_object($sth))
+        {
+            $membreNoyauAbsence[$i]["matricule"] = trim($row->CODEPERS);
+            $membreNoyauAbsence[$i]["fullname"] = utf8_encode($row->FULLNAME);
+            $membreNoyauAbsence[$i]["date"] = $row->THEDATE;
+            $membreNoyauAbsence[$i]["timemin"] = $row->TIMEMIN;
+            $membreNoyauAbsence[$i]["motif"] = utf8_encode($row->CAPTION1);
+
+            $i++;
+        }
+
+        $membreNoyauAbsence = isset($membreNoyauAbsence)? $membreNoyauAbsence : '';
+        return $membreNoyauAbsence;
+    }
+
+    public static function getAllNoyauIntemperieAbsence($noyau, $date){
+
+        $dbh = ibase_connect("31.204.90.68:C:\DSK\Data\dsk2.fdb","SYSDBA","masterkey");
+        //    $dbh = ibase_connect("10.10.110.30:C:\DSK\Data\dsk2.fdb","SYSDBA","masterkey");
+
+        $sql="SELECT PERS.FULLNAME, PERS.CODEPERS, PERS.NOPERS, ABSENCE.THEDATE, ABSENCE.TIMEMIN, ACCOUNT.CAPTION1 , PERSHISTORY.CUSTOM3 FROM ABSENCE
+                INNER JOIN PERS ON PERS.NOPERS = ABSENCE.NOPERS
+                INNER JOIN PERSHISTORY ON (PERS.NOPERS = PERSHISTORY.NOPERS )
+                INNER JOIN ACCOUNT ON ABSENCE.NOACCOUNT= ACCOUNT.NOACCOUNT
+
+                WHERE THEDATE='".$date."' AND
+                (PERSHISTORY.STARTDATE<='".$date."'
+                AND (PERSHISTORY.ENDDATE>='".$date."' OR PERSHISTORY.ENDDATE IS NULL) )
 
                 AND PERSHISTORY.CUSTOM3= '".$noyau."'
+                AND ACCOUNT.NOACCOUNT = 20
                 ";
 
         $sth = ibase_query($dbh, $sql);
@@ -776,11 +850,13 @@ class Dsk {
 
         while ($row = ibase_fetch_object($sth))
         {
+            $membreNoyauAbsence[$i]["id"] = trim($row->NOPERS);
+            $membreNoyauAbsence[$i]["noyau"] = trim($row->CUSTOM3);
             $membreNoyauAbsence[$i]["matricule"] = trim($row->CODEPERS);
-            $membreNoyauAbsence[$i]["fullname"] = $row->FULLNAME;
+            $membreNoyauAbsence[$i]["fullname"] = utf8_encode($row->FULLNAME);
             $membreNoyauAbsence[$i]["date"] = $row->THEDATE;
             $membreNoyauAbsence[$i]["timemin"] = $row->TIMEMIN;
-            $membreNoyauAbsence[$i]["motif"] = $row->CAPTION1;
+            $membreNoyauAbsence[$i]["motif"] = utf8_encode($row->CAPTION1);
 
             $i++;
         }
@@ -891,6 +967,7 @@ class Dsk {
             WHERE Absence.THEDATE='".$date."'
             AND  PERSHISTORY.CUSTOM3 <> '".$noyau."'
             AND (PERS.CODECOSTCENTERREF NOT IN ('5470', '5420'))
+            AND ACCOUNT1.NOACCOUNT <> 20
             ";
 
         $sth = ibase_query($dbh, $sql);
@@ -900,10 +977,10 @@ class Dsk {
         while ($row = ibase_fetch_object($sth))
         {
             $absenceHorsNoyau[$i]["matricule"] = trim($row->CODEPERS);
-            $absenceHorsNoyau[$i]["fullname"] = $row->FULLNAME;
+            $absenceHorsNoyau[$i]["fullname"] = utf8_encode($row->FULLNAME);
             $absenceHorsNoyau[$i]["date"] = $row->THEDATE;
             $absenceHorsNoyau[$i]["timemin"] = $row->TIMEMIN;
-            $absenceHorsNoyau[$i]["motif"] = $row->CAPTION1;
+            $absenceHorsNoyau[$i]["motif"] = utf8_encode($row->CAPTION1);
 
             $i++;
         }
@@ -911,6 +988,136 @@ class Dsk {
         $absenceHorsNoyau = isset($absenceHorsNoyau)? $absenceHorsNoyau : '';
         return $absenceHorsNoyau;
     //    sleep(5);
+    }
+
+    public static function getAllHorsNoyauIntemperieAbsence($noyau, $date, $chantier_code){
+
+        $dbh = ibase_connect("31.204.90.68:C:\DSK\Data\dsk2.fdb","SYSDBA","masterkey");
+        //    $dbh = ibase_connect("10.10.110.30:C:\DSK\Data\dsk2.fdb","SYSDBA","masterkey");
+
+        $sql = "
+        SELECT 	PERS.CODEPERS,
+                PERS.NOPERS,
+                PERSHISTORY.CUSTOM3,
+	            Absence.NoPers,
+	            Absence.Thedate,
+	            Pers.FULLNAME,
+	            ACCOUNT.CUSTOM,
+                ACCOUNT.NOACCOUNT,
+	            TERMS.GIDDID,
+	            ABSENCE.TIMEMIN,
+	            ACCOUNT1.CAPTION1,
+                ACCOUNT1.NOACCOUNT FROM Absence
+            INNER JOIN Pers on (Pers.NoPers=ABSENCE.NoPers)
+            INNER JOIN PERSHISTORY ON
+             ((PERSHISTORY.NOPERS=ABSENCE.NOPERS)
+             AND (PERSHISTORY.STARTDATE<= ABSENCE.THEDATE)
+             AND (PERS.CODECOSTCENTERREF NOT IN ('5470', '5420'))
+             AND ((PERSHISTORY.ENDDATE IS NULL) OR (PERSHISTORY.ENDDATE>= ABSENCE.THEDATE))
+            )
+            INNER JOIN Booking ON
+             ((Booking.NOPERS=Absence.NOPERS)
+             AND (Booking.THEDATE=(SELECT MAX(THEDATE) from booking where (booking.NoPers = Pers.NoPers and (booking.BK1<>0 or booking.BK2<>0) and booking.THEDATE<='".$date."')))
+            )
+
+            LEFT JOIN TERMS ON (
+              (
+              TERMS.GIDDID = BOOKING.BKT1
+              ) OR
+              (
+              TERMS.GIDDID = BOOKING.BKT2
+              ) OR
+              (
+              TERMS.GIDDID = BOOKING.BKT3
+              ) OR
+              (
+              TERMS.GIDDID = BOOKING.BKT4
+              ) OR
+              (
+              TERMS.GIDDID = BOOKING.BKT5
+              ) OR
+              (
+              TERMS.GIDDID = BOOKING.BKT6
+              ) OR
+              (
+              TERMS.GIDDID = BOOKING.BKT7
+              ) OR
+              (
+              TERMS.GIDDID = BOOKING.BKT8
+              ) OR
+              (
+              TERMS.GIDDID = BOOKING.BKT9
+              ) OR
+              (
+              TERMS.GIDDID = BOOKING.BKT10
+              ) OR
+              (
+              TERMS.GIDDID = BOOKING.BKT11
+              ) OR
+              (
+              TERMS.GIDDID = BOOKING.BKT12
+              ) OR
+              (
+              TERMS.GIDDID = BOOKING.BKT13
+              ) OR
+              (
+              TERMS.GIDDID = BOOKING.BKT14
+              ) OR
+              (
+              TERMS.GIDDID = BOOKING.BKT15
+              ) OR
+              (
+              TERMS.GIDDID = BOOKING.BKT16
+              ) OR
+              (
+              TERMS.GIDDID = BOOKING.BKT17
+              ) OR
+              (
+              TERMS.GIDDID = BOOKING.BKT18
+              ) OR
+              (
+              TERMS.GIDDID = BOOKING.BKT19
+              ) OR
+              (
+              TERMS.GIDDID = BOOKING.BKT20
+              )
+              )
+              INNER JOIN
+              TERMSHISTORY
+              ON ((TERMSHISTORY.NOTERM = TERMS.NOTERM)
+              AND (TERMSHISTORY.STARTDATE<=BOOKING.THEDATE)
+              AND ((TERMSHISTORY.ENDDATE>=BOOKING.THEDATE) OR TERMSHISTORY.ENDDATE IS NULL))
+
+            INNER JOIN account on ((Account.NoAccount=TERMSHISTORY.SIte) AND (ACCOUNT.CUSTOM = ".$chantier_code.") )
+            INNER JOIN account AS account1 on ((account1.NoAccount=ABSENCE.NOACCOUNT) )
+
+            WHERE Absence.THEDATE='".$date."'
+            AND  PERSHISTORY.CUSTOM3 <> '".$noyau."'
+            AND (PERS.CODECOSTCENTERREF NOT IN ('5470', '5420'))
+            AND ACCOUNT1.NOACCOUNT = 20
+            ";
+
+        $sth = ibase_query($dbh, $sql);
+
+        $i = 0;
+
+        while ($row = ibase_fetch_object($sth))
+        {
+            $absenceHorsNoyau[$i]["id"] = $row->NOPERS;
+            $absenceHorsNoyau[$i]["noyau"] = trim($row->CUSTOM3);
+            $absenceHorsNoyau[$i]["id"] = trim($row->NOPERS);
+            $absenceHorsNoyau[$i]["matricule"] = trim($row->CODEPERS);
+            $absenceHorsNoyau[$i]["fullname"] = utf8_encode($row->FULLNAME);
+            $absenceHorsNoyau[$i]["date"] = $row->THEDATE;
+            $absenceHorsNoyau[$i]["timemin"] = $row->TIMEMIN;
+            $absenceHorsNoyau[$i]["motif"] = utf8_encode($row->CAPTION1);
+
+            $i++;
+        }
+        // ????
+        $absenceHorsNoyau = isset($absenceHorsNoyau)? $absenceHorsNoyau : '';
+        return $absenceHorsNoyau;
+        //    sleep(5);
     }
 
 }

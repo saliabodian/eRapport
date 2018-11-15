@@ -89,11 +89,34 @@
             }
         });
 
-        $('.checkbo_noyaux').click(function(){
+        $('.checkbox_noyaux').click(function(){
             if($('.checkbox_noyau:checked').length == $('.checkbox_noyau').length){
                 $('#check_all').prop('checked',true);
             }else{
                 $('#check_all').prop('checked',false);
+            }
+        });
+    });
+
+
+    $(document).ready(function(){
+        $('#check_all_site').click(function(){
+            if(this.checked){
+                $('.checkbox_site').each(function(){
+                    this.checked = true;
+                });
+            }else{
+                $('.checkbox_site').each(function(){
+                    this.checked = false;
+                });
+            }
+        });
+
+        $('.checkbox_site').click(function(){
+            if($('.checkbox_site:checked').length == $('.checkbox_site').length){
+                $('#check_all_site').prop('checked',true);
+            }else{
+                $('#check_all_site').prop('checked',false);
             }
         });
     });
@@ -171,6 +194,7 @@
             $('fieldset').removeClass('moreActions');
         });
     });
+
     $(document).ready(function() {
         $('#minusButton').on('click', function(e) {
             e.preventDefault();
@@ -178,6 +202,59 @@
             $('fieldset').addClass('moreActions');
         });
 
+    });
+
+    /*$(document).ready(function(){
+        var next = 1;
+        $(".add-more").click(function(e){
+            e.preventDefault();
+            var addto = "#field" + next;
+            var addRemove = "#field" + (next);
+            next = next + 1;
+            var newIn = '<input autocomplete="off" class="span11 input form-control" id="field' + next + '" name="field' + next + '" type="text">';
+            var newInput = $(newIn);
+            var removeBtn = '<button id="remove' + (next - 1) + '" class="btn btn-danger remove-me" >-</button></div><div id="field">';
+            var removeButton = $(removeBtn);
+            $(addto).after(newInput);
+            $(addRemove).after(removeButton);
+            $("#field" + next).attr('data-source',$(addto).attr('data-source'));
+            $("#count").val(next);
+
+            $('.remove-me').click(function(e){
+                e.preventDefault();
+                var fieldNum = this.id.charAt(this.id.length-1);
+                var fieldID = "#field" + fieldNum;
+                $(this).remove();
+                $(fieldID).remove();
+            });
+        });
+    }); */
+
+    $(document).ready(function(){
+        var maxField = 15; //Input fields increment limitation
+        var addButton = $('.add_button'); //Add button selector
+        var wrapper = $('.field_wrapper'); //Input field wrapper
+        var fieldHTML = '<div class="control-group field_wrapper">' +
+            '<div class="controls">' +
+            '<input id="spaceBottom" type="text" class="span4" placeholder="Batiment" name="bat[]"/>' +
+            '<a href="javascript:void(0);" class="remove_button"><i><img src="img/moins-mini.png"></i></a></div></div>'; //New input field html
+        var x = 1; //Initial field counter is 1
+
+        //Once add button is clicked
+        $(addButton).click(function(){
+            //Check maximum number of input fields
+            if(x < maxField){
+                x++; //Increment field counter
+                $(wrapper).append(fieldHTML); //Add field html
+            }
+        });
+
+        //Once remove button is clicked
+        $(wrapper).on('click', '.remove_button', function(e){
+            e.preventDefault();
+            $(this).parent('div').remove(); //Remove field html
+            x--; //Decrement field counter
+        });
     });
 
 
@@ -308,6 +385,84 @@
     }
 
 
+    $(document).ready(function(){
+        $("#myInput").on("keyup", function() {
+            var value = $(this).val().toLowerCase();
+            $("#myTable tr").filter(function() {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+    });
+
+    $(document).ready(function(){
+        $("#myInputGeneratedReport").on("keyup", function() {
+            var value = $(this).val().toLowerCase();
+            $("#myTableGeneratedReport tr").filter(function() {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+    });
+
+
+    $(document).ready(function(){
+        $("#myInputSubmittedReport").on("keyup", function() {
+            var value = $(this).val().toLowerCase();
+            $("#myTableSubmittedReport tr").filter(function() {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+    });
+
+    $(document).ready(function(){
+        $("#myInputValidatedReport").on("keyup", function() {
+            var value = $(this).val().toLowerCase();
+            $("#myTableValidatedReport tr").filter(function() {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+    });
+
+    $(document).ready(function(){
+        $("#myInputMissingAnomaly").on("keyup", function() {
+            var value = $(this).val().toLowerCase();
+            $("#myTableMissingAnomaly tr").filter(function() {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+    });
+
+    $(document).ready(function(){
+        $("#myInputHourAnomaly").on("keyup", function() {
+            var value = $(this).val().toLowerCase();
+            $("#myTableHourAnomaly tr").filter(function() {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+    });
+
+    $(document).ready(function(){
+        $("#myInputChantierWithoutItp").on("keyup", function() {
+            var value = $(this).val().toLowerCase();
+            $("#myTableChantierWithoutItp tr").filter(function() {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+    });
+
+    $(document).ready(function(){
+        $("#myInputChantierWithItp").on("keyup", function() {
+            var value = $(this).val().toLowerCase();
+            $("#myTableChantierWithItp tr").filter(function() {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+    });
+
+    $(document).ready(function() {
+        $('#table').DataTable( {
+            "pagingType": "full_numbers"
+        } );
+    } );
 /*
 
     Gestion de l'ajout dynamique des lignes
@@ -325,8 +480,9 @@
 
     });
 
+ */
 
-*/
+
     function printErapport(){
 
         var nb = document.getElementById("nb").value;

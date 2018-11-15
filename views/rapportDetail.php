@@ -113,7 +113,7 @@
                                                     </select>
                                             <?php endforeach; ?>
                                         <?php else : ?>
-                                            <select class="select2-container" name="abs">
+                                            <select class="select2-container span4" name="abs">
                                                 <option></option>
                                                 <option value="Maladie (M)">Maladie (M)</option>
                                                 <option value="Accident (A)">Accident (A)</option>
@@ -187,12 +187,28 @@
                                 </div>
                                 <?php if(sizeof($workerToUpdate)=== 1) : ?>
                                     <?php foreach($workerToUpdate as $worker): ?>
+                                        <?php if(!empty($batimentList)) : ?>
+                                            <div class="control-group">
+                                            <label class="control-label">Bâtiment :</label>
+                                            <div class="controls">
+                                                <select class="span4 mySelect select2-container" id="bat" name="bat">
+                                                    <option>Bâtiment</option>
+                                                    <?php foreach($batimentList as $batiment) : ?>
+                                                        <?php foreach($workerToUpdate as $worker) : ?>
+                                                            <option value="<?= $batiment['id']?>" <?php if($worker['bat_1']=== $batiment['id']) : ?> selected="selected" <?php endif; ?>><?= $batiment['nom']?></option>
+                                                        <?php endforeach ;?>
+                                                    <?php endforeach ;?>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <?php else : ?>
                                         <div class="control-group">
                                             <label class="control-label">Batiment :</label>
                                             <div class="controls">
                                                 <input type="text" class="span4" id="bat" name="bat" <?php if(!empty($worker['bat_1'])) : ?> value="<?= $worker['bat_1'] ?>" <?php else :?> placeholder="Batiment" <?php endif ; ?> >
                                             </div>
                                         </div>
+                                        <?php endif ; ?>
                                         <div class="control-group">
                                             <label class="control-label">Axe :</label>
                                             <div class="controls">
@@ -278,12 +294,26 @@
                                         </div>
                                     <?php endforeach ; ?>
                                 <?php else : ?>
+                                    <?php if(!empty($batimentList)) :?>
+                                        <div class="control-group">
+                                            <label class="control-label">Bâtiment :</label>
+                                            <div class="controls">
+                                                <select class="span4 mySelect select2-container" id="bat" name="bat">
+                                                    <option>Bâtiment</option>
+                                                    <?php foreach($batimentList as $batiment) : ?>
+                                                            <option value="<?= $batiment['id']?>" ><?= $batiment['nom']?></option>
+                                                    <?php endforeach ;?>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    <?php else : ?>
                                     <div class="control-group">
                                         <label class="control-label">Batiment :</label>
                                         <div class="controls">
                                             <input type="text" class="span4" id="bat" name="bat"  placeholder="Batiment" >
                                         </div>
                                     </div>
+                                    <?php endif ; ?>
                                     <div class="control-group">
                                         <label class="control-label">Axe :</label>
                                         <div class="controls">
@@ -383,12 +413,28 @@
                                     <div>
                                         <?php if(sizeof($workerToUpdate)===1) :?>
                                             <?php foreach($workerToUpdate as $worker) : ?>
-                                                <div class="control-group">
-                                                    <label class="control-label">Batiment :</label>
-                                                    <div class="controls">
-                                                        <input type="text" class="span4" id="bat2" name="bat2" <?php if(!empty($worker['bat_2'])) : ?> value="<?= $worker['bat_2'] ?>" <?php else :?> placeholder="Batiment" <?php endif ; ?>>
+                                                <?php if(!empty($batimentList)) : ?>
+                                                    <div class="control-group">
+                                                        <label class="control-label">Bâtiment :</label>
+                                                        <div class="controls">
+                                                            <select class="span4 mySelect select2-container" id="bat2" name="bat2">
+                                                                <option>Bâtiment</option>
+                                                                <?php foreach($batimentList as $batiment) : ?>
+                                                                    <?php foreach($workerToUpdate as $worker) : ?>
+                                                                        <option value="<?= $batiment['id']?>" <?php if($worker['bat_2']=== $batiment['id']) : ?> selected="selected" <?php endif; ?>><?= $batiment['nom']?></option>
+                                                                    <?php endforeach ;?>
+                                                                <?php endforeach ;?>
+                                                            </select>
+                                                        </div>
                                                     </div>
-                                                </div>
+                                                <?php else : ?>
+                                                    <div class="control-group">
+                                                        <label class="control-label">Batiment :</label>
+                                                        <div class="controls">
+                                                            <input type="text" class="span4" id="bat2" name="bat2" <?php if(!empty($worker['bat_2'])) : ?> value="<?= $worker['bat_2'] ?>" <?php else :?> placeholder="Batiment" <?php endif ; ?>>
+                                                        </div>
+                                                    </div>
+                                                <?php endif ; ?>
                                                 <div class="control-group">
                                                     <label class="control-label">Axe :</label>
                                                     <div class="controls">
@@ -474,12 +520,26 @@
                                                 </div>
                                             <?php endforeach ; ?>
                                         <?php else : ?>
-                                            <div class="control-group">
-                                                <label class="control-label">Batiment :</label>
-                                                <div class="controls">
-                                                    <input type="text" class="span4" id="bat2" name="bat2" placeholder="Batiment" >
+                                            <?php if(!empty($batimentList)) : ?>
+                                                <div class="control-group">
+                                                    <label class="control-label">Bâtiment :</label>
+                                                    <div class="controls">
+                                                        <select class="span4 mySelect select2-container" id="bat2" name="bat2">
+                                                            <option>Bâtiment</option>
+                                                            <?php foreach($batimentList as $batiment) : ?>
+                                                                <option value="<?= $batiment['id']?>" ><?= $batiment['nom']?></option>
+                                                            <?php endforeach ;?>
+                                                        </select>
+                                                    </div>
                                                 </div>
-                                            </div>
+                                            <?php else : ?>
+                                                <div class="control-group">
+                                                    <label class="control-label">Batiment :</label>
+                                                    <div class="controls">
+                                                        <input type="text" class="span4" id="bat2" name="bat2" placeholder="Batiment" >
+                                                    </div>
+                                                </div>
+                                            <?php endif; ?>
                                             <div class="control-group">
                                                 <label class="control-label">Axe :</label>
                                                 <div class="controls">
@@ -589,20 +649,34 @@
                                         </div>
                                 <?php if(sizeof($workerToUpdate)===1) : ?>
                                     <?php foreach($workerToUpdate as $worker) : ?>
-
-                                    <div class="control-group">
-                                        <label class="control-label">Batiment :</label>
-                                        <div class="controls">
-                                            <input type="text" class="span4" id="bat3" name="bat3" <?php if(!empty($worker['bat_3'])) : ?> value="<?= $worker['bat_3'] ?>" <?php else :?> placeholder="Batiment" <?php endif ; ?>>
+                                    <?php if (!empty($batimentList)) : ?>
+                                        <div class="control-group">
+                                            <label class="control-label">Bâtiment :</label>
+                                            <div class="controls">
+                                                <select class="span4 mySelect select2-container" id="bat3" name="bat3">
+                                                    <option>Bâtiment</option>
+                                                    <?php foreach($batimentList as $batiment) : ?>
+                                                        <?php foreach($workerToUpdate as $worker) : ?>
+                                                            <option value="<?= $batiment['id']?>" <?php if($worker['bat_3']=== $batiment['id']) : ?> selected="selected" <?php endif; ?>><?= $batiment['nom']?></option>
+                                                        <?php endforeach ;?>
+                                                    <?php endforeach ;?>
+                                                </select>
+                                            </div>
                                         </div>
-                                    </div>
-
+                                    <?php else : ?>
+                                        <div class="control-group">
+                                            <label class="control-label">Batiment :</label>
+                                            <div class="controls">
+                                                <input type="text" class="span4" id="bat3" name="bat3" <?php if(!empty($worker['bat_3'])) : ?> value="<?= $worker['bat_3'] ?>" <?php else :?> placeholder="Batiment" <?php endif ; ?>>
+                                            </div>
+                                        </div>
+                                    <?php endif ; ?>
                                     <div class="control-group">
                                         <label class="control-label">Axe :</label>
                                         <div class="controls">
                                                 <input type="text" class="span4" id="axe3" name="axe3" <?php if(!empty($worker['axe_3'])) : ?> value="<?= $worker['axe_3'] ?>" <?php else :?> placeholder="Axe" <?php endif ; ?>>
-                                            </div>
                                         </div>
+                                    </div>
 
                                     <div class="control-group">
                                         <label class="control-label">Etage :</label>
@@ -674,24 +748,36 @@
                                                 <option value="Niveau -10">Niveau -10</option>
                                             </select>
                                         </div>
-                                        </div>
+                                    </div>
 
                                     <div class="control-group">
                                         <label class="control-label">Heure(s) :</label>
                                         <div class="controls">
                                                 <input type="text" class="span2" id="ht3" name="ht3" value="<?= $worker['ht3'] ?>" placeholder="">
                                             </div>
-                                        </div>
+                                    </div>
                                    <?php endforeach ;?>
                                 <?php else : ?>
-
+                                    <?php if(!empty($batimentList)) : ?>
+                                        <div class="control-group">
+                                            <label class="control-label">Bâtiment :</label>
+                                            <div class="controls">
+                                                <select class="span4 mySelect select2-container" id="bat3" name="bat3">
+                                                    <option>Bâtiment</option>
+                                                    <?php foreach($batimentList as $batiment) : ?>
+                                                        <option value="<?= $batiment['id']?>" ><?= $batiment['nom']?></option>
+                                                    <?php endforeach ;?>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    <?php else : ?>
                                     <div class="control-group">
                                         <label class="control-label">Batiment :</label>
                                         <div class="controls">
                                                 <input type="text" class="span4" id="bat3" name="bat3"placeholder="Batiment" >
                                             </div>
                                         </div>
-
+                                    <?php endif ; ?>
                                     <div class="control-group">
                                         <label class="control-label">Axe :</label>
                                         <div class="controls">
@@ -789,12 +875,28 @@
                                         </div>
                                     <?php if(sizeof($workerToUpdate)===1) : ?>
                                         <?php foreach($workerToUpdate as $worker) : ?>
-                                            <div class="control-group">
-                                                <label class="control-label">Batiment :</label>
-                                                <div class="controls">
-                                                    <input type="text" class="span4" id="bat4" name="bat4" <?php if(!empty($worker['bat_4'])) : ?> value="<?= $worker['bat_4'] ?>" <?php else :?> placeholder="Batiment" <?php endif ; ?>>
+                                            <?php if(!empty($batimentList)) : ?>
+                                                <div class="control-group">
+                                                    <label class="control-label">Bâtiment :</label>
+                                                    <div class="controls">
+                                                        <select class="span4 mySelect select2-container" id="bat4" name="bat4">
+                                                            <option>Bâtiment</option>
+                                                            <?php foreach($batimentList as $batiment) : ?>
+                                                                <?php foreach($workerToUpdate as $worker) : ?>
+                                                                    <option value="<?= $batiment['id']?>" <?php if($worker['bat_4']=== $batiment['id']) : ?> selected="selected" <?php endif; ?>><?= $batiment['nom']?></option>
+                                                                <?php endforeach ;?>
+                                                            <?php endforeach ;?>
+                                                        </select>
+                                                    </div>
                                                 </div>
-                                            </div>
+                                            <?php else : ?>
+                                                <div class="control-group">
+                                                    <label class="control-label">Batiment :</label>
+                                                    <div class="controls">
+                                                        <input type="text" class="span4" id="bat4" name="bat4" <?php if(!empty($worker['bat_4'])) : ?> value="<?= $worker['bat_4'] ?>" <?php else :?> placeholder="Batiment" <?php endif ; ?>>
+                                                    </div>
+                                                </div>
+                                            <?php endif ; ?>
                                             <div class="control-group">
                                                 <label class="control-label">Axe :</label>
                                                 <div class="controls">
@@ -882,16 +984,30 @@
                                                     <!--a class="sAdd btn btn-success add-more" title="" href="#"><i class="icon-plus"></i></a-->
                                         <?php endforeach ; ?>
                                     <?php else : ?>
-                                        <div class="control-group">
-                                                <label class="control-label">Batiment :</label>
+                                        <?php if(!empty($batimentList)) : ?>
+                                            <div class="control-group">
+                                                <label class="control-label">Bâtiment :</label>
                                                 <div class="controls">
-                                                    <input type="text" class="span9" id="bat4" name="bat4"  placeholder="Batiment" >
+                                                    <select class="span4 mySelect select2-container" id="bat4" name="bat4">
+                                                        <option>Bâtiment</option>
+                                                        <?php foreach($batimentList as $batiment) : ?>
+                                                            <option value="<?= $batiment['id']?>" ><?= $batiment['nom']?></option>
+                                                        <?php endforeach ;?>
+                                                    </select>
                                                 </div>
                                             </div>
+                                        <?php else : ?>
+                                            <div class="control-group">
+                                                <label class="control-label">Batiment :</label>
+                                                <div class="controls">
+                                                    <input type="text" class="span4" id="bat4" name="bat4"  placeholder="Batiment" >
+                                                </div>
+                                            </div>
+                                        <?php endif ; ?>
                                         <div class="control-group">
                                                 <label class="control-label">Axe :</label>
                                                 <div class="controls">
-                                                    <input type="text" class="span9" id="axe4" name="axe4"  placeholder="Axe" >
+                                                    <input type="text" class="span4" id="axe4" name="axe4"  placeholder="Axe" >
                                                 </div>
                                             </div>
                                         <div class="control-group">
@@ -985,16 +1101,32 @@
                                     </div>
                                     <?php if(sizeof($workerToUpdate)===1) : ?>
                                                 <?php foreach($workerToUpdate as $worker) : ?>
-                                                <div class="control-group">
-                                                    <label class="control-label">Batiment :</label>
-                                                    <div class="controls">
-                                                        <input type="text" class="span9" id="bat5" name="bat5" <?php if(!empty($worker['bat_5'])) : ?> value="<?= $worker['bat_5'] ?>" <?php else :?> placeholder="Batiment" <?php endif ; ?>>
-                                                    </div>
-                                                </div>
+                                                    <?php if(!empty($batimentList)) : ?>
+                                                        <div class="control-group">
+                                                            <label class="control-label">Bâtiment :</label>
+                                                            <div class="controls">
+                                                                <select class="span4 mySelect select2-container" id="bat5" name="bat5">
+                                                                    <option>Bâtiment</option>
+                                                                    <?php foreach($batimentList as $batiment) : ?>
+                                                                        <?php foreach($workerToUpdate as $worker) : ?>
+                                                                            <option value="<?= $batiment['id']?>" <?php if($worker['bat_5']=== $batiment['id']) : ?> selected="selected" <?php endif; ?>><?= $batiment['nom']?></option>
+                                                                        <?php endforeach ;?>
+                                                                    <?php endforeach ;?>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    <?php else : ?>
+                                                        <div class="control-group">
+                                                            <label class="control-label">Batiment :</label>
+                                                            <div class="controls">
+                                                                <input type="text" class="span4" id="bat5" name="bat5" <?php if(!empty($worker['bat_5'])) : ?> value="<?= $worker['bat_5'] ?>" <?php else :?> placeholder="Batiment" <?php endif ; ?>>
+                                                            </div>
+                                                        </div>
+                                                    <?php endif ; ?>
                                                 <div class="control-group">
                                                     <label class="control-label">Axe :</label>
                                                     <div class="controls">
-                                                        <input type="text" class="span9" id="axe5" name="axe5" <?php if(!empty($worker['axe_5'])) : ?> value="<?= $worker['axe_5'] ?>" <?php else :?> placeholder="Axe" <?php endif ; ?>>
+                                                        <input type="text" class="span4" id="axe5" name="axe5" <?php if(!empty($worker['axe_5'])) : ?> value="<?= $worker['axe_5'] ?>" <?php else :?> placeholder="Axe" <?php endif ; ?>>
                                                     </div>
                                                 </div>
                                                     <div class="control-group">
@@ -1078,16 +1210,30 @@
                                                     <!--a class="sAdd btn btn-success add-more" title="" href="#"><i class="icon-plus"></i></a-->
                                                 <?php endforeach ; ?>
                                             <?php else : ?>
-                                                <div class="control-group">
-                                                    <label class="control-label">Batiment :</label>
-                                                    <div class="controls">
-                                                        <input type="text" class="span9" id="bat5" name="bat5"  placeholder="Batiment" >
+                                                <?php if(!empty($batimentList)) : ?>
+                                                    <div class="control-group">
+                                                        <label class="control-label">Bâtiment :</label>
+                                                        <div class="controls">
+                                                            <select class="span4 mySelect select2-container" id="bat5" name="bat5">
+                                                                <option>Bâtiment</option>
+                                                                <?php foreach($batimentList as $batiment) : ?>
+                                                                    <option value="<?= $batiment['id']?>" ><?= $batiment['nom']?></option>
+                                                                <?php endforeach ;?>
+                                                            </select>
+                                                        </div>
                                                     </div>
-                                                </div>
+                                                <?php else : ?>
+                                                    <div class="control-group">
+                                                        <label class="control-label">Batiment :</label>
+                                                        <div class="controls">
+                                                            <input type="text" class="span4" id="bat5" name="bat5"  placeholder="Batiment" >
+                                                        </div>
+                                                    </div>
+                                                <?php endif ; ?>
                                                 <div class="control-group">
                                                     <label class="control-label">Axe :</label>
                                                     <div class="controls">
-                                                        <input type="text" class="span9" id="axe5" name="axe5"  placeholder="Axe" >
+                                                        <input type="text" class="span4" id="axe5" name="axe5"  placeholder="Axe" >
                                                     </div>
                                                 </div>
                                                 <div class="control-group">
@@ -1181,16 +1327,32 @@
                                         </div>
                                             <?php if(sizeof($workerToUpdate)===1) : ?>
                                                 <?php foreach($workerToUpdate as $worker) :?>
+                                                    <?php if(!empty($batimentList)) : ?>
+                                                        <div class="control-group">
+                                                            <label class="control-label">Bâtiment :</label>
+                                                            <div class="controls">
+                                                                <select class="span4 mySelect select2-container" id="bat6" name="bat6">
+                                                                    <option>Bâtiment</option>
+                                                                    <?php foreach($batimentList as $batiment) : ?>
+                                                                        <?php foreach($workerToUpdate as $worker) : ?>
+                                                                            <option value="<?= $batiment['id']?>" <?php if($worker['bat_6']=== $batiment['id']) : ?> selected="selected" <?php endif; ?>><?= $batiment['nom']?></option>
+                                                                        <?php endforeach ;?>
+                                                                    <?php endforeach ;?>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    <?php else :?>
                                                     <div class="control-group">
                                                         <label class="control-label">Batiment :</label>
                                                         <div class="controls">
-                                                            <input type="text" class="span9" id="bat6" name="bat6" <?php if(!empty($worker['bat_6'])) : ?> value="<?= $worker['bat_6'] ?>" <?php else :?> placeholder="Batiment" <?php endif ; ?>>
+                                                            <input type="text" class="span4" id="bat6" name="bat6" <?php if(!empty($worker['bat_6'])) : ?> value="<?= $worker['bat_6'] ?>" <?php else :?> placeholder="Batiment" <?php endif ; ?>>
                                                         </div>
                                                     </div>
+                                                    <?php endif ; ?>
                                                     <div class="control-group">
                                                         <label class="control-label">Axe :</label>
                                                         <div class="controls">
-                                                            <input type="text" class="span9" id="axe6" name="axe6" <?php if(!empty($worker['axe_6'])) : ?> value="<?= $worker['axe_6'] ?>" <?php else :?> placeholder="Axe" <?php endif ; ?>>
+                                                            <input type="text" class="span4" id="axe6" name="axe6" <?php if(!empty($worker['axe_6'])) : ?> value="<?= $worker['axe_6'] ?>" <?php else :?> placeholder="Axe" <?php endif ; ?>>
                                                         </div>
                                                     </div>
                                                     <div class="control-group">
@@ -1274,16 +1436,30 @@
                                                     <!--a class="sAdd btn btn-success add-more" title="" href="#"><i class="icon-plus"></i></a-->
                                                 <?php endforeach;?>
                                             <?php else : ?>
-                                            <div class="control-group">
-                                                <label class="control-label">Batiment :</label>
-                                                <div class="controls">
-                                                    <input type="text" class="span9" id="bat6" name="bat6"  placeholder="Batiment" >
+                                                <?php if(!empty($batimentList)) : ?>
+                                                    <div class="control-group">
+                                                        <label class="control-label">Bâtiment :</label>
+                                                        <div class="controls">
+                                                            <select class="span4 mySelect select2-container" id="bat6" name="bat6">
+                                                                <option>Bâtiment</option>
+                                                                <?php foreach($batimentList as $batiment) : ?>
+                                                                    <option value="<?= $batiment['id']?>" ><?= $batiment['nom']?></option>
+                                                                <?php endforeach ;?>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                <?php else : ?>
+                                                <div class="control-group">
+                                                    <label class="control-label">Batiment :</label>
+                                                    <div class="controls">
+                                                        <input type="text" class="span4" id="bat6" name="bat6"  placeholder="Batiment" >
+                                                    </div>
                                                 </div>
-                                            </div>
+                                                <?php endif ; ?>
                                             <div class="control-group">
                                                 <label class="control-label">Axe :</label>
                                                 <div class="controls">
-                                                    <input type="text" class="span9" id="axe6" name="axe6" placeholder="Axe" >
+                                                    <input type="text" class="span4" id="axe6" name="axe6" placeholder="Axe" >
                                                 </div>
                                             </div>
                                             <div class="control-group">

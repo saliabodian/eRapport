@@ -37,6 +37,8 @@ $conf = Config::getInstance();
 
 
     if(!empty($_SESSION)){
+
+        $itpActive = isset($itpActive) ? $itpActive : '';
         //var_dump($_GET);
         //var_dump($_POST);
 
@@ -64,9 +66,15 @@ $conf = Config::getInstance();
 
         $allAbsence = Dsk::getAllAbsence($_GET["date_generation"]);
 
-    //  var_dump($allAbsence);
+        $matricule = isset($_GET['chef_dequipe_matricule'])? $_GET['chef_dequipe_matricule'] : '';
 
-    //  exit;
+        $chantierCode = isset($_GET["chantier_code"])? $_GET["chantier_code"] : '';
+
+        $dateRapport = isset($_GET["date_generation"])? $_GET["date_generation"]:'';
+
+
+
+
 
 
     //  var_dump($interimaireList);
@@ -107,15 +115,163 @@ $conf = Config::getInstance();
     //    var_dump(strtotime(date('Y/m/d', time())));
     //    exit;
 
-        if(strtotime($_GET["date_generation"]) != strtotime(date('Y/m/d', time()))){
-            $allPointage = Dsk::getCalculTotalHoraire($_GET["date_generation"], $_GET["chantier_code"]) ;
+        $siteWithItp = Chantier::getChantierActifWithItp();
+        if(!empty($siteWithItp)){
+            foreach($siteWithItp as $site){
+                $siteWithItpId[] = $site['id'];
+            }
+        }
+        if(!empty($siteWithItpId)){
+            if (in_array($_GET['chantier_id'], $siteWithItpId)) {
+                $itpActive = true;
+            }else{
+                $itpActive = false;
+            }
         }
 
-        //$allPointage = Dsk::getCalculTotalHoraire($_GET["date_generation"], $_GET["chantier_code"]) ;
 
-        //var_dump($pointage);
+   //     var_dump($itpActive);
 
-        //exit;
+    //    exit;
+
+        if($itpActive === false || empty($itpActive)){
+            if(strtotime($_GET["date_generation"]) != strtotime(date('Y/m/d', time()))){
+                $allPointage = Dsk::getCalculTotalHoraire($_GET["date_generation"], $_GET["chantier_code"]) ;
+            }
+        }
+
+
+        //    var_dump($allPointage);
+    //    $noyauListToAdd = Dsk::getAllNoyauIntemperieAbsence($matricule, $dateRapport);
+    //    var_dump($noyauListToAdd);
+    //    exit;
+
+        /*
+         *   $allPointage
+         *   matricule
+             id
+             nom
+             hpoint
+        */
+
+        /*
+         *
+         *  $noyauListToAdd
+            id
+            matricule
+            fullname
+            date
+            timemin
+            motif
+        */
+
+        /*
+         *
+         * matricule*/
+        //////////////////////////////////////////////////////////////////////////////
+        //           ANCIENNE METHODE DE MAJ DU CHAMP VOLUME HORAIRE               //
+        /////////////////////////////////////////////////////////////////////////////
+        /*    if(!empty($siteWithItp)){
+            foreach($siteWithItp as $site){
+                $siteWithItpId[] = $site['id'];
+            }
+            if(!empty($siteWithItpId)){
+                if (in_array($_GET['chantier_id'], $siteWithItpId)) {
+                    $noyauListToAdd = Dsk::getAllNoyauIntemperieAbsence($matricule, $dateRapport);
+                    $horsNoyauListToAdd = Dsk::getAllHorsNoyauIntemperieAbsence($matricule, $dateRapport, $chantierCode);
+
+
+                    if(!empty($allPointage)){
+                        if(!empty($noyauListToAdd)){
+                            foreach($allPointage as $pointage){
+                                foreach($noyauListToAdd as $noyauToAdd){
+                                    if($pointage['matricule']===$noyauToAdd['matricule']){
+                                        $pointage['hpoint'] = $pointage['hpoint'] + $noyauToAdd['timemin']/60;
+                                    }
+                                }
+                            }
+
+                        //    var_dump($pointage);
+
+                        }
+                        if(!empty($horsNoyauListToAdd)){
+                            foreach($allPointage as $pointage){
+                                foreach($horsNoyauListToAdd as $noyauToAdd){
+                                    if($pointage['matricule']===$noyauToAdd['matricule']){
+                                        $pointage['hpoint'] = $pointage['hpoint'] + $noyauToAdd['timemin']/60;
+                                    }
+                                }
+                            }
+                        }
+                    }else{
+                        $allPointage = array();
+                        if(!empty($noyauListToAdd)){
+                            $allPointageNoyauToadd = array();
+                            $noyauListToAddLength = sizeof($noyauListToAdd);
+                            for($i = 0; $i<$noyauListToAddLength; $i++){
+                                $allPointageNoyauToadd[$i]['matricule'] = $noyauListToAdd[$i]['matricule'];
+                                $allPointageNoyauToadd[$i]['id'] = $noyauListToAdd[$i]['id'];
+                                $allPointageNoyauToadd[$i]['nom'] = $noyauListToAdd[$i]['fullname'];
+                                $allPointageNoyauToadd[$i]['hpoint'] = $noyauListToAdd[$i]['timemin']/60;
+                            }
+                        }
+                        if(!empty($horsNoyauListToAdd)){
+                            $allPointageHorsNoyauToadd = array();
+                            $horsNoyauListToAddLength = sizeof($horsNoyauListToAdd);
+                            for($j = 0; $j<$horsNoyauListToAddLength; $j++){
+                                $allPointageHorsNoyauToadd[$j]['matricule'] = $horsNoyauListToAdd[$j]['matricule'];
+                                $allPointageHorsNoyauToadd[$j]['id'] = $horsNoyauListToAdd[$j]['id'];
+                                $allPointageHorsNoyauToadd[$j]['nom'] = $horsNoyauListToAdd[$j]['fullname'];
+                                $allPointageHorsNoyauToadd[$j]['hpoint'] = $horsNoyauListToAdd[$j]['timemin']/60;
+                            }
+                        }
+                    }
+                    if(!empty($allPointageNoyauToadd) && !empty($allPointageHorsNoyauToadd)){
+                    //   var_dump($allPointageNoyauToadd);
+                    //    var_dump($allPointageHorsNoyauToadd);
+                    //    exit;
+                        $allPointageNoyauToaddLength = sizeof($allPointageNoyauToadd);
+                    //    var_dump($allPointageNoyauToaddLength);
+
+
+                        for($i=0; $i<$allPointageNoyauToaddLength; $i++){
+                            $allPointage[$i]['matricule'] = $allPointageNoyauToadd[$i]['matricule'];
+                            $allPointage[$i]['id'] = $allPointageNoyauToadd[$i]['id'];
+                            $allPointage[$i]['nom'] = $allPointageNoyauToadd[$i]['nom'];
+                            $allPointage[$i]['hpoint'] = $allPointageNoyauToadd[$i]['hpoint'];
+                        }
+                    //    var_dump($allPointage);
+                    //    exit;
+                        $allPointageHorsNoyauToaddLength = sizeof($allPointageHorsNoyauToadd);
+                        for($j=0; $j<$allPointageHorsNoyauToaddLength ; $j++){
+                            $allPointage[$j + $allPointageNoyauToaddLength]['matricule'] = $allPointageHorsNoyauToadd[$j]['matricule'];
+                            $allPointage[$j + $allPointageNoyauToaddLength]['id'] = $allPointageHorsNoyauToadd[$j]['id'];
+                            $allPointage[$j + $allPointageNoyauToaddLength]['nom'] = $allPointageHorsNoyauToadd[$j]['nom'];
+                            $allPointage[$j + $allPointageNoyauToaddLength]['hpoint'] = $allPointageHorsNoyauToadd[$j]['hpoint'];
+                        }
+                    }
+
+                    if(!empty($allPointageNoyauToadd) && empty($allPointageHorsNoyauToadd)){
+                        $allPointageNoyauToaddLength = sizeof($allPointageNoyauToadd);
+                        for($i = 0 ; $i<$allPointageNoyauToaddLength; $i++){
+                            $allPointage[$i]['matricule'] = $allPointageNoyauToadd[$i]['matricule'];
+                            $allPointage[$i]['id'] = $allPointageNoyauToadd[$i]['id'];
+                            $allPointage[$i]['nom'] = $allPointageNoyauToadd[$i]['nom'];
+                            $allPointage[$i]['hpoint'] = $allPointageNoyauToadd[$i]['hpoint'];
+                        }
+                    }
+                    if(empty($allPointageNoyauToadd) && !empty($allPointageHorsNoyauToadd)){
+                        $allPointageHorsNoyauToaddLength = sizeof($allPointageHorsNoyauToadd);
+                        for($j=0; $j<$allPointageHorsNoyauToaddLength ; $j++){
+                            $allPointage[$j]['matricule'] = $allPointageHorsNoyauToadd[$j]['matricule'];
+                            $allPointage[$j]['id'] = $allPointageHorsNoyauToadd[$j]['id'];
+                            $allPointage[$j]['nom'] = $allPointageHorsNoyauToadd[$j]['nom'];
+                            $allPointage[$j]['hpoint'] = $allPointageHorsNoyauToadd[$j]['hpoint'];
+                        }
+                    }
+                }
+            }
+        }*/
 
         $rapportJournalier = Rapport::get($_GET["rapport_id"]);
         //var_dump($rapportJournalier);
@@ -508,11 +664,11 @@ $conf = Config::getInstance();
             $absentHorsNoyauHeader = Rapport::getRapportAbsentHorsNoyauHeader($idRapportAbsentHorsNoyau, $_GET['date_generation'], $_GET['chantier_id']);
         }
 
-
         foreach($noyau as $noyauDetail){
             $noyauWorkerTask[$noyauDetail['id']]  = Rapport::getWorkerTask($noyauDetail['id']);
             $noyauWorkerTaskDetail[$noyauDetail['id']] = Rapport::getWorkerTaskDetail($noyauDetail['id']);
         }
+
 
         /*foreach ($noyauWorkerTask[25] as $workerTsk){
             var_dump($workerTsk['code']);

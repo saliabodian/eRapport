@@ -61,7 +61,7 @@
                                 <div class="control-group">
                                     <label for="matricule" class="control-label" >Matricule :</label>
                                     <div class="controls">
-                                        <input disabled type="text" class="span11" placeholder="" name="" value="<?= $interimaireObject->getMatricule() ?>"/>
+                                        <input disabled type="text" class="span2" placeholder="" name="" value="<?= $interimaireObject->getMatricule() ?>"/>
                                     </div>
                                 </div>
                             <?php endif ?>
@@ -83,12 +83,22 @@
                                     <input type="checkbox" name="actif" <?php if($interimaireObject->isActif()==1) : ?> checked <?php endif; ?> value="<?= $interimaireObject->isActif()?> "/>
                                 </div>
                             </div>
-                            <div class="control-group">
-                                <label for="agence_id" class="control-label">Agence <span>*</span>:</label>
-                                <div class="controls mySelect">
-                                    <?php $selectAgence->displayHTML(); ?>
+                            <?php if ($interimaireObject->getId() > 0) : ?>
+                                <div class="control-group">
+                                    <label for="agence_id" class="control-label" >Agence :</label>
+                                    <div class="controls">
+                                        <input disabled type="text" class="span3" placeholder="" name="agence_id" value="<?= $theAgenceName ?>"/>
+                                        <input type="hidden" name="agence_id" value="<?= $interimaireObject->getAgenceId()->getId(); ?>">
+                                    </div>
                                 </div>
-                            </div>
+                            <?php else : ?>
+                                <div class="control-group">
+                                    <label for="agence_id" class="control-label">Agence <span>*</span>:</label>
+                                    <div class="controls mySelect">
+                                        <?php $selectAgence->displayHTML(); ?>
+                                    </div>
+                                </div>
+                            <?php endif; ?>
                             <div class="control-group">
                                 <label for="metier_id" class="control-label">Métier :</label>
                                 <div class="controls mySelect">
@@ -123,13 +133,13 @@
                             <div class="control-group">
                                 <label for="date_prem_cont" class="control-label">Date première mise à disposition :</label>
                                 <div class="controls">
-                                    <input name="date_prem_cont" class="datepicker" value="<?= $interimaireObject->getDatePremCont()?>"/>
+                                    <input name="date_prem_cont" autocomplete="off" class="datepicker" value="<?= $interimaireObject->getDatePremCont()?>"/>
                                 </div>
                             </div>
                             <div class="control-group">
                                 <label for="date_deb" class="control-label">Date début de mission:</label>
                                 <div class="controls">
-                                    <input name="date_deb" class="datepicker" value="<?= $interimaireObject->getDateDeb()?>"/>
+                                    <input name="date_deb" autocomplete="off" class="datepicker" value="<?= $interimaireObject->getDateDeb()?>"/>
                                 </div>
                             </div>
                             <div class="control-group">

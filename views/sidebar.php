@@ -52,7 +52,8 @@
           <li> <a href="qualification.php"><i class="icon-book"></i>&nbsp;&nbsp;Gestion des qualifications</a></li>
           <li> <a href="metier.php"><i class="icon-file"></i>&nbsp;&nbsp;Gestion des métiers</a></li>
           <li> <a href="interimaire.php"><i class="icon-group"></i>&nbsp;&nbsp;Gestion des intérimaires</a></li>
-          <li> <a href="mobilite.php"><i class="icon-group"></i>&nbsp;&nbsp;Mobilité des Intérimaires</a></li>
+          <li> <a href="desactivationInterimaires.php"><i class="icon-check-empty"></i>&nbsp;&nbsp;Désactivation des intérimaires</a></li>
+          <li> <a href="mobilite.php"><i class="icon-map-marker"></i>&nbsp;&nbsp;Mobilité des Intérimaires</a></li>
           <li> <a href="affectation.php"><i class="icon-hand-right"></i>&nbsp;&nbsp;Affectation des intérimaires</a></li>
           <li> <a href="showAffectation.php"><i class="icon-tags"></i> &nbsp;&nbsp;Intérimaires affectés par chantier</a></li>
         </ul>
@@ -73,11 +74,18 @@
       }
     ?>
     <?php
-      if ($_SESSION['post_id']=== "4" || $_SESSION['post_id']=== "7"){
-    ?>
-      <li> <a href="chantier.php"><i class="icon-map-marker"></i> <span>Gestion des chantiers</span> <span class="label label-important"></span></a></li>
+    if ($_SESSION['post_id']=== "4" || $_SESSION['post_id']=== "7"){
+      ?>
+      <li class="submenu"> <a href="#"><i class="icon-map-marker"></i> <span>Gestion des chantiers</span> <span class="label label-important"></span></a>
+        <ul>
+          <li> <a href="chantier.php"><i class="icon-picture"></i>&nbsp;&nbsp;Création des chantiers</a></li>
+          <li> <a href="batiment.php"><i class="icon-home"></i>&nbsp;&nbsp;Création des bâtiments</a></li>
+          <li> <a href="chantierEnIntemperie.php"><i class="icon-asterisk"></i>&nbsp;&nbsp;Chantiers en Intempéries</a></li>
+        </ul>
+      </li>
+
     <?php
-      }
+    }
     ?>
     <?php
       if ($_SESSION['post_id']=== "4" || $_SESSION['post_id']=== "7" || $_SESSION['post_id']=== "1"|| $_SESSION['post_id']=== "2" || $_SESSION['post_id']=== "3" || $_SESSION['post_id']=== "5"){
@@ -94,22 +102,35 @@
       }
     ?>
     <?php
-    if ($_SESSION['post_id']=== "4" || $_SESSION['post_id']=== "7" || $_SESSION['post_id']=== "1"|| $_SESSION['post_id']=== "2" || $_SESSION['post_id']=== "3" || $_SESSION['post_id']=== "5" || $_SESSION['post_id']=== "12"){
+    if ($_SESSION['post_id']=== "4" ||  $_SESSION['post_id']=== "7" || $_SESSION['post_id']=== "1"|| $_SESSION['post_id']=== "2" || $_SESSION['post_id']=== "3" || $_SESSION['post_id']=== "5" || $_SESSION['post_id']=== "12" ){
       ?>
       <li class="submenu"> <a href="#"><i class="icon-bar-chart"></i> <span>Reporting</span> <span class="label label-important"></span></a>
         <ul>
-          <li> <a href="tasksHoursByWorkersBySite.php"><i class="icon-caret-right"></i><span>&nbsp;Tâches / travailleurs / chantier</span></a></li>
-          <li> <a href="tasksHoursDoneBySite.php"><i class="icon-caret-right"></i><span>&nbsp;&nbsp;Récap. tâches / chantier</span></a></li>
           <li> <a href="condenseTaskDoneOnSite.php"><i class="icon-caret-right"></i><span>&nbsp;&nbsp;Résumé tâches / chantier</span></a></li>
+          <li> <a href="tasksHoursDoneBySite.php"><i class="icon-caret-right"></i><span>&nbsp;&nbsp;Récap. tâches / chantier</span></a></li>
+          <li> <a href="tasksHoursByWorkersBySite.php"><i class="icon-caret-right"></i><span>&nbsp;Tâches / travailleurs / chantier</span></a></li>
+          <li> <a href="exportInterimaire.php"><i class="icon-caret-right"></i><span>&nbsp;Liste des intérimaires actifs</span></a></li>
+         <?php
+          if ( $_SESSION['post_id'] === "7" || $_SESSION['post_id']=== "4"){
+          ?>
+            <li> <a href="exportDpl.php"><i class="icon-caret-right"></i><span>&nbsp;Export de Données RH</span></a></li>
+          <?php } ?>
         </ul>
       </li>
     <?php
     }
     ?>
     <?php
-    if ( $_SESSION['post_id'] === "7" ){
+    if ( $_SESSION['post_id'] === "7" || $_SESSION['post_id']=== "4"){
       ?>
       <li> <a href="printAllErapport.php"><i class="icon-print"></i> <span>Impression des erapport</span> <span class="label label-important"></span></a></li>
+    <?php
+    }
+    ?>
+    <?php
+    if ( $_SESSION['post_id'] === "14"){
+      ?>
+      <li> <a href="exportInterimaire.php"><i class="icon-list-ul"></i> <span>Liste des intérimaires actifs</span> <span class="label label-important"></span></a></li>
     <?php
     }
     ?>

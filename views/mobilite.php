@@ -17,7 +17,7 @@
                             <div class="control-group">
                                 <label for="date_deb" class="control-label">Date début <span>*</span> :</label>
                                 <div class="controls">
-                                    <input name="date_deb" class="datepicker" value=""/>
+                                    <input name="date_deb" autocomplete="off" class="datepicker" value=""/>
                                 </div>
                             </div>
                             <div class="control-group">
@@ -25,7 +25,7 @@
                                     Date fin <span>*</span> :
                                 </label>
                                 <div class="controls">
-                                    <input name="date_fin" class="datepicker" value=""/>
+                                    <input name="date_fin" autocomplete="off" class="datepicker" value=""/>
                                 </div>
                             </div>
                             <div class="control-group span12">

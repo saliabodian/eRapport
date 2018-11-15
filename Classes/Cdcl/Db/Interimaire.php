@@ -1775,4 +1775,14 @@ class Interimaire extends DbObject{
             return 'OK';
         }
     }
+
+    public static function interimaireDesactivation($interimaireId){
+
+        $sql = 'UPDATE interimaire set actif = 0 WHERE id=:interimaire_id';
+        $stmt = Config::getInstance()->getPDO()->prepare($sql);
+        $stmt->bindValue(':interimaire_id', $interimaireId);
+        if($stmt->execute()===false){
+            print_r($stmt->errorInfo());
+        }
+    }
 }

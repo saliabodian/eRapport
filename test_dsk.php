@@ -12,7 +12,7 @@
 define('DB_HOST', 'localhost');
 define('DB_USER', 'root');
 define('DB_PASSWORD', 'salihin_cdcl');
-define('DB_DATABASE', 'erapportnew');
+define('DB_DATABASE', 'cdcl_test');
 
 // définition DSN
 $dsn = 'mysql:dbname='.DB_DATABASE.';host='.DB_HOST.';charset=UTF8';
@@ -847,7 +847,7 @@ while ($row = ibase_fetch_object($sth))
 
 var_dump($absenceHorsNoyau);
 
-/*
+/**/
 echo "<br><br>";
     echo "Les hors noyaux pour une date donnée";
 echo "<br><br>";
@@ -1074,6 +1074,43 @@ while ($row = ibase_fetch_object($sth))
 }
 
 var_dump($pointeuse);
+
+
+//public static function getCalculTotalHoraire($date, $chantier){
+        $dbh = ibase_connect("31.204.90.68:C:\DSK\Data\dsk2.fdb","SYSDBA","masterkey");
+    //    $dbh = ibase_connect("10.10.110.30:C:\DSK\Data\dsk2.fdb","SYSDBA","masterkey");
+
+
+        $stmt = "select noaccount, caption1, custom, giddid
+                from account
+                left join termshistory on account.NOACCOUNT = termshistory.site left join terms on termshistory.NOTERM = terms.NOTERM
+                where (noaccount > 20000) and (mod(noaccount,10) = 1) and (account.custom = ".$chantier.")";
+
+        $sth = ibase_query($dbh, $stmt);
+        $row = ibase_fetch_object($sth);
+        $chantier_id = $row->NOACCOUNT;
+
+        $sql = "
+                Select Rvalue,fullname, codepers, nopers, raccount
+                from listaccountdate('".$date."', '".$date."')
+                left join pers on pers.nopers = listaccountdate.rnopers
+                where raccount in (".$chantier_id.")
+                ";
+
+        $sth = ibase_query($dbh, $sql);
+
+        $i = 0;
+
+        while ($row = ibase_fetch_object($sth))
+        {
+            $pointeuse[$i]["matricule"] = trim($row->CODEPERS);
+            $pointeuse[$i]["id"] = $row->NOPERS;
+            $pointeuse[$i]["nom"] = $row->FULLNAME;
+            $pointeuse[$i]["hpoint"] = $row->RVALUE/60;
+
+            $i++;
+        }
+
 
 
 ?>

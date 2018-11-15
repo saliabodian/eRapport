@@ -241,6 +241,9 @@ Class User extends DbObject{
     public function saveDB()
     {
         if ($this->id > 0){
+        //    var_dump(md5($this->password));
+
+        //    exit;
             $sql = '
                 UPDATE user
                 SET
@@ -250,7 +253,6 @@ Class User extends DbObject{
                 `email`= :email,
                 `registration_number`= :registration_number,
                 `post_id`= :post_id
-                `password`= :password,
                 WHERE `id` = :id
                 ';
             $stmt = Config::getInstance()->getPDO()->prepare($sql);
@@ -261,7 +263,6 @@ Class User extends DbObject{
             $stmt->bindValue(':email', $this->email);
             $stmt->bindValue(':registration_number', $this->registration_number);
             $stmt->bindValue(':post_id', $this->post_id->getId(), \PDO::PARAM_INT);
-            $stmt->bindValue(':password', md5($this->password));
 
             if ($stmt->execute() === false) {
                 print_r($stmt->errorInfo());
@@ -352,10 +353,10 @@ Class User extends DbObject{
                         post_id
                     FROM
                         user
-                where user.username= :username
+                where username= :username
                 ';
         $pdoStmt = Config::getInstance()->getPDO()->prepare($sql);
-        $pdoStmt->bindValue(':username', $username, \PDO::PARAM_INT);
+        $pdoStmt->bindValue(':username', $username);
 
         if ($pdoStmt->execute() === false) {
             print_r($pdoStmt->errorInfo());
@@ -384,11 +385,16 @@ Class User extends DbObject{
         $conf = Config::getInstance();
         $formOk = true;
         if(!empty($_POST)){
-            //var_dump($_POST);
+        //    var_dump($_POST);
+
+        //    exit;
             $login = isset($_POST['login']) ? $_POST['login'] : '';
             //var_dump($_POST['login']);
+        //    var_dump($login);
+
+        //    exit;
             $password = isset($_POST['password']) ? $_POST['password'] : '';
-            //
+        //    var_dump(md5($password));
             $formOk = true;
 
             if(empty($login)){
@@ -418,7 +424,7 @@ Class User extends DbObject{
 
             //var_dump($loginExist);
 
-           // var_dump($passwordExist);
+        //    var_dump($passwordExist);
 
             $passwordExist = isset($passwordExist)? $passwordExist : "";
 
@@ -432,12 +438,19 @@ Class User extends DbObject{
             if($formOk===true){
                 session_start();
                 $user = new User();
+
+            //    var_dump($login);
+
                 $userSessionValues = $user->getByUsername($login);
+
+
 
 
             //($id=0, $username='', $firstname='', $lastname='', $email='', $registration_number=0, $created='', $password='', $post_id=0)
 
-            //   var_dump($userSessionValues);
+            //    var_dump($userSessionValues);
+
+            //    exit;
                 $_SESSION['id']=$userSessionValues['id'];
                 $_SESSION['username']=$userSessionValues['username'];
                 $_SESSION['lastname']=$userSessionValues['lastname'];
@@ -445,6 +458,8 @@ Class User extends DbObject{
                 $_SESSION['email']=$userSessionValues['email'];
                 $_SESSION['post_id']=$userSessionValues['post_id'];
             //    var_dump($_SESSION);
+            //    exit;
+
                 header('Location:route.php');
             }
         }
@@ -552,18 +567,18 @@ Class User extends DbObject{
     public static function getAllForSelectChefDEquipebyChantier($chantier_id)
     {
         $sql = '
-            SELECT
-                `user`.`id`,
-                `user`.`username`,
-                `user`.`firstname`,
-                `user`.`lastname`,
-                `user`.`email`
-            FROM `user` INNER JOIN
-            chantier_has_user ON chantier_has_user.user_id = user.id
-            WHERE post_id = 1
-            AND chantier_has_user.chantier_id = :chantier_id
-            ORDER BY `lastname`
-            ';
+                SELECT
+                    `user`.`id`,
+                    `user`.`username`,
+                    `user`.`firstname`,
+                    `user`.`lastname`,
+                    `user`.`email`
+                FROM `user` INNER JOIN
+                chantier_has_user ON chantier_has_user.user_id = user.id
+                WHERE post_id = 1
+                AND chantier_has_user.chantier_id = :chantier_id
+                ORDER BY `lastname`'
+        ;
         $stmt = Config::getInstance()->getPDO()->prepare($sql);
         $stmt->bindValue(':chantier_id', $chantier_id, \PDO::PARAM_INT);
         if ($stmt->execute() === false) {
@@ -577,6 +592,33 @@ Class User extends DbObject{
         }
         $returnList = isset($returnList) ? $returnList : '';
         return $returnList;
+    }
+
+    public static function getAllChefDEquipebyChantier($chantier_id)
+    {
+        $sql = '
+                SELECT
+                    `user`.`id`,
+                    `user`.`username`,
+                    `user`.`firstname`,
+                    `user`.`lastname`,
+                    `user`.`email`
+                FROM `user` INNER JOIN
+                chantier_has_user ON chantier_has_user.user_id = user.id
+                WHERE post_id = 1
+                AND chantier_has_user.chantier_id = :chantier_id
+                ORDER BY `lastname`'
+        ;
+        $stmt = Config::getInstance()->getPDO()->prepare($sql);
+        $stmt->bindValue(':chantier_id', $chantier_id, \PDO::PARAM_INT);
+        if ($stmt->execute() === false) {
+            print_r($stmt->errorInfo());
+        }
+        else {
+            $allDatas = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        }
+        $allDatas = isset($allDatas) ? $allDatas : '';
+        return $allDatas;
     }
 
     public static function getChefDEquipeForSelectbyChantier($chantier_id, $user_id)
@@ -611,5 +653,242 @@ Class User extends DbObject{
         return $returnList;
     }
 
+    public function getDplForExport($dateDebut, $dateFin){
+        $sql ="
+                SELECT
+                '00003' as code_entreprise,
+                rd.ouvrier_id,
+                rd.interimaire_id,
+                DATE_FORMAT(r.date, '%Y%m') am,
+                'P' as code_p,
+                DATE_FORMAT(r.date, '%d') jd,
+                DATE_FORMAT(r.date, '%d') jf,
+                '1010' as code_cpt_tache,
+                '4500' as code_interne0,
+                '0' as code_interne1,
+                rd.dpl_pers,
+                '0' as code_interne2,
+                '0' as code_interne3,
+                '0' as code_interne4,
+                'M' as code_interne5,
+                '0' as code_interne6,
+                c.code,
+                rd.htot
+            FROM
+                rapport r,
+                chantier c,
+                rapport_detail rd
+            WHERE c.id = r.chantier
+            AND r.id = rd.rapport_id
+            AND rd.dpl_pers != 0
+            AND r.date BETWEEN :date_debut AND :date_fin
+            ORDER BY r.date
+        ";
+        $stmt = Config::getInstance()->getPDO()->prepare($sql);
+        $stmt->bindValue(':date_debut', $dateDebut);
+        $stmt->bindValue(':date_fin', $dateFin);
 
+        if($stmt->execute() === false){
+            print_r($stmt->errorInfo());
+        }else{
+            $rslt = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        }
+
+        return $rslt;
+    }
+
+    public function getIntHoursForExport($dateDebut, $dateFin){
+        $sql ="
+                SELECT
+                    SUM(rdt.heures) heures,
+                    CONCAT(DATE_FORMAT(r.date, '%Y'),
+                            DATE_FORMAT(r.date, '%m')) am,
+                    c.code code_chantier,
+                    '1003' code_entreprise,
+                    rd.interimaire_id,
+                    'P' code_p,
+                    DATE_FORMAT(r.date, '%d') jd,
+                    DATE_FORMAT(r.date, '%d') jf,
+                    '1001' as code_cpt_tache,
+                    '0' as code_interne1,
+                    '0' as code_interne2,
+                    '0' as code_interne3,
+                    '0' as code_interne4,
+                    'M' as code_interne5,
+                    '0' as code_interne6
+                FROM
+                    rapport r,
+                    chantier c,
+                    rapport_detail rd,
+                    rapport_detail_has_tache rdt,
+                    tache t,
+                    type_tache tt
+                WHERE
+                    c.id = r.chantier
+                        AND r.id = rd.rapport_id
+                        AND rdt.rapport_detail_id = rd.id
+                        AND rdt.tache_id = t.id
+                        AND rdt.type_tache_id = tt.id
+                        AND t.type_tache_id = tt.id
+                        AND t.id != 97
+                        AND rd.interimaire_id IS NOT NULL
+                        AND r.date BETWEEN :date_debut AND :date_fin
+                GROUP BY rd.interimaire_id , r.date
+                UNION SELECT
+                    SUM(rdt.heures) heures,
+                    CONCAT(DATE_FORMAT(r.date, '%Y'),
+                            DATE_FORMAT(r.date, '%m')) am,
+                    c.code code_chantier,
+                    '1003' code_entreprise,
+                    rd.interimaire_id,
+                    'P' code_p,
+                    DATE_FORMAT(r.date, '%d') jd,
+                    DATE_FORMAT(r.date, '%d') jf,
+                    '6001' as code_cpt_tache,
+                    '0' as code_interne1,
+                    '0' as code_interne2,
+                    '0' as code_interne3,
+                    '0' as code_interne4,
+                    'M' as code_interne5,
+                    '0' as code_interne6
+                FROM
+                    rapport r,
+                    chantier c,
+                    rapport_detail rd,
+                    rapport_detail_has_tache rdt,
+                    tache t,
+                    type_tache tt
+                WHERE
+                    c.id = r.chantier
+                        AND r.id = rd.rapport_id
+                        AND rdt.rapport_detail_id = rd.id
+                        AND rdt.tache_id = t.id
+                        AND rdt.type_tache_id = tt.id
+                        AND t.type_tache_id = tt.id
+                        AND t.id = 97
+                        AND rd.interimaire_id IS NOT NULL
+                        AND r.date BETWEEN :date_debut AND :date_fin
+                GROUP BY rd.interimaire_id , r.date
+        ";
+        $stmt = Config::getInstance()->getPDO()->prepare($sql);
+        $stmt->bindValue(':date_debut', $dateDebut);
+        $stmt->bindValue(':date_fin', $dateFin);
+
+        if($stmt->execute() === false){
+            print_r($stmt->errorInfo());
+        }else{
+            $rslt = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        }
+
+        return $rslt;
+    }
+
+    public function getKmForExport($dateDebut, $dateFin){
+        $sql ="SELECT
+                '00003' AS code_entreprise,
+                rd.ouvrier_id matricule,
+                DATE_FORMAT(r.date, '%Y%m') am,
+                'P' AS code_p,
+                DATE_FORMAT(r.date, '%d') jd,
+                DATE_FORMAT(r.date, '%d') jf,
+                '1052' AS code_cpt_tache,
+                c.code,
+                '0' AS code_interne1,
+                rd.km,
+                '0' AS code_interne2,
+                '0' AS code_interne3,
+                '0' AS code_interne4,
+                'M' AS code_interne5,
+                '0' AS code_interne6
+            FROM
+                rapport r,
+                chantier c,
+                rapport_detail rd
+            WHERE
+                c.id = r.chantier
+                    AND r.id = rd.rapport_id
+                    AND rd.km != 0
+                    AND rd.ouvrier_id != 0
+                    AND r.date BETWEEN :date_debut AND :date_fin
+            ORDER BY r.date
+        ";
+        $stmt = Config::getInstance()->getPDO()->prepare($sql);
+        $stmt->bindValue(':date_debut', $dateDebut);
+        $stmt->bindValue(':date_fin', $dateFin);
+
+        if($stmt->execute() === false){
+            print_r($stmt->errorInfo());
+        }else{
+            $rslt = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        }
+
+        return $rslt;
+    }
+
+    public function getTPenForExport($dateDebut, $dateFin){
+        $sql = "SELECT
+                    '00003' AS code_entreprise,
+                    rd.ouvrier_id matricule,
+                    DATE_FORMAT(r.date, '%Y%m') am,
+                    'P' AS code_p,
+                    DATE_FORMAT(r.date, '%d') jd,
+                    DATE_FORMAT(r.date, '%d') jf,
+                    '1008' AS code_cpt_tache,
+                    c.code,
+                    '0' AS code_interne1,
+                    rd.hins,
+                    '0' AS code_interne2,
+                    '0' AS code_interne3,
+                    '0' AS code_interne4,
+                    'M' AS code_interne5,
+                    '0' AS code_interne6
+                FROM
+                    rapport r,
+                    chantier c,
+                    rapport_detail rd
+                WHERE
+                    c.id = r.chantier
+                        AND r.id = rd.rapport_id
+                        AND rd.hins != 0
+                        AND rd.ouvrier_id != 0
+                        AND r.date BETWEEN :date_debut AND :date_fin
+                UNION SELECT
+                    '1003' AS code_entreprise,
+                    rd.interimaire_id matricule,
+                    DATE_FORMAT(r.date, '%Y%m') am,
+                    'P' AS code_p,
+                    DATE_FORMAT(r.date, '%d') jd,
+                    DATE_FORMAT(r.date, '%d') jf,
+                    '6002' AS code_cpt_tache,
+                    c.code,
+                    '0' AS code_interne1,
+                    rd.hins,
+                    '0' AS code_interne2,
+                    '0' AS code_interne3,
+                    '0' AS code_interne4,
+                    'M' AS code_interne5,
+                    '0' AS code_interne6
+                FROM
+                    rapport r,
+                    chantier c,
+                    rapport_detail rd
+                WHERE
+                    c.id = r.chantier
+                        AND r.id = rd.rapport_id
+                        AND rd.hins != 0
+                        AND rd.interimaire_id != 0
+                        AND r.date BETWEEN :date_debut AND :date_fin
+                ";
+        $stmt = Config::getInstance()->getPDO()->prepare($sql);
+        $stmt->bindValue(':date_debut', $dateDebut);
+        $stmt->bindValue(':date_fin', $dateFin);
+
+        if($stmt->execute() === false){
+            print_r($stmt->errorInfo());
+        }else{
+            $rslt = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        }
+
+        return $rslt;
+    }
 }

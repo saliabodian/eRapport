@@ -469,4 +469,94 @@ class Chantier extends DbObject{
         }
         return $chantierHasUserRow;
     }
+
+    // Récupération des chantiers en intempérie
+
+    public static function getChantierActifWithItp()
+    {
+        $sql=' SELECT * FROM chantier WHERE actif=1 AND is_itp=1
+        ';
+        $pdoStmt = Config::getInstance()->getPDO()->prepare($sql);
+        if ($pdoStmt->execute() === false) {
+            print_r($pdoStmt->errorInfo());
+        }
+        else {
+            $chantiers = $pdoStmt->fetchAll(\PDO::FETCH_ASSOC);
+        }
+        return $chantiers;
+    }
+
+    // Récupération des chantiers sans intempérie
+
+    public static function getChantierActifWithoutItp()
+    {
+        $sql=' SELECT * FROM chantier WHERE actif=1 AND is_itp=0
+        ';
+        $pdoStmt = Config::getInstance()->getPDO()->prepare($sql);
+        if ($pdoStmt->execute() === false) {
+            print_r($pdoStmt->errorInfo());
+        }
+        else {
+            $chantiers = $pdoStmt->fetchAll(\PDO::FETCH_ASSOC);
+        }
+        return $chantiers;
+    }
+
+
+    public static function unsetIntemperie($chantierId){
+        $sql = 'UPDATE chantier SET is_itp = 0 WHERE id =:chantierId';
+
+        $stmt = Config::getInstance()->getPDO()->prepare($sql);
+
+        $stmt->bindValue(':chantierId', $chantierId);
+
+        if($stmt->execute()===false){
+            print_r($stmt->errorInfo());
+        }else{
+            return true;
+        }
+
+    }
+
+    public static function setIntemperie($chantierId){
+        $sql = 'UPDATE chantier SET is_itp = 1 WHERE id =:chantierId';
+
+        $stmt = Config::getInstance()->getPDO()->prepare($sql);
+
+        $stmt->bindValue(':chantierId', $chantierId);
+
+        if(($stmt->execute())===false){
+            print_r($stmt->errorInfo());
+        }else{
+            return true;
+        }
+
+    }
+
+    public static function lastChantierCreated(){
+        $sql = "SELECT id FROM chantier ORDER BY created DESC limit 1";
+
+        $stmt=Config::getInstance()->getPDO()->prepare($sql);
+        if(($stmt->execute())===false){
+            print_r($stmt->errorInfo());
+        }else{
+            $chantier = $stmt->fetch();
+            return $chantier;
+        }
+    }
+
+    public static function chantierBatimentList($chantierId){
+        $sql = "SELECT batiment.id, batiment.nom from batiment, chantier where chantier.id = batiment.chantier_id AND batiment.chantier_id = :chantier_id";
+
+        $stmt = Config::getInstance()->getPDO()->prepare($sql);
+
+        $stmt->bindValue(":chantier_id", $chantierId, \PDO::PARAM_INT);
+
+        if(($stmt->execute()) === false){
+            print_r($stmt->errorInfo());
+        }else{
+            return $batiments = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        }
+    }
+
 }

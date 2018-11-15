@@ -4,7 +4,7 @@
         <h1>Les anomalies RH  </h1>
     </div>
     <div class="container-fluid">
-    <div class="row-fluid">
+        <div class="row-fluid">
         <div class="span12">
             <div class="widget-box">
                 <div class="widget-title"> <span class="icon"> <i class="icon-align-justify"></i> </span>
@@ -31,6 +31,7 @@
                 <div class="widget-content nopadding">
                     <?php include 'alert.php'; ?>
                     <?php if(!empty($hourAnomaly)){ ?>
+                        <input class="span12" id="myInputHourAnomaly" type="text" placeholder=" Filtrer les anomalies horaires...">
                         <div class="widget-box">
                             <div class="widget-title"> <span class="icon"> <i class="icon-th"></i> </span>
                                 <h5>Anomalies RH : Différence entre volume horaire badgé et heures prestées</h5>
@@ -59,7 +60,7 @@
                                             <input type="hidden" name="chantier_code" value="<?= $anomaly['code']?>"/>
                                             <input type="hidden" name="anomaly" value="true"/>
                                             <input type="hidden" name="selected_matricule[]" value="<?= isset($anomaly['ouvrier_id'])? $anomaly['ouvrier_id'] : (isset($anomaly['interimaire_id'])? $anomaly['interimaire_id'] : '')?>"/>
-                                            <tbody>
+                                            <tbody id="myTableHourAnomaly">
                                             <tr>
                                                 <td><?= isset($anomaly['ouvrier_id'])? $anomaly['ouvrier_id'] : (isset($anomaly['interimaire_id'])? $anomaly['interimaire_id'] : '')?> - <?=$anomaly['fullname']?></td>
                                                 <td><?= $anomaly['htot']?></td>
@@ -84,6 +85,7 @@
                 <div class="widget-content nopadding">
                     <?php include 'alert.php'; ?>
                     <?php if(!empty($absenceList)){ ?>
+                        <input class="span12" id="myInputMissingAnomaly" type="text" placeholder=" Filtrer les anomalies de type absence...">
                         <div class="widget-box">
                             <div class="widget-title"> <span class="icon"> <i class="icon-th"></i> </span>
                                 <h5>Anomalies RH : Ouvriers ou Intérimaires avec absence</h5>
@@ -111,7 +113,7 @@
                                             <input type="hidden" name="chantier_code" value="<?= $anomaly['code']?>"/>
                                             <input type="hidden" name="anomaly" value="true"/>
                                             <input type="hidden" name="selected_matricule[]" value="<?= isset($anomaly['ouvrier_id'])? $anomaly['ouvrier_id'] : (isset($anomaly['interimaire_id'])? $anomaly['interimaire_id'] : '')?>"/>
-                                            <tbody>
+                                            <tbody id="myTableMissingAnomaly">
                                             <tr>
                                                 <td><?= isset($anomaly['ouvrier_id'])? $anomaly['ouvrier_id'] : (isset($anomaly['interimaire_id'])? $anomaly['interimaire_id'] : '')?> - <?=$anomaly['fullname']?></td>
                                                 <td><?= $anomaly['abs'].' - '.$anomaly['habs'].'H' ?></td>

@@ -32,6 +32,10 @@ use Classes\Cdcl\Db\Chantier;
 
 if(!empty($_SESSION)){
 
+//    var_dump($_POST);
+
+//    exit;
+
     $chantierId = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
     $chantierObject = new Chantier();
@@ -40,21 +44,35 @@ if(!empty($_SESSION)){
 
     $chantierList = Chantier::getAllForSelect();
 
-
+    $batimentList = isset($batimentList) ? $batimentList : '';
 
     if ($chantierId > 0) {
         $chantierObject = Chantier::get($chantierId);
+        $batimentList = Chantier::chantierBatimentList($chantierId);
         //print_r($chantierObject);
     }
 
-    // var_dump($chantierObject->getId());
+
+
+    // var_dump($chantierId);
+
+
+
 
     // Si lien suppression
     if (isset($_GET['delete']) && intval($_GET['delete']) > 0) {
-        if (Chantier::deleteById(intval($_GET['delete']))) {
-            header('Location: chantier.php?success='.urlencode('Suppression effectuée'));
-            exit;
+
+        $batimentList = Chantier::chantierBatimentList(intval($_GET['delete']));
+
+        if(!empty($batimentList)){
+            foreach($batimentList as $batiment){
+                \Classes\Cdcl\Db\Batiment::deleteById($batiment['id']);
+            }
         }
+
+        Chantier::deleteById(intval($_GET['delete']));
+        header('Location: chantier.php?success='.urlencode('Suppression effectuée'));
+        exit;
     }
 
 

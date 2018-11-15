@@ -64,18 +64,20 @@
                                     <input type="email" class="span11" placeholder="m.mariano@cdclux.com" name="email" value="<?= $userObject->getEmail() ?>"/>
                                 </div>
                             </div>
-                            <div class="control-group">
+                            <?php if ($userObject->getId() <= 0) : ?>
+                                <div class="control-group">
                                 <label class="control-label">Mot de passe <span>*</span></label>
                                 <div class="controls">
                                     <input type="password"  class="span11" placeholder="Mot de passe" name="password1" value="<?= md5($userObject->getPassword()) ?>"/>
                                 </div>
                             </div>
-                            <div class="control-group">
+                                <div class="control-group">
                                 <label class="control-label">Confirmer mot de passe <span>*</span></label>
                                 <div class="controls">
                                     <input type="password"  class="span11" placeholder="Confirmer votre mot de passe" name="password2" value="<?= md5($userObject->getPassword()) ?>"/>
                                 </div>
                             </div>
+                            <?php endif; ?>
                             <div class="control-group">
                                 <label for="role" class="control-label">Fonction<span>*</span> :</label>
                                 <div class="controls mySelect">

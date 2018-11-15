@@ -1,3 +1,8 @@
+* {
+.border-radius(0) !important;
+}
+
+
 .mySelect{
     width: 40%;
 }
@@ -47,4 +52,22 @@
 .titlePerso{
     font-size: 24px;
     font-weight: bold;
+}
+
+.hr {
+    border: none;
+    border-top: double #333;
+    color: #333;
+    overflow: visible;
+    text-align: center;
+    height: 5px;
+}
+
+.detail{
+    border: 1px solid;
+}
+
+#space {
+    margin-bottom: 10px;
+    margin-top: 10px;
 }

@@ -22,7 +22,7 @@
                             <div class="control-group">
                                 <label class="control-label">Semaine du</label>
                                 <div class="controls">
-                                    <input type="text" name="date_deb" class="btn datepicker btn-block span11 " value=""/>
+                                    <input type="text" autocomplete="off" name="date_deb" class="btn datepicker btn-block span11 " value=""/>
                                 </div>
                             </div>
                             <div class="form-actions">
@@ -48,7 +48,7 @@
                             <div class="control-group">
                                 <label class="control-label">Date</label>
                                 <div class="controls">
-                                    <input type="text" name="date_deb" class="btn datepicker btn-block span11 " value=""/>
+                                    <input type="text" name="date_deb" autocomplete="off" class="btn datepicker btn-block span11 " value=""/>
                                 </div>
                             </div>
                             <div class="form-actions">

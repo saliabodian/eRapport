@@ -47,15 +47,15 @@
                             <div class="control-group">
                                 <label for="date_fin" class="control-label">Date de génération:</label>
                                 <div class="controls">
-                                    <input name="date_gen" class="datepicker" value=""/>
+                                    <input name="date_gen" autocomplete="off" class="datepicker" value=""/>
                                 </div>
                             </div>
-                                <div class="control-group">
-                                    <label  class=" control-label" for="">Chef d'équipe absent </label>
-                                    <div class="controls">
-                                        <input  type="checkbox"  name="missing" >
-                                    </div>
+                            <div class="control-group">
+                                <label  class=" control-label" for="">Chef d'équipe absent </label>
+                                <div class="controls">
+                                    <input  type="checkbox"  name="missing" >
                                 </div>
+                            </div>
                             <div class="form-actions">
                                 <div class=" span4 btn-block"></div>
                                 <div class="span4">
@@ -73,6 +73,7 @@
             <div class="span12">
                 <div class="widget-content nopadding">
                     <?php if(!empty($rapportGeneratedList)){ ?>
+                        <input class="span12" id="myInputGeneratedReport" type="text" placeholder=" Filtrer les rapports générés...">
                         <div class="widget-box">
                             <div class="widget-title"> <span class="icon"> <i class="icon-th"></i> </span>
                                 <h5>Liste des rapports générés</h5>
@@ -87,7 +88,7 @@
                                         <th></th>
                                     </tr>
                                     </thead>
-                                    <tbody>
+                                    <tbody id="myTableGeneratedReport">
                                     <?php foreach ($rapportGeneratedList as $rapportGenerated ) : ?>
                                         <tr class="odd gradeX">
                                             <td><?= date('d-m-Y',strtotime($rapportGenerated['date'])) ?></td>
@@ -110,6 +111,7 @@
             <div class="span12">
                 <div class="widget-content nopadding">
                     <?php if(!empty($rapportSubmittedList)){ ?>
+                        <input class="span12" id="myInputSubmittedReport" type="text" placeholder=" Filtrer les rapports soumis...">
                         <div class="widget-box">
                             <div class="widget-title"> <span class="icon"> <i class="icon-th"></i> </span>
                                 <h5>Liste des rapports soumis</h5>
@@ -124,7 +126,7 @@
                                         <th></th>
                                     </tr>
                                     </thead>
-                                    <tbody>
+                                    <tbody id="myTableSubmittedReport">
                                     <?php foreach ($rapportSubmittedList as $rapportSubmitted ) : ?>
                                         <tr class="odd gradeX">
                                             <td><?= date('d-m-Y',strtotime($rapportSubmitted['date'])) ?></td>
@@ -147,6 +149,7 @@
             <div class="span12">
                 <div class="widget-content nopadding">
                     <?php if(!empty($rapportValidatedList)){ ?>
+                        <input class="span12" id="myInputValidatedReport" type="text" placeholder=" Filtrer les rapports validés...">
                         <div class="widget-box">
                             <div class="widget-title"> <span class="icon"> <i class="icon-th"></i> </span>
                                 <h5>Liste des rapports validés</h5>
@@ -162,7 +165,7 @@
                                         <th></th>
                                     </tr>
                                     </thead>
-                                    <tbody>
+                                    <tbody id="myTableValidatedReport">
                                         <?php foreach ($rapportValidatedList as $rapportValidated ) : ?>
                                             <tr class="odd gradeX">
                                                 <td><?= date('d-m-Y',strtotime($rapportValidated['date'])) ?></td>

@@ -47,7 +47,7 @@ if(!empty($_SESSION)){
 
     //var_dump($interimaireId);
 
-    // exit;
+    //exit;
 
     $interimaireObject = new Interimaire();
     if(!empty($_GET['search'])){
@@ -77,10 +77,18 @@ if(!empty($_SESSION)){
     if ($interimaireId > 0)
     {
         $interimaireObject = Interimaire::get($interimaireId);
-        //    print_r($interimaireObject);
     }
 
-    // var_dump($interimaireObject->getId());
+
+    $idAgence = $interimaireObject->getAgenceId()->getId();
+
+    $theAgence = Agence::get($idAgence);
+
+    //var_dump($theAgence);
+
+    $theAgenceName = $theAgence->getNom();
+
+    // var_dump($theAgenceName);
 
     // Si lien suppression
     if (isset($_GET['delete']) && intval($_GET['delete']) > 0) {
@@ -131,6 +139,10 @@ if(!empty($_SESSION)){
         $qualif_id = isset($_POST['qualif_id']) ? $_POST['qualif_id'] : 0;
         $dpt_id = isset($_POST['dpt_id']) ? $_POST['dpt_id'] : 0;
         $user_id = isset($_POST['user_id']) ? $_POST['user_id'] : 0;
+
+
+
+
 
         $formOk = true;
 
@@ -245,10 +257,10 @@ if(!empty($_SESSION)){
                 $affectationExists = Interimaire::checkInterimaireAffectation($_POST['chantier_id'],$selectedWeek,$selectedYear,$_POST['interimaire_id']);
             //    var_dump($affectationExists);
             //    exit;
-                if ($affectationExists >= 1){
-                    $conf->addError("Cet intérimaire a déjà été affecté pour ce chantier et cette date");
-                    $formOk = false;
-                }
+            //    if ($affectationExists >= 1){
+            //        $conf->addError("Cet intérimaire a déjà été affecté pour ce chantier et cette date");
+            //       $formOk = false;
+            //   }
             }
         }else{
             if(empty($date_deb)){
@@ -278,6 +290,16 @@ if(!empty($_SESSION)){
             $rel = 7 - $selectedDay;
 
             $date_fin = new DateTime($date_deb->format('Y-m-d').' +'.$rel .'day');
+
+            if(intval($_POST['interimaire_id']) != 0){
+                $affectationExists = Interimaire::checkInterimaireAffectation($_POST['chantier_id'],$selectedWeek,$selectedYear,$_POST['interimaire_id']);
+                //    var_dump($affectationExists);
+                //    exit;
+                //    if ($affectationExists >= 1){
+                //        $conf->addError("Cet intérimaire a déjà été affecté pour ce chantier et cette date");
+                //       $formOk = false;
+                //   }
+            }
         }
 
         if ($formOk) {
@@ -322,17 +344,14 @@ if(!empty($_SESSION)){
 
         //    exit;
 
-            if($_POST['interimaire_id'] != 0){
-                if($affectationExists < 1){
+            if($affectationExists < 1){
+                if($_POST['interimaire_id'] != 0){
                     $affectation = Interimaire::affectationInterimaireSaved($chantier_id, $selectedWeek, $_POST['interimaire_id'], $date_deb);
+                }else{
+                    $id = Interimaire::getLastId($agence_id, $matricule);
+                    $affectation = Interimaire::affectationInterimaireSaved($chantier_id, $selectedWeek, $id, $date_deb);
                 }
-            }else{
-                $id = Interimaire::getLastId($agence_id, $matricule);
-                // var_dump($id);
-                // exit;
-                 $affectation = Interimaire::affectationInterimaireSaved($chantier_id, $selectedWeek, $id, $date_deb);
             }
-
 
             header('Location: interimaire.php?success='.urlencode('Ajout/Modification effectuée').'&interimaire_id='.$interimaireObject->getId());
             exit;

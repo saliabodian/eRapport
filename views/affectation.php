@@ -18,7 +18,7 @@
                                 <input type="hidden" name="affectation" value="true">
                                 <label class="controls span2 m-wrap">Semaine du</label>
                                 <div class="controls span2 m-wrap">
-                                    <input type="text" name="date_affectation" class=" btn datepicker btn-block" value="" />
+                                    <input type="text" autocomplete="off" name="date_affectation" class=" btn datepicker btn-block" value="" />
                                 </div>
                                 <div class="controls span3 m-wrap">
                                     <input type="submit" class="btn-primary" value="Affecter les intérimaires" style="text-align:left;"/>
@@ -54,7 +54,7 @@
                             <div class="control-group">
                                 <label class="control-label">Semaine du</label>
                                 <div class="controls">
-                                    <input type="text" name="date_deb" class="span3 btn datepicker btn-block" value=""/>
+                                    <input type="text" autocomplete="off" name="date_deb" class="span3 btn datepicker btn-block" value=""/>
                                 </div>
                             </div>
                             <div class="form-actions">
