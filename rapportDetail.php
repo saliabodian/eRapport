@@ -35,128 +35,23 @@ $conf = Config::getInstance();
 
 if(!empty($_SESSION)){
 
-
-   //var_dump($_POST['matriculeList']);
-    //exit;
-
-    /**array(37) {
-    ["matriculeList"]=>string(5)
-     * "Array"
-     * ["htot"]=>string(1) "8"
-     * ["abs"]=>string(10) "Congé (C)"
-     * ["habs"]=>string(1) "8"
-     * ["type_task"]=>array(1)
-     * {[0]=>string(22) "Choisir une catégorie"}
-     * ["tasks"]=>array(1)
-     * {[0]=>string(18) "Choisir une tâche"}
-     * ["batiment"]=>array(1) {[0]=>string(0) ""}
-     * ["axe"]=>array(1) {[0]=>string(0) ""}
-     * ["etage"]=>array(1) {[0]=>string(0) ""}
-     * ["type_task2"]=>string(1) "4"["tasks2"]=>string(2) "17"
-     * ["batiment2"]=>string(1) "A"
-     * ["axe2"]=> string(1) "2"
-     * ["etage2"]=>string(1) "1"
-     * ["type_task3"]=>string(2) "10"
-     * ["tasks3"]=>string(1) "9"
-     * ["batiment3"]=>string(1) "B"
-     * ["axe3"]=>string(1) "1"
-     * ["etage3"]=>string(1) "1"
-     * ["type_task4"]=>string(2) "10"
-     * ["tasks4"]=>string(2) "74"
-     * ["batiment4"]=>string(1) "C"
-     * ["axe4"]=>string(1) "1"
-     * ["etage4"]=>string(1) "1"
-     * ["type_task5"]=>string(1) "4"
-     * ["tasks5"]=>string(2) "17"
-     * ["batiment5"]=>string(1) "D"
-     * ["axe5"]=>string(1) "1"
-     * ["etage5"]=>string(1) "1"
-     * ["type_task6"]=>string(1) "4"
-     * ["tasks6"]=>string(2) "17"
-     * ["batiment6"]=>string(1) "E"
-     * ["axe6"]=>string(1) "1"
-     * ["etage6"]=>string(1) "1"
-     * ["hins"]=>string(1) "2"
-     * ["dpl_pers"]=>string(0) ""
-     * ["km"]=>string(1) "5"
-    }*/
-    // exit;
-
-    /* *
-     *
-     * $_POST["rapport_id"]
-     * $_POST["rapport_type"]
-     * $_POST["chef_dequipe_id"]
-     * $_POST["chef_dequipe_matricule"]
-     * $_POST["date_generation"]
-     * $_POST["chantier_code"]
-     * $_POST["chantier_id"]
-     * $_POST["check_all"]
-     * $_POST["selected_matricule"]
-     *
-     * */
-    /*if($_SESSION['post_id'] === 1){
-        $matriculeList = isset($_POST['selected_matricule'])? $_POST['selected_matricule'] : '';
-    }*/
     $matriculeList = isset($_POST['selected_matricule'])? $_POST['selected_matricule'] : '';
 
     $batimentList = Chantier::chantierBatimentList($_POST['chantier_id']);
 
     $batimentList = isset($batimentList) ? $batimentList : '';
 
+    //$_POST['chantier_id']
+    $taskbySiteExist = Chantier::taskBySiteExist($_POST['chantier_id']);
 
-
-    //var_dump($batimentList);
-    /*var_dump($matriculeList);
-
-    foreach( $matriculeList as $matricule){
-        var_dump($matricule);
-        var_dump($_SESSION['username']);
-        if($matricule === $_SESSION['username'] || $matricule === '') {
-            $newArray[] = $matricule;
-        }
-    }
-
-    var_dump($newArray);
-
-    exit;
-    */
+    // $_SESSION['chantier'] = $_POST['chantier_id'];
     $_POST['majForm'] = isset($_POST['majForm'])? $_POST['majForm'] : '';
     if($_POST['majForm']){
-
-    //    var_dump($_POST['machine']);
-
-    //    var_dump($_POST['htot']);
-    //
-    // exit;
-
+    //    var_dump(intval($_POST['htot']));
+    //    die;
         $form = true;
 
-        //var_dump($_POST['rapport_detail_id']);
-       /* foreach($_POST['rapport_detail_id'] as $rapport){
-            var_dump($rapport);
-       }
-       exit;*/
-        // Gestion des contrôles a effectué avant soumission
-        // du formulaire et insertion en base de données
-
-    //    var_dump($_POST);
-
-    //    exit;
-
-        if( ($_POST['ht']=== '0' ||  $_POST['ht']=== '')
-            && ($_POST['ht2']=== '0' || $_POST['ht2']=== '')
-            && ($_POST['ht3']=== '0' || $_POST['ht3']=== '')
-            && ($_POST['ht4']=== '0' || $_POST['ht4']=== '')
-            && ($_POST['ht5']=== '0' ||  $_POST['ht5']=== '')
-            && ($_POST['ht6']=== '0' ||  $_POST['ht6']=== '')
-            && ($_POST['htot']=== '0' ||  $_POST['htot']=== '')){
-            $conf->addError('Veuillez saisir au moins une tâche.');
-            $form = false;
-        }
-
-
-
+        // Gestion des contrôles a effectué avant soumission du formulaire et insertion en base de données
 
         if(($_POST['type_task'])!= 'Catégorie'){
             // var_dump('type task non vide');
@@ -292,8 +187,8 @@ if(!empty($_SESSION)){
                 header('Location: anomalieRh.php?success=' . urlencode('Modification effectuée avec succés'));
                 exit;
             }else{
-                // var_dump($_POST['machine']);
-                // exit;
+            //      var_dump($_POST['htot']);
+            //      exit;
 
                 Rapport::updateRapportDetail($_POST['rapport_detail_id'], $_POST['htot'], $_POST['hins'], $_POST['machine'], $_POST['abs'],
                     $_POST['habs'], $dpl_pers,$_POST['km'], $_POST['remarque'], $chef_dequipe_updated,
@@ -311,6 +206,9 @@ if(!empty($_SESSION)){
         }else{
             $conf->addError('La mise à jour ne s\'est pas effectuée correctement');
 
+        //    var_dump($taskbySiteExist);
+
+        //    exit;
 
             $listTache= Tache::getAll();
 
@@ -870,7 +768,7 @@ if(!empty($_SESSION)){
                 $workerTaskList = Rapport::getWorkerNoyauTask($worker['rapport_detail_id']);
             }
 
-        */    // var_dump($_POST);
+        */  // var_dump($_POST);
 
             // Gestion de la composition de la matrice si ce sont uniquement des ouvriers
             // ou si ce sont uniquement des intérimaires ou si c'est un mix
@@ -902,7 +800,12 @@ if(!empty($_SESSION)){
             include $conf->getViewsDir().'header.php';
             include $conf->getViewsDir().'sidebar.php';
             include $conf->getViewsDir().'rapportDetail.php';
-            include $conf->getViewsDir().'footer.php';
+            if(intval($taskbySiteExist['nb']) > 0){
+                include $conf->getViewsDir().'footerTskSite.php';
+            }
+            else{
+                include $conf->getViewsDir().'footer.php';
+            }
             exit;
 
         }
@@ -1476,11 +1379,20 @@ if(!empty($_SESSION)){
         }
 
 
-        // exit;
 
-        $listTypeTache = TypeTache::getAll();
+    //    exit;
 
-        $listTache= Tache::getAll();
+        if(intval($taskbySiteExist['nb']) > 0){
+
+            $listTypeTache = TypeTache::getAllTypeTacheBySite($_POST['chantier_id']);
+
+            $listTache = Tache::getAllTacheBySite($_POST['chantier_id']);
+        }else{
+
+            $listTypeTache = TypeTache::getAll();
+
+            $listTache= Tache::getAll();
+        }
 
         // var_dump($workerToUpdate);
         // exit;
@@ -1518,7 +1430,13 @@ if(!empty($_SESSION)){
         include $conf->getViewsDir().'header.php';
         include $conf->getViewsDir().'sidebar.php';
         include $conf->getViewsDir().'rapportDetail.php';
-        include $conf->getViewsDir().'footer.php';
+        if(intval($taskbySiteExist['nb']) > 0){
+            include $conf->getViewsDir().'footerTskSite.php';
+        }
+        else{
+            include $conf->getViewsDir().'footer.php';
+        }
+
     }else{
         header('Location: erapportShow.php?rapport_id='.$_POST['rapport_id'].'&rapport_type='.$_POST['rapport_type'].'&chef_dequipe_id='.$_POST['chef_dequipe_id'].'&chef_dequipe_matricule='.$_POST['chef_dequipe_matricule'].'&date_generation='.$_POST['date_generation'].'&chantier_id='.$_POST['chantier_id'].'&chantier_code='.$_POST['chantier_code'].'&erreur=true');
     }
