@@ -230,6 +230,10 @@ if(!empty($_SESSION)){
         // Gestion de la génération des rapports journaliers en J+1 uniquement
         if(!empty($siteWithItp)){
             if (in_array($_POST['chantier_id'], $siteWithItpId)) {
+                $hasHistory = Chantier::checkHistory($_POST['chantier_id'], $dateRapport);
+                if($hasHistory === false){
+                    Chantier::setHistory($_POST['chantier_id'], $dateRapport);
+                }
                 if($dateRapport >= $today){
                     $conf->addError(' Aucun rapport ne peut être généré pour cette date. Mode intempéries sur chantier activé!');
                     $form=false;
@@ -633,7 +637,7 @@ if(!empty($_SESSION)){
 
         if(!empty($teamLeaderMissing) && ($teamLeaderAffectedOnSite<= 1) && $form){
 
-            echo "CAS 2";
+        //    echo "CAS 2";
 
 
             $rapportId = isset($rapportId)? $rapportId : "";

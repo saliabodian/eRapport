@@ -134,7 +134,13 @@ $conf = Config::getInstance();
 
     //    exit;
 
-        if($itpActive === false || empty($itpActive)){
+        $historyExist = Chantier::checkHistory($_GET['chantier_id'], $_GET["date_generation"]);
+
+    //    var_dump($historyExist);
+
+    //    die;
+
+        if( $historyExist === false ){
             if(strtotime($_GET["date_generation"]) != strtotime(date('Y/m/d', time()))){
                 $allPointage = Dsk::getCalculTotalHoraire($_GET["date_generation"], $_GET["chantier_code"]) ;
             }
@@ -582,7 +588,8 @@ $conf = Config::getInstance();
 
 
         // Mise à jour des heures pointées au niveau des différentes matrices générées
-        if(!empty($allPointage)){
+        if($historyExist <= 0){
+            if(!empty($allPointage)){
             foreach($allPointage as $pointage){
                 foreach($noyau as $rapport){
                     if($rapport['ouvrier_id'] === $pointage['matricule']){
@@ -622,7 +629,7 @@ $conf = Config::getInstance();
                 }
             }
         }
-
+        }
         // Récupération des ids des différents rapports générés absents à savoir ceux du noyau, les absents et les hors noyaux
 
     //    $i = 0;
