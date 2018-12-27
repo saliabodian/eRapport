@@ -25,20 +25,27 @@ use Classes\Cdcl\Db\Tache;
 
 $conf = Config::getInstance();
 
+
 if(!empty($_SESSION)){
 
-    if($_POST['tsk_type_id'])
-    {
+    if($_POST['tsk_type_id']){
         $listTasks = Tache::getTacheByTypeTache($_POST['tsk_type_id']);
+    }
 
-    //    var_dump($listTasks);
+    if($_POST['tsk_type_id'] && $_POST['chantierId']){
+        $listTasks = Tache::getTacheByTypeTacheBySite($_POST['tsk_type_id'], $_POST['chantierId']);
     }
     //var_dump($listTasks);
 // exit;
     include $conf->getViewsDir().'header.php';
     include $conf->getViewsDir().'sidebar.php';
     include $conf->getViewsDir().'getTache.php';
-    include $conf->getViewsDir().'footer.php';
+    if($_POST['tsk_type_id'] ){
+        include $conf->getViewsDir().'footer.php';
+    }
+    if($_POST['tsk_type_id'] && $_POST['chantierId']){
+        include $conf->getViewsDir().'footerTskSite.php';
+    }
 }else{
     header('Location: index.php');
 }
