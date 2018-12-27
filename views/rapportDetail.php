@@ -20,7 +20,7 @@
                                 <input type="hidden" name="chef_dequipe_matricule" value="<?= $_POST['chef_dequipe_matricule']?>">
                                 <input type="hidden" name="date_generation" value="<?= $_POST['date_generation']?>">
                                 <input type="hidden" name="chantier_code" value="<?= $_POST['chantier_code']?>">
-                                <input type="hidden" name="chantier_id" value="<?= $_POST['chantier_id']?>">
+                                <input type="hidden" name="chantier_id" id="chantier_id" value="<?= $_POST['chantier_id']?>">
                                 <input type="hidden" value="true" name="majForm"/>
                                 <input type="hidden" name="anomaly" value="<?= isset($_POST['anomaly'])?$_POST['anomaly'] : '' ?>"/>
                                 <?php if(sizeof($workerToUpdate) === 1) : ?>
@@ -45,34 +45,39 @@
                                 <div class="control-group">
                                     <label class="control-label">Heures totales :</label>
                                     <div class="controls">
+                                        <!-- Matrice Ouvriers && Intérimaires -->
                                         <?php if(in_array('Ouvrier', $workerType) && in_array('Interimaire',$workerType ) && sizeof($workerToUpdate) > 1): ?>
                                             <?php foreach($workerToUpdate as $worker) : ?>
                                                 <input type="hidden" class="span2" name="htot" value="" />
                                             <?php endforeach ; ?>
-                                            <input type="number" class="span2" name="" value="" disabled/>
+                                            <input type="text" class="span2" name="" value="" disabled/>
                                         <?php endif; ?>
+                                        <!-- Intérimaires Uniquement et nb_interimaire >1 -->
                                         <?php if(!(in_array('Ouvrier', $workerType)) && in_array('Interimaire',$workerType ) && sizeof($workerToUpdate) > 1 ):?>
                                             <?php foreach($workerToUpdate as $worker) : ?>
-                                                <input type="hidden" class="span2" name="htot" value="<?= ($worker['htot'] != 0 )? $worker['htot']: 8 ?>"/>
+                                                <input type="hidden" class="span2" name="htot" value="<?= $worker['htot'] ?>"/>
                                             <?php endforeach ; ?>
-                                            <input type="number" class="span2" name="htot" value="<?= ($worker['htot'] != 0 )? $worker['htot']: 8 ?>"/>
+                                            <input type="text" class="span2" name="htot" value="<?= $worker['htot'] ?>"/>
                                         <?php endif; ?>
+                                        <!-- Intérimaires Uniquement et nb_interimaire =1 -->
                                         <?php if(!(in_array('Ouvrier', $workerType)) && in_array('Interimaire',$workerType ) && sizeof($workerToUpdate) === 1 ):?>
                                             <?php foreach($workerToUpdate as $worker) : ?>
-                                                <input type="number" class="span2" name="htot" value="<?= ($worker['htot'] != 0 )? $worker['htot']: 8 ?>"/>
+                                                <input type="text" class="span2" name="htot" value="<?= $worker['htot'] ?>"/>
                                             <?php endforeach ; ?>
                                         <?php endif; ?>
+                                        <!-- Ouvriers Uniquement et nb_ouvrier =1 -->
                                         <?php if((in_array('Ouvrier', $workerType)) && !(in_array('Interimaire',$workerType )) && sizeof($workerToUpdate) === 1 ):?>
                                             <?php foreach($workerToUpdate as $worker) : ?>
                                                 <input type="hidden" class="span2" name="htot" value="<?= $worker['htot']  ?>"/>
-                                                <input type="number" class="span2" name="htot" value="<?= $worker['htot'] ?>" disabled/>
+                                                <input type="text" class="span2" name="htot" value="<?= $worker['htot'] ?>" disabled/>
                                             <?php endforeach ; ?>
                                         <?php endif; ?>
+                                        <!-- Ouvriers Uniquement et nb_ouvrier >1 -->
                                         <?php if((in_array('Ouvrier', $workerType)) && !(in_array('Interimaire',$workerType )) && sizeof($workerToUpdate) > 1 ):?>
                                             <?php foreach($workerToUpdate as $worker) : ?>
                                                 <input type="hidden" class="span2" name="htot" value="<?= $worker['htot']  ?>"/>
                                             <?php endforeach ; ?>
-                                            <input type="number" class="span2" name="" value="" disabled/>
+                                            <input type="text" class="span2" name="" value="" disabled/>
                                         <?php endif; ?>
                                     </div>
                                 </div>
