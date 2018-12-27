@@ -27,6 +27,12 @@ $conf = Config::getInstance();
 // var_dump($_SESSION);
 
 if(!empty($_SESSION)){
+
+   // Script à éxécuter
+
+   include 'sendConducEmail.php';
+   include 'sendEmailToRh.php';
+
     if ($_SESSION['post_id']=== "4" || $_SESSION['post_id']=== "7"){
         header('Location: home.php');
     }
