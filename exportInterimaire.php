@@ -33,9 +33,18 @@ if(!empty($_SESSION)){
 
     $interiamireList = $interimaires->getAllIntActifs();
 
-    //var_dump($interiamireList);
+    // var_dump($interiamireList);
 
-    //exit;
+    // exit;
+
+    $interimaireId = [];
+
+    foreach($interiamireList as $interiamire){
+        $interimaireId [] = $interiamire['id'];
+    }
+    $intMobiles= $interimaires->getIntWithMobility();
+
+
 include $conf->getViewsDir().'headerTableExport.php';
 include $conf->getViewsDir().'sidebar.php';
 include $conf->getViewsDir().'exportInterimaire.php';

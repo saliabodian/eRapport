@@ -61,8 +61,8 @@ if(!empty($_SESSION)){
          * */
         if($_POST['T'] === '1'){
 
-            var_dump($_POST);
-            var_dump($_GET);
+        //    var_dump($_POST);
+        //    var_dump($_GET);
         //    echo "On est la chez les T ouvriers CDCL";
             if(empty($dateDebut) || $dateDebut === '1970-01-01'){
                 $conf->addError('Veuillez renseigner l\'heure de début.');
