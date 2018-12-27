@@ -79,7 +79,6 @@
       <li class="submenu"> <a href="#"><i class="icon-map-marker"></i> <span>Gestion des chantiers</span> <span class="label label-important"></span></a>
         <ul>
           <li> <a href="chantier.php"><i class="icon-picture"></i>&nbsp;&nbsp;Création des chantiers</a></li>
-          <li> <a href="batiment.php"><i class="icon-home"></i>&nbsp;&nbsp;Création des bâtiments</a></li>
           <li> <a href="chantierEnIntemperie.php"><i class="icon-asterisk"></i>&nbsp;&nbsp;Chantiers en Intempéries</a></li>
         </ul>
       </li>
@@ -108,8 +107,14 @@
         <ul>
           <li> <a href="condenseTaskDoneOnSite.php"><i class="icon-caret-right"></i><span>&nbsp;&nbsp;Résumé tâches / chantier</span></a></li>
           <li> <a href="tasksHoursDoneBySite.php"><i class="icon-caret-right"></i><span>&nbsp;&nbsp;Récap. tâches / chantier</span></a></li>
+
           <li> <a href="tasksHoursByWorkersBySite.php"><i class="icon-caret-right"></i><span>&nbsp;Tâches / travailleurs / chantier</span></a></li>
-          <li> <a href="exportInterimaire.php"><i class="icon-caret-right"></i><span>&nbsp;Liste des intérimaires actifs</span></a></li>
+            <?php
+          if ( $_SESSION['post_id'] === "14"){
+          ?>
+            <li> <a href="tasksHoursByWorkersBySiteFull.php"><i class="icon-caret-right"></i><span>&nbsp;Tâches / travailleurs / chantier - Full</span></a></li>
+          <?php } ?>
+          <li> <a href="exportToExcelListInt.php"><i class="icon-caret-right"></i><span>&nbsp;Liste des intérimaires actifs</span></a></li>
          <?php
           if ( $_SESSION['post_id'] === "7" || $_SESSION['post_id']=== "4"){
           ?>
