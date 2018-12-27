@@ -202,5 +202,82 @@ class Batiment extends DbObject{
         }
     }
 
+    public function batimentCheck($chantierId, $nom){
+        $sql = 'SELECT count(id) FROM batiment WHERE nom like :nom AND chantier_id=:chantier_id ';
+        $stmt = Config::getInstance()->getPDO()->prepare($sql);
+        $stmt->bindValue(':chantier_id', $chantierId);
+        $stmt->bindValue(':nom', '%'.$nom.'%');
 
+        if($stmt->execute() === false){
+            print_r($stmt->errorInfo());
+        }else{
+            if( $stmt->fetch() <= 0 ){
+                return true;
+            } else{
+                return false ;
+            }
+        }
+
+    }
+
+    public function getBatiment($chantierId, $dateDebut, $dateFin){
+
+        $sql = 'SELECT
+                batiment.id,
+                batiment.nom
+            FROM
+                rapport_detail_has_tache,
+                rapport_detail,
+                rapport,
+                chantier,
+                batiment
+            WHERE
+                rapport_detail_has_tache.rapport_detail_id = rapport_detail.id
+                    AND rapport_detail.rapport_id = rapport.id
+                    AND rapport.chantier = chantier.id
+                    AND batiment.chantier_id = chantier.id
+                    AND chantier.id = :chantier_id
+                    AND rapport.date BETWEEN :dateDeb AND :dateFin
+            GROUP BY batiment.id';
+
+        $stmt = Config::getInstance()->getPDO()->prepare($sql);
+        $stmt->bindValue(':chantier_id', $chantierId);
+        $stmt->bindValue(':dateDeb', $dateDebut);
+        $stmt->bindValue(':dateFin', $dateFin);
+
+        if($stmt->execute()===false){
+            print_r($stmt->errorInfo());
+        }else{
+            return $rst = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        }
+    }
+
+    public function getBatimentBis($chantierId,$dateDebut,$dateFin){
+        $sql = 'SELECT
+                    rapport_detail_has_tache.batiment
+                FROM
+                    rapport_detail_has_tache,
+                    rapport_detail,
+                    rapport,
+                    chantier
+                WHERE
+                    rapport_detail_has_tache.rapport_detail_id = rapport_detail.id
+                        AND rapport_detail.rapport_id = rapport.id
+                        AND rapport.chantier = chantier.id
+                        AND chantier.id = :chantier_id
+                        AND rapport.date BETWEEN :dateDeb AND :dateFin
+                        AND ( rapport_detail_has_tache.batiment <> "")
+                GROUP BY rapport_detail_has_tache.batiment';
+
+        $stmt = Config::getInstance()->getPDO()->prepare($sql);
+        $stmt->bindValue(':chantier_id', $chantierId);
+        $stmt->bindValue(':dateDeb', $dateDebut);
+        $stmt->bindValue(':dateFin', $dateFin);
+
+        if($stmt->execute()===false){
+            print_r($stmt->errorInfo());
+        }else{
+            return $rst = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        }
+    }
 }
