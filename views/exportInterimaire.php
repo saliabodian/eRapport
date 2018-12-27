@@ -18,23 +18,35 @@
                                 <table class="table table-bordered">
                                     <thead>
                                     <tr>
-                                        <th>Matricule</th>
-                                        <th>Prénom</th>
-                                        <th>Nom</th>
-                                        <th>Actif</th>
-                                        <th>Métier</th>
                                         <th>Agence</th>
+                                        <th>Intérimaire</th>
+                                        <th>Métier / Qualif</th>
+                                        <th>Département</th>
+                                        <th>Chef d'équipe</th>
+                                        <th>Chantier d'affectation</th>
+                                        <th>Mobilité</th>
                                     </tr>
                                     </thead>
                                     <tbody id="">
                                     <?php foreach ($interiamireList as $interimaire) : ?>
                                         <tr>
-                                            <td><?= $interimaire['matricule']?></td>
-                                            <td><?= $interimaire['firstname']?></td>
-                                            <td><?= $interimaire['lastname'] ?></td>
-                                            <td><?= $interimaire['actif']?></td>
-                                            <td><?= $interimaire['nom_metier']?></td>
                                             <td><?= $interimaire['nom_agence']?></td>
+                                            <td><?= $interimaire['matricule']." - ".$interimaire['firstname']." ".$interimaire['lastname'] ?></td>
+                                            <td><?= $interimaire['nom_metier']." / ".$interimaire['nom_qualif'] ?></td>
+                                            <td><?= $interimaire['nom_dpt'] ?></td>
+                                            <td><?= $interimaire['chef_equipe']?></td>
+                                            <td><?= $interimaire['chantier_de_base']?></td>
+                                            <td>
+                                                <?php
+                                                foreach($intMobiles as $intMobile) {
+                                                    if(array_search($intMobile['interimaire_id'], $interimaireId) && $intMobile['interimaire_id'] === $interimaire['id']){
+                                                        echo $intMobile['chantier']."; " ;
+                                                    }else{
+                                                        "pas de mobilté";
+                                                    }
+                                                }
+                                                ?>
+                                            </td>
                                         </tr>
                                     <?php endforeach ?>
                                     </tbody>
