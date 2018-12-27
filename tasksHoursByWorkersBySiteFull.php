@@ -54,22 +54,6 @@ if(!empty($_SESSION)){
 
     $chantier = new Chantier();
 
-//    var_dump($listTypeTache);
-//    $listTache= Tache::getAll();
-
-//exit;
-//    $selectChantier = new SelectHelper($list, $chantier->getId(), array(
-//        'name' => 'chantier_id',
-//        'id' => 'id',
-//        'class' => 'select2-container',
-//    ));
-
-//    var_dump($_POST);
-
-
-
-//    exit;
-
     if(!empty($_POST)){
         /*
          * ["chantier_id"]=> string(3) "247"
@@ -132,8 +116,8 @@ if(!empty($_SESSION)){
 
     include $conf->getViewsDir().'header.php';
     include $conf->getViewsDir().'sidebar.php';
-    include $conf->getViewsDir().'tasksHoursByWorkersBySite.php';
-    include $conf->getViewsDir().'footerSp.php';
+    include $conf->getViewsDir().'tasksHoursByWorkersBySiteFull.php';
+    include $conf->getViewsDir().'footer.php';
 
     /**
      *
