@@ -2,6 +2,10 @@
 Thumbs.db
 template
 inc/config.php
-src
+/ExportHours
+/ExportKm
+/ExportTpen
+/ExportTxt
 js_sources
 /vendor/
+img/
