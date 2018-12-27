@@ -26,11 +26,10 @@ $conf = Config::getInstance();
 
 if(!empty($_SESSION)){
 
-    if($_POST['chantier_id'])
+    if($_POST)
     {
         $listOuvrier = Interimaire::getOuvrier($_POST['chantier_id']);
 
-        //    var_dump($listOuvrier);
     }
  //   var_dump($listOuvrier);
  //exit;
