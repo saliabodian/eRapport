@@ -30,6 +30,10 @@ $conf = Config::getInstance();
 
 use Classes\Cdcl\Db\Chantier;
 
+use Classes\Cdcl\Db\Batiment ;
+
+use Classes\Cdcl\Db\TypeTache ;
+
 if(!empty($_SESSION)){
 
 //    var_dump($_POST);
@@ -51,13 +55,6 @@ if(!empty($_SESSION)){
         $batimentList = Chantier::chantierBatimentList($chantierId);
         //print_r($chantierObject);
     }
-
-
-
-    // var_dump($chantierId);
-
-
-
 
     // Si lien suppression
     if (isset($_GET['delete']) && intval($_GET['delete']) > 0) {
@@ -131,6 +128,129 @@ if(!empty($_SESSION)){
             $conf->addError('Erreur dans l\'ajout ou la modification');
         }
     }
+
+    // Gestion de l^'ajout de batiment
+    $_GET['addBuilding'] = isset($_GET['addBuilding']) ? $_GET['addBuilding'] : '';
+    $_GET['batiment_id'] = isset($_GET['batiment_id']) ? $_GET['batiment_id'] : '';
+    $batimentObject = new Batiment();
+    if(!empty($_GET['batiment_id'])){
+        $batimentObject=Batiment::get($_GET['batiment_id']);
+    }
+
+    if($_GET['addBuilding']){
+        $_GET['submit_form'] = isset($_GET['submit_form']) ? $_GET['submit_form'] : '';
+
+        if($_GET['submit_form']){
+
+            $batiment = isset($_GET['nom']) ? $_GET['nom'] : '';
+            $formBuilding = true ;
+            $_GET['submit_form'] = isset($_GET['submit_form']) ? $_GET['submit_form'] : '';
+
+        //    var_dump($formBuilding);
+
+            if(empty($batiment)){
+                $conf->addError('Veuillez saisir le nom du bâtiment !');
+                $formBuilding = false ;
+            }else{
+                if(!empty($batimentList)){
+                    foreach($batimentList as $bat){
+                        if($batiment === $bat['nom']){
+                            $conf->addError('Ce nom est déjà utilisé !');
+                            $formBuilding = false ;
+                        }
+                    }
+                }
+            }
+
+            if($formBuilding){
+
+                $batimentObject = new Batiment(
+                    $batimentObject->getId(),
+                    $batiment,
+                    new Chantier($_GET['id'])
+                );
+                    $batimentObject->saveDB();
+                $_GET['addBuilding'] = '';
+            }
+        }
+
+    }
+
+
+    // Suppression d'un bâtiment déjà créé pour un chantier
+    $_GET['bat_delete'] = isset($_GET['bat_delete']) ? $_GET['bat_delete'] :'';
+    if($_GET['bat_delete']){
+        Batiment::deleteById(intval($_GET['bat_id']));
+        header('Location: chantier.php?success='.urlencode('Suppression du bâtiment effectuée').'&id='.$_GET['id']);
+        exit;
+    }
+
+    // Rattachement des tâches par chantier
+
+    $_GET['addTask'] = isset($_GET['addTask'])? $_GET['addTask'] : '';
+    if($_GET['addTask']){
+        $TypeTaches = TypeTache::getAll();
+        $_GET['submit_form'] = isset($_GET['submit_form']) ? $_GET['submit_form'] : '';
+
+        if($_GET['submit_form']){
+
+            $_GET['type_task'] = isset($_GET['type_task']) ? $_GET['type_task'] : '';
+            $_GET['id'] = isset($_GET['id']) ? $_GET['id'] : '';
+            $_GET['tasks'] = isset($_GET['tasks']) ? $_GET['tasks'] : [] ;
+            $formTask = true ;
+            $_GET['submit_form'] = isset($_GET['submit_form']) ? $_GET['submit_form'] : '';
+
+            if(empty($_GET['type_task'])){
+                $conf->addError('Veuillez choisir un type de tâche !');
+                $formTask = false ;
+            }else{
+                if(empty($_GET['tasks']) || $_GET['tasks']=== 'Tâche'){
+                    $conf->addError('Veuillez choisir au moins une tâche !');
+                    $formTask = false ;
+                }
+            }
+
+        //    var_dump($_GET['tasks']);
+
+        //    exit;
+        //    var_dump($formTask);
+        //    echo "OK"; die;
+
+
+            if($formTask){
+                for ($i = 0; $i < sizeof($_GET['tasks']); $i++){
+                    Chantier::insertTaskBySite($_GET['id'], $_GET['tasks'][$i], $_GET['type_task'] );
+                }
+                header('Location: chantier.php?success='.urlencode('Rattachement effectué avec succés').'&id='.$_GET['id']);
+                exit;
+            }
+        }
+    }
+
+    // Suppression d'une tâche rattachée
+    $_GET['tsk_delete'] = isset($_GET['tsk_delete']) ? $_GET['tsk_delete'] :'';
+    if($_GET['tsk_delete']){
+        Chantier::deleteByTaskBySite(intval($_GET['id_ref']));
+        header('Location: chantier.php?success='.urlencode('Suppression de la tâche rattachée effectuée avec succés').'&id='.$_GET['id']);
+        exit;
+    }
+
+    // Gestion de la liste des bâtiments à afficher
+    if ($chantierId > 0) {
+        $batimentList = Chantier::chantierBatimentList($chantierId);
+        //print_r($chantierObject);
+    }
+
+    // Gestion de l'affichage la liste des tâches
+    if ($chantierId > 0) {
+        $taskList = Chantier::getAllTasksBySyte($chantierId);
+
+    //    var_dump($taskList);
+
+    //    exit;
+        $taskTypeList = Chantier::taskTypeBySite($chantierId);
+    }
+
 
     $selectChantier = new SelectHelper($chantierList, $chantierId, array(
         'name' => 'id',
