@@ -6,6 +6,7 @@
 
 <!--end-Footer-part-->
 
+<script src="js/tableToExcel.js"></script>
 <script src="js/excanvas.min.js"></script>
 <script src="js/jquery.min.js"></script>
 <script src="js/jquery.ui.custom.js"></script>
@@ -342,10 +343,9 @@
         });
     }
 
-    function getChantierId(val) {
-        //test du javascript
-        //alert("ok");
+    function getChantierId(val,dateDeb,dateFin) {
         //implémentation de la fonction AJAX
+        //Gestion de la liste des ouvriers
         $.ajax({
             type: "POST",
             url: "getOuvrier.php",
@@ -354,12 +354,124 @@
                 $(".fullname").html(data);
             }
         });
+
     }
 
-    function getFullname(val) {
-        //test du javascript
-        //alert("ok");
+
+    function getChantierIdFull(val,dateDeb,dateFin) {
         //implémentation de la fonction AJAX
+        //Gestion de la liste des ouvriers
+        $.ajax({
+            type: "POST",
+            url: "getOuvrier.php",
+            data: "chantier_id=" + val+"&dateDeb="+$('.date_deb').val()+"&dateFin="+$('.date_fin').val(),
+            success: function (data) {
+                $(".fullname").html(data);
+            }
+        });
+
+
+        // Gestion de la liste des bâtiments
+        $.ajax({
+            type: "POST",
+            url: "getBatiment.php",
+            data: "chantier_id=" + val+"&dateDeb="+$('.date_deb').val()+"&dateFin="+$('.date_fin').val(),
+            success: function (data) {
+                $(".batiment_id").html(data);
+            }
+        });
+
+        // Gestion des types de étages
+        $.ajax({
+            type: "POST",
+            url: "getEtage.php",
+            data: "chantier_id=" + val+"&dateDeb="+$('.date_deb').val()+"&dateFin="+$('.date_fin').val(),
+            success: function (data) {
+                $(".etage").html(data);
+            }
+        });
+
+        // Gestion des types de tâches
+        $.ajax({
+            type: "POST",
+            url: "getSiteTypeTache.php",
+            data: "chantier_id=" + val+"&dateDeb="+$('.date_deb').val()+"&dateFin="+$('.date_fin').val(),
+            success: function (data) {
+                $(".type_tache_ouvrier").html(data);
+            }
+        });
+
+        // Gestion des tâches
+        $.ajax({
+            type: "POST",
+            url: "getSiteTache.php",
+            data: "chantier_id=" + val+"&dateDeb="+$('.date_deb').val()+"&dateFin="+$('.date_fin').val(),
+            success: function (data) {
+                $(".tache_ouvrier").html(data);
+            }
+        });
+    }
+
+    /*function getAllAbtBat(val,siteId,dateDeb,dateFin){
+
+        // Gestion des types de étages
+        $.ajax({
+            type: "POST",
+            url: "getEtageBat.php",
+            data: "batiment_id=" + val+"&siteId="+$('.chantier_id').val()+"&dateDeb="+$('.date_deb').val()+"&dateFin="+$('.date_fin').val(),
+            success: function (data) {
+                $(".etage").html(data);
+            }
+        });
+
+        //Gestion de la liste des ouvriers
+        $.ajax({
+            type: "POST",
+            url: "getOuvrierBat.php",
+            data: "batiment_id=" + val+"&siteId="+$('.chantier_id').val()+"&dateDeb="+$('.date_deb').val()+"&dateFin="+$('.date_fin').val(),
+            success: function (data) {
+                $(".fullname").html(data);
+            }
+        });
+
+
+        // Gestion des types de tâches
+        $.ajax({
+            type: "POST",
+            url: "getBatTypeTache.php",
+            data: "batiment_id=" + val+"&siteId="+$('.chantier_id').val()+"&dateDeb="+$('.date_deb').val()+"&dateFin="+$('.date_fin').val(),
+            success: function (data) {
+                $(".type_tache_ouvrier").html(data);
+            }
+        });
+
+        // Gestion des tâches
+        $.ajax({
+            type: "POST",
+            url: "getBatTache.php",
+            data: "batiment_id=" + val+"&siteId="+$('.chantier_id').val()+"&dateDeb="+$('.date_deb').val()+"&dateFin="+$('.date_fin').val(),
+            success: function (data) {
+                $(".tache_ouvrier").html(data);
+            }
+        });
+    } */
+
+    function getFullnameFull(val) {
+
+        // gestion des types de tâches
+        $.ajax({
+            type: "POST",
+            url: "getOuvrierTypeTache.php",
+            data: "fullname=" + val,
+            success: function (data) {
+                $(".type_tache_ouvrier").html(data);
+            }
+        });
+
+
+    }
+
+    function getFullname(val){
         $.ajax({
             type: "POST",
             url: "getOuvrierTache.php",
@@ -368,6 +480,23 @@
                 $(".tache_ouvrier").html(data);
             }
         });
+
+    }
+
+    function getOuvrierTache(val,chantierId) {
+        //test du javascript
+        //alert("ok");
+        //implémentation de la fonction AJAX
+        // gestion des tâches
+        $.ajax({
+            type: "POST",
+            url: "getOuvrierTache.php",
+            data: "typeTacheId=" + val +"&chantierId="+$('.chantier_id').val(),
+            success: function (data) {
+                $(".tache_ouvrier").html(data);
+            }
+        });
+
     }
 
     function getChantierId2(val) {
@@ -516,6 +645,42 @@
     //    window.open("eRapportShowPrint.php?rapport_id="+id_rapport+"&rapport_type="+rapport_type+"&chef_dequipe_id="+user_id+"&chef_dequipe_matricule="+username+"&date_generation="+date+"&chantier_id="+chantier_id+"&chantier_code="+code+"&validated="+validated+"&submitted="+submitted+".pdf");
     //    window.open("http://www.google.lu");
     //    window.open("http://www.seneweb.com");
+    }
+
+    // Export to excell TEST
+
+    function fnExcelReport()
+    {
+        var tab_text="<table border='2px'><tr bgcolor='#87AFC6'>";
+        var textRange; var j=0;
+        tab = document.getElementById('headerTable'); // id of table
+
+        for(j = 0 ; j < tab.rows.length ; j++)
+        {
+            tab_text=tab_text+tab.rows[j].innerHTML+"</tr>";
+            //tab_text=tab_text+"</tr>";
+        }
+
+        tab_text=tab_text+"</table>";
+        tab_text= tab_text.replace(/<A[^>]*>|<\/A>/g, "");//remove if u want links in your table
+        tab_text= tab_text.replace(/<img[^>]*>/gi,""); // remove if u want images in your table
+        tab_text= tab_text.replace(/<input[^>]*>|<\/input>/gi, ""); // reomves input params
+
+        var ua = window.navigator.userAgent;
+        var msie = ua.indexOf("MSIE ");
+
+        if (msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./))      // If Internet Explorer
+        {
+            txtArea1.document.open("txt/html","replace");
+            txtArea1.document.write(tab_text);
+            txtArea1.document.close();
+            txtArea1.focus();
+            sa=txtArea1.document.execCommand("SaveAs",true,"Say Thanks to Sumit.xls");
+        }
+        else                 //other browser not tested on IE 11
+            sa = window.open('data:application/vnd.ms-excel,' + encodeURIComponent(tab_text));
+
+        return (sa);
     }
 </script>
 </body>
