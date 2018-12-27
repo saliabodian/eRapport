@@ -94,9 +94,9 @@ if(!empty($_SESSION)){
 
             //    exit;
 
-            //var_dump($tacheId);
 
-            //exit;
+
+        //    exit;
 
             $batimentObject->saveDB();
             header('Location: batiment.php?success='.urlencode('Ajout/Modification effectué(e)').'&batiment_id='.$batimentObject->getId());
